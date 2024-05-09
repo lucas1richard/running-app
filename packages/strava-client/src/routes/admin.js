@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { STRAVA_ACCESS_TOKEN, athleteAuthorizationCode } = require('../constants');
+const { STRAVA_ACCESS_TOKEN } = require('../constants');
 const { getItem, storeItem } = require('../database/setupdb-mysql');
 
 const router = new Router();

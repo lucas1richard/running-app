@@ -1,7 +1,7 @@
 const { Router } = require('express');
-const { STRAVA_ACCESS_TOKEN, athleteAuthorizationCode } = require('../constants');
+const { STRAVA_ACCESS_TOKEN } = require('../constants');
 const { getAccessToken } = require('../database/utils');
-const { bulkAddActivities } = require('../database/setupdb-couchbase');
+const { bulkAddActivities, getActivityDetail, addActivityDetail } = require('../database/setupdb-couchbase');
 
 const router = new Router();
 
@@ -17,19 +17,25 @@ router.get('/list', async (req, res, next) => {
   res.json(activitiesList);
 });
 
-router.get('/:id', async (req, res, next) => {
+router.get('/detail/:id', async (req, res, next) => {
   const activityId = req.params?.id;
-  console.log(activityId)
+  const detail = await getActivityDetail(activityId);
+  if (detail) {
+    return res.json(detail);
+  }
+  const accessToken = await getAccessToken();
   const activitiyRes = await fetch(`https://www.strava.com/api/v3/activities/${activityId}`, {
     headers: {
-      Authorization: `Bearer ${athleteAuthorizationCode}`
+      Authorization: `Bearer ${accessToken}`
     },
   });
   const activitiy = await activitiyRes.json();
+  await addActivityDetail(activitiy);
   res.json(activitiy);
 });
 
 router.get('/:id/streams', async (req, res, next) => {
+  const accessToken = await getAccessToken();
   const activityId = req.params?.id;
   const streamKeys = [
     'time',
@@ -46,7 +52,7 @@ router.get('/:id/streams', async (req, res, next) => {
   ].join(',');
   const activitiyRes = await fetch(`https://www.strava.com/api/v3/activities/${activityId}/streams?keys=${streamKeys}`, {
     headers: {
-      Authorization: `Bearer ${athleteAuthorizationCode}`
+      Authorization: `Bearer ${accessToken}`
     },
   });
   const activitiy = await activitiyRes.json();
