@@ -1,0 +1,13 @@
+.container {
+  padding: 1rem;
+  display: flex;
+}
+
+.container:hover {
+  background-color: #dedede;
+}
+
+.summaryImg {
+  max-width: 200px;
+  margin-right: 1rem;
+}

@@ -1,14 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
-import { Provider } from 'react-redux';
-
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from 'react-router-dom';
+import './index.css';
+import App from './App';
+import { enableMapSet } from 'immer';
+import reportWebVitals from './reportWebVitals';
 import reducer from './reducers'
 import mySaga from './sagas'
+import ActivityDetailPage from './Detail';
+import DataLayer from './DataLayer';
+
+enableMapSet();
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -19,13 +27,29 @@ const store = configureStore({
 })
 
 // then run the saga
-sagaMiddleware.run(mySaga)
+sagaMiddleware.run(mySaga);
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    Component: App,
+  },
+  {
+    path: '/:id/detail',
+    Component: ActivityDetailPage,
+  },
+  {
+    path: '/hello-world',
+    element: <div>Hello world</div>
+  }
+]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+      <DataLayer />
+      <RouterProvider router={router} />
     </Provider>
   </React.StrictMode>
 );

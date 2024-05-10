@@ -1,38 +1,15 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { GOOGLE_API_KEY } from '../constants';
-import dayjs from 'dayjs';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { selectActivities } from '../reducers/activities';
+import Tile from './Tile';
 
 const Activities = () => {
-  const dispatch = useDispatch();
-  const activities = useSelector(selectActivities);
-
-  useEffect(() => {
-    dispatch({ type: 'activities/FETCH_ACTIVITIES' });
-  }, []);
+  const activities = useSelector(selectActivities, (a, b) => a.length === b.length);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
-      {activities.map((activity) => (
-        <div key={activity.id} style={{ padding: '10px', display: 'flex' }}>
-          <img
-            src={`https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&path=enc:${activity.map.summary_polyline}&key=${GOOGLE_API_KEY}`}
-            alt="summary route"
-            style={{ width: '200px', marginRight: '10px' }}
-          />
-          <div>
-            <div>
-              {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
-            </div>
-            <div>
-              <h2>{activity.name}</h2>
-            </div>
-            <div>
-              {activity.sport_type} - {(activity.distance / 1609).toFixed(2)} miles
-            </div>
-          </div>
-        </div>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', }}>
+      {activities.filter(({ sport_type }) => sport_type === 'Run').map((activity) => (
+        <Tile key={activity.id} activity={activity} />
       ))}
     </div>
   );

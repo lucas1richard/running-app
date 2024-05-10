@@ -1,8 +1,7 @@
 import './App.css';
 import Activities from './Activities';
 
-function App() {
-  
+function App() {  
   return (
     <div className="App">
       <Activities />
