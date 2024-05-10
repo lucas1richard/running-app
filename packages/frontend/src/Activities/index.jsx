@@ -1,27 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { GOOGLE_API_KEY } from '../constants';
+import dayjs from 'dayjs';
+import { selectActivities } from '../reducers/activities';
 
 const Activities = () => {
-  const [activities, setActivities] = useState([]);
+  const dispatch = useDispatch();
+  const activities = useSelector(selectActivities);
 
   useEffect(() => {
-    fetch('http://localhost:3001/activities/list')
-      .then((res) => res.json())
-      .then(setActivities)
-      .catch(console.log)
+    dispatch({ type: 'activities/FETCH_ACTIVITIES' });
   }, []);
 
   return (
-    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '10px' }}>
       {activities.map((activity) => (
-        <div key={activity.id} style={{ width: '20%', padding: '10px', border: '1px solid black' }}>
+        <div key={activity.id} style={{ padding: '10px', display: 'flex' }}>
+          <img
+            src={`https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&path=enc:${activity.map.summary_polyline}&key=${GOOGLE_API_KEY}`}
+            alt="summary route"
+            style={{ width: '200px', marginRight: '10px' }}
+          />
           <div>
-            {activity.start_date_local}
-          </div>
-          <div>
-            {activity.sport_type}
-          </div>
-          <div>
-            Distance: {(activity.distance/1609).toFixed(2)} miles
+            <div>
+              {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
+            </div>
+            <div>
+              <h2>{activity.name}</h2>
+            </div>
+            <div>
+              {activity.sport_type} - {(activity.distance / 1609).toFixed(2)} miles
+            </div>
           </div>
         </div>
       ))}
