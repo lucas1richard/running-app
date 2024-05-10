@@ -1,11 +1,24 @@
 const { Router } = require('express');
 const { STRAVA_ACCESS_TOKEN } = require('../constants');
 const { getAccessToken } = require('../database/utils');
-const { bulkAddActivities, getActivityDetail, addActivityDetail } = require('../database/setupdb-couchbase');
+const {
+  bulkAddActivities,
+  getActivityDetail,
+  addActivityDetail,
+  getAllActivities,
+} = require('../database/setupdb-couchbase');
 
 const router = new Router();
 
 router.get('/list', async (req, res, next) => {
+  const forceFetch = req.query.force;
+  if (!forceFetch) {
+    const existingActivities = await getAllActivities();
+    if  (existingActivities.length > 0) {
+      return res.json(existingActivities);
+    }
+  }
+
   const accessToken = await getAccessToken();
   const activitiesListRes = await fetch('https://www.strava.com/api/v3/athlete/activities?per_page=100&page=1', {
     headers: {

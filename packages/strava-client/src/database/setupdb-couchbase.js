@@ -31,6 +31,14 @@ const bulkAddActivities = async (activities) => {
   }))});
 };
 
+const getAllActivities = async () => {
+  const db = await nano.db.use(ACTIVITIES_DB);
+  const params   = { include_docs: true, limit: 10000, descending: true };
+
+  const body = await db.list(params);
+  return body?.rows?.map(({ doc } = {}) => doc) || [];
+};
+
 const getActivity = async (id) => {
   try {
     const activities = await nano.db.use(ACTIVITIES_DB);
@@ -59,6 +67,7 @@ module.exports = {
   bulkAddActivities,
   getActivity,
   getActivityDetail,
+  getAllActivities,
 };
 
 // sqlite
