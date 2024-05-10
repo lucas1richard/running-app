@@ -15,18 +15,47 @@ const {
 
 let pool;
 
-async function initMysql() {
+const createTokensTable = (dbPool) => new Promise((acc, rej) => {
+  dbPool.query(
+      `
+      CREATE TABLE IF NOT EXISTS tokens
+      (
+        id MEDIUMINT NOT NULL AUTO_INCREMENT,
+        access_token varchar(255),
+        refresh_token varchar(255),
+        expires int,
+        PRIMARY KEY (id)
+      )
+      DEFAULT CHARSET utf8mb4
+      `,
+      (err) => {
+          if (err) return rej(err);
+          acc();
+      }
+  );
+});
 
-console.log({
-  MYSQL_HOST: HOST,
-  MYSQL_HOST_FILE: HOST_FILE,
-  MYSQL_USER: USER,
-  MYSQL_USER_FILE: USER_FILE,
-  MYSQL_PASSWORD: PASSWORD,
-  MYSQL_PASSWORD_FILE: PASSWORD_FILE,
-  MYSQL_DB: DB,
-  MYSQL_DB_FILE: DB_FILE,
-})
+const createActivitiesTable = (dbPool) => new Promise((acc, rej) => {
+  dbPool.query(
+    `
+      CREATE TABLE IF NOT EXISTS activities
+      (
+        id BIGINT NOT NULL,
+        activity_name VARCHAR(255),
+        sport_type VARCHAR(255),
+        has_streams BOOLEAN,
+        PRIMARY KEY (id)
+      )
+      DEFAULT CHARSET utf8mb4
+    `,
+    (err) => {
+      if (err) return rej(err);
+      acc();
+    }
+  );
+});
+
+async function initMysql() {
   const host = HOST_FILE ? fs.readFileSync(HOST_FILE) : HOST;
   const user = USER_FILE ? fs.readFileSync(USER_FILE) : USER;
   const password = PASSWORD_FILE ? fs.readFileSync(PASSWORD_FILE) : PASSWORD;
@@ -53,34 +82,17 @@ console.log({
       'CREATE DATABASE IF NOT EXISTS strava_tokens',
       err => {
         if (err) return console.error(err);
-  
-        console.log(`Made it`);
     });
   } catch (err) {
     console.log(err);
   }
 
-  return new Promise((acc, rej) => {
-      pool.query(
-          `
-          CREATE TABLE IF NOT EXISTS tokens
-          (
-            id MEDIUMINT NOT NULL AUTO_INCREMENT,
-            access_token varchar(255),
-            refresh_token varchar(255),
-            expires int,
-            PRIMARY KEY (id)
-          )
-          DEFAULT CHARSET utf8mb4
-          `,
-          err => {
-              if (err) return rej(err);
+  await Promise.all([
+    createTokensTable(pool),
+    createActivitiesTable(pool),
+  ]);
 
-              console.log(`Connected to mysql db at host ${HOST}`);
-              acc();
-          },
-      );
-  });
+  console.log(`Connected to mysql db at host ${HOST}`);
 }
 
 async function getItem(id) {

@@ -5,7 +5,10 @@ const {
   getActivityDetail,
   addActivityDetail,
   getAllActivities,
+  getStream,
+  addStream,
 } = require('../database/setupdb-couchbase');
+const summary = require('../database/mysql-activities');
 
 const router = new Router();
 
@@ -25,7 +28,10 @@ router.get('/list', async (req, res) => {
     },
   });
   const activitiesList = await activitiesListRes.json();
-  await bulkAddActivities(activitiesList);
+  
+  await bulkAddActivities(activitiesList); // couchdb
+  await summary.bulkAdd(activitiesList); // mysql
+
   res.json(activitiesList);
 });
 
@@ -47,8 +53,15 @@ router.get('/detail/:id', async (req, res) => {
 });
 
 router.get('/:id/streams', async (req, res) => {
-  const accessToken = await getAccessToken();
   const activityId = req.params?.id;
+
+  const cachedStream = await getStream(activityId);
+  if (cachedStream) {
+    await summary.setHasStreams(activityId, true);
+    return res.json(cachedStream);
+  }
+
+  const accessToken = await getAccessToken();
   const streamKeys = [
     'time',
     'distance',
@@ -62,14 +75,20 @@ router.get('/:id/streams', async (req, res) => {
     'moving',
     'grade_smooth',
   ].join(',');
-  const activitiyRes = await fetch(`https://www.strava.com/api/v3/activities/${activityId}/streams?keys=${streamKeys}`, {
+  const streamRes = await fetch(`https://www.strava.com/api/v3/activities/${activityId}/streams?keys=${streamKeys}`, {
     headers: {
       Authorization: `Bearer ${accessToken}`
     },
   });
-  const activitiy = await activitiyRes.json();
+  const stream = await streamRes.json();
+  await addStream({ stream }, activityId);
+  await summary.setHasStreams(activityId, true);
+  res.json({ stream });
+});
 
-  res.json(activitiy);
+router.get('/summary', async (req, res) => {
+  const activities = await summary.getAll();
+  res.json(activities);
 });
 
 module.exports = {

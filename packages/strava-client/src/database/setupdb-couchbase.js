@@ -65,11 +65,30 @@ const addActivityDetail = async (activity) => {
   return res;
 };
 
+const addStream = async (stream, documentId) => {
+  const db = await nano.db.use(STREAMS_DB);
+
+  const res = await db.insert(stream, `${documentId}`)
+  return res;
+};
+
+const getStream = async (id) => {
+  try {
+    const db = await nano.db.use(STREAMS_DB);
+    const stream = await db.get(`${id}`);
+    return stream;
+  } catch (err) {
+    return undefined;
+  }
+};
+
 module.exports = {
   addActivityDetail,
+  addStream,
   setupdb,
   bulkAddActivities,
   getActivity,
+  getStream,
   getActivityDetail,
   getAllActivities,
 };
