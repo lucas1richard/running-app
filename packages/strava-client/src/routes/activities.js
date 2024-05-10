@@ -7,7 +7,7 @@ const router = new Router();
 
 router.get('/list', async (req, res, next) => {
   const accessToken = await getAccessToken();
-  const activitiesListRes = await fetch('https://www.strava.com/api/v3/athlete/activities', {
+  const activitiesListRes = await fetch('https://www.strava.com/api/v3/athlete/activities?per_page=100&page=1', {
     headers: {
       Authorization: `Bearer ${accessToken}`
     },
