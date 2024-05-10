@@ -1,6 +1,6 @@
 const app = require('./app');
 const PORT = require('./port');
-const { setupdb, getAllActivities } = require('./database/setupdb-couchbase');
+const { setupdb } = require('./database/setupdb-couchbase');
 const { initMysql } = require('./database/setupdb-mysql');
 const { activitiesRouter } = require('./routes/activities');
 const { adminRouter } = require('./routes/admin');
@@ -14,6 +14,10 @@ setupdb()
   .then(initMysql)
   .then(() => {
     app.listen(PORT, (err) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
       console.log(`strava-client listening on port ${PORT}`);
     });
   })

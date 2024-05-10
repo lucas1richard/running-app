@@ -44,7 +44,9 @@ const getActivity = async (id) => {
     const activities = await nano.db.use(ACTIVITIES_DB);
     const activity = await activities.get(`${id}`);
     return activity;
-  } catch (err) {}
+  } catch (err) {
+    return undefined;
+  }
 };
 
 const getActivityDetail = async (id) => {
@@ -52,7 +54,9 @@ const getActivityDetail = async (id) => {
     const activities = await nano.db.use(ACTIVITIES_DETAIL_DB);
     const activity = await activities.get(`${id}`);
     return activity;
-  } catch (err) {}
+  } catch (err) {
+    return undefined;
+  }
 };
 
 const addActivityDetail = async (activity) => {
@@ -69,7 +73,3 @@ module.exports = {
   getActivityDetail,
   getAllActivities,
 };
-
-// sqlite
-
-// mysql

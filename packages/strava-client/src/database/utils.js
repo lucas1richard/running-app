@@ -1,5 +1,5 @@
 const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../constants');
-const { getItem, storeItem, upsertItem } = require('./setupdb-mysql');
+const { getItem, upsertItem } = require('./setupdb-mysql');
 
 const getAccessToken = async () => {
   const { access_token, expires } = await getItem(1) || {};
@@ -25,7 +25,7 @@ const refreshAccessToken = async () => {
   });
 
   const body = await res.json();
-  const record = await upsertItem(body, 1);
+  await upsertItem(body, 1);
 
   return body;
 };

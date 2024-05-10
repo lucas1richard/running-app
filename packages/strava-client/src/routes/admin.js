@@ -1,18 +1,16 @@
 const { Router } = require('express');
-const { STRAVA_ACCESS_TOKEN } = require('../constants');
 const { getItem, storeItem } = require('../database/setupdb-mysql');
 
 const router = new Router();
 
-router.get('/', async (req, res, next) => {
+router.get('/', async (req, res) => {
   const item = await getItem(1);
   
   res.json(item || {});
 });
 
-router.post('/set-token', async (req, res, next) => {
-  console.log(req.body)
-  const item = await storeItem(req.body);
+router.post('/set-token', async (req, res) => {
+  await storeItem(req.body);
 
   res.json({});
 });

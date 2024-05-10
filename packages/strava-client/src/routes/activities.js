@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const { STRAVA_ACCESS_TOKEN } = require('../constants');
 const { getAccessToken } = require('../database/utils');
 const {
   bulkAddActivities,
@@ -10,7 +9,7 @@ const {
 
 const router = new Router();
 
-router.get('/list', async (req, res, next) => {
+router.get('/list', async (req, res) => {
   const forceFetch = req.query.force;
   if (!forceFetch) {
     const existingActivities = await getAllActivities();
@@ -30,7 +29,7 @@ router.get('/list', async (req, res, next) => {
   res.json(activitiesList);
 });
 
-router.get('/detail/:id', async (req, res, next) => {
+router.get('/detail/:id', async (req, res) => {
   const activityId = req.params?.id;
   const detail = await getActivityDetail(activityId);
   if (detail) {
@@ -47,7 +46,7 @@ router.get('/detail/:id', async (req, res, next) => {
   res.json(activitiy);
 });
 
-router.get('/:id/streams', async (req, res, next) => {
+router.get('/:id/streams', async (req, res) => {
   const accessToken = await getAccessToken();
   const activityId = req.params?.id;
   const streamKeys = [

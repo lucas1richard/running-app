@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const passport = require('passport');
-StravaStrategy = require('passport-strava-oauth2').Strategy;
+const StravaStrategy = require('passport-strava-oauth2').Strategy;
 
 const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../constants');
 const PORT = require('../port');
@@ -81,36 +81,3 @@ router.get('/exchange_token', async (req, res) => {
 module.exports = {
   authRouter: router,
 };
-
-/**
- * {
-strava-service-1  |   token_type: 'Bearer',
-strava-service-1  |   expires_at: 1715118691,
-strava-service-1  |   expires_in: 21600,
-strava-service-1  |   refresh_token: 'db3a27c1a6d5e2d47c0f3a144547ff3c007b4969',
-strava-service-1  |   access_token: '5efe05ad474ab7c373d919bf7576801f8c031570',
-strava-service-1  |   athlete: {
-strava-service-1  |     id: 85720357,
-strava-service-1  |     username: null,
-strava-service-1  |     resource_state: 2,
-strava-service-1  |     firstname: 'Richard',
-strava-service-1  |     lastname: 'Lucas',
-strava-service-1  |     bio: null,
-strava-service-1  |     city: null,
-strava-service-1  |     state: null,
-strava-service-1  |     country: null,
-strava-service-1  |     sex: 'M',
-strava-service-1  |     premium: false,
-strava-service-1  |     summit: false,
-strava-service-1  |     created_at: '2021-05-20T17:41:43Z',
-strava-service-1  |     updated_at: '2024-03-18T00:23:17Z',
-strava-service-1  |     badge_type_id: 0,
-strava-service-1  |     weight: 0,
-strava-service-1  |     profile_medium: 'https://dgalywyr863hv.cloudfront.net/pictures/athletes/85720357/20542422/1/medium.jpg',
-strava-service-1  |     profile: 'https://dgalywyr863hv.cloudfront.net/pictures/athletes/85720357/20542422/1/large.jpg',
-strava-service-1  |     friend: null,
-strava-service-1  |     follower: null
-strava-service-1  |   }
-strava-service-1  | }
-
- */

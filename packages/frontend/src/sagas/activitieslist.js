@@ -1,4 +1,4 @@
-import { all, call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 
 // worker Saga: will be fired on USER_FETCH_REQUESTED actions
 function* fetchActivities(action) {
