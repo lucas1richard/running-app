@@ -4,6 +4,8 @@ import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { makeSelectActivity, makeSelectStreamType } from '../reducers/activities';
 import HeartRateChart from './HeartRateChart';
+import { makeSelectApplicableHeartZone } from '../reducers/heartszones';
+import HeartZonesDisplay from './HeartZonesDisplay';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -12,8 +14,7 @@ const ActivityDetailPage = () => {
   const heartRateStream = useSelector(makeSelectStreamType(id, 'heartrate'));
   const velocityStream = useSelector(makeSelectStreamType(id, 'velocity_smooth'));
   const activity = useSelector(makeSelectActivity(id)) || {};
-
-  console.log(velocityStream);
+  const zones = useSelector(makeSelectApplicableHeartZone(activity.start_date_local));
 
   useEffect(() => {
     dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
@@ -21,14 +22,24 @@ const ActivityDetailPage = () => {
   
   return (
     <div>
-      <h1>{activity.name}</h1>
-      <h2>{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</h2>
+      <h1 className="text-center">{activity.name}</h1>
+      <h2 className="text-center">{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</h2>
+
+      <HeartZonesDisplay zones={zones} heartData={heartRateStream?.data} />
+
       {heartRateStream && (
         <div>
-          <HeartRateChart data={heartRateStream.data} velocity={velocityStream?.data} />
+          <HeartRateChart
+            data={heartRateStream.data}
+            velocity={velocityStream?.data}
+            zones={zones}
+            title="Whole Activity"
+          />
           <HeartRateChart
             data={heartRateStream.data.slice(0, 60 * 4 * 6)}
             velocity={velocityStream?.data?.slice(9, 60 * 4 * 6)}
+            zones={zones}
+            title="First 24 Min"
           />
         </div>
       )}

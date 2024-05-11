@@ -15,6 +15,7 @@ import reducer from './reducers'
 import mySaga from './sagas'
 import ActivityDetailPage from './Detail';
 import DataLayer from './DataLayer';
+import HeartRateZones from './HeartRateZones';
 
 enableMapSet();
 
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
   {
     path: '/:id/detail',
     Component: ActivityDetailPage,
+  },
+  {
+    path: '/heart-zones',
+    Component: HeartRateZones,
   },
   {
     path: '/hello-world',

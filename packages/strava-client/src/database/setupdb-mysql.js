@@ -1,6 +1,7 @@
 const waitPort = require('wait-port');
 const fs = require('fs');
 const mysql = require('mysql2');
+const { createHeartRateZonesTable } = require('./mysql-heart-zones');
 
 const {
     MYSQL_HOST: HOST,
@@ -90,6 +91,7 @@ async function initMysql() {
   await Promise.all([
     createTokensTable(pool),
     createActivitiesTable(pool),
+    createHeartRateZonesTable()
   ]);
 
   console.log(`Connected to mysql db at host ${HOST}`);
