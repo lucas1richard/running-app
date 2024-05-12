@@ -14,7 +14,7 @@ const colors = [
 
 const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), []);
-  const gradePlots = useMemo(() => getGradeColor(grade, { vertex: 50 }), []);
+  const gradePlots = useMemo(() => getGradeColor(grade, { vertex: 20 }), []);
 
   /** @type {Highcharts.ChartOptions} */
   const options = {
@@ -32,93 +32,32 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         name: 'HeartRate',
         data,
         yAxis: 0,
-        color: 'black',
       },
       velocity && {
         name: 'Velocity',
         data: velocity.map(val => val * 2.237),
         yAxis: 1,
-        color: 'rgba(0,0,0,0.25)'
+          color: 'rgba(0,0,0,0.25)'
       }
     ].filter(Boolean),
     xAxis: {
-      plotBands: hrzones.map((band) => ({
-        color: colors[band.zone],
-        ...band
-      })),
-      // plotBands: gradePlots,
-    },
-    yAxis: [
-      { // Primary yAxis
-        labels: {
-          style: {
-            color: 'black'
-          }
-        },
-        title: {
-          text: 'HeartRate',
-          style: {
-            color: 'black'
-          }
-        },
-      },
-      { // Secondary yAxis
-        gridLineWidth: 0,
-        title: {
-          text: 'Velocity',
-          style: {
-            color: 'rgba(0,0,0,0.25)'
-          }
-        },
-        labels: {
-          format: '{value} mph',
-          style: {
-            color: 'rgba(0,0,0,0.25)'
-          }
-        },
-        opposite: true,
-      }
-    ]
-  };
-  /** @type {Highcharts.ChartOptions} */
-  const options2 = {
-    chart: {
-      type: 'line',
-      height: 400,
-      width,
-    },
-    title: {
-      text: title,
-    },
-    zooming: 'x',
-    series: [
-      {
-        name: 'HeartRate',
-        data,
-        yAxis: 0,
-        color: 'black',
-      },
-      velocity && {
-        name: 'Velocity',
-        data: velocity.map(val => val * 2.237),
-        yAxis: 1,
-        color: 'rgba(0,0,0,0.25)'
-      }
-    ].filter(Boolean),
-    xAxis: {
+      // plotBands: hrzones.map((band) => ({
+      //   color: colors[band.zone],
+      //   ...band
+      // })),
       plotBands: gradePlots,
     },
     yAxis: [
       { // Primary yAxis
         labels: {
           style: {
-            color: 'black'
+            color: Highcharts.getOptions().colors[0]
           }
         },
         title: {
           text: 'HeartRate',
           style: {
-            color: 'black'
+            color: Highcharts.getOptions().colors[0]
           }
         },
       },
@@ -142,15 +81,10 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
   };
 
   return (
-    <div>
+    <div style={{ width: 5000, overflowX: 'scroll'}}>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
-        allowChartUpdate={true}
-      />
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options2}
         allowChartUpdate={true}
       />
     </div>

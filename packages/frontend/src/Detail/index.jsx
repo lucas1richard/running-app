@@ -13,6 +13,7 @@ const ActivityDetailPage = () => {
 
   const heartRateStream = useSelector(makeSelectStreamType(id, 'heartrate'));
   const velocityStream = useSelector(makeSelectStreamType(id, 'velocity_smooth'));
+  const gradeStream = useSelector(makeSelectStreamType(id, 'grade_smooth'));
   const activity = useSelector(makeSelectActivity(id)) || {};
   const zones = useSelector(makeSelectApplicableHeartZone(activity.start_date_local));
 
@@ -32,12 +33,14 @@ const ActivityDetailPage = () => {
           <HeartRateChart
             data={heartRateStream.data}
             velocity={velocityStream?.data}
+            grade={gradeStream?.data}
             zones={zones}
             title="Whole Activity"
           />
           <HeartRateChart
             data={heartRateStream.data.slice(0, 60 * 4 * 6)}
             velocity={velocityStream?.data?.slice(9, 60 * 4 * 6)}
+            grade={gradeStream?.data?.slice(9, 60 * 4 * 6)}
             zones={zones}
             title="First 24 Min"
           />
