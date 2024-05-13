@@ -5,11 +5,12 @@ import { useParams } from 'react-router-dom';
 import { makeSelectActivity, makeSelectActivityDetails, makeSelectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertHeartDataToZoneSpeeds, convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import HeartZonesChart from './HeartZonesChart';
 import ElevationChart from './ElevationChart';
+import SegmentsDetailDisplay from './Segments';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -75,14 +76,15 @@ const ActivityDetailPage = () => {
             grade={gradeStream?.data}
             zones={zones}
           />
-          {/* <HeartRateChart
-            data={heartRateStream.data.slice(0, 60 * 4 * 6)}
-            velocity={velocityStream?.data?.slice(9, 60 * 4 * 6)}
-            grade={gradeStream?.data?.slice(9, 60 * 4 * 6)}
-            zones={zones}
-            title="First 24 Min"
-          /> */}
         </div>
+      )}
+
+      {details && (
+        <SegmentsDetailDisplay
+          heartData={heartRateStream?.data}
+          velocityData={velocityStream?.data}
+          segments={details.segment_efforts}
+        />
       )}
     </div>
   );

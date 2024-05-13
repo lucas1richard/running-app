@@ -52,3 +52,6 @@ code {
 .flex-justify-between {
   justify-content: space-between;
 }
+.highcharts-plot-band:hover {
+  fill: rgba(0,0,0, 0.33) !important;
+}

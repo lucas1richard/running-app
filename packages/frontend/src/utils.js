@@ -9,7 +9,7 @@ export const getDuration = (s) => {
   const minutes = Math.floor(s / 60) % 60;
 
   const display = [seconds, minutes, hours];
-  
+
   const text = ['sec', 'min', 'hr'];
   const real = display.map((val, ix) => [val, text[ix]]);
 
@@ -20,7 +20,7 @@ export const condenseZonesFromHeartRate = (zones, heartrate) => {
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
   const zone = rangeMap.findIndex((zoneLowThreshhold, ix) => zoneLowThreshhold <= heartrate[0] && rangeMap[ix + 1] > heartrate[0]) + 1;
-  const ans = [{ zone, from: 0, to: 1}];
+  const ans = [{ zone, from: 0, to: 1 }];
 
   heartrate.forEach((hr, ix) => {
     if (ix < 1) return;
@@ -79,7 +79,7 @@ export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
   const adjustedHigh = relativeMode ? vert : vertex;
 
   const maxIx = gradientScale.length - 1;
-  
+
   const percentiles = dataArr.map((el) => (el - low) / (adjustedHigh - low));
   const colorsIx = percentiles.map((p) => Math.floor(p * maxIx));
   const colors = colorsIx.map((ix) => gradientScale[ix]);
@@ -136,3 +136,23 @@ export const convertHeartDataToZonePercents = (heartData, zones) => convertHeart
 
 export const convertMetersToMiles = (distance) => distance / 1609;
 export const convertMetricSpeedToMPH = (metersPerSecond) => metersPerSecond * 2.237;
+
+export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal = (val) => val } = {}) => {
+  const m = x.length;
+  const n = y.length;
+  const cache = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+
+  let result = 0;
+  for (let i = 0; i <= m; i++) {
+    for (let j = 0; j <= n; j++) {
+      if (i === 0 || j === 0)
+        cache[i][j] = 0;
+      else if (getXVal(x[i - 1]) === getYVal(y[j - 1])) {
+        cache[i][j] = cache[i - 1][j - 1] + 1;
+        result = Math.max(result, cache[i][j]);
+      } else
+        cache[i][j] = 0;
+    }
+  }
+  return result;
+}

@@ -1,13 +1,34 @@
-import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { getGradeColor } from '../utils';
+import styles from '../Detail.module.css';
 
-const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
-  const gradePlots = useMemo(() => getGradeColor(grade, { relativeMode: true, vertex: 20 }), []);
+const getPlotbandConfig = ({ ix, text, to, from } = {}) => {
+    return {
+      from,
+      to,
+      label: {
+        align: 'left',
+        style: {
+          color: 'contrast',
+          fontWeight: 'bold',
+        },
+        y: 16 * (ix % 18) + 16,
+        useHTML: true,
+        formatter() {
+          return `<div class="${styles.bandLabel}">${text}</div>`
+        },
+      },
+      borderWidth: 1,
+      borderColor: 'black',
+      color: 'rgba(0,0,0,0.05)',
+      useHTML: true,
+      id: ix
+    };
+};
 
+const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
   /** @type {Highcharts.Options} */
-  const options2 = {
+  const options = {
     chart: {
       type: 'line',
       height: 400,
@@ -16,36 +37,33 @@ const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
     title: {
       text: title,
     },
-    zooming: 'x',
     series: [
       {
         name: 'HeartRate',
-        data,
+        data: heartData,
         yAxis: 0,
         color: 'red',
-        lineWidth: 3,
+        lineWidth: 2,
         animation: false,
       },
       velocity && {
         name: 'Velocity',
         data: velocity.map(val => Math.round((val * 100 * 2.237)) / 100),
         yAxis: 1,
-        color: 'black',
-        lineWidth: 2,
-        animation: false,
-      },
-      grade && {
-        name: 'Altitude',
-        data: grade.map(val => Math.round(val * 10 * 2.237) / 10),
-        yAxis: 2,
-        color: 'blue',
         lineWidth: 1,
+        color: 'black',
         animation: false,
-      },
+      }
     ].filter(Boolean),
     xAxis: {
-      plotBands: gradePlots,
-      gridLineWidth: 1,
+      plotBands: segments.map((band, ix) => getPlotbandConfig({
+          ix,
+          from: band.start_index,
+          to: band.end_index,
+          text: band.name
+        }),
+      ),
+      gridLineWidth: 0,
       alignTicks: false,
       tickInterval: 60,
       gridLineColor: '#aaa'
@@ -79,15 +97,6 @@ const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
           }
         },
         opposite: true,
-      },
-      { // Altitude yAxis
-        enabled: false,
-        labels: {
-          enabled: false,
-        },
-        title: {
-          enabled: false,
-        }
       }
     ]
   };
@@ -96,11 +105,11 @@ const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
     <div>
       <HighchartsReact
         highcharts={Highcharts}
-        options={options2}
+        options={options}
         allowChartUpdate={true}
       />
     </div>
   );
 };
 
-export default ElevationChart;
+export default SegmentsChart;
