@@ -2,15 +2,9 @@ import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate, getGradeColor } from '../utils';
+import { hrZonesBg } from '../colors/hrZones';
 
-const colors = [
-  'black',
-  'rgba(0, 132, 255, 0.2)',
-  'rgba(0,255,0,0.2)',
-  'rgba(255, 251, 0, 0.1)',
-  'rgba(255, 115, 0, 0.1)',
-  'rgba(255,0,0,0.2)',
-];
+
 
 const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), []);
@@ -44,7 +38,7 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
     ].filter(Boolean),
     xAxis: {
       plotBands: hrzones.map((band) => ({
-        color: colors[band.zone],
+        color: hrZonesBg[band.zone],
         ...band
       })),
       // plotBands: gradePlots,

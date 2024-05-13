@@ -7,6 +7,7 @@ const {
   getAllActivities,
   getStream,
   addStream,
+  getAllStreams,
 } = require('../database/setupdb-couchbase');
 const summary = require('../database/mysql-activities');
 
@@ -84,6 +85,12 @@ router.get('/:id/streams', async (req, res) => {
   await addStream({ stream }, activityId);
   await summary.setHasStreams(activityId, true);
   res.json({ stream });
+});
+
+router.get('/streams/list', async (req, res) => {
+  const allStreams = await getAllStreams();
+
+  res.json(Object.fromEntries(allStreams.map((str) => [str._id, str])));
 });
 
 router.get('/summary', async (req, res) => {

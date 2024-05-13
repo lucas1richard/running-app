@@ -82,6 +82,14 @@ const getStream = async (id) => {
   }
 };
 
+const getAllStreams = async () => {
+  const db = await nano.db.use(STREAMS_DB);
+  const params   = { include_docs: true, limit: 10000, descending: true };
+
+  const body = await db.list(params);
+  return body?.rows?.map(({ doc } = {}) => doc) || [];
+};
+
 module.exports = {
   addActivityDetail,
   addStream,
@@ -89,6 +97,7 @@ module.exports = {
   bulkAddActivities,
   getActivity,
   getStream,
+  getAllStreams,
   getActivityDetail,
   getAllActivities,
 };

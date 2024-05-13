@@ -32,6 +32,12 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
         nextState.streams[action.payload.id] = action.payload.data;
       });
     }
+
+    case 'activitiesReducer/SET_STREAMS': {
+      return produce(state, (nextState) => {
+        nextState.streams = action.payload.data;
+      });
+    }
     
     default:
       return state;

@@ -2,8 +2,8 @@ import gradientScale from './colors/gradient-scale';
 
 export const getDuration = (s) => {
   const seconds = s % 60;
-  const minutes = Math.floor(s / 60);
-  const hours = Math.floor(((s / 60) / 60) / 60)
+  const hours = Math.floor(s / 3600);
+  const minutes = Math.floor((s / 60) % 60);
 
   const display = [seconds, minutes, hours].filter(Boolean);
   const text = ['sec', 'min', 'hr'];
@@ -91,3 +91,20 @@ export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
 
   return condenseGradeColorToPlot(colors);
 };
+
+export const convertHeartDataToZoneTimes = (heartData, zones) => {
+  if (!heartData) return [];
+  const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
+
+  return heartData.reduce((acc, heartrate) => {
+    const zone = rangeMap.findIndex((threshhold, ix) => threshhold <= heartrate && rangeMap[ix + 1] > heartrate);
+    const newacc = [...acc];
+    newacc[zone] = (newacc[zone] || 0) + 1;
+    return newacc;
+  }, new Array(5).fill(0));
+};
+
+export const convertHeartDataToZonePercents = (heartData, zones) => convertHeartDataToZoneTimes(
+  heartData,
+  zones
+).map((time) => (100 * time / heartData?.length).toFixed(2));
