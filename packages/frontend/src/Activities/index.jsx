@@ -56,9 +56,9 @@ const Activities = () => {
               <ZonesHeader zones={zones} start={start} />
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', }}>
-                {runs.map((activity) => (
-                  <Tile key={activity.id} activity={activity} zones={zones} />
-                ))}
+              {runs.map((activity) => (
+                <Tile key={activity.id} activity={activity} zones={zones} />
+              ))}
             </div>
           </>
         ))}

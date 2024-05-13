@@ -1,15 +1,19 @@
 import gradientScale from './colors/gradient-scale';
 
 export const getDuration = (s) => {
+  if (s === Infinity || !s) {
+    return [];
+  }
   const seconds = s % 60;
   const hours = Math.floor(s / 3600);
-  const minutes = Math.floor((s / 60) % 60);
+  const minutes = Math.floor(s / 60) % 60;
 
-  const display = [seconds, minutes, hours].filter(Boolean);
+  const display = [seconds, minutes, hours];
+  
   const text = ['sec', 'min', 'hr'];
   const real = display.map((val, ix) => [val, text[ix]]);
 
-  return real.reverse();
+  return real.reverse().slice(real.findIndex(([val]) => !!val));
 };
 
 export const condenseZonesFromHeartRate = (zones, heartrate) => {
@@ -68,7 +72,6 @@ export const condenseGradeColorToPlot = (colors) => {
 };
 
 export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
-  console.log(dataArr);
   // high, min, percentile diff
   const high = Math.max.apply(null, dataArr);
   const low = relativeMode ? Math.min.apply(null, dataArr) : -1 * vertex;
@@ -103,8 +106,33 @@ export const convertHeartDataToZoneTimes = (heartData, zones) => {
     return newacc;
   }, new Array(5).fill(0));
 };
+export const convertHeartDataToZoneSpeeds = (zones, heartData, velocityData) => {
+  if (!heartData || !velocityData) return [];
+  const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
+
+  const zoneSpeeds = heartData.reduce((acc, heartrate, index) => {
+    const zone = rangeMap.findIndex((threshhold, ix) => threshhold <= heartrate && rangeMap[ix + 1] > heartrate);
+    const newacc = [...acc];
+    newacc[zone] = (newacc[zone] || { zone: zone + 1, mps: 0, count: 0 });
+    newacc[zone].mps += velocityData[index];
+    newacc[zone].count += 1;
+    newacc[zone].max = Math.max(newacc[zone].max, velocityData[index]);
+    newacc[zone].min = Math.min(newacc[zone].min, velocityData[index]);
+    return newacc;
+  }, new Array(5).fill(0).map((el, ix) => ({ zone: ix + 1, mps: 0, count: 0, max: 0, min: Infinity, })));
+
+  return zoneSpeeds.map(({ mps, count, ...rest }) => {
+    return {
+      avg: count ? mps / count : 0,
+      ...rest,
+    }
+  });
+};
 
 export const convertHeartDataToZonePercents = (heartData, zones) => convertHeartDataToZoneTimes(
   heartData,
   zones
 ).map((time) => (100 * time / heartData?.length).toFixed(2));
+
+export const convertMetersToMiles = (distance) => distance / 1609;
+export const convertMetricSpeedToMPH = (metersPerSecond) => metersPerSecond * 2.237;

@@ -3,6 +3,7 @@ import { produce } from 'immer';
 const activitiesInitialState = {
   activities: {},
   activitiesOrder: [],
+  details: {},
   summary: {},
   streams: {},
   loading: false,
@@ -24,6 +25,12 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
     case 'activitiesReducer/SET_ACTIVITIES_SUMMARY': {
       return produce(state, (nextState) => {
         nextState.summary = action.payload;
+      });
+    }
+
+    case 'activitiesReducer/SET_ACTIVITY_DETAIL': {
+      return produce(state, (nextState) => {
+        nextState.details[action.payload._id] = action.payload;
       });
     }
 
@@ -49,6 +56,7 @@ export const selectActivities = (state) => state
 
 export const makeSelectActivitySummary = (id) => (state) => state.activities.summary[id];
 export const makeSelectActivity = (id) => (state) => state.activities.activities[id];
+export const makeSelectActivityDetails = (id) => (state) => state.activities.details[id];
 
 export const makeSelectStreams = (id) => (state) => state.activities.streams[id];
 export const makeSelectStreamType = (id, findType) => (state) => state.activities.streams[id]

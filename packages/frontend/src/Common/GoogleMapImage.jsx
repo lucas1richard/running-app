@@ -1,0 +1,11 @@
+import { GOOGLE_API_KEY } from '../constants';
+
+const GoogleMapImage = ({ polyline, alt, className }) => (
+  <img
+    src={`https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&path=enc:${polyline}&key=${GOOGLE_API_KEY}`}
+    alt={alt}
+    className={className}
+  />
+);
+
+export default GoogleMapImage;

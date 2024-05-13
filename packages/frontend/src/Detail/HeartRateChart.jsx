@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import Highcharts from 'highcharts';
+import Highcharts, { animate } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate, getGradeColor } from '../utils';
 import { hrZonesBg } from '../colors/hrZones';
@@ -26,14 +26,18 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         name: 'HeartRate',
         data,
         yAxis: 0,
-        color: 'black',
+        color: 'red',
+        lineWidth: 2,
+        animation: false,
 
       },
       velocity && {
         name: 'Velocity',
         data: velocity.map(val => val * 2.237),
         yAxis: 1,
-        color: 'darkred'
+        lineWidth: 1,
+        color: 'black',
+        animation: false,
       }
     ].filter(Boolean),
     xAxis: {
@@ -47,13 +51,13 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
       { // Primary yAxis
         labels: {
           style: {
-            color: 'black'
+            color: 'red'
           }
         },
         title: {
           text: 'HeartRate',
           style: {
-            color: 'black'
+            color: 'red'
           }
         },
       },
@@ -62,13 +66,13 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         title: {
           text: 'Velocity',
           style: {
-            color: 'darkred'
+            color: 'black'
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'darkred'
+            color: 'black'
           }
         },
         opposite: true,
@@ -91,19 +95,25 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         name: 'HeartRate',
         data,
         yAxis: 0,
-        color: 'black',
+        color: 'red',
+        lineWidth: 3,
+        animation: false,
       },
       velocity && {
         name: 'Velocity',
         data: velocity.map(val => val * 2.237),
         yAxis: 1,
-        color: 'darkred'
+        color: 'black',
+        lineWidth: 2,
+        animation: false,
       },
       grade && {
         name: 'grade',
         data: grade.map(val => val * 2.237),
         yAxis: 2,
         color: 'blue',
+        lineWidth: 1,
+        animation: false,
       },
     ].filter(Boolean),
     xAxis: {
@@ -113,13 +123,13 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
       { // Primary yAxis
         labels: {
           style: {
-            color: 'black'
+            color: 'red'
           }
         },
         title: {
           text: 'HeartRate',
           style: {
-            color: 'black'
+            color: 'red'
           }
         },
       },
@@ -128,13 +138,13 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         title: {
           text: 'Velocity',
           style: {
-            color: 'darkred'
+            color: 'black'
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'darkred'
+            color: 'black'
           }
         },
         opposite: true,

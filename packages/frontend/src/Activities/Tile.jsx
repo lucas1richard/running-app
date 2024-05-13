@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { GOOGLE_API_KEY } from '../constants';
 import dayjs from 'dayjs';
 import { makeSelectStreamType } from '../reducers/activities';
 import styles from './Tile.module.css';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
+import { convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
+import GoogleMapImage from '../Common/GoogleMapImage';
 
 const Tile = ({ activity, zones }) => {
   const streamSelector = useCallback(makeSelectStreamType(activity.id, 'heartrate'), [activity.id]);
@@ -15,8 +16,8 @@ const Tile = ({ activity, zones }) => {
   return (
     <div>
       <div className={styles.container}>
-        <img
-          src={`https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&path=enc:${activity.map.summary_polyline}&key=${GOOGLE_API_KEY}`}
+        <GoogleMapImage
+          polyline={activity.map.summary_polyline}
           alt="summary route"
           className={styles.summaryImg}
         />
@@ -28,9 +29,9 @@ const Tile = ({ activity, zones }) => {
             <Link to={`/${activity.id}/detail`}><h2>{activity.name}</h2></Link>
           </div>
           <div>
-            {(activity.distance / 1609).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/></div>
+            {convertMetersToMiles(activity.distance).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/></div>
           <div>
-            Avg Speed - {(activity.average_speed * 2.237).toFixed(2)} mph
+            Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
           </div>
           <div>
             Avg HR - {(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)

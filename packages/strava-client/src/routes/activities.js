@@ -36,7 +36,7 @@ router.get('/list', async (req, res) => {
   res.json(activitiesList);
 });
 
-router.get('/detail/:id', async (req, res) => {
+router.get('/:id/detail', async (req, res) => {
   const activityId = req.params?.id;
   const detail = await getActivityDetail(activityId);
   if (detail) {

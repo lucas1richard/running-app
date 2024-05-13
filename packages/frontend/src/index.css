@@ -15,3 +15,37 @@ code {
 .text-center {
   text-align: center;;
 }
+
+.margin-t {
+  margin-top: 1rem;
+}
+.margin-tb {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+.margin-b {
+  margin-bottom: 1rem;
+}
+.pad {
+  padding: 1rem;
+}
+.pad-t {
+  padding-top: 1rem;
+}
+.pad-tb {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.pad-b {
+  margin-bottom: 1rem;
+}
+
+.fullwidth {
+  width: 100%;
+}
+.flex {
+  display: flex;
+}
+.flex-justify-between {
+  justify-content: space-between;
+}
