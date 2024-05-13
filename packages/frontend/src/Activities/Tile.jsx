@@ -20,21 +20,29 @@ const Tile = ({ activity, zones }) => {
           polyline={activity.map.summary_polyline}
           alt="summary route"
           className={styles.summaryImg}
+          width="100"
+          height="75"
         />
-        <div style={{ width: '100%' }}>
-          <div>
-            {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
-          </div>
-          <div>
-            <Link to={`/${activity.id}/detail`}><h2>{activity.name}</h2></Link>
-          </div>
-          <div>
-            {convertMetersToMiles(activity.distance).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/></div>
-          <div>
-            Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-          </div>
-          <div>
-            Avg HR - {(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+        <div className="flex flex-justify-between flex-column fullwidth">
+          <div className="flex flex-justify-between">
+            <div>
+              <div>
+                {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
+              </div>
+              <div>
+                <h2 className={styles.title}><Link to={`/${activity.id}/detail`}>{activity.name}</Link></h2>
+              </div>
+            </div>
+            <div>
+              <div>
+                {convertMetersToMiles(activity.distance).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/></div>
+              <div>
+                Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+              </div>
+              <div>
+                Avg HR - {(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+              </div>
+            </div>
           </div>
           <div style={{ width: '100%' }}>
             {heartRateStream && <ZonesWidth zones={zones} heartData={heartRateStream.data} />}

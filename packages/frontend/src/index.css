@@ -46,6 +46,9 @@ code {
 .flex {
   display: flex;
 }
+.flex-column {
+  flex-direction: column;;
+}
 .flex-justify-between {
   justify-content: space-between;
 }

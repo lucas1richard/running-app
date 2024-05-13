@@ -3,12 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { makeSelectActivity, makeSelectActivityDetails, makeSelectStreamType } from '../reducers/activities';
-import HeartRateChart from './HeartRateChart';
 import { makeSelectApplicableHeartZone } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertHeartDataToZoneSpeeds, convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
+import HeartZonesChart from './HeartZonesChart';
+import ElevationChart from './ElevationChart';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -63,12 +64,16 @@ const ActivityDetailPage = () => {
 
       {heartRateStream && (
         <div>
-          <HeartRateChart
+          <HeartZonesChart
+            data={heartRateStream.data}
+            velocity={velocityStream?.data}
+            zones={zones}
+          />
+          <ElevationChart
             data={heartRateStream.data}
             velocity={velocityStream?.data}
             grade={gradeStream?.data}
             zones={zones}
-            title="Whole Activity"
           />
           {/* <HeartRateChart
             data={heartRateStream.data.slice(0, 60 * 4 * 6)}

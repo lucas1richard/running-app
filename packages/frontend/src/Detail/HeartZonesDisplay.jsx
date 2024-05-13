@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import DurationDisplay from '../Common/DurationDisplay';
-import { hrZonesBg } from '../colors/hrZones';
+import { hrZonesBg, hrZonesBgStrong, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
 
 const HeartZonesDisplay = ({ zones, heartData, velocityData }) => {
@@ -26,72 +26,61 @@ const HeartZonesDisplay = ({ zones, heartData, velocityData }) => {
 
   const avg = useMemo(() => convertHeartDataToZoneSpeeds(zones, heartData, velocityData), [heartData, velocityData, zones]);
 
-  const Cell = useCallback(({ ix }) => (
-    <>
-      <div className="flex flex-justify-between">
-        <div>
-          Time in Zone:
+  const Cell = useCallback(({ ix, title, range }) => {
+    const isMaxPercentage = Number(percents[ix]) === Math.max.apply(null, percents.map(Number));
+    return (
+      <div
+        style={{
+          width: '20%',
+          padding: '1rem',
+          background: hrZonesBg[ix + 1],
+          border: `1px solid ${isMaxPercentage ? hrZonesBgStrong[ix+1] : hrZonesBg[ix + 1]}`,
+          ...isMaxPercentage ? { boxShadow: `inset 0 0 1rem ${hrZonesText[ix+1]}` } : {},
+        }}
+      >
+        <div className="text-center margin-b">
+          <b>{title}</b> ({range})
         </div>
-        <div>
-          <DurationDisplay numSeconds={totalTimes[ix]} /> ({percents[ix]}%)
-        </div>
+          <div className="flex flex-justify-between">
+            <div>
+              Time in Zone:
+            </div>
+            <div>
+              <DurationDisplay numSeconds={totalTimes[ix]} /> <span>({percents[ix]}%)</span>
+            </div>
+          </div>
+          {avg[ix] && (
+            <>
+              <div className="flex flex-justify-between">
+                <div>
+                  Avg Pace in Zone:
+                </div>
+                <div>
+                  <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
+                </div>
+              </div>
+              <div className="flex flex-justify-between">
+                <div>
+                  Fastest Pace in Zone:
+                </div>
+                <div>
+                  <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)))} />/mi
+                </div>
+              </div>
+            </>
+          )}
       </div>
-      {avg[ix] && (
-        <>
-        <div className="flex flex-justify-between">
-          <div>
-            Avg Pace in Zone:
-          </div>
-          <div>
-            <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
-          </div>
-        </div>
-        <div className="flex flex-justify-between">
-          <div>
-            Fastest Pace in Zone:
-          </div>
-          <div>
-            <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)))} />/mi
-          </div>
-        </div>
-        </>
-      )}
-    </>
-  ), [avg, percents, totalTimes]);
+    );
+  }, [avg, percents, totalTimes]);
 
   return (
     <div style={{ border: '1px solid black' }}>
       <div style={{ display: 'flex' }}>
-        <div style={{ width: '20%', padding: '1rem', background: hrZonesBg[1] }}>
-          <div className="text-center margin-b">
-            <b>Zone 1</b> ({zones.z1} - {zones.z2 - 1})
-          </div>
-          <Cell ix={0} />
-        </div>
-        <div style={{ width: '20%', padding: '1rem', background: hrZonesBg[2] }}>
-          <div className="text-center margin-b">
-            <b>Zone 2</b> ({zones.z2} - {zones.z3 - 1})
-          </div>
-          <Cell ix={1} />
-        </div>
-        <div style={{ width: '20%', padding: '1rem', background: hrZonesBg[3] }}>
-          <div className="text-center margin-b">
-            <b>Zone 3</b> ({zones.z3} - {zones.z4 - 1})
-          </div>
-          <Cell ix={2} />
-        </div>
-        <div style={{ width: '20%', padding: '1rem', background: hrZonesBg[4] }}>
-          <div className="text-center margin-b">
-            <b>Zone 4</b> ({zones.z4} - {zones.z5 - 1})
-          </div>
-          <Cell ix={3} />
-        </div>
-        <div style={{ width: '20%', padding: '1rem', background: hrZonesBg[5] }}>
-          <div className="text-center margin-b">
-            <b>Zone 5</b> (>={zones.z5})
-          </div>
-          <Cell ix={4} />
-        </div>
+        <Cell ix={0} title="Zone 1" range={`${zones.z1} - ${zones.z2 - 1}`} />
+        <Cell ix={1} title="Zone 2" range={`${zones.z2} - ${zones.z3 - 1}`} />
+        <Cell ix={2} title="Zone 3" range={`${zones.z3} - ${zones.z4 - 1}`} />
+        <Cell ix={3} title="Zone 4" range={`${zones.z4} - ${zones.z5 - 1}`} />
+        <Cell ix={4} title="Zone 5" range={<span>&ge; {zones.z5}</span>} />
       </div>
     </div>
   );

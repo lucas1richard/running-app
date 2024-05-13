@@ -1,84 +1,11 @@
 import { useMemo } from 'react';
-import Highcharts, { animate } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { condenseZonesFromHeartRate, getGradeColor } from '../utils';
-import { hrZonesBg } from '../colors/hrZones';
+import { getGradeColor } from '../utils';
 
-
-
-const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
-  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), []);
+const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
   const gradePlots = useMemo(() => getGradeColor(grade, { relativeMode: true, vertex: 20 }), []);
 
-  /** @type {Highcharts.Options} */
-  const options = {
-    chart: {
-      type: 'line',
-      height: 400,
-      width,
-    },
-    title: {
-      text: title,
-    },
-    zooming: 'x',
-    series: [
-      {
-        name: 'HeartRate',
-        data,
-        yAxis: 0,
-        color: 'red',
-        lineWidth: 2,
-        animation: false,
-
-      },
-      velocity && {
-        name: 'Velocity',
-        data: velocity.map(val => val * 2.237),
-        yAxis: 1,
-        lineWidth: 1,
-        color: 'black',
-        animation: false,
-      }
-    ].filter(Boolean),
-    xAxis: {
-      plotBands: hrzones.map((band) => ({
-        color: hrZonesBg[band.zone],
-        ...band
-      })),
-      // plotBands: gradePlots,
-    },
-    yAxis: [
-      { // Primary yAxis
-        labels: {
-          style: {
-            color: 'red'
-          }
-        },
-        title: {
-          text: 'HeartRate',
-          style: {
-            color: 'red'
-          }
-        },
-      },
-      { // Secondary yAxis
-        gridLineWidth: 0,
-        title: {
-          text: 'Velocity',
-          style: {
-            color: 'black'
-          }
-        },
-        labels: {
-          format: '{value} mph',
-          style: {
-            color: 'black'
-          }
-        },
-        opposite: true,
-      }
-    ]
-  };
   /** @type {Highcharts.Options} */
   const options2 = {
     chart: {
@@ -101,15 +28,15 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
       },
       velocity && {
         name: 'Velocity',
-        data: velocity.map(val => val * 2.237),
+        data: velocity.map(val => Math.round((val * 100 * 2.237)) / 100),
         yAxis: 1,
         color: 'black',
         lineWidth: 2,
         animation: false,
       },
       grade && {
-        name: 'grade',
-        data: grade.map(val => val * 2.237),
+        name: 'Altitude',
+        data: grade.map(val => Math.round(val * 10 * 2.237) / 10),
         yAxis: 2,
         color: 'blue',
         lineWidth: 1,
@@ -118,6 +45,10 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
     ].filter(Boolean),
     xAxis: {
       plotBands: gradePlots,
+      gridLineWidth: 1,
+      alignTicks: false,
+      tickInterval: 60,
+      gridLineColor: '#aaa'
     },
     yAxis: [
       { // Primary yAxis
@@ -172,11 +103,6 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
     <div>
       <HighchartsReact
         highcharts={Highcharts}
-        options={options}
-        allowChartUpdate={true}
-      />
-      <HighchartsReact
-        highcharts={Highcharts}
         options={options2}
         allowChartUpdate={true}
       />
@@ -184,4 +110,4 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
   );
 };
 
-export default HeartRateChart;
+export default ElevationChart;

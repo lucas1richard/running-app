@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { convertHeartDataToZonePercents } from '../utils';
-import { hrZonesBg, hrZonesBgStrong } from '../colors/hrZones';
+import { hrZonesBg, hrZonesBgStrong, hrZonesText } from '../colors/hrZones';
 
 const ZonesWidth = ({ zones, heartData }) => {
   const times = useMemo(() => convertHeartDataToZonePercents(heartData, zones), [heartData, zones]);
@@ -12,8 +12,8 @@ const ZonesWidth = ({ zones, heartData }) => {
         <div
           style={{
             width: `${time}%`,
-            background: hrZonesBg[ix + 1],
-            border: `1px solid ${hrZonesBgStrong[ix + 1]}`,
+            background: hrZonesText[ix + 1],
+            border: `1px solid ${hrZonesText[ix + 1]}`,
             height: '0.5rem',
             overflow: 'hidden',
           }}

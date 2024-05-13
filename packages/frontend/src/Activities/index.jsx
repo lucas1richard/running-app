@@ -46,7 +46,7 @@ const Activities = () => {
   }, []);
 
   return (
-    <div style={{ padding: '1rem' }}>
+    <div style={{ padding: '1rem', margin: 'auto', maxWidth: 1280 }}>
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
       </div>
@@ -55,7 +55,7 @@ const Activities = () => {
             <div style={{ marginTop: '3rem' }}>
               <ZonesHeader zones={zones} start={start} />
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', }}>
+            <div>
               {runs.map((activity) => (
                 <Tile key={activity.id} activity={activity} zones={zones} />
               ))}
