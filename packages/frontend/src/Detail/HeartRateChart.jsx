@@ -14,9 +14,9 @@ const colors = [
 
 const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), []);
-  const gradePlots = useMemo(() => getGradeColor(grade, { vertex: 50 }), []);
+  const gradePlots = useMemo(() => getGradeColor(grade, { relativeMode: true, vertex: 20 }), []);
 
-  /** @type {Highcharts.ChartOptions} */
+  /** @type {Highcharts.Options} */
   const options = {
     chart: {
       type: 'line',
@@ -33,12 +33,13 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         data,
         yAxis: 0,
         color: 'black',
+
       },
       velocity && {
         name: 'Velocity',
         data: velocity.map(val => val * 2.237),
         yAxis: 1,
-        color: 'rgba(0,0,0,0.25)'
+        color: 'darkred'
       }
     ].filter(Boolean),
     xAxis: {
@@ -67,20 +68,20 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         title: {
           text: 'Velocity',
           style: {
-            color: 'rgba(0,0,0,0.25)'
+            color: 'darkred'
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'rgba(0,0,0,0.25)'
+            color: 'darkred'
           }
         },
         opposite: true,
       }
     ]
   };
-  /** @type {Highcharts.ChartOptions} */
+  /** @type {Highcharts.Options} */
   const options2 = {
     chart: {
       type: 'line',
@@ -102,8 +103,14 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         name: 'Velocity',
         data: velocity.map(val => val * 2.237),
         yAxis: 1,
-        color: 'rgba(0,0,0,0.25)'
-      }
+        color: 'darkred'
+      },
+      grade && {
+        name: 'grade',
+        data: grade.map(val => val * 2.237),
+        yAxis: 2,
+        color: 'blue',
+      },
     ].filter(Boolean),
     xAxis: {
       plotBands: gradePlots,
@@ -127,13 +134,29 @@ const HeartRateChart = ({ title, data, velocity, zones, width, grade }) => {
         title: {
           text: 'Velocity',
           style: {
-            color: 'rgba(0,0,0,0.25)'
+            color: 'darkred'
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'rgba(0,0,0,0.25)'
+            color: 'darkred'
+          }
+        },
+        opposite: true,
+      },
+      { // Secondary yAxis
+        gridLineWidth: 0,
+        title: {
+          text: 'Altitude',
+          style: {
+            color: 'blue'
+          }
+        },
+        labels: {
+          format: '{value} ft',
+          style: {
+            color: 'blue'
           }
         },
         opposite: true,

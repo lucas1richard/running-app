@@ -47,7 +47,6 @@ export const getPercentileToIx = (numIxAvailable, data, refIx) => {
 };
 
 export const condenseGradeColorToPlot = (colors) => {
-  console.log(colors);
   const ans = [{
     color: colors[0],
     from: 0,
@@ -61,7 +60,7 @@ export const condenseGradeColorToPlot = (colors) => {
     if (color === latest.color) {
       latest.to = ix + 1;
     } else {
-      ans.push({ color, from: ix, to: ix + 1 });
+      ans.push({ color, from: latest.to - 1, to: ix + 1 });
     }
   });
 
@@ -79,18 +78,16 @@ export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
   const maxIx = gradientScale.length - 1;
   
   const percentiles = dataArr.map((el) => (el - low) / (adjustedHigh - low));
-  console.log({percentiles})
   const colorsIx = percentiles.map((p) => Math.floor(p * maxIx));
-  console.log(colorsIx)
   const colors = colorsIx.map((ix) => gradientScale[ix]);
 
-  console.log(
-    dataArr.map((grade, ix) => ({
-      grade,
-      percentile: percentiles[ix],
-      colorIx: colorsIx[ix],
-    })
-  ));
+  // console.log(
+  //   dataArr.map((grade, ix) => ({
+  //     grade,
+  //     percentile: percentiles[ix],
+  //     colorIx: colorsIx[ix],
+  //   })
+  // ));
 
   return condenseGradeColorToPlot(colors);
 };

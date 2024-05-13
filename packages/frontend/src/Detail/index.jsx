@@ -13,7 +13,7 @@ const ActivityDetailPage = () => {
 
   const heartRateStream = useSelector(makeSelectStreamType(id, 'heartrate'));
   const velocityStream = useSelector(makeSelectStreamType(id, 'velocity_smooth'));
-  const gradeStream = useSelector(makeSelectStreamType(id, 'grade_smooth'));
+  const gradeStream = useSelector(makeSelectStreamType(id, 'altitude'));
   const activity = useSelector(makeSelectActivity(id)) || {};
   const zones = useSelector(makeSelectApplicableHeartZone(activity.start_date_local));
 

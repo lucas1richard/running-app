@@ -1,8 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 
-function* fetchActivities() {
+function* fetchActivities({ forceFetch }) {
   try {
-    const res = yield call(fetch, 'http://localhost:3001/activities/list');
+    const queryParam = new URLSearchParams({
+      ...forceFetch ? { force: true } : {},
+    });
+    const res = yield call(fetch, `http://localhost:3001/activities/list?${queryParam}`);
     const acts = yield res.json();
     const sortedActs = [...acts];
     sortedActs.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
