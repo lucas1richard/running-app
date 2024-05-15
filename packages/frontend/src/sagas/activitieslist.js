@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
 function* fetchActivities({ forceFetch }) {
   try {
@@ -27,9 +27,9 @@ function* fetchActivitySummary() {
   }
 }
 
-function* fetchActivityDetail({ id }) {
+function* fetchActivityDetail({ payload }) {
   try {
-    const res = yield call(fetch, `http://localhost:3001/activities/${id}/detail`);
+    const res = yield call(fetch, `http://localhost:3001/activities/${payload}/detail`);
     const summary = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_ACTIVITY_DETAIL', payload: summary });
@@ -64,9 +64,9 @@ function* fetchStreamData({ id }) {
 //   yield takeEvery('INCREMENT_ASYNC', incrementAsync)
 // }
 export function* activitiesListSaga() {
-  yield takeLatest('activities/FETCH_ACTIVITIES', fetchActivities);
-  yield takeLatest('activities/FETCH_ACTIVITIES_SUMMARY', fetchActivitySummary);
-  yield takeLatest('activities/FETCH_ACTIVITY_DETAIL', fetchActivityDetail);
-  yield takeLatest('activities/FETCH_STREAM_DATA', fetchStreamData);
-  yield takeLatest('activities/FETCH_ALL_STREAMS', fetchAllStreams);
+  yield takeEvery('activities/FETCH_ACTIVITIES', fetchActivities);
+  yield takeEvery('activities/FETCH_ACTIVITIES_SUMMARY', fetchActivitySummary);
+  yield takeEvery('activities/FETCH_ACTIVITY_DETAIL', fetchActivityDetail);
+  yield takeEvery('activities/FETCH_STREAM_DATA', fetchStreamData);
+  yield takeEvery('activities/FETCH_ALL_STREAMS', fetchAllStreams);
 }

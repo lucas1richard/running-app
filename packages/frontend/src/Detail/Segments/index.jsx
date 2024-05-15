@@ -34,7 +34,7 @@ const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
       {showToggles && segments.map((seg, ix) => (
         <div key={seg.id}>
           <label>
-            <input type="checkbox" value={ix} checked={visible[ix]} onChange={onToggle}/> {seg.name}
+            <input type="checkbox" value={ix} checked={visible[ix]} onChange={onToggle}/> {seg.name} <small>(index {seg.start_index} to {seg.end_index})</small>
           </label>
         </div>)
       )}

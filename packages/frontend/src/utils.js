@@ -142,6 +142,8 @@ export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal =
   const n = y.length;
   const cache = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
 
+  const matchingSegments = [];
+
   let result = 0;
   for (let i = 0; i <= m; i++) {
     for (let j = 0; j <= n; j++) {
@@ -150,9 +152,10 @@ export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal =
       else if (getXVal(x[i - 1]) === getYVal(y[j - 1])) {
         cache[i][j] = cache[i - 1][j - 1] + 1;
         result = Math.max(result, cache[i][j]);
+        matchingSegments.push(i - 1)
       } else
         cache[i][j] = 0;
     }
   }
-  return result;
+  return matchingSegments;
 }

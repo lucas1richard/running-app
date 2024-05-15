@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { makeSelectActivity, makeSelectActivityDetails, makeSelectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH, longestCommonSubString } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import HeartZonesChart from './HeartZonesChart';
@@ -22,11 +22,19 @@ const ActivityDetailPage = () => {
   const activity = useSelector(makeSelectActivity(id)) || {};
   const zones = useSelector(makeSelectApplicableHeartZone(activity.start_date_local));
   const details = useSelector(makeSelectActivityDetails(id));
+  const comparisonDetails = useSelector(makeSelectActivityDetails(11173828695));
+
+  const matchingSegmentIndexes = useMemo(() => longestCommonSubString(
+    details?.segment_efforts || [],
+    comparisonDetails?.segment_efforts || [],
+    { getXVal: (val) => val.name, getYVal: (val) => val.name}
+  ), [comparisonDetails?.segment_efforts, details?.segment_efforts]);
 
 
   useEffect(() => {
     dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
-    dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', id });
+    dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: id });
+    dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: 11173828695 });
   }, [dispatch, id]);
   
   return (
@@ -86,6 +94,15 @@ const ActivityDetailPage = () => {
           segments={details.segment_efforts}
         />
       )}
+      {
+        details && comparisonDetails && (
+          <div>
+            {matchingSegmentIndexes.map((ix) => (
+              <div key={ix}>{comparisonDetails.segment_efforts[ix].name}</div>
+            ))}
+          </div>
+        )
+      }
     </div>
   );
 };

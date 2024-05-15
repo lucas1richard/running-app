@@ -30,7 +30,7 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
 
     case 'activitiesReducer/SET_ACTIVITY_DETAIL': {
       return produce(state, (nextState) => {
-        nextState.details[action.payload._id] = action.payload;
+        nextState.details[action.payload.id] = action.payload;
       });
     }
 
