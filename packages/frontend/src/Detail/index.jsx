@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
@@ -11,10 +11,12 @@ import GoogleMapImage from '../Common/GoogleMapImage';
 import HeartZonesChart from './HeartZonesChart';
 import ElevationChart from './ElevationChart';
 import SegmentsDetailDisplay from './Segments';
+import Tile from '../Activities/Tile';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const [similarDist, setSimilarDist] = useState([]);
 
   const heartRateStream = useSelector(makeSelectStreamType(id, 'heartrate'));
   const velocityStream = useSelector(makeSelectStreamType(id, 'velocity_smooth'));
@@ -35,6 +37,16 @@ const ActivityDetailPage = () => {
     dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
     dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: id });
     dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: 11173828695 });
+    fetch(
+      'http://localhost:3001/analysis/similar-workouts/by-route',
+      {
+        method: 'POST',
+        body: JSON.stringify({ id }),
+        headers: { 'Content-Type': 'application/json' },
+      }
+    ).then((res) => res.json())
+      .then(({ combo }) => setSimilarDist(combo))
+      .catch(console.log)
   }, [dispatch, id]);
   
   return (
@@ -98,11 +110,14 @@ const ActivityDetailPage = () => {
         details && comparisonDetails && (
           <div>
             {matchingSegmentIndexes.map((ix) => (
-              <div key={ix}>{comparisonDetails.segment_efforts[ix].name}</div>
+              <div key={ix}>{comparisonDetails.segment_efforts[ix]?.name}</div>
             ))}
           </div>
         )
       }
+
+      <h2>Similar Runs</h2>
+      {similarDist.map((activity) => <Tile key={activity.id} activity={activity} zones={zones} />)}
     </div>
   );
 };

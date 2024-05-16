@@ -36,7 +36,13 @@ const getAllActivities = async () => {
   const params   = { include_docs: true, limit: 10000, descending: true };
 
   const body = await db.list(params);
-  return body?.rows?.map(({ doc } = {}) => doc) || [];
+  const allRows = body
+    ?.rows
+    ?.map(({ doc } = {}) => doc) || [];
+
+  allRows?.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+
+  return allRows;
 };
 
 const getActivity = async (id) => {

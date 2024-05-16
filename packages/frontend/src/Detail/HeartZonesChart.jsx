@@ -5,7 +5,7 @@ import { condenseZonesFromHeartRate } from '../utils';
 import { hrZonesBg } from '../colors/hrZones';
 
 const HeartZonesChart = ({ title, data, velocity, zones, width }) => {
-  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), []);
+  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
 
   /** @type {Highcharts.Options} */
   const options = {
@@ -42,10 +42,15 @@ const HeartZonesChart = ({ title, data, velocity, zones, width }) => {
         color: hrZonesBg[band.zone],
         ...band
       })),
-      gridLineWidth: 1,
+      gridLineWidth: 2,
       alignTicks: false,
-      tickInterval: 60,
-      gridLineColor: '#aaa'
+      tickInterval: 240,
+      minorGridLineWidth: 1,
+      minorTicks: true,
+      minorTickInterval: 60,
+      minorTickLength: 4,
+      minorGridLineColor: 'rgba(0,0,0,0.3)',
+      gridLineColor: 'rgba(0,0,0,0.4)'
     },
     yAxis: [
       { // Primary yAxis
