@@ -1,39 +1,38 @@
 const { Router } = require('express');
-const { getAccessToken } = require('../database/utils');
 const {
   bulkAddActivities,
   getActivityDetail,
   addActivityDetail,
-  getAllActivities,
   getStream,
   addStream,
   getAllStreams,
 } = require('../database/setupdb-couchbase');
 const summary = require('../database/mysql-activities');
+const Activity = require('../database/sequelize-activities');
+const fetchStrava = require('../utils/fetchStrava');
 
 const router = new Router();
 
 router.get('/list', async (req, res) => {
   const forceFetch = req.query.force;
+  const page = req.query.page || 1;
+  const perPage = req.query.per_page || 100;
+
   if (!forceFetch) {
-    const existingActivities = await getAllActivities();
+    const existingActivities = await Activity.findAll({
+      order: [['start_date', 'DESC']],
+      where: { sport_type: 'Run' },
+    });
     if  (existingActivities.length > 0) {
       return res.json(existingActivities);
     }
   }
 
-  const accessToken = await getAccessToken();
-  const activitiesListRes = await fetch('https://www.strava.com/api/v3/athlete/activities?per_page=100&page=1', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    },
-  });
-  const activitiesList = await activitiesListRes.json();
-  
+  const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
   await bulkAddActivities(activitiesList); // couchdb
-  await summary.bulkAdd(activitiesList); // mysql
+  const records = await Activity.bulkAddFromStrava(activitiesList); // mysql
 
-  res.json(activitiesList);
+  res.json(records);
 });
 
 router.get('/:id/detail', async (req, res) => {
@@ -42,13 +41,7 @@ router.get('/:id/detail', async (req, res) => {
   if (detail) {
     return res.json(detail);
   }
-  const accessToken = await getAccessToken();
-  const activitiyRes = await fetch(`https://www.strava.com/api/v3/activities/${activityId}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    },
-  });
-  const activitiy = await activitiyRes.json();
+  const activitiy = await fetchStrava(`/activities/${activityId}`);
   await addActivityDetail(activitiy);
   res.json(activitiy);
 });
@@ -62,7 +55,6 @@ router.get('/:id/streams', async (req, res) => {
     return res.json(cachedStream);
   }
 
-  const accessToken = await getAccessToken();
   const streamKeys = [
     'time',
     'distance',
@@ -76,12 +68,7 @@ router.get('/:id/streams', async (req, res) => {
     'moving',
     'grade_smooth',
   ].join(',');
-  const streamRes = await fetch(`https://www.strava.com/api/v3/activities/${activityId}/streams?keys=${streamKeys}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    },
-  });
-  const stream = await streamRes.json();
+  const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys}`);
   await addStream({ stream }, activityId);
   await summary.setHasStreams(activityId, true);
   res.json({ stream });

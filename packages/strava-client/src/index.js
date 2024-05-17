@@ -2,6 +2,7 @@ const app = require('./app');
 const PORT = require('./port');
 const { setupdb } = require('./database/setupdb-couchbase');
 const { initMysql } = require('./database/setupdb-mysql');
+const { initSequelize } = require('./database/sequelize-init');
 const { activitiesRouter } = require('./routes/activities');
 const { adminRouter } = require('./routes/admin');
 const { authRouter } = require('./routes/authenticate');
@@ -17,6 +18,7 @@ app.use('/analysis', analysisRouter);
 
 setupdb()
   .then(initMysql)
+  .then(initSequelize)
   .then(() => {
     app.listen(PORT, (err) => {
       if (err) {

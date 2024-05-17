@@ -1,27 +1,10 @@
 const getMySQLConnection = require('./mysql-connection');
 
-const bulkAdd = async (activities) => {
-  const pool = await getMySQLConnection();
-  const activitiesValues = activities.map(
-    (a) => `(${a.id}, "${a.name}", "${a.sport_type}", false)`
-  ).join(',');
-  return new Promise((acc, rej) => {
-    pool.query(
-      `INSERT IGNORE INTO activities VALUES ${activitiesValues}
-      `,
-      (err) => {
-        if (err) return rej(err);
-        acc();
-      }
-    );
-  });
-};
-
 const setHasStreams = async (id, hasStreams) => {
   const pool = await getMySQLConnection();
   return new Promise((acc, rej) => {
     pool.query(
-      `UPDATE activities SET
+      `UPDATE activity SET
         has_streams=?
       WHERE id=?
       `,
@@ -38,7 +21,7 @@ const getAll = async () => {
   const pool = await getMySQLConnection();
   return new Promise((acc, rej) => {
     pool.query(
-      `SELECT * FROM activities
+      `SELECT * FROM activity ORDER BY start_date
       `,
       (err, rows) => {
         if (err) return rej(err);
@@ -50,7 +33,6 @@ const getAll = async () => {
 };
 
 module.exports = {
-  bulkAdd,
   getAll,
   setHasStreams,
 };

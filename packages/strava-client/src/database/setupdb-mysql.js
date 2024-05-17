@@ -36,26 +36,6 @@ const createTokensTable = (dbPool) => new Promise((acc, rej) => {
   );
 });
 
-const createActivitiesTable = (dbPool) => new Promise((acc, rej) => {
-  dbPool.query(
-    `
-      CREATE TABLE IF NOT EXISTS activities
-      (
-        id BIGINT NOT NULL,
-        activity_name VARCHAR(255),
-        sport_type VARCHAR(255),
-        has_streams BOOLEAN,
-        PRIMARY KEY (id)
-      )
-      DEFAULT CHARSET utf8mb4
-    `,
-    (err) => {
-      if (err) return rej(err);
-      acc();
-    }
-  );
-});
-
 async function initMysql() {
   const host = HOST_FILE ? fs.readFileSync(HOST_FILE) : HOST;
   const user = USER_FILE ? fs.readFileSync(USER_FILE) : USER;
@@ -90,7 +70,6 @@ async function initMysql() {
 
   await Promise.all([
     createTokensTable(pool),
-    createActivitiesTable(pool),
     createHeartRateZonesTable()
   ]);
 

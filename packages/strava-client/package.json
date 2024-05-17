@@ -21,6 +21,7 @@
     "npm": "^10.7.0",
     "passport": "^0.7.0",
     "passport-strava-oauth2": "^0.1.3",
+    "sequelize": "^6.37.3",
     "uuid": "^9.0.1",
     "wait-port": "^1.1.0"
   },

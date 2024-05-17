@@ -33,7 +33,7 @@ const bulkAddActivities = async (activities) => {
 
 const getAllActivities = async () => {
   const db = await nano.db.use(ACTIVITIES_DB);
-  const params   = { include_docs: true, limit: 10000, descending: true };
+  const params = { include_docs: true, limit: 10000, descending: true };
 
   const body = await db.list(params);
   const allRows = body
