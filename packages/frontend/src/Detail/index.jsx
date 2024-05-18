@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { makeSelectActivity, makeSelectActivityDetails, makeSelectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH, longestCommonSubString } from '../utils';
+import { convertHeartDataToZoneTimes, convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import HeartZonesChart from './HeartZonesChart';
@@ -24,14 +24,6 @@ const ActivityDetailPage = () => {
   const activity = useSelector(makeSelectActivity(id)) || {};
   const zones = useSelector(makeSelectApplicableHeartZone(activity.start_date_local));
   const details = useSelector(makeSelectActivityDetails(id));
-  const comparisonDetails = useSelector(makeSelectActivityDetails(11173828695));
-
-  const matchingSegmentIndexes = useMemo(() => longestCommonSubString(
-    details?.segment_efforts || [],
-    comparisonDetails?.segment_efforts || [],
-    { getXVal: (val) => val.name, getYVal: (val) => val.name}
-  ), [comparisonDetails?.segment_efforts, details?.segment_efforts]);
-
 
   useEffect(() => {
     dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
@@ -46,8 +38,23 @@ const ActivityDetailPage = () => {
       }
     ).then((res) => res.json())
       .then(({ combo }) => setSimilarDist(combo))
-      .catch(console.log)
+      .catch(console.log);
   }, [dispatch, id]);
+
+
+  useEffect(() => {
+    if (activity.zonesCache || !heartRateStream?.data || !zones?.id) return;
+
+    fetch('http://localhost:3001/heartzones/set-cache', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        times: convertHeartDataToZoneTimes(heartRateStream.data, zones),
+        id: activity.id,
+        zonesId: zones.id,
+      }),
+    })
+  }, [activity.id, activity.zonesCache, heartRateStream, id, zones]);
   
   return (
     <div className="pad">
@@ -90,12 +97,12 @@ const ActivityDetailPage = () => {
             velocity={velocityStream?.data}
             zones={zones}
           />
-          <ElevationChart
+          {/* <ElevationChart
             data={heartRateStream.data}
             velocity={velocityStream?.data}
             grade={gradeStream?.data}
             zones={zones}
-          />
+          /> */}
         </div>
       )}
 
@@ -106,15 +113,6 @@ const ActivityDetailPage = () => {
           segments={details.segment_efforts}
         />
       )}
-      {
-        details && comparisonDetails && (
-          <div>
-            {matchingSegmentIndexes.map((ix) => (
-              <div key={ix}>{comparisonDetails.segment_efforts[ix]?.name}</div>
-            ))}
-          </div>
-        )
-      }
 
       <h2>Similar Runs</h2>
       {similarDist.map((activity) => <Tile key={activity.id} activity={activity} zones={zones} />)}

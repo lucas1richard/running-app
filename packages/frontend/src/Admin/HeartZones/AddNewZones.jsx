@@ -1,0 +1,98 @@
+import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+const AddNewHRZones = ({ latestZone }) => {
+  const dispatch = useDispatch();
+  const [z1, setZ1] = useState(latestZone.z1);
+  const [z2, setZ2] = useState(latestZone.z2);
+  const [z3, setZ3] = useState(latestZone.z3);
+  const [z4, setZ4] = useState(latestZone.z4);
+  const [z5, setZ5] = useState(latestZone.z5);
+  const [startDate, setStartDate] = useState();
+
+  const onFormSubmit = useCallback((ev) => {
+    ev.preventDefault();
+    dispatch({
+      type: 'heartzones/ADD_HEART_ZONES',
+      payload: { z1, z2, z3, z4, z5, starting: startDate }
+    });
+  }, [z1, z2, z3, z4, z5, startDate, dispatch]);
+
+  return (
+    <div>
+      <form onSubmit={onFormSubmit}>
+        <div className="flex gap">
+          <div className="flex flex-align-center">
+            <label htmlFor="z1-input">Zone 1 Min HR:</label>&nbsp;
+            <input
+              id="z1-input"
+              type="number"
+              min={0}
+              max={300}
+              step={1}
+              value={z1}
+              onChange={(ev) => setZ1(ev.target.value)}
+            />
+          </div>
+          <div className="flex flex-align-center">
+            <label htmlFor="z2-input">Zone 2 Min HR:</label>&nbsp;
+            <input
+              id="z2-input"
+              type="number"
+              min={0}
+              max={300}
+              step={1}
+              value={z2}
+              onChange={(ev) => setZ2(ev.target.value)}
+            />
+          </div>
+          <div className="flex flex-align-center">
+            <label htmlFor="z3-input">Zone 3 Min HR:</label>&nbsp;
+            <input
+              id="z3-input"
+              type="number"
+              min={0}
+              max={300}
+              step={1}
+              value={z3}
+              onChange={(ev) => setZ3(ev.target.value)}
+            />
+          </div>
+          <div className="flex flex-align-center">
+            <label htmlFor="z4-input">Zone 4 Min HR:</label>&nbsp;
+            <input
+              id="z4-input"
+              type="number"
+              min={0}
+              max={400}
+              step={1}
+              value={z4}
+              onChange={(ev) => setZ4(ev.target.value)}
+            />
+          </div>
+          <div className="flex flex-align-center">
+            <label htmlFor="z5-input">Zone 5 Min HR:</label>&nbsp;
+            <input
+              id="z5-input"
+              type="number"
+              min={0}
+              max={300}
+              step={1}
+              value={z5}
+              onChange={(ev) => setZ5(ev.target.value)}
+            />
+          </div>
+        </div>
+        <div className="flex flex-align-center">
+          <label htmlFor="start-date-input">Start Date:</label>&nbsp;
+          <input id="start-date-input" type="date" value={startDate} onChange={(ev) => setStartDate(ev.target.value)} />
+        </div>
+        <button>
+          Add
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default AddNewHRZones;

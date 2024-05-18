@@ -15,7 +15,9 @@ code {
 .text-center {
   text-align: center;;
 }
-
+.text-right {
+  text-align: right;
+}
 .margin-t {
   margin-top: 1rem;
 }
@@ -39,12 +41,17 @@ code {
 .pad-b {
   margin-bottom: 1rem;
 }
-
+.gap {
+  gap: 1rem;
+}
 .fullwidth {
   width: 100%;
 }
 .flex {
   display: flex;
+}
+.flex-align-center {
+  align-items: center;;
 }
 .flex-column {
   flex-direction: column;;

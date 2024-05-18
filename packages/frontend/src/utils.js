@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import gradientScale from './colors/gradient-scale';
 
 export const getDuration = (s) => {
@@ -134,7 +135,20 @@ export const convertHeartDataToZonePercents = (heartData, zones) => convertHeart
   zones
 ).map((time) => (100 * time / heartData?.length).toFixed(2));
 
-export const convertMetersToMiles = (distance) => distance / 1609;
+export const convertZonesCacheToPercents = (caches) => {
+  const arr = [
+    caches.seconds_z1,
+    caches.seconds_z2,
+    caches.seconds_z3,
+    caches.seconds_z4,
+    caches.seconds_z5,
+  ];
+  const total = arr.reduce((accum, num) => accum + num, 0);
+
+  return arr.map((time) => (100 * time / total).toFixed(2))
+};
+
+export const convertMetersToMiles = (distance) => Math.round((distance / 1609) * 100) / 100;
 export const convertMetricSpeedToMPH = (metersPerSecond) => metersPerSecond * 2.237;
 
 export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal = (val) => val } = {}) => {
@@ -159,3 +173,8 @@ export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal =
   }
   return matchingSegments;
 }
+
+export const getDateString = (date) => dayjs(date).format('MMMM DD, YYYY');
+export const getActivityStartDate = (activity) => getDateString(activity.start_date_local);
+
+export const getSummaryPolyline = (activity) => activity?.summary_polyline || activity?.map?.summary_polyline;

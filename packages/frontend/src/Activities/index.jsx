@@ -4,22 +4,15 @@ import { selectActivities } from '../reducers/activities';
 import Tile from './Tile';
 import { selectAllHeartZones } from '../reducers/heartszones';
 import ZonesHeader from './ZonesHeader';
+import CurrentSummary from './CurrentSummary';
 
 const Activities = () => {
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities, (a, b) => a.length === b.length);
-  const runs = useMemo(
-    () => activities.filter(({ sport_type }) => sport_type === 'Run'),
-    [activities]
-  );
-  //
+
   const allzones = useSelector(selectAllHeartZones);
   
-  // heart rate zones should be ordered by `start_date` descending
-  // return allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
-  //
-  
-  const categorizeRunsByZones = runs.reduce((acc, run) => {
+  const categorizeRunsByZones = useMemo(() => activities.reduce((acc, run) => {
     const currDate = new Date(run.start_date_local);
     const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
     const { start_date } = zones;
@@ -37,18 +30,19 @@ const Activities = () => {
         zones,
       }
     ]
-  }, []);
-
-  console.log(categorizeRunsByZones)
+  }, []), [activities, allzones]);
 
   const onClickSync = useCallback(() => {
     dispatch({ type: 'activities/FETCH_ACTIVITIES', forceFetch: true });
-  }, []);
+  }, [dispatch]);
 
   return (
     <div style={{ padding: '1rem', margin: 'auto', maxWidth: 1280 }}>
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
+      </div>
+      <div>
+        <CurrentSummary activities={activities} />
       </div>
         {categorizeRunsByZones.map(({ runs, zones, start }) => (
           <>

@@ -1,17 +1,21 @@
 import React, { useMemo } from 'react';
-import { convertHeartDataToZonePercents } from '../utils';
-import { hrZonesBg, hrZonesBgStrong, hrZonesText } from '../colors/hrZones';
+import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../utils';
+import { hrZonesText } from '../colors/hrZones';
 
-const ZonesWidth = ({ zones, heartData }) => {
-  const times = useMemo(() => convertHeartDataToZonePercents(heartData, zones), [heartData, zones]);
-  if (!zones || !heartData) return null;
+const ZonesWidth = ({ zones, heartData, id, zonesCache }) => {
+  const percents = useMemo(() => {
+    if (zonesCache) return convertZonesCacheToPercents(zonesCache);
+    return convertHeartDataToZonePercents(heartData, zones)
+  }, [heartData, zones, zonesCache]);
+
+  if (!zonesCache && !zones && !heartData) return null;
   
   return (
     <div style={{ display: 'flex' }}>
-      {times.filter((n) => Boolean(Number(n))).map((time, ix) => (
+      {percents.filter((n) => Boolean(Number(n))).map((percent, ix) => (
         <div
           style={{
-            width: `${time}%`,
+            width: `${percent}%`,
             background: hrZonesText[ix + 1],
             border: `1px solid ${hrZonesText[ix + 1]}`,
             height: '0.5rem',

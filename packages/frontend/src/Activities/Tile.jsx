@@ -6,18 +6,18 @@ import { makeSelectStreamType } from '../reducers/activities';
 import styles from './Tile.module.css';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
 
 const Tile = ({ activity, zones }) => {
   const streamSelector = useCallback(makeSelectStreamType(activity.id, 'heartrate'), [activity.id]);
   const heartRateStream = useSelector(streamSelector);
-  
+
   return (
     <div>
       <div className={styles.container}>
         <GoogleMapImage
-          polyline={activity.map.summary_polyline}
+          polyline={getSummaryPolyline(activity)}
           alt="summary route"
           className={styles.summaryImg}
           width="100"
@@ -30,7 +30,9 @@ const Tile = ({ activity, zones }) => {
                 {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
               </div>
               <div>
-                <h2 className={styles.title}><Link to={`/${activity.id}/detail`}>{activity.name}</Link></h2>
+                <h2 className={styles.title}>
+                  <Link to={`/${activity.id}/detail`}>{activity.name}</Link>
+                </h2>
               </div>
             </div>
             <div>
@@ -45,7 +47,14 @@ const Tile = ({ activity, zones }) => {
             </div>
           </div>
           <div style={{ width: '100%' }}>
-            {heartRateStream && <ZonesWidth zones={zones} heartData={heartRateStream.data} />}
+            {(heartRateStream || activity.zonesCache) && (
+              <ZonesWidth
+                id={activity.id}
+                zonesCache={activity.zonesCache}
+                zones={zones}
+                heartData={heartRateStream?.data}
+              />
+            )}
           </div>
         </div>
       </div>

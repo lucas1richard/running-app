@@ -16,6 +16,7 @@ import mySaga from './sagas'
 import ActivityDetailPage from './Detail';
 import DataLayer from './DataLayer';
 import HeartRateZones from './HeartRateZones';
+import AdminDashboard from './Admin';
 
 enableMapSet();
 
@@ -44,9 +45,9 @@ const router = createBrowserRouter([
     Component: HeartRateZones,
   },
   {
-    path: '/hello-world',
-    element: <div>Hello world</div>
-  }
+    path: '/admin',
+    Component: AdminDashboard,
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
