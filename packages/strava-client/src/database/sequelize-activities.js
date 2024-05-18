@@ -125,7 +125,7 @@ Activity.init(
   },
   {
     sequelize: sequelizeMysql,
-    modelName: 'Activity',
+    modelName: 'activities',
     tableName: 'activities',
   }
 );

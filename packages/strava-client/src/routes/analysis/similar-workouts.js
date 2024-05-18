@@ -7,10 +7,9 @@
 //  - lat,long
 
 const Router = require('express').Router;
+const Activity = require('../../database/sequelize-activities');
 const {
-  getAllActivities,
   getAllStreams,
-  getActivity,
 } = require('../../database/setupdb-couchbase');
 
 const router = new Router();
@@ -19,13 +18,13 @@ router.post('/by-route', async (req, res) => {
   const { body } = req;
   const id = body?.id; // id of the sample workout
   
-  const activity = await getActivity(id);
+  const activity = await Activity.findOne({ where: { id } });
 
   if (!id) {
     return res.json({ activity_not_found: true });
   }
   
-  const allActivities = await getAllActivities();
+  const allActivities = await Activity.findAll();
   const allRuns = allActivities.filter(({ sport_type }) => sport_type === 'Run')
   const allStreams = await getAllStreams();
 

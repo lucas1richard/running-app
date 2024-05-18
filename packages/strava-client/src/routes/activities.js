@@ -10,6 +10,7 @@ const {
 const summary = require('../database/mysql-activities');
 const Activity = require('../database/sequelize-activities');
 const fetchStrava = require('../utils/fetchStrava');
+const ZonesCache = require('../database/sequelize-zones-cache');
 
 const router = new Router();
 
@@ -22,6 +23,16 @@ router.get('/list', async (req, res) => {
     const existingActivities = await Activity.findAll({
       order: [['start_date', 'DESC']],
       where: { sport_type: 'Run' },
+      include: [{
+        model: ZonesCache,
+        attributes: [
+          'seconds_z1',
+          'seconds_z2',
+          'seconds_z3',
+          'seconds_z4',
+          'seconds_z5',
+        ],
+      }],
     });
     if  (existingActivities.length > 0) {
       return res.json(existingActivities);
