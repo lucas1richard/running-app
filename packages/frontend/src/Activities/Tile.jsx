@@ -8,10 +8,12 @@ import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
 import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
+import { makeSelectZones } from '../reducers/heartszones';
 
-const Tile = ({ activity, zones }) => {
+const Tile = ({ activity }) => {
   const streamSelector = useCallback(makeSelectStreamType(activity.id, 'heartrate'), [activity.id]);
   const heartRateStream = useSelector(streamSelector);
+  const zones = useSelector(makeSelectZones(activity.start_date))
 
   return (
     <div>
@@ -47,10 +49,10 @@ const Tile = ({ activity, zones }) => {
             </div>
           </div>
           <div style={{ width: '100%' }}>
-            {(heartRateStream || activity.zonesCache) && (
+            {(heartRateStream || activity.zonesCaches[zones.id]) && (
               <ZonesWidth
                 id={activity.id}
-                zonesCache={activity.zonesCache}
+                zonesCaches={activity.zonesCaches}
                 zones={zones}
                 heartData={heartRateStream?.data}
               />

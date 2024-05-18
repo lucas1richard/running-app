@@ -85,14 +85,6 @@ export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
   const colorsIx = percentiles.map((p) => Math.floor(p * maxIx));
   const colors = colorsIx.map((ix) => gradientScale[ix]);
 
-  // console.log(
-  //   dataArr.map((grade, ix) => ({
-  //     grade,
-  //     percentile: percentiles[ix],
-  //     colorIx: colorsIx[ix],
-  //   })
-  // ));
-
   return condenseGradeColorToPlot(colors);
 };
 

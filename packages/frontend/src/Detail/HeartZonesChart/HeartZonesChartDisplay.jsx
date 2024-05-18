@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { condenseZonesFromHeartRate } from '../utils';
-import { hrZonesBg } from '../colors/hrZones';
+import { condenseZonesFromHeartRate } from '../../utils';
+import { hrZonesBg } from '../../colors/hrZones';
 
-const HeartZonesChart = ({ title, data, velocity, zones, width }) => {
+const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
 
   /** @type {Highcharts.Options} */
@@ -96,4 +96,4 @@ const HeartZonesChart = ({ title, data, velocity, zones, width }) => {
   );
 };
 
-export default HeartZonesChart;
+export default HeartZonesChartDisplay;

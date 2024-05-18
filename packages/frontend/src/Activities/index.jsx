@@ -5,6 +5,7 @@ import Tile from './Tile';
 import { selectAllHeartZones } from '../reducers/heartszones';
 import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
+import ConfigWidget from '../Config';
 
 const Activities = () => {
   const dispatch = useDispatch();
@@ -44,6 +45,7 @@ const Activities = () => {
       <div>
         <CurrentSummary activities={activities} />
       </div>
+      <ConfigWidget />
         {categorizeRunsByZones.map(({ runs, zones, start }) => (
           <>
             <div style={{ marginTop: '3rem' }}>

@@ -15,7 +15,13 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
     case 'activitiesReducer/SET_ACTIVITIES': {
       const activitiesOrder = action.payload.map(({ id }) => id);
       return produce(state, (nextState) => {
-        nextState.activities = Object.fromEntries(action.payload.map((activity) => [activity.id, activity]));
+        nextState.activities = Object.fromEntries(
+          action.payload.map((activity) => [activity.id, {
+            ...activity, zonesCaches: Object.fromEntries(
+              activity.zonesCaches.map((zoneCache) => [zoneCache.heartZoneId, zoneCache])
+            )
+          }])
+        );
         nextState.activitiesOrder = activitiesOrder;
         nextState.loading = false;
         nextState.error = undefined;
@@ -45,7 +51,7 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
         nextState.streams = action.payload.data;
       });
     }
-    
+
     default:
       return state;
   }

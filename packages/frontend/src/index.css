@@ -47,8 +47,14 @@ code {
 .fullwidth {
   width: 100%;
 }
+.full-width {
+  width: 100%;
+}
 .flex {
   display: flex;
+}
+.flex-item-grow {
+  flex-grow: 1;
 }
 .flex-align-center {
   align-items: center;;

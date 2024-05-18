@@ -1,17 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { makeSelectActivity, makeSelectActivityDetails, makeSelectStreamType } from '../reducers/activities';
-import { makeSelectApplicableHeartZone } from '../reducers/heartszones';
+import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertHeartDataToZoneTimes, convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
-import HeartZonesChart from './HeartZonesChart';
-import ElevationChart from './ElevationChart';
+// import ElevationChart from './ElevationChart';
 import SegmentsDetailDisplay from './Segments';
 import Tile from '../Activities/Tile';
+import HeartZonesChartContainer from './HeartZonesChart';
+import { selectConfigZonesId } from '../reducers/config';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -20,9 +21,15 @@ const ActivityDetailPage = () => {
 
   const heartRateStream = useSelector(makeSelectStreamType(id, 'heartrate'));
   const velocityStream = useSelector(makeSelectStreamType(id, 'velocity_smooth'));
-  const gradeStream = useSelector(makeSelectStreamType(id, 'altitude'));
+  // const gradeStream = useSelector(makeSelectStreamType(id, 'altitude'));
   const activity = useSelector(makeSelectActivity(id)) || {};
-  const zones = useSelector(makeSelectApplicableHeartZone(activity.start_date_local));
+
+  const configZonesId = useSelector(selectConfigZonesId);
+  const allZones = useSelector(selectAllHeartZones);
+  const nativeZones = useSelector(makeSelectApplicableHeartZone(activity.start_date));
+  const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
+  const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
+
   const details = useSelector(makeSelectActivityDetails(id));
 
   useEffect(() => {
@@ -43,7 +50,7 @@ const ActivityDetailPage = () => {
 
 
   useEffect(() => {
-    if (activity.zonesCache || !heartRateStream?.data || !zones?.id) return;
+    if (!zones || !heartRateStream?.data) return;
 
     fetch('http://localhost:3001/heartzones/set-cache', {
       method: 'POST',
@@ -54,7 +61,7 @@ const ActivityDetailPage = () => {
         zonesId: zones.id,
       }),
     })
-  }, [activity.id, activity.zonesCache, heartRateStream, id, zones]);
+  }, [activity.id, heartRateStream, id, zones]);
   
   return (
     <div className="pad">
@@ -85,6 +92,7 @@ const ActivityDetailPage = () => {
 
       <HeartZonesDisplay
         zones={zones}
+        nativeZones={nativeZones}
         heartData={heartRateStream?.data}
         velocityData={velocityStream?.data}
       />
@@ -92,11 +100,7 @@ const ActivityDetailPage = () => {
 
       {heartRateStream && (
         <div>
-          <HeartZonesChart
-            data={heartRateStream.data}
-            velocity={velocityStream?.data}
-            zones={zones}
-          />
+          <HeartZonesChartContainer id={id} />
           {/* <ElevationChart
             data={heartRateStream.data}
             velocity={velocityStream?.data}
