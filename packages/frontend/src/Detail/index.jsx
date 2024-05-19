@@ -68,7 +68,10 @@ const ActivityDetailPage = () => {
       {details && (
         <div className="text-center">
           <GoogleMapImage
+            activityId={id}
             polyline={details.map.polyline}
+            imgHeight={600}
+            imgWidth={1200}
             alt="route"
           />
         </div>

@@ -18,9 +18,12 @@ const Tile = ({ activity }) => {
     <div>
       <div className={styles.container}>
         <GoogleMapImage
+          activityId={activity.id}
           polyline={getSummaryPolyline(activity)}
           alt="summary route"
           className={styles.summaryImg}
+          imgWidth={400}
+          imgHeight={200}
           width="100"
           height="75"
         />

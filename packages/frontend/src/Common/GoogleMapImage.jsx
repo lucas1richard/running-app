@@ -1,12 +1,16 @@
-import { GOOGLE_API_KEY } from '../constants';
-
-const GoogleMapImage = ({ polyline, ...rest }) => {
+const GoogleMapImage = ({
+  polyline,
+  activityId,
+  imgWidth,
+  imgHeight,
+  ...rest
+}) => {
   if (!polyline) {
-    return (<div style={{ width: Number(rest.width) }} />)
+    return (<div style={{ width: Number(rest.width || 100) }} />)
   }
   return (
     <img
-      src={`https://maps.googleapis.com/maps/api/staticmap?size=600x300&maptype=roadmap&path=enc:${(polyline).replace(/\\\\/g, '\\')}&key=${GOOGLE_API_KEY}`}
+      src={`http://localhost:3002/routes/${activityId}.png?size=${imgWidth || 900}x${imgHeight || 450}&maptype=roadmap&path=enc:${(polyline).replace(/\\\\/g, '\\')}`}
       alt=""
       {...rest}
     />
