@@ -6,6 +6,7 @@ const {
   getStream,
   addStream,
   getAllStreams,
+  updateActivityDetail,
 } = require('../database/setupdb-couchbase');
 const summary = require('../database/mysql-activities');
 const Activity = require('../database/sequelize-activities');
@@ -46,7 +47,7 @@ router.get('/:id/detail', async (req, res) => {
     await addActivityDetail(activitiy);
     res.json(activitiy);
   } catch (err) {
-    res.sendStatus(500)
+    res.status(500).send(err.message)
   }
 });
 
@@ -76,6 +77,28 @@ router.get('/:id/streams', async (req, res) => {
   await addStream({ stream }, activityId);
   await summary.setHasStreams(activityId, true);
   res.json({ stream });
+});
+
+router.put('/:id', async (req, res, next) => {
+  try {
+    const id = req.params?.id;
+    const body = req.body;
+    if (!body) return res.status(400).send('request body is required');
+
+    const stravaRes = await fetchStrava(`/activities/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(req.body),
+    });
+
+    await Activity.update({ ...req.body }, { where: { id } });
+    if (body.description) {
+      await updateActivityDetail(id, { description: body.description });
+    }
+
+    res.json(stravaRes);
+  } catch (err) {
+    next(err);
+  }
 });
 
 router.get('/streams/list', async (req, res) => {

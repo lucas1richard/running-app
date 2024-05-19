@@ -41,6 +41,18 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
       });
     }
 
+    case 'activitiesReducer/UPDATE_ACTIVITY': {
+      return produce(state, (nextState) => {
+        const activity = state.activities[action.payload.id];
+        nextState.activities[activity.id] = { ...activity, ...action.payload };
+
+        if (action.payload.description) {
+          const detail = state.details[activity.id];
+          nextState.details[activity.id] = { ...detail, desciption: action.payload.desciption };
+        }
+      });
+    }
+
     case 'activitiesReducer/SET_STREAM': {
       return produce(state, (nextState) => {
         nextState.streams[action.payload.id] = action.payload.data;
@@ -84,7 +96,7 @@ export const selectStreamType = createDeepEqualSelector(
   getActivitiesState,
   (state, id) => id,
   (state, id, findType) => findType,
-  (activities, id, findType) => activities?.streams?.[id]?.stream?.find(({ type }) => type === findType)
+  (activities, id, findType) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)
 );
 
 export default activitiesReducer;

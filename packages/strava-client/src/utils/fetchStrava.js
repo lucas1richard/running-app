@@ -1,10 +1,14 @@
 const { getAccessToken } = require('../database/utils');
 
-const fetchStrava = async (apiPath) => {
+const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
   const accessToken = await getAccessToken();
+  console.log(options)
   const res = await fetch(`https://www.strava.com/api/v3${apiPath}`, {
+    ...options,
     headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`,
+      ...options.method === 'GET' ? {} : { 'Content-Type': 'application/json' },
+      ...options.headers,
     },
   });
   const resjson = await res.json();

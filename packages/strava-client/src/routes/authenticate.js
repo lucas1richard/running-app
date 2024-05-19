@@ -29,9 +29,7 @@ passport.use(new StravaStrategy({
   clientID: STRAVA_CLIENT_ID,
   clientSecret: STRAVA_CLIENT_SECRET,
   callbackURL: `http://127.0.0.1:${PORT}/auth/exchange_token`,
-  // authorizationURL: `https://www.strava.com/oauth/authorize?scope=activity:read_all`
-  scope: 'activity:read_all'
-  // authorizationURL: `https://www.strava.com/oauth/authorize?client_id=${STRAVA_CLIENT_ID},response_type=code&scope=read,activity:read_all`
+  scope: 'activity:write,activity:read_all'
 },
 function(accessToken, refreshToken, profile, done) {
   console.log(profile);

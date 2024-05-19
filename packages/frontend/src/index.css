@@ -68,3 +68,27 @@ code {
 .highcharts-plot-band:hover {
   fill: rgba(0,0,0, 0.33) !important;
 }
+.heading-1 {
+  font-size: 2rem;
+  font-weight: bold;;
+}
+.heading-2 {
+  font-size: 1.8rem;
+  font-weight: bold;;
+}
+.heading-3 {
+  font-size: 1.6rem;
+  font-weight: bold;;
+}
+.heading-4 {
+  font-size: 1.4rem;
+  font-weight: bold;;
+}
+.heading-5 {
+  font-size: 1.2rem;
+  font-weight: bold;;
+}
+.heading-6 {
+  font-size: 1rem;
+  font-weight: bold;;
+}
