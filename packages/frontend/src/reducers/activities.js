@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { createDeepEqualSelector } from '../utils';
 
 const activitiesInitialState = {
   activities: {},
@@ -57,16 +58,33 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
   }
 };
 
-export const selectActivities = (state) => state
-  .activities.activitiesOrder.map((id) => state.activities.activities[id]);
+const getActivitiesState = (state) => state.activities;
+
+export const selectActivities = createDeepEqualSelector(
+  getActivitiesState,
+  (activities) => activities.activitiesOrder.map((id) => activities.activities[id])
+);
 
 export const makeSelectActivitySummary = (id) => (state) => state.activities.summary[id];
-export const makeSelectActivity = (id) => (state) => state.activities.activities[id];
-export const makeSelectActivityDetails = (id) => (state) => state.activities.details[id];
 
-export const makeSelectStreams = (id) => (state) => state.activities.streams[id];
-export const makeSelectStreamType = (id, findType) => (state) => state.activities.streams[id]
-  ?.stream.find(({ type }) => findType === type)
-  || undefined;
+
+export const selectActivity = createDeepEqualSelector(
+  getActivitiesState,
+  (state, id) => id,
+  (activities, id) => activities.activities[id]
+)
+
+export const selectActivityDetails = createDeepEqualSelector(
+  getActivitiesState,
+  (state, id) => id,
+  (activities, id) => activities.details[id]
+);
+
+export const selectStreamType = createDeepEqualSelector(
+  getActivitiesState,
+  (state, id) => id,
+  (state, id, findType) => findType,
+  (activities, id, findType) => activities?.streams?.[id]?.stream?.find(({ type }) => type === findType)
+);
 
 export default activitiesReducer;

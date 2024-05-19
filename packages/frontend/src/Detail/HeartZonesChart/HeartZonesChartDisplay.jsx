@@ -86,13 +86,11 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
   };
 
   return (
-    <div>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-        allowChartUpdate={true}
-      />
-    </div>
+    <HighchartsReact
+      highcharts={Highcharts}
+      options={options}
+      allowChartUpdate={true}
+    />
   );
 };
 

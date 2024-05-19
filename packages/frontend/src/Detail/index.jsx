@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
-import { makeSelectActivity, makeSelectActivityDetails, makeSelectStreamType } from '../reducers/activities';
+import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertHeartDataToZoneTimes, convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
@@ -19,18 +19,18 @@ const ActivityDetailPage = () => {
   const dispatch = useDispatch();
   const [similarDist, setSimilarDist] = useState([]);
 
-  const heartRateStream = useSelector(makeSelectStreamType(id, 'heartrate'));
-  const velocityStream = useSelector(makeSelectStreamType(id, 'velocity_smooth'));
-  // const gradeStream = useSelector(makeSelectStreamType(id, 'altitude'));
-  const activity = useSelector(makeSelectActivity(id)) || {};
+  const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
+  const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
+  // const gradeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
+  const activity = useSelector((state) => selectActivity(state, id)) || {};
 
   const configZonesId = useSelector(selectConfigZonesId);
   const allZones = useSelector(selectAllHeartZones);
-  const nativeZones = useSelector(makeSelectApplicableHeartZone(activity.start_date));
+  const nativeZones = useSelector((state) => makeSelectApplicableHeartZone(state, activity.start_date));
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
-  const details = useSelector(makeSelectActivityDetails(id));
+  const details = useSelector((state) => selectActivityDetails(state, id));
 
   useEffect(() => {
     dispatch({ type: 'activities/FETCH_STREAM_DATA', id });

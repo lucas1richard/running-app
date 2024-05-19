@@ -1,19 +1,18 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { makeSelectStreamType } from '../reducers/activities';
+import { selectStreamType } from '../reducers/activities';
 import styles from './Tile.module.css';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
 import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
-import { makeSelectZones } from '../reducers/heartszones';
+import { selectHeartZones } from '../reducers/heartszones';
 
 const Tile = ({ activity }) => {
-  const streamSelector = useCallback(makeSelectStreamType(activity.id, 'heartrate'), [activity.id]);
-  const heartRateStream = useSelector(streamSelector);
-  const zones = useSelector(makeSelectZones(activity.start_date))
+  const heartRateStream = useSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
+  const zones = useSelector((state) => selectHeartZones(state, activity.start_date))
 
   return (
     <div>

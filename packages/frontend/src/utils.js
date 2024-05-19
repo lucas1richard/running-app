@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import { createSelectorCreator, weakMapMemoize } from 'reselect';
+import fastDeepEqual from 'fast-deep-equal';
 import gradientScale from './colors/gradient-scale';
 
 export const getDuration = (s) => {
@@ -170,3 +172,8 @@ export const getDateString = (date) => dayjs(date).format('MMMM DD, YYYY');
 export const getActivityStartDate = (activity) => getDateString(activity.start_date_local);
 
 export const getSummaryPolyline = (activity) => activity?.summary_polyline || activity?.map?.summary_polyline;
+
+export const createDeepEqualSelector = createSelectorCreator(
+  weakMapMemoize,
+  fastDeepEqual
+);

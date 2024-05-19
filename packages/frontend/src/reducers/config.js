@@ -1,4 +1,5 @@
 import { produce } from 'immer';
+import { createSelector } from 'reselect';
 
 const configInitialState = {
   zonesId: -1,
@@ -18,6 +19,11 @@ const configReducer = (state = configInitialState, action = {}) => {
   }
 };
 
-export const selectConfigZonesId = (state) => state.config.zonesId;
+const getConfigState = (state) => state.config;
+
+export const selectConfigZonesId = createSelector(
+  getConfigState,
+  (config) => config.zonesId
+);
 
 export default configReducer;

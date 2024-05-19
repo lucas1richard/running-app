@@ -1,5 +1,6 @@
 import { produce } from 'immer';
 import { selectConfigZonesId } from './config';
+import { createDeepEqualSelector } from '../utils';
 
 const heartzonesInitialState = {
   record: [],
@@ -18,29 +19,42 @@ const heartzonesReducer = (state = heartzonesInitialState, action = {}) => {
   }
 };
 
-export const selectAllHeartZones = (state) => state.heartzones.record;
+const getHeartZonesState = (state) => state.heartzones;
 
-export const makeSelectApplicableHeartZone = (date) => (state) => {
-  const allzones = selectAllHeartZones(state);
-  const currDate = new Date(date);
+export const selectAllHeartZones = createDeepEqualSelector(
+  getHeartZonesState,
+  (heartzones) => heartzones.record
+);
 
-  // heart rate zones should be ordered by `start_date` descending
-  return allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
-};
+export const makeSelectApplicableHeartZone = createDeepEqualSelector(
+  selectAllHeartZones,
+  (state, date) => date,
+  (allzones, date) => {
+    const currDate = new Date(date);
+    // heart rate zones should be ordered by `start_date` descending
+    return allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
+  }
+);
 
-/**
- * - If zones are configured to be relative to date, get the applicable zone.
- * - If zones are set to a specific value, use that value.
- * @param {string} date 
- */
-export const makeSelectZones = (date) => (state) => {
+// /**
+//  * - If zones are configured to be relative to date, get the applicable zone.
+//  * - If zones are set to a specific value, use that value.
+//  * @param {string} date 
+//  */
+export const getHeartZones = (state, date) => {
   const configZonesId = selectConfigZonesId(state);
   const allZones = selectAllHeartZones(state);
-  const nativeZones = makeSelectApplicableHeartZone(date)(state);
+  const nativeZones = makeSelectApplicableHeartZone(state, date);
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
   return zones;
 };
+
+export const selectHeartZones = createDeepEqualSelector(
+  (state) => state,
+  (state, date) => date,
+  getHeartZones
+);
 
 export default heartzonesReducer;
