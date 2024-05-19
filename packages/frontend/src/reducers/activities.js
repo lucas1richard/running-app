@@ -7,6 +7,7 @@ const activitiesInitialState = {
   details: {},
   summary: {},
   streams: {},
+  similarWorkouts: {},
   loading: false,
   error: undefined,
 };
@@ -65,6 +66,12 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
       });
     }
 
+    case 'activitiesReducer/SET_SIMILAR_WORKOUTS': {
+      return produce(state, (nextState) => {
+        nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(({ id }) => id);
+      });
+    }
+
     default:
       return state;
   }
@@ -97,6 +104,12 @@ export const selectStreamType = createDeepEqualSelector(
   (state, id) => id,
   (state, id, findType) => findType,
   (activities, id, findType) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)
+);
+
+export const selectSimilarWorkouts = createDeepEqualSelector(
+  getActivitiesState,
+  (state, id) => id,
+  (activities, id) => (activities.similarWorkouts[id] || []).map((id) => activities.activities[id])
 );
 
 export default activitiesReducer;

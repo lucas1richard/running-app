@@ -1,11 +1,12 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
+import requestor from '../utils/requestor';
 
 function* fetchActivities({ forceFetch }) {
   try {
     const queryParam = new URLSearchParams({
       ...forceFetch ? { force: true } : {},
     });
-    const res = yield call(fetch, `http://localhost:3001/activities/list?${queryParam}`);
+    const res = yield call(requestor.get, `/activities/list?${queryParam}`);
     const acts = yield res.json();
     const sortedActs = [...acts];
     sortedActs.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
@@ -18,7 +19,7 @@ function* fetchActivities({ forceFetch }) {
 
 function* fetchActivitySummary() {
   try {
-    const res = yield call(fetch, 'http://localhost:3001/activities/summary');
+    const res = yield call(requestor.get, '/activities/summary');
     const summary = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_ACTIVITIES_SUMMARY', payload: summary });
@@ -29,7 +30,7 @@ function* fetchActivitySummary() {
 
 function* fetchActivityDetail({ payload }) {
   try {
-    const res = yield call(fetch, `http://localhost:3001/activities/${payload}/detail`);
+    const res = yield call(requestor.get, `/activities/${payload}/detail`);
     const summary = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_ACTIVITY_DETAIL', payload: summary });
@@ -40,7 +41,7 @@ function* fetchActivityDetail({ payload }) {
 
 function* fetchAllStreams() {
   try {
-    const res = yield call(fetch, `http://localhost:3001/activities/streams/list`);
+    const res = yield call(requestor.get, `/activities/streams/list`);
     const summary = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_STREAMS', payload: { data: summary } });
@@ -51,7 +52,7 @@ function* fetchAllStreams() {
 
 function* fetchStreamData({ id }) {
   try {
-    const res = yield call(fetch, `http://localhost:3001/activities/${id}/streams`);
+    const res = yield call(requestor.get, `/activities/${id}/streams`);
     const summary = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_STREAM', payload: { data: summary, id } });

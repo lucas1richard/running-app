@@ -1,8 +1,9 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
+import requestor from '../utils/requestor';
 
 function* fetchHeartZones() {
   try {
-    const res = yield call(fetch, 'http://localhost:3001/heartzones');
+    const res = yield call(requestor.get, '/heartzones');
     const zones = yield res.json();
 
     yield put({ type: 'heartzonesReducer/SET_HEART_ZONES', payload: zones });
@@ -13,11 +14,7 @@ function* fetchHeartZones() {
 
 function* addHeartZones({ payload }) {
   try {
-    const res = yield call(fetch, 'http://localhost:3001/heartzones', {
-      method: 'POST',
-      body: JSON.stringify(payload),
-      headers: { 'Content-Type': 'application/json' },
-    });
+    const res = yield call(requestor.post, '/heartzones', payload);
     const zones = yield res.json();
 
     yield put({ type: 'heartzonesReducer/SET_HEART_ZONES', payload: zones });
