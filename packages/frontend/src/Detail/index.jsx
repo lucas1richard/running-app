@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
@@ -9,12 +9,12 @@ import { convertHeartDataToZoneTimes, convertMetersToMiles, convertMetricSpeedTo
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
-
 import HeartZonesChartContainer from './HeartZonesChart';
 import { selectConfigZonesId } from '../reducers/config';
 import UpdatableNameDescription from './UpdatableNameDescription';
 import requestor from '../utils/requestor';
 import SimilarWorkouts from './SimilarWorkouts';
+import ReactMap from '../ReactMap';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -24,6 +24,7 @@ const ActivityDetailPage = () => {
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   // const gradeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
+  const [showMap, setShowMap] = useState(false);
 
   const configZonesId = useSelector(selectConfigZonesId);
   const allZones = useSelector(selectAllHeartZones);
@@ -63,6 +64,14 @@ const ActivityDetailPage = () => {
           />
         </div>
       )}
+      <div className="flex flex-column flex-align-center">
+        {!showMap && <button onClick={() => setShowMap(true)}>Show Map</button>}
+        {showMap && (
+          <div style={{ height: 600, width: 600 }}>
+            <ReactMap id={id} />
+          </div>
+        )}
+      </div>
       <UpdatableNameDescription
         activity={activity}
         details={details}
