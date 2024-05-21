@@ -15,25 +15,29 @@ const fetchStrava = require('../utils/fetchStrava');
 const router = new Router();
 
 router.get('/list', async (req, res) => {
-  const forceFetch = req.query.force;
-  const page = req.query.page || 1;
-  const perPage = req.query.per_page || 100;
+  try {
+    const forceFetch = req.query.force;
+    const page = req.query.page || 1;
+    const perPage = req.query.per_page || 100;
 
-  if (!forceFetch) {
-    const existingActivities = await Activity.findAll({
-      order: [['start_date', 'DESC']],
-      where: { sport_type: 'Run' },
-    });
-    if  (existingActivities.length > 0) {
-      return res.json(existingActivities);
+    if (!forceFetch) {
+      const existingActivities = await Activity.findAll({
+        order: [['start_date', 'DESC']],
+        where: { sport_type: 'Run' },
+      });
+      if (existingActivities.length > 0) {
+        return res.json(existingActivities);
+      }
     }
+
+    const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
+    await bulkAddActivities(activitiesList); // couchdb
+    const records = await Activity.bulkAddFromStrava(activitiesList); // mysql
+
+    res.json(records);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
-
-  const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
-  await bulkAddActivities(activitiesList); // couchdb
-  const records = await Activity.bulkAddFromStrava(activitiesList); // mysql
-
-  res.json(records);
 });
 
 router.get('/:id/detail', async (req, res) => {
@@ -52,31 +56,35 @@ router.get('/:id/detail', async (req, res) => {
 });
 
 router.get('/:id/streams', async (req, res) => {
-  const activityId = req.params?.id;
-
-  const cachedStream = await getStream(activityId);
-  if (cachedStream) {
+  try {
+    const activityId = req.params?.id;
+  
+    const cachedStream = await getStream(activityId);
+    if (cachedStream) {
+      await summary.setHasStreams(activityId, true);
+      return res.json(cachedStream);
+    }
+  
+    const streamKeys = [
+      'time',
+      'distance',
+      'latlng',
+      'altitude',
+      'velocity_smooth',
+      'heartrate',
+      'cadence',
+      'watts',
+      'temp',
+      'moving',
+      'grade_smooth',
+    ].join(',');
+    const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys}`);
+    await addStream({ stream }, activityId);
     await summary.setHasStreams(activityId, true);
-    return res.json(cachedStream);
+    res.json({ stream });
+  } catch (err) {
+    res.status(500).send(err.message)
   }
-
-  const streamKeys = [
-    'time',
-    'distance',
-    'latlng',
-    'altitude',
-    'velocity_smooth',
-    'heartrate',
-    'cadence',
-    'watts',
-    'temp',
-    'moving',
-    'grade_smooth',
-  ].join(',');
-  const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys}`);
-  await addStream({ stream }, activityId);
-  await summary.setHasStreams(activityId, true);
-  res.json({ stream });
 });
 
 router.put('/:id', async (req, res, next) => {
@@ -102,14 +110,22 @@ router.put('/:id', async (req, res, next) => {
 });
 
 router.get('/streams/list', async (req, res) => {
-  const allStreams = await getAllStreams();
-
-  res.json(Object.fromEntries(allStreams.map((str) => [str._id, str])));
+  try {
+    const allStreams = await getAllStreams();
+  
+    res.json(Object.fromEntries(allStreams.map((str) => [str._id, str])));
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
 });
 
 router.get('/summary', async (req, res) => {
-  const activities = await summary.getAll();
-  res.json(activities);
+  try {
+    const activities = await summary.getAll();
+    res.json(activities);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 module.exports = {

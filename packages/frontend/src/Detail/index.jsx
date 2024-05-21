@@ -19,7 +19,7 @@ import ReactMap from '../ReactMap';
 const ActivityDetailPage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  
+
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   // const gradeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
@@ -79,7 +79,7 @@ const ActivityDetailPage = () => {
       <h2 className="text-center">{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</h2>
       <div className="text-center margin-tb">
         <div>
-          <strong>{convertMetersToMiles(activity.distance).toFixed(2)}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time}/></strong>
+          <strong>{convertMetersToMiles(activity.distance).toFixed(2)}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
         </div>
         <div>
           Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
@@ -120,10 +120,12 @@ const ActivityDetailPage = () => {
         />
       )}
 
-      <SimilarWorkouts
-        activity={activity}
-        zones={zones}
-      />
+      {activity?.id && zones?.id && (
+        <SimilarWorkouts
+          activity={activity}
+          zones={zones}
+        />
+      )}
     </div>
   );
 };

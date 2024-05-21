@@ -5,20 +5,27 @@ const ZonesCache = require('../database/sequelize-zones-cache');
 const router = new Router();
 
 router.get('/', async (req, res) => {
-  const zones = await getAllHeartRateZones() || [];
-  res.json(zones);
+  try {
+    const zones = await getAllHeartRateZones() || [];
+    res.json(zones);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 });
 
 router.post('/', async (req, res) => {
-  const { z1, z2, z3, z4, z5, starting } = req.body;
-  const rows = await addHeartRateZone({ z1, z2, z3, z4, z5, starting });
-  res.json(rows);
+  try {
+    const { z1, z2, z3, z4, z5, starting } = req.body;
+    const rows = await addHeartRateZone({ z1, z2, z3, z4, z5, starting });
+    res.json(rows);
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
 });
 
 router.post('/set-cache', async (req, res) => {
-  const { id, times, zonesId } = req.body;
-
   try {
+    const { id, times, zonesId } = req.body;
     await ZonesCache.findOrCreate({
       where: {
         seconds_z1: times[0],

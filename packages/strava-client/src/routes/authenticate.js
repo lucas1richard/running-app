@@ -45,35 +45,34 @@ function(accessToken, refreshToken, profile, done) {
 }
 ));
 
-router.get('/strava',
-  passport.authenticate('strava'));
+router.get('/strava', passport.authenticate('strava'));
 
-router.get('/strava/callback', 
-  passport.authenticate('strava', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
+router.get('/strava/callback', passport.authenticate('strava', { failureRedirect: '/login' }),
+  (req, res) => {
     res.redirect('/');
 });
 
 router.get('/exchange_token', async (req, res) => {
-  const code = req.query?.code;
-  const record = await getItem(1);
-
-  console.log(record);
-
-  const query = `client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`;
-  const tokenRes = await fetch(`https://www.strava.com/api/v3/oauth/token?${query}`, {
-    method: 'POST',
-  });
-
-  const token = await tokenRes.json();
-  if (record) {
-    await updateItem(1, token)
-  } else {
-    await storeItem(token)
+  try {
+    const code = req.query?.code;
+    const record = await getItem(1);
+  
+    const query = `client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`;
+    const tokenRes = await fetch(`https://www.strava.com/api/v3/oauth/token?${query}`, {
+      method: 'POST',
+    });
+  
+    const token = await tokenRes.json();
+    if (record) {
+      await updateItem(1, token)
+    } else {
+      await storeItem(token)
+    }
+  
+    res.json(token);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
-
-  res.json(token);
 });
 
 module.exports = {
