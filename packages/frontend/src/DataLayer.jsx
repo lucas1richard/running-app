@@ -8,7 +8,6 @@ const DataLayer = ({ children }) => {
     dispatch({ type: 'activities/FETCH_ACTIVITIES' });
     dispatch({ type: 'activities/FETCH_ACTIVITIES_SUMMARY' });
     dispatch({ type: 'heartzones/FETCH_HEART_ZONES' });
-    dispatch({ type: 'activities/FETCH_ALL_STREAMS' });
   }, [dispatch]);
 
   return (<>{children}</>);
