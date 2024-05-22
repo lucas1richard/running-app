@@ -12,8 +12,8 @@ const HeartZonesChartContainer = ({ id }) => {
 
   return (
     <HeartZonesChartDisplay
-      data={heartRateStream.data}
-      velocity={velocityStream?.data}
+      data={heartRateStream?.data || []}
+      velocity={velocityStream?.data || []}
       zones={zones}
     />
   );

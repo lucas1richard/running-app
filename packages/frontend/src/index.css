@@ -65,6 +65,9 @@ code {
 .flex-justify-between {
   justify-content: space-between;
 }
+.flex-justify-center {
+  justify-content: center;
+}
 .highcharts-plot-band:hover {
   fill: rgba(0,0,0, 0.33) !important;
 }
@@ -91,4 +94,13 @@ code {
 .heading-6 {
   font-size: 1rem;
   font-weight: bold;;
+}
+.display-none {
+  display: none;
+}
+label:has(> input) {
+  cursor: pointer;
+}
+label:has(> input):hover {
+  background-color: azure;
 }

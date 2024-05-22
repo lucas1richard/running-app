@@ -41,6 +41,8 @@ const ActivityDetailPage = () => {
 
   useEffect(() => {
     if (!zones || !heartRateStream?.data) return;
+    console.log(zones.id, activity, activity?.zonesCaches?.[zones.id])
+    if (activity?.zonesCaches?.[zones.id]) return;
 
     if (convertHeartDataToZoneTimes(heartRateStream.data, zones).filter(Boolean).length === 0) return;
 
@@ -53,17 +55,17 @@ const ActivityDetailPage = () => {
 
   return (
     <div className="pad">
-      {details && (
-        <div className="text-center">
-          <GoogleMapImage
-            activityId={id}
-            polyline={details.map.polyline}
-            imgHeight={600}
-            imgWidth={1200}
-            alt="route"
-          />
-        </div>
-      )}
+      <div className="flex flex-justify-center">
+        <GoogleMapImage
+          activityId={id}
+          polyline={details?.map?.polyline}
+          imgHeight={600}
+          imgWidth={1200}
+          height={600}
+          width={600}
+          alt="route"
+        />
+      </div>
       <div className="flex flex-column flex-align-center">
         {!showMap && <button onClick={() => setShowMap(true)}>Show Map</button>}
         {showMap && (
@@ -100,25 +102,20 @@ const ActivityDetailPage = () => {
       />
 
 
-      {heartRateStream && (
-        <div>
-          <HeartZonesChartContainer id={id} />
-          {/* <ElevationChart
-            data={heartRateStream.data}
-            velocity={velocityStream?.data}
-            grade={gradeStream?.data}
-            zones={zones}
-          /> */}
-        </div>
-      )}
+      <HeartZonesChartContainer id={id} />
 
-      {details && (
+      {/* <ElevationChart
+        data={heartRateStream.data}
+        velocity={velocityStream?.data}
+        grade={gradeStream?.data}
+        zones={zones}
+      /> */}
+
         <SegmentsDetailDisplay
           heartData={heartRateStream?.data}
           velocityData={velocityStream?.data}
-          segments={details.segment_efforts}
+          segments={details?.segment_efforts || []}
         />
-      )}
 
       {activity?.id && zones?.id && (
         <SimilarWorkouts

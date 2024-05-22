@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import SegmentsChart from './SegmentsChart';
 
 const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
   const [visible, setVisible] = useState(Array.from(segments).fill(true));
   const [showToggles, setShowToggles] = useState(false);
+
   const onToggle = useCallback((ev) => {
     const ix = Number(ev.target.value);
     setVisible((visible) => {
@@ -12,15 +13,23 @@ const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
       return newVisible;
     })
   }, []);
+
+  useEffect(() => {
+    setVisible(Array.from(segments).fill(true));
+  }, [segments]);
+
   const setAllVisible = useCallback(() => {
     setVisible(Array.from(segments).fill(true));
-  }, []);
+  }, [segments]);
+
   const setAllHidden = useCallback(() => {
     setVisible(Array.from(segments).fill(false));
-  }, []);
+  }, [segments]);
+
   const setToggleVisibility = useCallback(() => {
     setShowToggles((show) => !show);
   }, []);
+
   return (
     <div>
       <h2>Segments</h2>
@@ -34,7 +43,11 @@ const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
       {showToggles && segments.map((seg, ix) => (
         <div key={seg.id}>
           <label>
-            <input type="checkbox" value={ix} checked={visible[ix]} onChange={onToggle}/> {seg.name} <small>(index {seg.start_index} to {seg.end_index})</small>
+            <input type="checkbox" value={ix} checked={visible[ix]} onChange={onToggle}/>
+            &nbsp;
+            {seg.name}
+            &nbsp;
+            <small>(index {seg.start_index} to {seg.end_index})</small>
           </label>
         </div>)
       )}
