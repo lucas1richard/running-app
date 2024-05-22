@@ -7,18 +7,32 @@
 //  - lat,long
 
 const Router = require('express').Router;
+const Sequelize = require('sequelize');
 const Activity = require('../../database/sequelize-activities');
-const {
-  getAllStreams,
-} = require('../../database/setupdb-couchbase');
 
 const router = new Router();
 
+/**
+ * 
+Decimal Places	Degrees	Distance
+0      	1.0        	   111 km
+1      	0.1      	     11.1 km
+2      	0.01      	   1.11 km
+3      	0.001      	   111 m
+4      	0.0001      	 11.1 m
+5      	0.00001      	 1.11 m
+6      	0.000001       111 mm
+7      	0.0000001      11.1 mm
+8      	0.00000001     1.11 mm
+
+ */
+const startDistConstraint = 0.0002; // about 22 meters or 72 feet (22 * 3.28084)
+const activityDistanceContstrint = 300; // 300 meters or 984 feet
+
 router.post('/by-route', async (req, res) => {
   try {
-
     const { body } = req;
-    const id = body?.id; // id of the sample workout
+    const id = body?.id;
 
     const activity = await Activity.findOne({ where: { id } });
 
@@ -26,28 +40,35 @@ router.post('/by-route', async (req, res) => {
       return res.json({ activity_not_found: true });
     }
 
-    const allActivities = await Activity.findAll();
-    const allRuns = allActivities.filter(({ sport_type }) => sport_type === 'Run')
-    const allStreams = await getAllStreams();
-
-    const similarDistance = allRuns.filter(({ distance }) => Math.abs(distance - activity.distance) < 500);
-
-    const getLatLongSimilar = (latlng) => (
-      Math.abs((activity.start_latlng[0] - latlng[0]) * 100000) < 20
-      && Math.abs((activity.start_latlng[1] - latlng[1]) * 100000) < 20
+    const combo = await Activity.findAll(
+      {
+        where: {
+          [Sequelize.Op.and]: {
+            sport_type: 'Run',
+            ax: Sequelize.where( // `ax` doesn't mean anything, just a placeholder
+              Sequelize.fn( // Geometric distance between two points
+                'ST_Distance',
+                Sequelize.col('start_latlng'),
+                Sequelize.fn('Point', activity.start_latlng[0], activity.start_latlng[1])
+              ),
+              Sequelize.Op.lte,
+              startDistConstraint
+            ),
+            distance: {
+              [Sequelize.Op.between]: [ // distance between 300 meters
+                activity.distance - activityDistanceContstrint,
+                activity.distance + activityDistanceContstrint
+              ]
+            },
+          },
+          [Sequelize.Op.not]: {
+            id // not the same activity
+          },
+        },
+      },
     );
 
-    const similarStart = allRuns.filter(({ start_latlng }) => getLatLongSimilar(start_latlng));
-
-    const getMap = (srcArr) => Object.fromEntries(srcArr.map((activity) => [activity.id, activity]))
-
-    const base = getMap(similarDistance);
-    const comparisons = [getMap(similarStart)];
-    const combo = Object.keys(base)
-      .filter((key) => key !== id && comparisons.every((dist) => Boolean(dist[id])))
-      .map((key) => base[key]);
-
-    res.json({ allRuns, similarDistance, similarStart, allStreams, combo });
+    res.json({ combo });
 
   } catch (error) {
     res.status(500).send(error.message);
