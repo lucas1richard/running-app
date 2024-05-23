@@ -11,14 +11,14 @@ const ZonesHeader = ({ zones, start, isCompact }) => {
   return (
     <div>
       {(start && !isCompact) && (
-        <h2 className="text-center">
+        <h2>
           {establishedText}
         </h2>
       )}
       <div>
         <div className="flex">
           {(start && isCompact) && (
-            <div className="flex-item-grow" style={{ padding }}>
+            <div className="flex-item-grow dls-white-bg" style={{ padding }}>
               <div className="text-center">
                 <b>{establishedText}</b>
               </div>

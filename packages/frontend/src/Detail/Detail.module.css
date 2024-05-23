@@ -3,3 +3,10 @@
   width: 100%;
   z-index: -100;
 }
+
+.quietInput {
+  border: 1px solid transparent;
+}
+.quietInput:hover {
+  border: 1px solid #444;
+}

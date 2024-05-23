@@ -16,7 +16,7 @@ const Tile = ({ activity }) => {
 
   return (
     <div>
-      <div className={styles.container}>
+      <div className={`dls-white-bg ${styles.container}`}>
         <GoogleMapImage
           activityId={activity.id}
           polyline={getSummaryPolyline(activity)}
@@ -27,21 +27,18 @@ const Tile = ({ activity }) => {
           width="100"
           height="75"
         />
-        <div className="flex flex-justify-between flex-column fullwidth">
+        <div className="flex flex-justify-between flex-column full-width">
           <div className="flex flex-justify-between">
             <div>
               <div>
                 {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
               </div>
-              <div>
-                <h2 className={styles.title}>
-                  <Link to={`/${activity.id}/detail`}>{activity.name}</Link>
-                </h2>
-              </div>
+              <Link className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
             </div>
             <div>
               <div>
-                {convertMetersToMiles(activity.distance).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/></div>
+                {convertMetersToMiles(activity.distance).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/>
+              </div>
               <div>
                 Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
               </div>
@@ -50,7 +47,7 @@ const Tile = ({ activity }) => {
               </div>
             </div>
           </div>
-          <div style={{ width: '100%' }}>
+          <div className="full-width">
             {(heartRateStream || activity.zonesCaches[zones.id]) && (
               <ZonesWidth
                 id={activity.id}

@@ -28,14 +28,16 @@ const CurrentSummary = ({
   const recentRuns = findRecent(activities, 7);
   const sameYearRuns = findSameYear(activities);
   return (
-    <div>
-      <h3>{sumDistance(recentRuns).toFixed(2)} miles in the last week</h3>
-      <h3>{sumDistance(sameYearRuns).toFixed(2)} miles this year</h3>
-      <h3>{sumDistance(activities).toFixed(2)} miles all time</h3>
-
-      {recentRuns.map(({ start_date, name, distance }) => (
-        <div key={start_date}>{getDateString(start_date)} - {convertMetersToMiles(distance)}</div>
-      ))}
+    <div className="dls-white-bg pad">
+      <div className="heading-5">
+        {sumDistance(recentRuns).toFixed(2)} miles in the last week
+      </div>
+      <div className="heading-5">
+        {sumDistance(sameYearRuns).toFixed(2)} miles this year
+      </div>
+      <div className="heading-6">
+        {sumDistance(activities).toFixed(2)} miles all time
+      </div>
     </div>
   );
 };

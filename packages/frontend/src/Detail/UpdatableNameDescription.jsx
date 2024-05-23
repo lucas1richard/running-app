@@ -1,5 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import classNames from 'classnames';
+import styles from './Detail.module.css';
 
 const UpdatableNameDescription = ({
   activity,
@@ -25,21 +27,20 @@ const UpdatableNameDescription = ({
     <div className="flex flex-column">
       <input
         type="string"
-        className="heading-1 text-center"
+        className={`heading-1 text-center ${styles.quietInput}`}
         value={name}
         onChange={(ev) => setName(ev.target.value)}
       />
-      <input
+      <textarea
         type="text"
-        className="heading-5 text-center"
+        className={`heading-5 text-center ${styles.quietInput}`}
         value={description}
         placeholder="Activity Description"
         onChange={(ev) => setDescription(ev.target.value)}
-      />
+      /> 
       <button
-        className="full-width"
+        className={classNames('full-width', { 'display-none': name === activity.name && description === details?.description})}
         onClick={updateActivity}
-        disabled={name === activity.name && description === details?.description}
       >
         Update
       </button>

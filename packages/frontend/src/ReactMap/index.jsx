@@ -70,7 +70,7 @@ function getDeckGlLayers(data) {
       extruded: false,
       pointType: 'circle',
       lineWidthScale: 20,
-      lineWidthMinPixels: 4,
+      lineWidthMinPixels: 2,
       getFillColor: [160, 160, 180, 200],
       getLineColor: (f) => {
         if (!f || !f.properties || !f.properties.zone) return [0, 0, 0];
@@ -85,7 +85,7 @@ function getDeckGlLayers(data) {
       },
       // getLineColor: () => [255, 0, 255],
       getPointRadius: 200,
-      getLineWidth: 1,
+      getLineWidth: 0.1,
       getElevation: 0
     })
   ];
