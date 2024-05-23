@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
@@ -9,13 +9,20 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import { selectHeartZones } from '../reducers/heartszones';
+import DetailDataFetcher from '../Detail/DetailDataFetcher';
 
 const Tile = ({ activity }) => {
+  const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date))
 
+  const onMouseEnter = useCallback(() => {
+    setHovered(true);
+  }, []);
+  
   return (
     <div>
+      {hovered && <DetailDataFetcher id={activity.id} />}
       <div className={`dls-white-bg ${styles.container}`}>
         <GoogleMapImage
           activityId={activity.id}
@@ -33,7 +40,7 @@ const Tile = ({ activity }) => {
               <div>
                 {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
               </div>
-              <Link className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
+              <Link onMouseEnter={onMouseEnter} onFocus={onMouseEnter} className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
             </div>
             <div>
               <div>

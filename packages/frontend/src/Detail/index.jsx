@@ -1,24 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertHeartDataToZoneTimes, convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
 import HeartZonesChartContainer from './HeartZonesChart';
 import { selectConfigZonesId } from '../reducers/config';
 import UpdatableNameDescription from './UpdatableNameDescription';
-import requestor from '../utils/requestor';
 import SimilarWorkouts from './SimilarWorkouts';
 import ReactMap from '../ReactMap';
+import DetailDataFetcher from './DetailDataFetcher';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
@@ -34,27 +33,9 @@ const ActivityDetailPage = () => {
 
   const details = useSelector((state) => selectActivityDetails(state, id));
 
-  useEffect(() => {
-    dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
-    dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: id });
-  }, [dispatch, id]);
-
-  useEffect(() => {
-    if (!zones || !heartRateStream?.data) return;
-    console.log(zones.id, activity, activity?.zonesCaches?.[zones.id])
-    if (activity?.zonesCaches?.[zones.id]) return;
-
-    if (convertHeartDataToZoneTimes(heartRateStream.data, zones).filter(Boolean).length === 0) return;
-
-    requestor.post('/heartzones/set-cache', {
-      times: convertHeartDataToZoneTimes(heartRateStream.data, zones),
-      id: activity.id,
-      zonesId: zones.id,
-    });
-  }, [activity.id, heartRateStream, id, zones.id]);
-
   return (
     <div className="pad">
+      <DetailDataFetcher id={id} />
       <div className="flex flex-justify-center gap margin-b">
         <GoogleMapImage
           activityId={id}
