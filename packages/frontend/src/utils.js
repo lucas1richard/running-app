@@ -3,7 +3,7 @@ import { createSelectorCreator, weakMapMemoize } from 'reselect';
 import fastDeepEqual from 'fast-deep-equal';
 import gradientScale from './colors/gradient-scale';
 
-export const getDuration = (s) => {
+export const getDuration = (s, text = [' sec ', ' min ', ' hr ']) => {
   if (s === Infinity || !s) {
     return [];
   }
@@ -13,7 +13,6 @@ export const getDuration = (s) => {
 
   const display = [seconds, minutes, hours];
 
-  const text = ['sec', 'min', 'hr'];
   const real = display.map((val, ix) => [val, text[ix]]);
 
   return real.reverse().slice(real.findIndex(([val]) => !!val));
@@ -142,7 +141,8 @@ export const convertZonesCacheToPercents = (caches) => {
   return arr.map((time) => (100 * time / total).toFixed(2))
 };
 
-export const convertMetersToMiles = (distance) => Math.round((distance / 1609) * 100) / 100;
+export const convertMetersToMiles = (distance) => Math.round((distance * 0.000621371) * 100) / 100;
+export const convertMetersToFt = (distance) => Math.round(distance * 3.28084);
 export const convertMetricSpeedToMPH = (metersPerSecond) => metersPerSecond * 2.237;
 
 export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal = (val) => val } = {}) => {

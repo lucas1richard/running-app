@@ -15,6 +15,7 @@ import UpdatableNameDescription from './UpdatableNameDescription';
 import SimilarWorkouts from './SimilarWorkouts';
 import ReactMap from '../ReactMap';
 import DetailDataFetcher from './DetailDataFetcher';
+import Laps from './Laps';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -76,7 +77,6 @@ const ActivityDetailPage = () => {
         velocityData={velocityStream?.data}
       />
 
-
       <HeartZonesChartContainer id={id} />
 
       <div className="flex flex-column flex-align-center">
@@ -87,6 +87,8 @@ const ActivityDetailPage = () => {
           </div>
         )}
       </div>
+
+      <Laps id={id} />
 
       {/* <ElevationChart
         data={heartRateStream.data}

@@ -26,8 +26,12 @@ img {
   border-radius: 1rem;
 }
 
+abbr {
+  font-size: small;
+}
+
 .text-center {
-  text-align: center;;
+  text-align: center;
 }
 .text-right {
   text-align: right;
