@@ -72,6 +72,12 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
       });
     }
 
+    case 'activitiesReducer/SET_WEATHER_DATA': {
+      return produce(state, (nextState) => {
+        nextState.activities[action.payload.activityId].weather = action.payload;
+      });
+    }
+
     default:
       return state;
   }

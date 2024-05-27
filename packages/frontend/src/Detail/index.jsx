@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
@@ -16,6 +16,7 @@ import SimilarWorkouts from './SimilarWorkouts';
 import ReactMap from '../ReactMap';
 import DetailDataFetcher from './DetailDataFetcher';
 import Laps from './Laps';
+import WeatherReporter from './WeatherReporter';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -34,8 +35,10 @@ const ActivityDetailPage = () => {
 
   const details = useSelector((state) => selectActivityDetails(state, id));
 
+  const { backgroundColor } = getWeatherStyles(activity.weather || {});
+
   return (
-    <div className="pad">
+    <div className={`pad`}>
       <DetailDataFetcher id={id} />
       <div className="flex flex-justify-center gap margin-b">
         <GoogleMapImage
@@ -47,27 +50,37 @@ const ActivityDetailPage = () => {
           width={600}
           alt="route"
         />
-        <div className="pad" style={{ width: 600, background: '#fff', border: '1px solid black', borderRadius: '1rem' }}>
-          <UpdatableNameDescription
-            activity={activity}
-            details={details}
-          />
-          <h2 className="text-center">{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</h2>
-          <div className="text-center margin-tb">
-            <div>
-              <strong>{convertMetersToMiles(activity.distance).toFixed(2)}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
+        <div className="border-radius-1" style={{ width: 600, background: '#fff', border: '1px solid black' }}>
+          <div className={`pad ${backgroundColor} border-radius-1`}>
+            <UpdatableNameDescription
+              activity={activity}
+              details={details}
+            />
+            <h2 className="text-center">
+              {activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}
+            </h2>
+            <h3 className="text-center">
+              {activity.start_date_local ? dayjs.utc(activity.start_date_local).format('h:mm A') : ''}
+            </h3>
+            <div className="text-center margin-tb">
+              <div>
+                <strong>{convertMetersToMiles(activity.distance).toFixed(2)}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
+              </div>
+              <div>
+                Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+              </div>
+              <div>
+                Avg Pace - <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(activity.average_speed)))} />/mi
+              </div>
+              <div>
+                Avg HR - {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+              </div>
             </div>
             <div>
-              Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-            </div>
-            <div>
-              Avg Pace - <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(activity.average_speed)))} />/mi
-            </div>
-            <div>
-              Avg HR - {(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+              <WeatherReporter id={id} />
             </div>
           </div>
-        </div>
+          </div>
       </div>
 
       <HeartZonesDisplay

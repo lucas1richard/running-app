@@ -11,6 +11,7 @@ const {
 const summary = require('../database/mysql-activities');
 const Activity = require('../database/sequelize-activities');
 const fetchStrava = require('../utils/fetchStrava');
+const Weather = require('../database/sequelize-weather');
 
 const router = new Router();
 
@@ -55,16 +56,33 @@ router.get('/:id/detail', async (req, res) => {
   }
 });
 
+router.get('/:id/laps', async (req, res) => {
+  try {
+    const activityId = req.params?.id;
+    const detail = await getActivityDetail(activityId);
+
+    if (detail?.has_detailed_laps) {
+      return res.json(detail.laps);
+    }
+
+    const laps = await fetchStrava(`/activities/${activityId}/laps`);
+    await updateActivityDetail(activityId, { laps, has_detailed_laps: true });
+    res.json(laps);
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+});
+
 router.get('/:id/streams', async (req, res) => {
   try {
     const activityId = req.params?.id;
-  
+
     const cachedStream = await getStream(activityId);
     if (cachedStream) {
       await summary.setHasStreams(activityId, true);
       return res.json(cachedStream);
     }
-  
+
     const streamKeys = [
       'time',
       'distance',
@@ -112,7 +130,7 @@ router.put('/:id', async (req, res, next) => {
 router.get('/streams/list', async (req, res) => {
   try {
     const allStreams = await getAllStreams();
-  
+
     res.json(Object.fromEntries(allStreams.map((str) => [str._id, str])));
   } catch (err) {
     res.status(500).send(err.message)
@@ -124,6 +142,36 @@ router.get('/summary', async (req, res) => {
     const activities = await summary.getAll();
     res.json(activities);
   } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+router.put('/:id/weather', async (req, res) => {
+  const transaction = await Weather.sequelize.transaction();
+  try {
+    const { id } = req.params;
+    const activity = await Activity.findByPk(id);
+    if (!activity) {
+      return res.status(404).send('Activity not found');
+    }
+
+    
+    const [weatherInstance] = await Weather.findOrCreate({
+      where: { activityId: id },
+      transaction,
+    });
+
+    weatherInstance.sky = req.body.sky;
+    weatherInstance.temperature = req.body.temperature;
+    weatherInstance.humidity = req.body.humidity;
+    weatherInstance.wind = req.body.wind;
+    weatherInstance.precipitation = req.body.precipitation;
+
+    await weatherInstance.save({ transaction });
+    await transaction.commit();
+    res.json(weatherInstance);
+  } catch (error) {
+    await transaction.rollback();
     res.status(500).send(error.message);
   }
 });

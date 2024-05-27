@@ -45,13 +45,13 @@ const GoogleMapImage = ({
   return (
     <>
       <div
-        className={classNames({ 'display-none': !isLoading && !isError})}
+        className={classNames('img', { 'display-none': !isLoading && !isError })}
         style={{ width: Number(width), height: Number(height), background: '#333' }}
       />
       {polyline && <img
         src={src}
         alt=""
-        className={classNames({ 'display-none': isLoading || isError })}
+        className={classNames('img', { 'display-none': isLoading || isError })}
         onError={onError}
         onLoad={onLoad}
         height={height}

@@ -6,7 +6,7 @@ import { selectStreamType } from '../reducers/activities';
 import styles from './Tile.module.css';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline, getWeatherStyles } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import { selectHeartZones } from '../reducers/heartszones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
@@ -19,22 +19,25 @@ const Tile = ({ activity }) => {
   const onMouseEnter = useCallback(() => {
     setHovered(true);
   }, []);
+
+  const duration = <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />;
+  
+  const { backgroundColor } = getWeatherStyles(activity.weather || {});
   
   return (
-    <div>
+    <div className="dls-white-bg border-radius-1 border-2">
       {hovered && <DetailDataFetcher id={activity.id} />}
-      <div className={`dls-white-bg ${styles.container}`}>
+      <div className={`${backgroundColor} ${styles.container} gap`}>
         <GoogleMapImage
           activityId={activity.id}
           polyline={getSummaryPolyline(activity)}
           alt="summary route"
-          className={styles.summaryImg}
           imgWidth={400}
           imgHeight={200}
           width="100"
           height="75"
         />
-        <div className="flex flex-justify-between flex-column full-width">
+        <div className="flex flex-justify-between flex-column flex-item-grow">
           <div className="flex flex-justify-between">
             <div>
               <div>
@@ -42,15 +45,24 @@ const Tile = ({ activity }) => {
               </div>
               <Link onMouseEnter={onMouseEnter} onFocus={onMouseEnter} className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
             </div>
-            <div>
+            <div className="flex-item-grow text-right">
               <div>
-                {convertMetersToMiles(activity.distance).toFixed(2)} miles in <DurationDisplay numSeconds={activity.elapsed_time}/>
+                {duration}
+                <span className="margin-l heading-4 dls-dark-gold">
+                  {convertMetersToMiles(activity.distance).toFixed(2)} <abbr>mi</abbr>
+                </span>
               </div>
               <div>
-                Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+                <small>Average Speed</small>
+                <span className="margin-l heading-4">
+                  {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+                </span>
               </div>
               <div>
-                Avg HR - {(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+                <small>Average HR</small>
+                <span className="margin-l heading-4">
+                  {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+                </span>
               </div>
             </div>
           </div>

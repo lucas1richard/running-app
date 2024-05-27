@@ -71,7 +71,7 @@ const Laps = ({ id }) => {
                 <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
                 <td>{lap.dist} <small>{lap.distUnit}</small></td>
                 <td><DurationDisplay numSeconds={lap.secondsPerMile} units={['', ':']} /></td>
-                <td className="text-center">{lap.average_heartrate.toFixed(1)} <abbr>bpm</abbr></td>
+                <td className="text-center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></td>
                 <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
                 <td>{lap.totalElevationGainFt} <small>ft</small></td>
               </tr>

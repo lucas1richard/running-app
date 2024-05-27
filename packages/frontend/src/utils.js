@@ -177,3 +177,35 @@ export const createDeepEqualSelector = createSelectorCreator(
   weakMapMemoize,
   fastDeepEqual
 );
+
+/**
+ * @param {number} speed 
+ * @returns seconds per mile
+ */
+export const convertSpeedToPace = (speed) => {
+  return Math.floor((3660 / convertMetricSpeedToMPH(speed)));
+};
+
+export const getWeatherStyles = (weather) => {
+  let backgroundColor;
+  switch (weather?.sky) {
+    case 'sunny':
+      backgroundColor = 'dls-sunshine-bg';
+      break;
+    case 'overcast':
+      backgroundColor = 'dls-overcast-bg';
+      break;
+    case 'mostly cloudy':
+      backgroundColor = 'dls-mostly-cloudy-bg';
+      break;
+    case 'partly cloudy':
+      backgroundColor = 'dls-partly-cloudy-bg';
+      break;
+    default:
+      backgroundColor = 'dls-white-bg';
+  }
+
+  return {
+    backgroundColor,
+  }
+};

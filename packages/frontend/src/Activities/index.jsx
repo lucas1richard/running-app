@@ -6,6 +6,7 @@ import { selectAllHeartZones } from '../reducers/heartszones';
 import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
 import ConfigWidget from '../Config';
+import SpeedChart from './SpeedChart';
 
 const Activities = () => {
   const dispatch = useDispatch();
@@ -43,20 +44,23 @@ const Activities = () => {
         <button onClick={onClickSync}>Sync Strava</button>
       </div>
       <div>
+        <SpeedChart activities={activities} />
+      </div>
+      <div>
         <CurrentSummary activities={activities} />
       </div>
       <ConfigWidget />
         {categorizeRunsByZones.map(({ runs, zones, start }) => (
-          <>
-            <div style={{ marginTop: '3rem' }}>
+          <div>
+            <div className="margin-tb" style={{ marginTop: '3rem' }}>
               <ZonesHeader zones={zones} start={start} />
             </div>
-            <div>
+            <div className="flex flex-column gap">
               {runs.map((activity) => (
                 <Tile key={activity.id} activity={activity} zones={zones} />
               ))}
             </div>
-          </>
+          </div>
         ))}
     </div>
   );

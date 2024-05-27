@@ -16,7 +16,7 @@ const ZonesHeader = ({ zones, start, isCompact }) => {
         </h2>
       )}
       <div>
-        <div className="flex">
+        <div className="flex border-radius-1">
           {(start && isCompact) && (
             <div className="flex-item-grow dls-white-bg" style={{ padding }}>
               <div className="text-center">

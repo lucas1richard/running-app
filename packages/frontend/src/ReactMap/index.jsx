@@ -19,7 +19,12 @@ const ReactMap = ({ id }) => {
 
   const defaultCenter = useMemo(() => {
     if (!lnglatStream.length) return { lat: 37.74, lng: -122.4 };
-    const [lng, lat] = lnglatStream[0];
+    const maxLng = lnglatStream.reduce((max, [lng]) => Math.max(max, lng), -Infinity);
+    const minLng = lnglatStream.reduce((min, [lng]) => Math.min(min, lng), Infinity);
+    const maxLat = lnglatStream.reduce((max, [, lat]) => Math.max(max, lat), -Infinity);
+    const minLat = lnglatStream.reduce((min, [, lat]) => Math.min(min, lat), Infinity);
+    const lng = (maxLng + minLng) / 2;
+    const lat = (maxLat + minLat) / 2;
     return { lat, lng };
   }, [lnglatStream]);
 
@@ -34,8 +39,8 @@ const ReactMap = ({ id }) => {
             zone,
           },
           geometry: {
-            type: 'MultiLineString',
-            coordinates: [lnglatStream.slice(ix > 1 ? from - 1 : from, to)]
+            type: 'LineString',
+            coordinates: lnglatStream.slice(ix > 1 ? from - 1 : from, to)
           }
         }
     })
@@ -75,15 +80,7 @@ function getDeckGlLayers(data) {
       getLineColor: (f) => {
         if (!f || !f.properties || !f.properties.zone) return [0, 0, 0];
         return hrZonesGraph[f.properties.zone];
-
-        // // const hex = f.properties.color;
-        // // const match = hex.match(/[0-9a-f]{2}/g);
-
-        // // if (!match) return [0, 0, 0];
-
-        // return match.map((x) => parseInt(x, 16));
       },
-      // getLineColor: () => [255, 0, 255],
       getPointRadius: 200,
       getLineWidth: 0.1,
       getElevation: 0

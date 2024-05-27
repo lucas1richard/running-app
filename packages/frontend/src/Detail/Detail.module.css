@@ -6,6 +6,7 @@
 
 .quietInput {
   border: 1px solid transparent;
+  background-color: transparent;
 }
 .quietInput:hover {
   border: 1px solid #444;

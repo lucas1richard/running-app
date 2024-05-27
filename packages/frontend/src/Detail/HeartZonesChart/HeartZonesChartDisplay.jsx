@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate } from '../../utils';
-import { hrZonesBg } from '../../colors/hrZones';
+import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 
 const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
@@ -86,12 +86,25 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
   };
 
   return (
-    <div style={{ height: 400 }}>
+    <div style={{ height: 410 }}>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
         allowChartUpdate={true}
       />
+      <div className="flex full-width">
+        {hrzones.map(({ zone, from, to }) => (
+          <div
+            key={`${zone}-${from}-${to}`}
+            style={{
+              backgroundColor: hrZonesText[zone],
+              height: 10,
+              width: `${100 * ((to - from) / data.length)}%`,
+            }}
+          >
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

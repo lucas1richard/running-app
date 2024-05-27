@@ -26,8 +26,8 @@ Decimal Places	Degrees	Distance
 8      	0.00000001     1.11 mm
 
  */
-const startDistConstraint = 0.0002; // about 22 meters or 72 feet (22 * 3.28084)
-const activityDistanceContstrint = 300; // 300 meters or 984 feet
+const startDistConstraint = 0.0003; // about 22 meters or 72 feet (22 * 3.28084)
+const activityDistanceContstrint = 500; // 300 meters or 984 feet
 
 router.post('/by-route', async (req, res) => {
   try {

@@ -21,15 +21,64 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+abbr {
+  font-size: smaller;
+}
+table, td, th {
+  border-collapse: collapse;
+  border: 1px solid black;
+  border: 1px solid;
+}
 
-img {
+td, th {
+  padding: 0.5rem;
+}
+
+input, select {
+  border: 1px solid black;
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+}
+
+label {
+  font-size: 0.8rem;;
+}
+
+button {
+  padding: 0.5rem;
+  border: 1px solid black;
+  background-color: azure;
+  border-radius: 0.5rem;
+  font-weight: bolder;
+  cursor: pointer;
+}
+
+/* button with onclick prop */
+button:active {
+  background-color: #e0eeee;
+  cursor: pointer;
+}
+
+
+.img {
   border-radius: 1rem;
 }
-
-abbr {
-  font-size: small;
+.border-radius-1 {
+  border-radius: 1rem;
+  overflow: hidden;
 }
-
+.border {
+  border: 1px solid #ddd;
+}
+.border-1 {
+  border: 1px solid #ddd;
+}
+.border-2 {
+  border: 2px solid #ddd;
+}
+.border-3 {
+  border: 3px solid #ddd;
+}
 .text-center {
   text-align: center;
 }
@@ -46,8 +95,24 @@ abbr {
 .margin-b {
   margin-bottom: 1rem;
 }
+.margin-l {
+  margin-left: 1rem;
+}
+.margin-r {
+  margin-right: 1rem;
+}
+.margin-lr {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
 .pad {
   padding: 1rem;
+}
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: none;
 }
 .pad-t {
   padding-top: 1rem;
@@ -135,4 +200,33 @@ label:has(> input):hover {
 
 .dls-white-bg {
   background-color: white;
+}
+.dls-yellow-bg-faint {
+  background-color: #FFFFE0;
+}
+.dls-gold {
+  color: #FFD700;
+}
+.dls-dark-gold {
+  color: #B8860B;
+}
+.dls-star-bg {
+  background-repeat: no-repeat;
+}
+
+.dls-sunshine-bg {
+  background: linear-gradient(to bottom right, #FFFFE0, transparent 50%), linear-gradient(to bottom left, skyblue, transparent 50%);
+  background-repeat: no-repeat;
+}
+.dls-overcast-bg {
+  background: linear-gradient(to bottom right, #708090, transparent 50%);
+  background-repeat: no-repeat;
+}
+.dls-mostly-cloudy-bg {
+  background: linear-gradient(to bottom right, #A9A9A9, transparent 50%), linear-gradient(to bottom left, skyblue, transparent 25%); /* dark gray */
+  background-repeat: no-repeat;
+}
+.dls-partly-cloudy-bg {
+  background: linear-gradient(to bottom right, #D3D3D3, transparent 50%), linear-gradient(to bottom left, skyblue, transparent 50%); /* light gray */
+  background-repeat: no-repeat;
 }
