@@ -1,12 +1,12 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import activitiesReducer from './activities';
 import heartzonesReducer from './heartszones';
-import configReducer from './config';
+import preferencesReducer from './preferences';
 
 const reducer = combineReducers({
   activities: activitiesReducer,
   heartzones: heartzonesReducer,
-  config: configReducer,
+  preferences: preferencesReducer,
 });
 
 export default reducer;

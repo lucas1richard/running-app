@@ -7,6 +7,8 @@ const {
   addStream,
   getAllStreams,
   updateActivityDetail,
+  getActivityPreferences,
+  updateActivityPreferences,
 } = require('../database/setupdb-couchbase');
 const summary = require('../database/mysql-activities');
 const Activity = require('../database/sequelize-activities');
@@ -100,6 +102,27 @@ router.get('/:id/streams', async (req, res) => {
     await addStream({ stream }, activityId);
     await summary.setHasStreams(activityId, true);
     res.json({ stream });
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+});
+
+router.get('/:id/preferences', async (req, res) => {
+  try {
+    const activityId = req.params?.id;
+    const preferences = await getActivityPreferences(activityId) || {};
+    res.json(preferences);
+  } catch (err) {
+    res.status(500).send(err.message)
+  }
+});
+
+router.put('/:id/preferences', async (req, res) => {
+  try {
+    const activityId = req.params?.id;
+    const preferences = req.body;
+    await updateActivityPreferences(activityId, preferences);
+    res.json(preferences);
   } catch (err) {
     res.status(500).send(err.message)
   }

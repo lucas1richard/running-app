@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import requestor from '../utils/requestor/index';
 import { convertHeartDataToZoneTimes } from '../utils';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
-import { selectConfigZonesId } from '../reducers/config';
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
+import { selectPreferencesZonesId } from '../reducers/preferences';
 
 const DetailDataFetcher = ({ id }) => {
   const dispatch = useDispatch();
   const activity = useSelector((state) => selectActivity(state, id)) || {};
-  const configZonesId = useSelector(selectConfigZonesId);
+  const configZonesId = useSelector(selectPreferencesZonesId);
   const allZones = useSelector(selectAllHeartZones);
   const nativeZones = useSelector((state) => makeSelectApplicableHeartZone(state, activity.start_date));
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
@@ -21,6 +21,7 @@ const DetailDataFetcher = ({ id }) => {
   useEffect(() => {
     if (!heartRateStream?.data) dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
     if (!details) dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: id });
+    dispatch({ type: 'preferences/FETCH_ACTIVITY_PREFERENCES', payload: { activityId: id } });
   }, [dispatch, id]);
 
   useEffect(() => {

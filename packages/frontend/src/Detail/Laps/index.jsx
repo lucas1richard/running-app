@@ -48,9 +48,6 @@ const Laps = ({ id }) => {
 
   return (
     <div>
-      <h3 className="heading-3">
-        Laps
-      </h3>
       <table className="dls-white-bg">
         <thead>
           <tr>
@@ -70,7 +67,7 @@ const Laps = ({ id }) => {
                 <td>{lap.name}</td>
                 <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
                 <td>{lap.dist} <small>{lap.distUnit}</small></td>
-                <td><DurationDisplay numSeconds={lap.secondsPerMile} units={['', ':']} /></td>
+                <td><DurationDisplay numSeconds={Math.floor((1 / convertMetersToMiles(lap.distance)) * lap.elapsed_time)} units={['', ':']} /></td>
                 <td className="text-center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></td>
                 <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
                 <td>{lap.totalElevationGainFt} <small>ft</small></td>

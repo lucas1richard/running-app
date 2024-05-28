@@ -1,3 +1,4 @@
+const deepmerge = require('deepmerge');
 const create_nano = require('nano');
 // setup the database if there is one
 
@@ -7,6 +8,8 @@ const nano = create_nano('http://admin:password@strava-couch-db:5984');
 const ACTIVITIES_DB = 'activities';
 const ACTIVITIES_DETAIL_DB = 'activities-detail';
 const STREAMS_DB = 'streams';
+const USER_PREFERENCES_DB = 'user-preferences';
+const ACTIVITY_PREFERENCES_DB = 'activity-preferences';
 
 const createIfNotExists = async (dbName) => {
   try {
@@ -17,10 +20,14 @@ const createIfNotExists = async (dbName) => {
 };
 
 const setupdb = async () => {
-  await createIfNotExists('_users');
-  await createIfNotExists(ACTIVITIES_DB);
-  await createIfNotExists(ACTIVITIES_DETAIL_DB);
-  await createIfNotExists(STREAMS_DB);
+  await Promise.allSettled([
+    createIfNotExists('_users'),
+    createIfNotExists(ACTIVITIES_DB),
+    createIfNotExists(ACTIVITIES_DETAIL_DB),
+    createIfNotExists(STREAMS_DB),
+    createIfNotExists(USER_PREFERENCES_DB),
+    createIfNotExists(ACTIVITY_PREFERENCES_DB),
+  ]);
 };
 
 const bulkAddActivities = async (activities) => {
@@ -78,6 +85,40 @@ const updateActivityDetail = async (activityId, detail) => {
   return res;
 };
 
+const getUserPreferences = async (userId) => {
+  try {
+    const db = await nano.db.use(USER_PREFERENCES_DB);
+    const preferences = await db.get(`${userId}`);
+    return preferences;
+  } catch (err) {
+    return undefined;
+  }
+};
+
+const getActivityPreferences = async (activityId) => {
+  try {
+    const db = await nano.db.use(ACTIVITY_PREFERENCES_DB);
+    const preferences = await db.get(`${activityId}`);
+    return preferences;
+  } catch (err) {
+    return undefined;
+  }
+};
+
+const updateUserPreferences = async (userId, preferences = {}) => {
+  const db = await nano.db.use(USER_PREFERENCES_DB);
+  const existing = await getUserPreferences(userId) || {};
+  const res = await db.insert(deepmerge(existing, preferences), `${userId}`);
+  return res;
+};
+
+const updateActivityPreferences = async (activityId, preferences = {}) => {
+  const db = await nano.db.use(ACTIVITY_PREFERENCES_DB);
+  const existing = await getActivityPreferences(activityId) || {};
+  const res = await db.insert(deepmerge(existing, preferences), `${activityId}`);
+  return res;
+}
+
 const addStream = async (stream, documentId) => {
   const db = await nano.db.use(STREAMS_DB);
 
@@ -112,6 +153,10 @@ module.exports = {
   getStream,
   getAllStreams,
   getActivityDetail,
+  getActivityPreferences,
   getAllActivities,
+  getUserPreferences,
   updateActivityDetail,
+  updateActivityPreferences,
+  updateUserPreferences,
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import dayjs, { utc } from 'dayjs';
-import { getDateString, convertMetersToMiles } from '../utils';
+import { convertMetersToMiles } from '../utils';
 
 dayjs.extend(utc);
 

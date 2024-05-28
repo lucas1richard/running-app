@@ -144,6 +144,11 @@ export const convertZonesCacheToPercents = (caches) => {
 export const convertMetersToMiles = (distance) => Math.round((distance * 0.000621371) * 100) / 100;
 export const convertMetersToFt = (distance) => Math.round(distance * 3.28084);
 export const convertMetricSpeedToMPH = (metersPerSecond) => metersPerSecond * 2.237;
+export const getSecondsPerMile = (metersPerSecond) => {
+  const milesPerSecond = metersPerSecond * 0.0006213712;
+  const secondsPerMile = 1 / milesPerSecond;
+  return Math.round(secondsPerMile);
+};
 
 export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal = (val) => val } = {}) => {
   const m = x.length;

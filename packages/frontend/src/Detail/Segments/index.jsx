@@ -32,7 +32,6 @@ const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
 
   return (
     <div>
-      <h2>Segments</h2>
       <div>
         <div>
           <button onClick={setAllVisible}>Show All</button>
@@ -43,7 +42,7 @@ const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
       {showToggles && segments.map((seg, ix) => (
         <div key={seg.id}>
           <label>
-            <input type="checkbox" value={ix} checked={visible[ix]} onChange={onToggle}/>
+            <input type="checkbox" value={ix} checked={visible[ix]} onChange={onToggle} />
             &nbsp;
             {seg.name}
             &nbsp;

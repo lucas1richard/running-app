@@ -10,28 +10,30 @@ import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
 import HeartZonesChartContainer from './HeartZonesChart';
-import { selectConfigZonesId } from '../reducers/config';
 import UpdatableNameDescription from './UpdatableNameDescription';
 import SimilarWorkouts from './SimilarWorkouts';
 import ReactMap from '../ReactMap';
 import DetailDataFetcher from './DetailDataFetcher';
 import Laps from './Laps';
 import WeatherReporter from './WeatherReporter';
+import { selectPreferencesZonesId } from '../reducers/preferences';
+import PreferenceControl from '../PreferenceControl';
+import usePreferenceControl from '../hooks/usePreferenceControl';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
-
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
-  // const gradeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
   const [showMap, setShowMap] = useState(false);
 
-  const configZonesId = useSelector(selectConfigZonesId);
+
+  const configZonesId = useSelector(selectPreferencesZonesId);
   const allZones = useSelector(selectAllHeartZones);
   const nativeZones = useSelector((state) => makeSelectApplicableHeartZone(state, activity.start_date));
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
+  const [tileBgColor, setTileBgColor, savePreferences] = usePreferenceControl(['activities', id, 'tileBackgroundIndicator']);
 
   const details = useSelector((state) => selectActivityDetails(state, id));
 
@@ -51,7 +53,8 @@ const ActivityDetailPage = () => {
           alt="route"
         />
         <div className="border-radius-1" style={{ width: 600, background: '#fff', border: '1px solid black' }}>
-          <div className={`pad ${backgroundColor} border-radius-1`}>
+          <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
+            <button onClick={() => setTileBgColor('weather')}>Show Weather Background</button>
             <UpdatableNameDescription
               activity={activity}
               details={details}
@@ -100,8 +103,14 @@ const ActivityDetailPage = () => {
           </div>
         )}
       </div>
-
-      <Laps id={id} />
+      
+      <PreferenceControl
+        subject="Laps"
+        keyPath={['activities', id, 'shouldShowLaps']}
+        saveConfig={{ activityId: id }}
+      >
+        <Laps id={id} />
+      </PreferenceControl>
 
       {/* <ElevationChart
         data={heartRateStream.data}
@@ -110,18 +119,36 @@ const ActivityDetailPage = () => {
         zones={zones}
       /> */}
 
+      <PreferenceControl
+        subject="Segments"
+        keyPath={['activities', id, 'shouldShowSegments']}
+        saveConfig={{ activityId: id }}
+      >
         <SegmentsDetailDisplay
           heartData={heartRateStream?.data}
           velocityData={velocityStream?.data}
           segments={details?.segment_efforts || []}
         />
-
-      {activity?.id && zones?.id && (
+      </PreferenceControl>
+          
+      <PreferenceControl
+        subject="Similar Workouts"
+        keyPath={['activities', id, 'shouldShowSimilar']}
+        saveConfig={{ activityId: id }}
+      >
         <SimilarWorkouts
           activity={activity}
           zones={zones}
         />
-      )}
+      </PreferenceControl>
+      <div>
+        <button onClick={savePreferences}>
+          Save Preferences as a General Rule
+        </button>
+        <button onClick={() => savePreferences({ activityId: id })}>
+          Save Preferences For This Activity Only
+        </button>
+      </div>
     </div>
   );
 };

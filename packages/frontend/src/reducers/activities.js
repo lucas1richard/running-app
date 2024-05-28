@@ -1,5 +1,6 @@
 import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
+import { selectListPrerences } from './preferences';
 
 const activitiesInitialState = {
   activities: {},
@@ -86,8 +87,24 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
 const getActivitiesState = (state) => state.activities;
 
 export const selectActivities = createDeepEqualSelector(
-  getActivitiesState,
-  (activities) => activities.activitiesOrder.map((id) => activities.activities[id])
+  [getActivitiesState,
+  selectListPrerences],
+  (activities, { sortBy, sortOrder }) => {
+    const order = activities.activitiesOrder.slice();
+
+    order.sort((a, b) => {
+      const first = sortOrder === 'asc' ? a : b;
+      const second = sortOrder === 'asc' ? b : a;
+
+      if (sortBy === 'start_date') {
+        return new Date(activities.activities[first].start_date_local) - new Date(activities.activities[second].start_date_local)
+      }
+
+      return (activities.activities[first][sortBy]) - (activities.activities[second][sortBy]);
+    });
+
+    return order.map((id) => activities.activities[id]);
+  }
 );
 
 export const makeSelectActivitySummary = (id) => (state) => state.activities.summary[id];

@@ -67,7 +67,7 @@ const HeartZonesDisplay = ({ zones, nativeZones, heartData, velocityData }) => {
     <div>
       {isUsingNonNativeZones && (
         <div>
-          Note: Using Non-native Heart Rate Zones
+          <small>Note: Using Non-native Heart Rate Zones</small>
         </div>
       )}
       <div style={{ border: '1px solid black' }}>

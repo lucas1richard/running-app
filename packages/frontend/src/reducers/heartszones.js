@@ -1,6 +1,6 @@
 import { produce } from 'immer';
-import { selectConfigZonesId } from './config';
 import { createDeepEqualSelector } from '../utils';
+import { selectPreferencesZonesId } from './preferences';
 
 const heartzonesInitialState = {
   record: [],
@@ -42,7 +42,7 @@ export const makeSelectApplicableHeartZone = createDeepEqualSelector(
 //  * @param {string} date 
 //  */
 export const getHeartZones = (state, date) => {
-  const configZonesId = selectConfigZonesId(state);
+  const configZonesId = selectPreferencesZonesId(state);
   const allZones = selectAllHeartZones(state);
   const nativeZones = makeSelectApplicableHeartZone(state, date);
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;

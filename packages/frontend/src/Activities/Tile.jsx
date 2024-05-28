@@ -11,7 +11,7 @@ import GoogleMapImage from '../Common/GoogleMapImage';
 import { selectHeartZones } from '../reducers/heartszones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
 
-const Tile = ({ activity }) => {
+const Tile = ({ activity, backgroundIndicator }) => {
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date))
@@ -22,7 +22,7 @@ const Tile = ({ activity }) => {
 
   const duration = <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />;
   
-  const { backgroundColor } = getWeatherStyles(activity.weather || {});
+  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather || {})) || {};
   
   return (
     <div className="dls-white-bg border-radius-1 border-2">

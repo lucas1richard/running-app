@@ -5,8 +5,7 @@ function* updateActivity({ payload }) {
   try {
     const { id, ...rest } = payload;
     const res = yield call(requestor.put, `/activities/${id}`, rest);
-    const updatedRes = yield res.json();
-    console.log(updatedRes);
+    yield res.json();
 
     yield put({ type: 'activitiesReducer/UPDATE_ACTIVITY', payload });
   } catch (e) {

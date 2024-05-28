@@ -8,6 +8,7 @@ const { adminRouter } = require('./routes/admin');
 const { authRouter } = require('./routes/authenticate');
 const { heartzonesRouter } = require('./routes/heartzones');
 const { analysisRouter } = require('./routes/analysis');
+const { userRouter } = require('./routes/user');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -15,6 +16,7 @@ app.use('/auth', authRouter);
 app.use('/auth', authRouter);
 app.use('/heartzones', heartzonesRouter);
 app.use('/analysis', analysisRouter);
+app.use('/user', userRouter);
 
 setupdb()
   .then(initMysql)

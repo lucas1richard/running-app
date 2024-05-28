@@ -1,24 +1,27 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAllHeartZones } from '../../reducers/heartszones';
-import { selectConfigZonesId } from '../../reducers/config';
 import ZonesHeader from '../../Activities/ZonesHeader';
+import { selectGlobalPrerences } from '../../reducers/preferences';
 
 const SetGlobalHeartZones = ({}) => {
   const allZones = useSelector(selectAllHeartZones);
-  const configHeartZone = useSelector(selectConfigZonesId);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  const preferences = useSelector(selectGlobalPrerences);
 
   const selectZone = useCallback((id) => {
-    dispatch({ type: 'configReducer/SET_ZONES_ID', payload: id });
-  }, [])
+    dispatch({ type: 'preferencesReducer/SET_GLOBAL_PREFERENCES', payload: { zonesId: id } });
+  }, [dispatch])
   
   return (
     <div>
-      <button onClick={() => selectZone(-1)} disabled={-1 === configHeartZone}>Set Relative</button>
+      <button onClick={() => selectZone(-1)} disabled={-1 === preferences.zonesId}>
+        Set Relative
+      </button>
       {allZones.map((zone) => (
-        <div key={zone.id} className="flex full-width" style={{ border: zone.id === configHeartZone ? '1px solid black' : 'none' }}>
-          <button onClick={() => selectZone(zone.id)} disabled={zone.id === configHeartZone}>
+        <div key={zone.id} className="flex full-width" style={{ border: zone.id === preferences.zonesId ? '1px solid black' : 'none' }}>
+          <button onClick={() => selectZone(zone.id)} disabled={zone.id === preferences.zonesId}>
             Select
           </button>
           <div className="flex-item-grow">
