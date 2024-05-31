@@ -161,9 +161,6 @@ select {
 .flex-justify-center {
   justify-content: center;
 }
-.highcharts-plot-band:hover {
-  fill: rgba(0,0,0, 0.33) !important;
-}
 .heading-1 {
   font-size: 2rem;
   font-weight: bold;;
@@ -213,6 +210,13 @@ label:has(> input):hover {
 [role="button"]:hover {
   background-color: azure;
 }
+.display-none {
+  display: none;
+}
+.display-block {
+  display: block;
+}
+
 
 .dls-white-bg {
   background-color: white;

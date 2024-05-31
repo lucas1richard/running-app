@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate } from '../../utils';
@@ -8,16 +8,17 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
 
   /** @type {Highcharts.Options} */
-  const options = {
+  const options = useMemo(() => ({
     chart: {
       type: 'line',
       height: 400,
-      width,
     },
     title: {
       text: title,
     },
-    zooming: 'x',
+    zooming: {
+      type: 'x',
+    },
     series: [
       {
         name: 'HeartRate',
@@ -42,6 +43,7 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
         color: hrZonesBg[band.zone],
         ...band
       })),
+      zoomEnabled: true,
       gridLineWidth: 2,
       alignTicks: false,
       tickInterval: 240,
@@ -83,7 +85,7 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
         opposite: true,
       }
     ]
-  };
+  }), [data, hrzones, title, velocity]);
 
   return (
     <div style={{ height: 410 }}>

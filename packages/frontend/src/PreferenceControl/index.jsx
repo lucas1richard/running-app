@@ -4,7 +4,7 @@ import usePreferenceControl from '../hooks/usePreferenceControl';
 const PreferenceControl = ({
   subject = '',
   keyPath, // string[]
-  showSaveButton = true,
+  showSaveButton = false,
   saveConfig, // { activityId: string }
   children,
 }) => {
@@ -42,7 +42,9 @@ const PreferenceControl = ({
           </button>
         )}
       </div>
-      {preference && children}
+        <div className={preference ? 'display-block' : 'display-none'}>
+          {children}
+        </div>
     </div>
   );
 }
