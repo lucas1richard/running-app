@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
 import { selectListPrerences } from './preferences';
+import deepmerge from 'deepmerge';
 
 const activitiesInitialState = {
   activities: {},
@@ -57,7 +58,8 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
 
     case 'activitiesReducer/SET_STREAM': {
       return produce(state, (nextState) => {
-        nextState.streams[action.payload.id] = action.payload.data;
+        const { id, data } = action.payload;
+        nextState.streams[id] = deepmerge(state.streams[id], data);
       });
     }
 

@@ -6,6 +6,8 @@ import { selectActivity, selectActivityDetails, selectStreamType } from '../redu
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 
+const streamTypes = ['heartrate', 'velocity_smooth', 'latlng'];
+
 const DetailDataFetcher = ({ id }) => {
   const dispatch = useDispatch();
   const activity = useSelector((state) => selectActivity(state, id)) || {};
@@ -17,12 +19,12 @@ const DetailDataFetcher = ({ id }) => {
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const details = useSelector((state) => selectActivityDetails(state, id));
-  
+
   useEffect(() => {
-    if (!heartRateStream?.data) dispatch({ type: 'activities/FETCH_STREAM_DATA', id });
+    if (!heartRateStream?.data) dispatch({ type: 'activities/FETCH_STREAM_DATA', id, types: streamTypes });
     if (!details) dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: id });
     dispatch({ type: 'preferences/FETCH_ACTIVITY_PREFERENCES', payload: { activityId: id } });
-  }, [dispatch, id]);
+  }, [details, dispatch, heartRateStream?.data, id]);
 
   useEffect(() => {
     if (!zones || !heartRateStream?.data) return;

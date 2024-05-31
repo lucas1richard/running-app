@@ -78,13 +78,6 @@ router.get('/:id/laps', async (req, res) => {
 router.get('/:id/streams', async (req, res) => {
   try {
     const activityId = req.params?.id;
-
-    const cachedStream = await getStream(activityId);
-    if (cachedStream) {
-      await summary.setHasStreams(activityId, true);
-      return res.json(cachedStream);
-    }
-
     const streamKeys = [
       'time',
       'distance',
@@ -97,11 +90,23 @@ router.get('/:id/streams', async (req, res) => {
       'temp',
       'moving',
       'grade_smooth',
-    ].join(',');
-    const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys}`);
+    ];
+    const keys = req.query?.keys?.split?.(',') || streamKeys;
+    const matchKeys = (streamData) => keys.map(
+      (key) => streamData?.find(({ type }) => type === key) || { type: key, data: [], notFound: true }
+    );
+
+    const cachedStream = await getStream(activityId);
+    if (cachedStream) {
+      await summary.setHasStreams(activityId, true);
+      return res.json({ stream: matchKeys(cachedStream.stream) });
+    }
+
+    const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
     await addStream({ stream }, activityId);
     await summary.setHasStreams(activityId, true);
-    res.json({ stream });
+    const response = keys.map((key) => stream?.find(({ type }) => type === key));
+    res.json({ stream: response });
   } catch (err) {
     res.status(500).send(err.message)
   }

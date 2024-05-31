@@ -50,9 +50,10 @@ function* fetchAllStreams() {
   }
 }
 
-function* fetchStreamData({ id }) {
+function* fetchStreamData({ id, types }) {
   try {
-    const res = yield call(requestor.get, `/activities/${id}/streams`);
+    const typesQuery = new URLSearchParams({ keys: types });
+    const res = yield call(requestor.get, `/activities/${id}/streams?${typesQuery}`);
     const summary = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_STREAM', payload: { data: summary, id } });
