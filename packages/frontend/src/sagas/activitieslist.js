@@ -29,13 +29,15 @@ function* fetchActivitySummary() {
 }
 
 function* fetchActivityDetail({ payload }) {
+  const key = `activities/FETCH_ACTIVITY_DETAIL-${payload}`;
   try {
+    yield put({ type: 'apiReducer/SET_LOADING', key })
     const res = yield call(requestor.get, `/activities/${payload}/detail`);
     const summary = yield res.json();
-
     yield put({ type: 'activitiesReducer/SET_ACTIVITY_DETAIL', payload: summary });
+    yield put({ type: 'apiReducer/SET_SUCCESS', key })
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put({ type: 'apiReducer/SET_ERROR', key, error: e.message })
   }
 }
 
@@ -62,9 +64,6 @@ function* fetchStreamData({ id, types }) {
   }
 }
 
-// export function* watchIncrementAsync() {
-//   yield takeEvery('INCREMENT_ASYNC', incrementAsync)
-// }
 export function* activitiesListSaga() {
   yield takeEvery('activities/FETCH_ACTIVITIES', fetchActivities);
   yield takeEvery('activities/FETCH_ACTIVITIES_SUMMARY', fetchActivitySummary);

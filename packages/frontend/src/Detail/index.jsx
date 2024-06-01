@@ -20,6 +20,7 @@ import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import FlexibleChart from './FlexibleChart';
+import { selectApiStatus } from '../reducers/apiStatus';
 
 const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
 const compressCoords = (coords) => {
@@ -34,6 +35,7 @@ const compressCoords = (coords) => {
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
+  const apiStatus = useSelector((state) => selectApiStatus(state, `activities/FETCH_ACTIVITY_DETAIL-${id}`));
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
@@ -51,9 +53,12 @@ const ActivityDetailPage = () => {
 
   const { backgroundColor } = getWeatherStyles(activity.weather || {});
 
+  const isLoading = (apiStatus === 'idle' || apiStatus === 'loading');
+
   return (
     <div className={`pad`}>
       <DetailDataFetcher id={id} />
+      {isLoading && <div>Loading...</div>}
       <div className="flex flex-justify-center gap margin-b">
         <GoogleMapImage
           activityId={id}
