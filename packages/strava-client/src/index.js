@@ -9,6 +9,8 @@ const { authRouter } = require('./routes/authenticate');
 const { heartzonesRouter } = require('./routes/heartzones');
 const { analysisRouter } = require('./routes/analysis');
 const { userRouter } = require('./routes/user');
+const waitPort = require('wait-port');
+const { run } = require('./kafka/client');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -22,12 +24,23 @@ setupdb()
   .then(initMysql)
   .then(initSequelize)
   .then(() => {
-    app.listen(PORT, (err) => {
+    return new Promise((ac, rej) => app.listen(PORT, (err) => {
       if (err) {
-        console.log(err);
-        return;
+        console.log('connect', err);
+        return rej(err);
       }
       console.log(`strava-client listening on port ${PORT}`);
-    });
+      ac();
+    }));
   })
-  .catch(console.log);
+  .then(() => waitPort({ 
+      host: 'running-app-kafka', 
+      port: 9092,
+      timeout: 10000,
+      waitForDns: true,
+    })
+  )
+  .then(() => run())
+  .catch((err) => {
+    console.log('Error starting strava-client', err);
+  });

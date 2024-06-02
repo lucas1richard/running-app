@@ -2,7 +2,6 @@ const { Router } = require('express');
 const {
   bulkAddActivities,
   getActivityDetail,
-  addActivityDetail,
   getStream,
   addStream,
   getAllStreams,
@@ -14,6 +13,7 @@ const summary = require('../database/mysql-activities');
 const Activity = require('../database/sequelize-activities');
 const fetchStrava = require('../utils/fetchStrava');
 const Weather = require('../database/sequelize-weather');
+const { getActivityDetails } = require('../controllers/getActivityDetails');
 
 const router = new Router();
 
@@ -46,13 +46,8 @@ router.get('/list', async (req, res) => {
 router.get('/:id/detail', async (req, res) => {
   try {
     const activityId = req.params?.id;
-    const detail = await getActivityDetail(activityId);
-    if (detail) {
-      return res.json(detail);
-    }
-    const activitiy = await fetchStrava(`/activities/${activityId}`);
-    await addActivityDetail(activitiy);
-    res.json(activitiy);
+    const activity = await getActivityDetails(activityId);
+    res.json(activity);
   } catch (err) {
     res.status(500).send(err.message)
   }
