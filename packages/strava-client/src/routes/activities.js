@@ -93,7 +93,6 @@ router.get('/:id/streams', async (req, res) => {
 
     const cachedStream = await getStream(activityId);
     if (cachedStream) {
-      await summary.setHasStreams(activityId, true);
       return res.json({ stream: matchKeys(cachedStream.stream) });
     }
 

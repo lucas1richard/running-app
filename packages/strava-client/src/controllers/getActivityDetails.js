@@ -7,7 +7,7 @@ const getActivityDetails = async (activityId) => {
   const detail = await getActivityDetail(activityId);
   await producer.connect();
   if (detail) {
-    await producer.send({
+    await producer.send({ // process the activity some more off-cycle
       topic: ACTIVITY_PULL,
       messages: [
         { value: JSON.stringify({ id: activityId }) }
@@ -18,7 +18,7 @@ const getActivityDetails = async (activityId) => {
 
   const activitiy = await fetchStrava(`/activities/${activityId}`);
   await addActivityDetail(activitiy);
-  await producer.send({
+  await producer.send({ // process the activity some more off-cycle
     topic: ACTIVITY_PULL,
     messages: [
       { value: JSON.stringify({ id: activitiy.id }) }
