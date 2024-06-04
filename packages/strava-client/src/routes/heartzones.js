@@ -1,5 +1,8 @@
 const { Router } = require('express');
-const { getAllHeartRateZones, addHeartRateZone } = require('../database/mysql-heart-zones');
+const {
+  getAllHeartRateZones,
+  addHeartRateZone,
+} = require('../database/mysql-heart-zones');
 const ZonesCache = require('../database/sequelize-zones-cache');
 
 const router = new Router();
