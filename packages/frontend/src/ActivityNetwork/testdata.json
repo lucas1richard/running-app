@@ -1,0 +1,186 @@
+[
+  {
+    "id": "11137630162x",
+    "longestCommonSubsequence": 40,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 40,
+    "scoreLow": 1,
+    "scoreHigh": 1
+  },
+  {
+    "id": "11173828695",
+    "longestCommonSubsequence": 38,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 40,
+    "scoreLow": 0.95,
+    "scoreHigh": 0.95
+  },
+  {
+    "id": "11448460995",
+    "longestCommonSubsequence": 31,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 37,
+    "scoreLow": 0.78,
+    "scoreHigh": 0.84
+  },
+  {
+    "id": "11365046540",
+    "longestCommonSubsequence": 30,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 37,
+    "scoreLow": 0.75,
+    "scoreHigh": 0.81
+  },
+  {
+    "id": "11497240073",
+    "longestCommonSubsequence": 32,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 50,
+    "scoreLow": 0.64,
+    "scoreHigh": 0.8
+  },
+  {
+    "id": "11120381679",
+    "longestCommonSubsequence": 27,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 44,
+    "scoreLow": 0.61,
+    "scoreHigh": 0.68
+  },
+  {
+    "id": "11191397077",
+    "longestCommonSubsequence": 29,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 49,
+    "scoreLow": 0.59,
+    "scoreHigh": 0.72
+  },
+  {
+    "id": "11528437045",
+    "longestCommonSubsequence": 28,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 48,
+    "scoreLow": 0.58,
+    "scoreHigh": 0.7
+  },
+  {
+    "id": "11584229718",
+    "longestCommonSubsequence": 20,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 27,
+    "scoreLow": 0.5,
+    "scoreHigh": 0.74
+  },
+  {
+    "id": "11257614780",
+    "longestCommonSubsequence": 18,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 20,
+    "scoreLow": 0.45,
+    "scoreHigh": 0.9
+  },
+  {
+    "id": "11470237259",
+    "longestCommonSubsequence": 18,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 21,
+    "scoreLow": 0.45,
+    "scoreHigh": 0.86
+  },
+  {
+    "id": "10776364107",
+    "longestCommonSubsequence": 14,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 17,
+    "scoreLow": 0.35,
+    "scoreHigh": 0.82
+  },
+  {
+    "id": "11153650885",
+    "longestCommonSubsequence": 8,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 20,
+    "scoreLow": 0.2,
+    "scoreHigh": 0.4
+  },
+  {
+    "id": "11348929783",
+    "longestCommonSubsequence": 7,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 31,
+    "scoreLow": 0.17,
+    "scoreHigh": 0.23
+  },
+  {
+    "id": "11427653299",
+    "longestCommonSubsequence": 7,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 31,
+    "scoreLow": 0.17,
+    "scoreHigh": 0.23
+  },
+  {
+    "id": "11108530631",
+    "longestCommonSubsequence": 6,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 29,
+    "scoreLow": 0.15,
+    "scoreHigh": 0.21
+  },
+  {
+    "id": "11395981611",
+    "longestCommonSubsequence": 6,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 10,
+    "scoreLow": 0.15,
+    "scoreHigh": 0.6
+  },
+  {
+    "id": "11548854020",
+    "longestCommonSubsequence": 6,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 29,
+    "scoreLow": 0.15,
+    "scoreHigh": 0.21
+  },
+  {
+    "id": "10736323762",
+    "longestCommonSubsequence": 0,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 16,
+    "scoreLow": 0,
+    "scoreHigh": 0
+  },
+  {
+    "id": "10757521731",
+    "longestCommonSubsequence": 0,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 19,
+    "scoreLow": 0,
+    "scoreHigh": 0
+  },
+  {
+    "id": "11277530847",
+    "longestCommonSubsequence": 0,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 17,
+    "scoreLow": 0,
+    "scoreHigh": 0
+  },
+  {
+    "id": "11325896104",
+    "longestCommonSubsequence": 0,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 33,
+    "scoreLow": 0,
+    "scoreHigh": 0
+  },
+  {
+    "id": "11380678538",
+    "longestCommonSubsequence": 0,
+    "activitySegmentsIdsLength": 40,
+    "compareSegmentsIdsLength": 24,
+    "scoreLow": 0,
+    "scoreHigh": 0
+  }
+]

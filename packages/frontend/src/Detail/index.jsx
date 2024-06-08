@@ -21,6 +21,7 @@ import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import FlexibleChart from './FlexibleChart';
 import { selectApiStatus } from '../reducers/apiStatus';
+import ActivityNetworkChart from '../ActivityNetwork';
 
 const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
 const compressCoords = (coords) => {
@@ -160,6 +161,8 @@ const ActivityDetailPage = () => {
           zones={zones}
         />
       </PreferenceControl>
+
+      <ActivityNetworkChart />
       <div>
         <button onClick={savePreferences}>
           Save Preferences as a General Rule
