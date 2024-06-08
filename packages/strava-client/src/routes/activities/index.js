@@ -11,6 +11,7 @@ const { streamsRouter } = require('./byId/streams');
 const { detailsRouter } = require('./byId/detail');
 const { lapsRouter } = require('./byId/laps');
 const { preferencesRouter } = require('./byId/preferences');
+const { segmentsRouter } = require('./byId/segments');
 
 const router = new Router();
 
@@ -19,6 +20,7 @@ router.use([
   detailsRouter,
   lapsRouter,
   preferencesRouter,
+  segmentsRouter,
   streamsRouter,
   weatherRouter,
 ]);

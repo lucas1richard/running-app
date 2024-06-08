@@ -7,9 +7,22 @@ const syncActivityDetails = async (activityId) => {
   const details = await getActivityDetail(activityId);
 
   const segmentEfforts = details?.segment_efforts || [];
-  console.log(segmentEfforts);
   try {
-    await AthleteSegment.bulkCreate(segmentEfforts.map(({ segment: se }) => ({
+    await AthleteSegment.bulkCreate(segmentEfforts.map(({ segment: se, ...rest }) => ({
+      ...rest,
+      start_date: new Date(rest.start_date),
+      activityId: activityId,
+      activitySegmentId: se.id,
+    }), {
+      ignoreDuplicates: true,
+      logging: false,
+    }), {
+      ignoreDuplicates: true,
+      logging: false,
+    });
+    console.log('Athlete segments added');
+    console.log('Now adding activity segments');
+    await ActivitySegment.bulkCreate(segmentEfforts.map(({ segment: se }) => ({
       ...se,
       start_latlng: {
         type: 'Point',
@@ -19,19 +32,11 @@ const syncActivityDetails = async (activityId) => {
         type: 'Point',
         coordinates: se.end_latlng?.length ? se.end_latlng : [0,0],
       },
+      activityId: activityId,
     })), {
       ignoreDuplicates: true,
       logging: false,
     });
-    await ActivitySegment.bulkCreate(segmentEfforts.map(({ segment: se, ...rest }) => ({
-      ...rest,
-      start_date: new Date(rest.start_date),
-      activityId: activityId,
-      athleteSegmentId: se.id,
-    }), {
-      ignoreDuplicates: true,
-      logging: false,
-    }));
   } catch (err) {
     console.error(err);
   }

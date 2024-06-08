@@ -1,3 +1,34 @@
+/*
+https://developers.strava.com/docs/reference/#api-models-DetailedSegment
+{
+  "id": 33102402,
+  "resource_state": 2,
+  "name": "400m to Marathon Finish",
+  "activity_type": "Run",
+  "distance": 435,
+  "average_grade": 1.2,
+  "maximum_grade": 4.9,
+  "elevation_high": 28.4,
+  "elevation_low": 22.3,
+  "start_latlng": [
+    40.769822,
+    -73.979474
+  ],
+  "end_latlng": [
+    40.772819,
+    -73.976517
+  ],
+  "elevation_profile": null,
+  "climb_category": 0,
+  "city": "New York",
+  "state": "New York",
+  "country": "United States",
+  "private": false,
+  "hazardous": false,
+  "starred": false
+},
+*/
+
 const { DataTypes, Model } = require('sequelize');
 const { sequelizeMysql } = require('./sequelize-mysql');
 
@@ -11,38 +42,74 @@ ActivitySegment.init(
       allowNull: false,
       primaryKey: true,
     },
-    elapsed_time: {
-      type: DataTypes.INTEGER,
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    moving_time: {
-      type: DataTypes.INTEGER,
-    },
-    start_date: {
-      type: DataTypes.DATE,
-    },
-    start_date_local: {
-      type: DataTypes.DATE,
+    activity_type: {
+      type: DataTypes.ENUM('Run', 'Ride'),
+      allowNull: false,
     },
     distance: {
-      type: DataTypes.DECIMAL(7, 2),
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
       get() { return Number(this.getDataValue('distance')); },
     },
-    start_index: {
-      type: DataTypes.INTEGER,
+    average_grade: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      get() { return Number(this.getDataValue('average_grade')); },
     },
-    end_index: {
-      type: DataTypes.INTEGER,
+    maximum_grade: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      get() { return Number(this.getDataValue('maximum_grade')); },
     },
-    device_watts: {
+    elevation_high: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      get() { return Number(this.getDataValue('elevation_high')); },
+    },
+    elevation_low: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: false,
+      get() { return Number(this.getDataValue('elevation_low')); },
+    },
+    start_latlng: {
+      type: DataTypes.GEOMETRY('POINT'),
+      get() { return this.getDataValue('start_latlng')?.coordinates },
+    },
+    end_latlng: {
+      type: DataTypes.GEOMETRY('POINT'),
+      get() { return this.getDataValue('end_latlng')?.coordinates },
+    },
+    climb_category: {
+      type: DataTypes.TINYINT,
+      allowNull: false,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    private: {
       type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
-    average_heartrate: {
-      type: DataTypes.DECIMAL(4, 1),
-      get() { return Number(this.getDataValue('average_heartrate')); },
+    hazardous: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
-    max_heartrate: {
-      type: DataTypes.DECIMAL(4, 1),
-      get() { return Number(this.getDataValue('max_heartrate')); },
+    starred: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
     },
   },
   {
