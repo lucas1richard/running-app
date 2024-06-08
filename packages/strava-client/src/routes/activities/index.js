@@ -3,7 +3,6 @@ const {
   bulkAddActivities,
   getAllStreams,
 } = require('../../database/setupdb-couchbase');
-const summary = require('../../database/mysql-activities');
 const Activity = require('../../database/sequelize-activities');
 const fetchStrava = require('../../utils/fetchStrava');
 const { weatherRouter } = require('./byId/weather');
@@ -48,15 +47,6 @@ router.get('/list', async (req, res) => {
     res.json(records);
   } catch (err) {
     res.status(500).send(err.message);
-  }
-});
-
-router.get('/summary', async (req, res) => {
-  try {
-    const activities = await summary.getAll();
-    res.json(activities);
-  } catch (error) {
-    res.status(500).send(error.message);
   }
 });
 

@@ -15,12 +15,10 @@ const initSequelize = async () => {
     Activity.hasOne(Weather);
     Weather.belongsTo(Activity);
   
-    // Activity.hasMany(ActivitySegment);
     Activity.hasMany(AthleteSegment);
   
     AthleteSegment.belongsTo(ActivitySegment, { foreignKey: 'activitySegmentId' });
     AthleteSegment.belongsTo(Activity, { foreignKey: 'activityId' });
-    // ActivitySegment.belongsTo(AthleteSegment, { foreignKey: 'athleteSegmentId' });
 
     await sequelizeMysql.query('SET FOREIGN_KEY_CHECKS = 0');
     await sequelizeMysql.query("SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));");
