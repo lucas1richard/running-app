@@ -18,9 +18,7 @@ const ActivityNetworkChart = () => {
       text: ''
     },
     plotOptions: {
-      networkgraph: {
-        keys: ['from', 'to']
-      }
+      networkgraph: {}
     },
     series: [
       {
