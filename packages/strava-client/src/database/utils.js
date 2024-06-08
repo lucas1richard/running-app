@@ -1,3 +1,4 @@
+const { Sequelize } = require('sequelize');
 const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../constants');
 const { getItem, upsertItem } = require('./setupdb-mysql');
 
@@ -31,7 +32,22 @@ const refreshAccessToken = async () => {
   return body;
 };
 
+const sequelizeCoordsDistance = (
+  refCoords,
+  dist = 0.0003, // 33.33 meters
+  col = 'start_latlng'
+) => Sequelize.where(
+  Sequelize.fn( // Geometric distance between two points
+    'ST_Distance',
+    Sequelize.col(col),
+    Sequelize.fn('Point', refCoords[0], refCoords[1])
+  ),
+  Sequelize.Op.lte,
+  dist
+);
+
 module.exports = {
+  sequelizeCoordsDistance,
   getAccessToken,
   refreshAccessToken,
 };

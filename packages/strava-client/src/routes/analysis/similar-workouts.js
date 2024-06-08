@@ -9,6 +9,7 @@
 const Router = require('express').Router;
 const Sequelize = require('sequelize');
 const Activity = require('../../database/sequelize-activities');
+const { sequelizeCoordsDistance } = require('../../database/utils');
 
 const router = new Router();
 
@@ -24,7 +25,6 @@ Decimal Places	Degrees	Distance
 6      	0.000001       111 mm
 7      	0.0000001      11.1 mm
 8      	0.00000001     1.11 mm
-
  */
 const startDistConstraint = 0.0003; // about 22 meters or 72 feet (22 * 3.28084)
 const activityDistanceContstrint = 500; // 300 meters or 984 feet
@@ -45,15 +45,11 @@ router.post('/by-route', async (req, res) => {
         where: {
           [Sequelize.Op.and]: {
             sport_type: 'Run',
-            ax: Sequelize.where( // `ax` doesn't mean anything, just a placeholder
-              Sequelize.fn( // Geometric distance between two points
-                'ST_Distance',
-                Sequelize.col('start_latlng'),
-                Sequelize.fn('Point', activity.start_latlng[0], activity.start_latlng[1])
-              ),
-              Sequelize.Op.lte,
-              startDistConstraint
-            ),
+            ax: sequelizeCoordsDistance( // `ax` doesn't mean anything, just a placeholder
+              activity.start_latlng,
+              startDistConstraint,
+              'start_latlng'
+            ), 
             distance: {
               [Sequelize.Op.between]: [ // distance between 300 meters
                 activity.distance - activityDistanceContstrint,
