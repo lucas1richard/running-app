@@ -16,10 +16,12 @@ const initSequelize = async () => {
     Activity.hasOne(Weather);
     Weather.belongsTo(Activity);
   
+    // Activity.hasMany(ActivitySegment);
     Activity.hasMany(AthleteSegment);
   
     AthleteSegment.belongsTo(ActivitySegment, { foreignKey: 'activitySegmentId' });
     AthleteSegment.belongsTo(Activity, { foreignKey: 'activityId' });
+    // ActivitySegment.belongsTo(AthleteSegment, { foreignKey: 'athleteSegmentId' });
 
     Activity.belongsToMany(Activity, { as: 'relatedActivity', through: RelatedActivities, foreignKey: 'relatedActivity' });
     Activity.belongsToMany(Activity, { as: 'baseActivity', through: RelatedActivities, foreignKey: 'baseActivity' });

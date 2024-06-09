@@ -52,6 +52,16 @@ const getAllActivities = async () => {
   return allRows;
 };
 
+const getActivity = async (id) => {
+  try {
+    const activities = await nano.db.use(ACTIVITIES_DB);
+    const activity = await activities.get(`${id}`);
+    return activity;
+  } catch (err) {
+    return undefined;
+  }
+};
+
 const getActivityDetail = async (id) => {
   try {
     const activities = await nano.db.use(ACTIVITIES_DETAIL_DB);
@@ -139,6 +149,7 @@ module.exports = {
   addStream,
   setupdb,
   bulkAddActivities,
+  getActivity,
   getStream,
   getAllStreams,
   getActivityDetail,

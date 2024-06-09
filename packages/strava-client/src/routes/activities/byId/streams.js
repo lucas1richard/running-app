@@ -32,6 +32,7 @@ router.get('/:id/streams', async (req, res) => {
 
     const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
     await addStream({ stream }, activityId);
+    // await summary.setHasStreams(activityId, true);
     const response = keys.map((key) => stream?.find(({ type }) => type === key));
     res.json({ stream: response });
   } catch (err) {
