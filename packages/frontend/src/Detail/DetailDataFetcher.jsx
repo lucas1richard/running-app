@@ -6,7 +6,7 @@ import { selectActivity, selectActivityDetails, selectStreamType } from '../redu
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 
-const streamTypes = ['heartrate', 'velocity_smooth', 'latlng'];
+const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude'];
 
 const DetailDataFetcher = ({ id }) => {
   const dispatch = useDispatch();

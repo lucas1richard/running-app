@@ -8,12 +8,14 @@ const HeartZonesChartContainer = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id)) || {};
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
+  const altitudeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
 
   return (
     <HeartZonesChartDisplay
       data={heartRateStream?.data || []}
       velocity={velocityStream?.data || []}
+      altitude={altitudeStream?.data || []}
       zones={zones}
     />
   );

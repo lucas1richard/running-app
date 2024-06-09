@@ -4,7 +4,14 @@ import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 
-const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
+const HeartZonesChartDisplay = ({
+  altitude,
+  title,
+  data,
+  velocity,
+  zones,
+  width,
+}) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
 
   /** @type {Highcharts.Options} */
@@ -12,6 +19,8 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
     chart: {
       type: 'line',
       height: 400,
+      alignThresholds: true,
+      alignTicks: true,
     },
     title: {
       text: title,
@@ -27,16 +36,25 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
         color: 'red',
         lineWidth: 2,
         animation: false,
-
+      },
+      altitude && {
+        name: 'altitude',
+        data: altitude,
+        yAxis: 1,
+        lineWidth: 1,
+        color: 'rgba(165, 42, 42, 0.5)',
+        animation: false,
+        type: 'area',
       },
       velocity && {
         name: 'Velocity',
         data: velocity.map(val => Math.round((val * 100 * 2.237)) / 100),
-        yAxis: 1,
+        yAxis: 2,
         lineWidth: 1,
         color: 'black',
         animation: false,
-      }
+      },
+      
     ].filter(Boolean),
     xAxis: {
       plotBands: hrzones.map((band) => ({
@@ -56,6 +74,7 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
     },
     yAxis: [
       { // Primary yAxis
+        height: '75%',
         labels: {
           style: {
             color: 'red'
@@ -70,6 +89,25 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
       },
       { // Secondary yAxis
         gridLineWidth: 0,
+        height: '25%',
+        top: '75%',
+        title: {
+          text: 'Altitude',
+          style: {
+            color: 'brown'
+          }
+        },
+        labels: {
+          format: '{value}',
+          style: {
+            color: 'brown'
+          }
+        },
+        opposite: false,
+      },
+      { // Secondary yAxis
+        gridLineWidth: 0,
+        height: '75%',
         title: {
           text: 'Velocity',
           style: {
@@ -83,7 +121,8 @@ const HeartZonesChartDisplay = ({ title, data, velocity, zones, width }) => {
           }
         },
         opposite: true,
-      }
+      },
+      
     ]
   }), [data, hrzones, title, velocity]);
 
