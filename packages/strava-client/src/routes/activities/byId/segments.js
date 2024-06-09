@@ -2,6 +2,7 @@ const { Router } = require('express');
 const AthleteSegment = require('../../../database/sequelize-athlete-segments');
 const { sequelizeCoordsDistance } = require('../../../database/utils');
 const Activity = require('../../../database/sequelize-activities');
+const RelatedActivities = require('../../../database/sequelize-related-activities');
 
 const router = new Router();
 
@@ -57,14 +58,24 @@ router.get('/:id/segments', async (req, res) => {
   }
 });
 
-router.get('/:id/segments/compare', async (req, res) => {
-  try {
-    const activityId = req.params?.id;
-    const activity = await Activity.findOne({ where: { id: activityId } });
+const getComparedSegments = async (activityId) => {
+  const activity = await Activity.findOne({ where: { id: activityId } });
 
     if (!activity) {
-      return res.json({ activity_not_found: true });
+      throw Error('Activity not found');
     }
+
+    // const existingRelatedActivities = await RelatedActivities.findAll({
+    //   where: {
+    //     baseActivity: activityId
+    //   },
+    //   order: [['segmentScoreFromBase', 'DESC']],
+    // });
+
+    // const existingMap = existingRelatedActivities.reduce((acc, { relatedActivity }) => {
+    //   acc[relatedActivity] = true;
+    //   return acc;
+    // }, {});
     
     const allSegments = await AthleteSegment.findAll({
       order: [['start_date', 'ASC']],
@@ -73,11 +84,12 @@ router.get('/:id/segments/compare', async (req, res) => {
         {
           model: Activity,
           where: {
-            isNearby: sequelizeCoordsDistance(activity.start_latlng, 0.0003, 'start_latlng'),
+            isNearby: sequelizeCoordsDistance(activity.start_latlng, 0.0006, 'start_latlng'),
           },
         }
       ],
     });
+
     const groupedSegments = allSegments.reduce((acc, segment) => {
       const key = segment.activityId;
       if (!acc[key]) acc[key] = [];
@@ -101,13 +113,39 @@ router.get('/:id/segments/compare', async (req, res) => {
       });
 
     comparedSegments.sort((a, b) => b.scoreLow - a.scoreLow);
+
+    await RelatedActivities.bulkCreate(
+      comparedSegments.filter(({ baseActivity }) => baseActivity !== activityId).map((segment) => ({
+        baseActivity: activityId,
+        relatedActivity: segment.id,
+        segmentScoreFromBase: segment.longestCommonSubsequence / segment.activitySegmentsIdsLength,
+        segmentScoreFromRelated: segment.longestCommonSubsequence / segment.compareSegmentsIdsLength,
+        longestCommonSegmentSubsequence: segment.longestCommonSubsequence,
+        numberBaseSegments: segment.activitySegmentsIdsLength,
+        numberRelatedSegments: segment.compareSegmentsIdsLength,
+      })),
+      {
+        ignoreDuplicates: true,
+      }
+    );
+
+    return comparedSegments;
+  };
+
+router.get('/:id/segments/compare', async (req, res) => {
+  try {
+    const activityId = req.params?.id;
     
+    const comparedSegments = await getComparedSegments(activityId);
+
     res.json(comparedSegments);
   } catch (err) {
-    res.status(500).send(err.message)
+    console.log(err)
+    res.status(500).send(err)
   }
 });
 
 module.exports = {
   segmentsRouter: router,
+  getComparedSegments,
 };

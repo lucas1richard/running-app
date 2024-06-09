@@ -19,7 +19,12 @@ const database = DB_FILE ? fs.readFileSync(DB_FILE) : DB;
 
 const sequelize = new Sequelize(database, user, password, {
   host,
-  dialect: 'mysql'
+  dialect: 'mysql',
+  define: {
+    defaultScope: {
+      exclude: ['createdAt', 'updatedAt'],
+    },
+  },
 });
 
 sequelize

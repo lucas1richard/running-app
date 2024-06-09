@@ -11,6 +11,7 @@ const { analysisRouter } = require('./routes/analysis');
 const { userRouter } = require('./routes/user');
 const waitPort = require('wait-port');
 const { run } = require('./kafka/client');
+const { segmentsRouter } = require('./routes/segments');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -19,6 +20,7 @@ app.use('/auth', authRouter);
 app.use('/heartzones', heartzonesRouter);
 app.use('/analysis', analysisRouter);
 app.use('/user', userRouter);
+app.use('/segments', segmentsRouter);
 
 setupdb()
   .then(initMysql)

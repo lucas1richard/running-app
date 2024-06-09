@@ -20,6 +20,13 @@ const ActivityNetworkChart = () => {
     plotOptions: {
       networkgraph: {}
     },
+    tooltip: {
+      useHtml: true,
+      formatter: function () {
+        console.log(this.point)
+        return `<b target="_blank" href="http://localhost:3000/${this.point.name}/detail">${this.point.name}</b>`;
+      }
+    },
     series: [
       {
         layoutAlgorithm: {
@@ -38,50 +45,19 @@ const ActivityNetworkChart = () => {
                 Math.random() * height : node.plotY;
             });
           },
-          linkLength: 10,
+          linkLength: 100,
         },
         name: 'K8',
         link: {
-          width: 5,
+          width: 1,
         },
         data: testdata
-          .filter(({ scoreLow }) => scoreLow >= 0.75)
-          .map(({ id, scoreLow }) => [
-            refId,
-            id
+          .filter(({ segmentScoreFromBase }) => segmentScoreFromBase > 0.7)
+          .map(({ baseActivity, relatedActivity }) => [
+            baseActivity,
+            relatedActivity,
           ])
       },
-      {
-        layoutAlgorithm: {
-          enableSimulation: true,
-          initialPositions: function () {
-            const chart = this.series[1].chart,
-              width = chart.plotWidth,
-              height = chart.plotHeight;
-    
-            this.nodes.forEach(function (node) {
-              // If initial positions were set previously, use that
-              // positions. Otherwise use random position:
-              node.plotX = node.plotX === undefined ?
-                Math.random() * width : node.plotX;
-              node.plotY = node.plotY === undefined ?
-                Math.random() * height : node.plotY;
-            });
-          },
-          linkLength: 20,
-
-        },
-        name: 'K9',
-        link: {
-          width: 2,
-        },
-        data: testdata
-          // .filter(({ scoreLow }) => scoreLow > 0.33 && scoreLow < 0.75)
-          .map(({ id, scoreLow }) => [
-            scoreLow < 0.33 ? id : refId,
-            id
-          ])
-      }
     ]
   };
 
