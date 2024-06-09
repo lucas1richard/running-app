@@ -17,12 +17,13 @@ const activitiesInitialState = {
 const activitiesReducer = (state = activitiesInitialState, action = {}) => {
   switch (action.type) {
     case 'activitiesReducer/SET_ACTIVITIES': {
+      console.log(action)
       const activitiesOrder = action.payload.map(({ id }) => id);
       return produce(state, (nextState) => {
         nextState.activities = Object.fromEntries(
           action.payload.map((activity) => [activity.id, {
             ...activity, zonesCaches: Object.fromEntries(
-              activity.zonesCaches.map((zoneCache) => [zoneCache.heartZoneId, zoneCache])
+              activity.zonesCaches?.map?.((zoneCache) => [zoneCache.heartZoneId, zoneCache]) || []
             )
           }])
         );

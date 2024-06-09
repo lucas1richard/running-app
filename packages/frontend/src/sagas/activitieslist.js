@@ -10,10 +10,11 @@ function* fetchActivities({ forceFetch }) {
     const acts = yield res.json();
     const sortedActs = [...acts];
     sortedActs.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+    console.log(sortedActs)
 
     yield put({ type: 'activitiesReducer/SET_ACTIVITIES', payload: sortedActs });
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put({ type: 'activities/FETCH_ACTIVITIES_FAILED', message: e.message });
   }
 }
 
@@ -24,7 +25,7 @@ function* fetchActivitySummary() {
 
     yield put({ type: 'activitiesReducer/SET_ACTIVITIES_SUMMARY', payload: summary });
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put({ type: 'activities/FETCH_ACTIVITIES_SUMMARY_FAILED', message: e.message });
   }
 }
 
@@ -48,7 +49,7 @@ function* fetchAllStreams() {
 
     yield put({ type: 'activitiesReducer/SET_STREAMS', payload: { data: summary } });
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put({ type: 'activities/FETCH_ALL_STREAMS_FAILED', message: e.message });
   }
 }
 
@@ -60,7 +61,7 @@ function* fetchStreamData({ id, types }) {
 
     yield put({ type: 'activitiesReducer/SET_STREAM', payload: { data: summary, id } });
   } catch (e) {
-    yield put({ type: 'USER_FETCH_FAILED', message: e.message });
+    yield put({ type: 'activities/FETCH_STREAMS_FAILED', message: e.message });
   }
 }
 

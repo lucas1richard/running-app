@@ -60,6 +60,8 @@ const initSequelize = async () => {
           'wind'
         ],
       }]
+    }, {
+      override: true,
     });
 
     sequelizeMysql.addScope('defaultScope', {
@@ -68,7 +70,6 @@ const initSequelize = async () => {
 
   } catch (err) {
     console.error(err);
-
   }
 };
 

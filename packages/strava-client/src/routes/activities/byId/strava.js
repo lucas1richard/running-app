@@ -1,11 +1,11 @@
 const { Router } = require('express');
-const { fetchStrava } = require('../../../utils/fetchStrava');
+const fetchStrava = require('../../../utils/fetchStrava');
 const Activity = require('../../../database/sequelize-activities');
 const { updateActivityDetail } = require('../../../database/setupdb-couchbase');
 
 const router = new Router();
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', async (req, res) => {
   try {
     const id = req.params?.id;
     const body = req.body;
@@ -23,7 +23,7 @@ router.put('/:id', async (req, res, next) => {
 
     res.json(stravaRes);
   } catch (err) {
-    next(err);
+    res.status(500).send(err.message);
   }
 });
 

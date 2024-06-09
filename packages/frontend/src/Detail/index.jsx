@@ -91,7 +91,7 @@ const ActivityDetailPage = () => {
                 Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
               </div>
               <div>
-                Avg Pace - <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(activity.average_speed)))} />/mi
+                Avg Pace - <DurationDisplay numSeconds={activity.average_seconds_per_mile} />/mi
               </div>
               <div>
                 Avg HR - {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
