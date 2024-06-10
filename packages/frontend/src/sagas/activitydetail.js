@@ -3,31 +3,33 @@ import requestor from '../utils/requestor';
 import { takeEveryContext } from './effects';
 
 function* updateActivity({ payload }) {
+  const key = this.triggeredBy;
   try {
-    yield put({ type: 'apiReducer/SET_LOADING', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
 
     const { id, ...rest } = payload;
     const res = yield call(requestor.put, `/activities/${id}`, rest);
     yield res.json();
 
     yield put({ type: 'activitiesReducer/UPDATE_ACTIVITY', payload });
-    yield put({ type: 'apiReducer/SET_SUCCESS', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
   } catch (e) {
-    yield put({ type: 'apiReducer/SET_FAILED', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_FAILED-${key}`, key });
   }
 }
 
 function* fetchSimilarWorkouts({ payload: id }) {
+  const key = this.triggeredBy;
   try {
-    yield put({ type: 'apiReducer/SET_LOADING', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
 
     const res = yield call(requestor.post, '/analysis/similar-workouts/by-route', { id });
     const { combo } = yield res.json();
 
     yield put({ type: 'activitiesReducer/SET_SIMILAR_WORKOUTS', payload: { id, combo } });
-    yield put({ type: 'apiReducer/SET_SUCCESS', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
   } catch (e) {
-    yield put({ type: 'apiReducer/SET_FAILED', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_FAILED-${key}`, key });
   }
 }
 

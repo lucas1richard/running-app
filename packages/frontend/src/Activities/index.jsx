@@ -10,7 +10,7 @@ import SpeedChart from './SpeedChart';
 import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
 import { makeStatusSelector } from '../reducers/apiStatus';
-import Spinner from '../Loading/Spinner';
+import Shimmer from '../Loading/Shimmer';
 
 const Activities = () => {
   const dispatch = useDispatch();
@@ -48,15 +48,9 @@ const Activities = () => {
     dispatch({ type: 'activities/FETCH_ACTIVITIES', forceFetch: true });
   }, [dispatch]);
 
-  if (
-    (activitiesApiStatus === 'loading' || activitiesApiStatus === 'idle')
-  ) {
-    console.log('quack')
-    return <Spinner />;
-  }
-
   return (
     <div style={{ padding: '1rem', margin: 'auto', maxWidth: 1280 }}>
+      <Shimmer isVisible={(activitiesApiStatus === 'loading' || activitiesApiStatus === 'idle')} />
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
       </div>

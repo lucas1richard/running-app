@@ -1,0 +1,116 @@
+.spinner {
+  --duration: 1000ms;
+  --diameter: 40px;
+  --color: #333;
+  width: var(--diameter);
+  height: var(--diameter);
+  margin: auto auto;
+  position: relative;
+  -webkit-animation: sk-scaleout var(--duration) infinite ease-in-out;
+  animation: sk-scaleout var(--duration) infinite ease-in-out;
+}
+
+@keyframes sk-scaleout {
+  0% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  100% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.spinner-inner {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color);
+  border-radius: 100%;
+  position: absolute;
+}
+
+
+.shimmer {
+  --duration: 1.5s;
+  --delay: 0.5s;
+  --color: #f6f7f8;
+  --shine: #f6f7f8;
+  --shine-width: 40%;
+  --shine-height: 100%;
+  --shine-duration: 1s;
+  --shine-delay: 0.5s;
+  --shine-ease: ease-in-out;
+  --shine-opacity: 0.5;
+  --shine-offset: 100%;
+  --shine-offset-end: 200%;
+  --shine-offset-start: -100%;
+  --shine-offset-start-end: 0%;
+  --shine-offset-end-end: 100%;
+  --shine-offset-start-start: -200%;
+  --shine-offset-end-start: 0%;
+  --shine-offset-start-start-end: -100%;
+  --shine-offset-end-start-end: 0%;
+  --shine-offset-start-end-start: 0%;
+  --shine-offset-end-end-start: 100%;
+  --shine-offset-start-start-start: -200%;
+  --shine-offset-end-end-end: 200%;
+  --shine-offset-start-start-end-end: -100%;
+  --shine-offset-end-start-end-end: 100%;
+  --shine-offset-start-end-start-end: 0%;
+  --shine-offset-end-end-start-end: 100%;
+  --shine-offset-start-start-start-end: -100%;
+  --shine-offset-end-end-end-start: 100%;
+  --shine-offset-start-start-end-start: -100%;
+  --shine-offset-end-start-start-end: 0%;
+  --shine-offset-start-end-start-start: 0%;
+  --shine-offset-end-end-start-start: 100%;
+  --shine-offset-start-start-start-start: -200%;
+  --shine-offset-end-end-end-end: 200%;
+  --shine-offset-start-start-end-end-start: -100%;
+  --shine-offset-end-start-end-end-start: 100%;
+  --shine-offset-start-end-start-end-start: 0%;
+  --shine-offset-end-end-start-end-start: 100%;
+  --shine-offset-start-start-start-end-start: -100%;
+  --shine-offset-end-end-end-start-end: 100%;
+  --shine-offset-start-start-end-start-end: -100%;
+  --shine-offset-end-start-start-end-start: 0%;
+  --shine-offset-start-end-start-start-end: 0%;
+  /* --shine-offset-end-end; */
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.1);
+}
+
+.shimmer-inner {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color);
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: linear-gradient(
+    90deg,
+    var(--color) var(--shine-offset),
+    var(--shine) var(--shine-offset),
+    var(--shine) var(--shine-offset-end),
+    var(--color) var(--shine-offset-end)
+  );
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  -webkit-animation: shimmer var(--shine-duration) infinite var(--shine-ease);
+  animation: shimmer var(--shine-duration) infinite var(--shine-ease);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: var(--shine-offset-start) 0;
+  }
+  100% {
+    background-position: var(--shine-offset-end) 0;
+  }
+}
+
+

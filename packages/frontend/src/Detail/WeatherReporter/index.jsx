@@ -7,6 +7,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../Detail.module.css';
 import { selectActivity } from '../../reducers/activities';
+import { useGetApiStatus } from '../../reducers/apiStatus';
+import Shimmer from '../../Loading/Shimmer';
+import classNames from 'classnames';
 
 const WeatherReporter = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id));
@@ -15,6 +18,7 @@ const WeatherReporter = ({ id }) => {
   const [humidity, setHumidity] = useState(activity?.weather?.humidity);
   const [wind, setWind] = useState(activity?.weather?.wind);
   const [precipitation, setPrecipitation] = useState(activity?.weather?.precipitation);
+  const weatherDataStatus = useGetApiStatus(`weather/FETCH_WEATHER-${id}`);
 
   useEffect(() => {
     setSky(activity?.weather?.sky);
@@ -62,10 +66,15 @@ const WeatherReporter = ({ id }) => {
   }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
 
   return (
-    <div>
+    <div className="border-radius-1 pad">
+      <Shimmer
+        isVisible={weatherDataStatus === 'loading'}
+      />
       <div>
         <form onSubmit={handleSubmit}>
           <div className="flex gap flex-align-center">
+
+
             <select
               id="sky"
               name="sky"
@@ -80,6 +89,7 @@ const WeatherReporter = ({ id }) => {
               <option value="overcast">Overcast</option>
             </select>
           </div>
+
 
           <div className="flex gap flex-align-center">
             <select
@@ -97,7 +107,6 @@ const WeatherReporter = ({ id }) => {
               <option value="torrential">Torrential Rain</option>
             </select>
           </div>
-
 
           <div className="flex gap flex-align-center">
             <input 

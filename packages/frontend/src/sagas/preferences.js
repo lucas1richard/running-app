@@ -4,8 +4,9 @@ import { selectActivityPreferences, selectGlobalPrerences, selectListPrerences }
 import { takeEveryContext } from './effects';
 
 function* fetchUserPreferences({ payload }) {
+  const key = this.triggeredBy;
   try {
-    yield put({ type: 'apiReducer/SET_LOADING', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
     const response = yield call(requestor.get, '/user/preferences');
     const data = yield response.json();
     if (data?.list) {
@@ -17,25 +18,25 @@ function* fetchUserPreferences({ payload }) {
     if (data?.activities) {
       yield put({ type: 'preferencesReducer/SET_ACTIVITY_DEFAULTS', payload: data.activities.default });
     }
-    yield put({ type: 'apiReducer/SET_SUCCESS', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
   } catch (error) {
-    yield put({ type: 'apiReducer/SET_ERROR', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
   }
 }
 
 function* fetchActivityPreferences({ payload }) {
   const key = `${this.triggeredBy}-${payload.activityId}`;
   try {
-    yield put({ type: 'apiReducer/SET_LOADING', key });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
     const response = yield call(requestor.get, `/activities/${payload.activityId}/preferences`);
     const data = yield response.json();
     yield put({
       type: 'preferencesReducer/SET_ACTIVITY_PREFERENCES',
       payload: { activityId: payload.activityId, preferences: data },
     });
-    yield put({ type: 'apiReducer/SET_SUCCESS', key });
+    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
   } catch (error) {
-    yield put({ type: 'apiReducer/SET_ERROR', key });
+    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
   }
 }
 

@@ -3,28 +3,30 @@ import requestor from '../utils/requestor';
 import { takeEveryContext } from './effects';
 
 function* fetchHeartZones() {
+  const key = this.triggeredBy;
   try {
-    yield put({ type: 'apiReducer/SET_LOADING', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
     const res = yield call(requestor.get, '/heartzones');
     const zones = yield res.json();
 
     yield put({ type: 'heartzonesReducer/SET_HEART_ZONES', payload: zones });
-    yield put({ type: 'apiReducer/SET_SUCCESS', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
   } catch (e) {
-    yield put({ type: 'apiReducer/SET_ERROR', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
   }
 }
 
 function* addHeartZones({ payload }) {
+  const key = this.triggeredBy;
   try {
-    yield put({ type: 'apiReducer/SET_LOADING', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
     const res = yield call(requestor.post, '/heartzones', payload);
     const zones = yield res.json();
 
     yield put({ type: 'heartzonesReducer/SET_HEART_ZONES', payload: zones });
-    yield put({ type: 'apiReducer/SET_SUCCESS', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
   } catch (e) {
-    yield put({ type: 'apiReducer/SET_ERROR', key: this.triggeredBy });
+    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
   }
 }
 

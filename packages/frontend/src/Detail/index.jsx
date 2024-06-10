@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
+import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
@@ -22,6 +22,7 @@ import usePreferenceControl from '../hooks/usePreferenceControl';
 import FlexibleChart from './FlexibleChart';
 import { useGetApiStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
+import Spinner from '../Loading/Spinner';
 
 const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
 const compressCoords = (coords) => {
@@ -36,7 +37,10 @@ const compressCoords = (coords) => {
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
-  const apiStatus = useGetApiStatus(`activities/FETCH_ACTIVITY_DETAIL-${id}`);
+  const streamDataStatus = useGetApiStatus(`activities/FETCH_STREAM_DATA-${id}`);
+  const detailDataStatus = useGetApiStatus(`activities/FETCH_ACTIVITY_DETAIL-${id}`);
+  const prefDataStatus = useGetApiStatus(`preferences/FETCH_ACTIVITY_PREFERENCES-${id}`);
+
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
@@ -54,123 +58,134 @@ const ActivityDetailPage = () => {
 
   const { backgroundColor } = getWeatherStyles(activity.weather || {});
 
-  const isLoading = (apiStatus === 'idle' || apiStatus === 'loading');
+  const isLoading = [
+    streamDataStatus,
+    detailDataStatus,
+    prefDataStatus,
+  ].some((apiStatus) => (apiStatus === 'idle' || apiStatus === 'loading'));
 
   return (
     <div className={`pad`}>
       <DetailDataFetcher id={id} />
-      {isLoading && <div>Loading...</div>}
-      <div className="flex flex-justify-center gap margin-b">
-        <GoogleMapImage
-          activityId={id}
-          polyline={details?.map?.polyline}
-          imgHeight={600}
-          imgWidth={1200}
-          height={600}
-          width={600}
-          alt="route"
-        />
-        <div className="border-radius-1" style={{ width: 600, background: '#fff', border: '1px solid black' }}>
-          <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
-            <button onClick={() => setTileBgColor('weather')}>Show Weather Background</button>
-            <UpdatableNameDescription
-              activity={activity}
-              details={details}
+      {isLoading
+        ? (
+          <Spinner size="xlarge" />
+        )
+        : (
+          <>
+            <div className="flex flex-justify-center gap margin-b">
+              <GoogleMapImage
+                activityId={id}
+                polyline={details?.map?.polyline}
+                imgHeight={600}
+                imgWidth={1200}
+                height={600}
+                width={600}
+                alt="route"
+              />
+              <div className="border-radius-1" style={{ width: 600, background: '#fff', border: '1px solid black' }}>
+                <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
+                  <button onClick={() => setTileBgColor('weather')}>Show Weather Background</button>
+                  <UpdatableNameDescription
+                    activity={activity}
+                    details={details}
+                  />
+                  <h2 className="text-center">
+                    {activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}
+                  </h2>
+                  <h3 className="text-center">
+                    {activity.start_date_local ? dayjs.utc(activity.start_date_local).format('h:mm A') : ''}
+                  </h3>
+                  <div className="text-center margin-tb">
+                    <div>
+                      <strong>{activity.distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
+                    </div>
+                    <div>
+                      Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+                    </div>
+                    <div>
+                      Avg Pace - <DurationDisplay numSeconds={activity.average_seconds_per_mile} />/mi
+                    </div>
+                    <div>
+                      Avg HR - {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+                    </div>
+                  </div>
+                  <div>
+                    <WeatherReporter id={id} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <FlexibleChart data={compressCoords(roundCoords(latlngStreamData))} width={600} />
+
+            <HeartZonesDisplay
+              zones={zones}
+              nativeZones={nativeZones}
+              heartData={heartRateStream?.data}
+              velocityData={velocityStream?.data}
             />
-            <h2 className="text-center">
-              {activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}
-            </h2>
-            <h3 className="text-center">
-              {activity.start_date_local ? dayjs.utc(activity.start_date_local).format('h:mm A') : ''}
-            </h3>
-            <div className="text-center margin-tb">
-              <div>
-                <strong>{convertMetersToMiles(activity.distance).toFixed(2)}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
-              </div>
-              <div>
-                Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-              </div>
-              <div>
-                Avg Pace - <DurationDisplay numSeconds={activity.average_seconds_per_mile} />/mi
-              </div>
-              <div>
-                Avg HR - {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
-              </div>
+
+            <HeartZonesChartContainer id={id} />
+
+            <div className="flex flex-column flex-align-center">
+              {!showMap && <button onClick={() => setShowMap(true)}>Show Map</button>}
+              {showMap && (
+                <div style={{ height: 600, width: 600 }}>
+                  <ReactMap id={id} />
+                </div>
+              )}
             </div>
+
+            <PreferenceControl
+              subject="Laps"
+              keyPath={['activities', id, 'shouldShowLaps']}
+              saveConfig={{ activityId: id }}
+            >
+              <Laps id={id} />
+            </PreferenceControl>
+
+            {/* <ElevationChart
+              data={heartRateStream.data}
+              velocity={velocityStream?.data}
+              grade={gradeStream?.data}
+              zones={zones}
+            /> */}
+
+            <PreferenceControl
+              subject="Segments"
+              keyPath={['activities', id, 'shouldShowSegments']}
+              saveConfig={{ activityId: id }}
+            >
+              <SegmentsDetailDisplay
+                heartData={heartRateStream?.data}
+                velocityData={velocityStream?.data}
+                segments={details?.segment_efforts || []}
+              />
+            </PreferenceControl>
+
+            <PreferenceControl
+              subject="Similar Workouts"
+              keyPath={['activities', id, 'shouldShowSimilar']}
+              saveConfig={{ activityId: id }}
+            >
+              <SimilarWorkouts
+                activity={activity}
+                zones={zones}
+              />
+            </PreferenceControl>
+
+            <ActivityNetworkChart />
             <div>
-              <WeatherReporter id={id} />
+              <button onClick={savePreferences}>
+                Save Preferences as a General Rule
+              </button>
+              <button onClick={() => savePreferences({ activityId: id })}>
+                Save Preferences For This Activity Only
+              </button>
             </div>
-          </div>
-          </div>
-      </div>
-
-      <FlexibleChart data={compressCoords(roundCoords(latlngStreamData))} width={600} />
-
-      <HeartZonesDisplay
-        zones={zones}
-        nativeZones={nativeZones}
-        heartData={heartRateStream?.data}
-        velocityData={velocityStream?.data}
-      />
-
-      <HeartZonesChartContainer id={id} />
-
-      <div className="flex flex-column flex-align-center">
-        {!showMap && <button onClick={() => setShowMap(true)}>Show Map</button>}
-        {showMap && (
-          <div style={{ height: 600, width: 600 }}>
-            <ReactMap id={id} />
-          </div>
+          </>
         )}
-      </div>
-
-      <PreferenceControl
-        subject="Laps"
-        keyPath={['activities', id, 'shouldShowLaps']}
-        saveConfig={{ activityId: id }}
-      >
-        <Laps id={id} />
-      </PreferenceControl>
-
-      {/* <ElevationChart
-        data={heartRateStream.data}
-        velocity={velocityStream?.data}
-        grade={gradeStream?.data}
-        zones={zones}
-      /> */}
-
-      <PreferenceControl
-        subject="Segments"
-        keyPath={['activities', id, 'shouldShowSegments']}
-        saveConfig={{ activityId: id }}
-      >
-        <SegmentsDetailDisplay
-          heartData={heartRateStream?.data}
-          velocityData={velocityStream?.data}
-          segments={details?.segment_efforts || []}
-        />
-      </PreferenceControl>
-
-      <PreferenceControl
-        subject="Similar Workouts"
-        keyPath={['activities', id, 'shouldShowSimilar']}
-        saveConfig={{ activityId: id }}
-      >
-        <SimilarWorkouts
-          activity={activity}
-          zones={zones}
-        />
-      </PreferenceControl>
-
-      <ActivityNetworkChart />
-      <div>
-        <button onClick={savePreferences}>
-          Save Preferences as a General Rule
-        </button>
-        <button onClick={() => savePreferences({ activityId: id })}>
-          Save Preferences For This Activity Only
-        </button>
-      </div>
     </div>
   );
 };
