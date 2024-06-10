@@ -1,9 +1,11 @@
-import { call, put, select, takeEvery } from 'redux-saga/effects';
+import { call, put, select } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
 import { selectActivityPreferences, selectGlobalPrerences, selectListPrerences } from '../reducers/preferences';
+import { takeEveryContext } from './effects';
 
 function* fetchUserPreferences({ payload }) {
   try {
+    yield put({ type: 'apiReducer/SET_LOADING', key: this.triggeredBy });
     const response = yield call(requestor.get, '/user/preferences');
     const data = yield response.json();
     if (data?.list) {
@@ -15,21 +17,25 @@ function* fetchUserPreferences({ payload }) {
     if (data?.activities) {
       yield put({ type: 'preferencesReducer/SET_ACTIVITY_DEFAULTS', payload: data.activities.default });
     }
+    yield put({ type: 'apiReducer/SET_SUCCESS', key: this.triggeredBy });
   } catch (error) {
-    yield put({ type: 'FETCH_WEATHER_FAILURE', error: error.message });
+    yield put({ type: 'apiReducer/SET_ERROR', key: this.triggeredBy });
   }
 }
 
 function* fetchActivityPreferences({ payload }) {
+  const key = `${this.triggeredBy}-${payload.activityId}`;
   try {
+    yield put({ type: 'apiReducer/SET_LOADING', key });
     const response = yield call(requestor.get, `/activities/${payload.activityId}/preferences`);
     const data = yield response.json();
     yield put({
       type: 'preferencesReducer/SET_ACTIVITY_PREFERENCES',
       payload: { activityId: payload.activityId, preferences: data },
     });
+    yield put({ type: 'apiReducer/SET_SUCCESS', key });
   } catch (error) {
-    yield put({ type: 'FETCH_WEATHER_FAILURE', error: error.message });
+    yield put({ type: 'apiReducer/SET_ERROR', key });
   }
 }
 
@@ -60,8 +66,8 @@ function* setActivityPreferences({ payload }) {
 }
 
 export function* preferencesSaga() {
-  yield takeEvery('preferences/FETCH_USER_PREFERENCES', fetchUserPreferences);
-  yield takeEvery('preferences/FETCH_ACTIVITY_PREFERENCES', fetchActivityPreferences);
-  yield takeEvery('preferences/SET_ACTIVITY_PREFERENCES', setActivityPreferences);
-  yield takeEvery('preferences/SET_USER_PREFERENCES', setUserPreferences);
+  yield takeEveryContext('preferences/FETCH_USER_PREFERENCES', fetchUserPreferences);
+  yield takeEveryContext('preferences/FETCH_ACTIVITY_PREFERENCES', fetchActivityPreferences);
+  yield takeEveryContext('preferences/SET_ACTIVITY_PREFERENCES', setActivityPreferences);
+  yield takeEveryContext('preferences/SET_USER_PREFERENCES', setUserPreferences);
 }

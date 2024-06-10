@@ -14,6 +14,7 @@ const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
     <div className="flex">
       {percents.filter((n) => Boolean(Number(n))).map((percent, ix) => (
         <div
+          key={`${percent}-${ix}-${id}`}
           style={{
             width: `${percent}%`,
             background: hrZonesText[ix + 1],

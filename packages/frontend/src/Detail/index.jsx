@@ -20,7 +20,7 @@ import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import FlexibleChart from './FlexibleChart';
-import { selectApiStatus } from '../reducers/apiStatus';
+import { useGetApiStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
 
 const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
@@ -36,7 +36,7 @@ const compressCoords = (coords) => {
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
-  const apiStatus = useSelector((state) => selectApiStatus(state, `activities/FETCH_ACTIVITY_DETAIL-${id}`));
+  const apiStatus = useGetApiStatus(`activities/FETCH_ACTIVITY_DETAIL-${id}`);
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};

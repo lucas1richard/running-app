@@ -17,7 +17,6 @@ const activitiesInitialState = {
 const activitiesReducer = (state = activitiesInitialState, action = {}) => {
   switch (action.type) {
     case 'activitiesReducer/SET_ACTIVITIES': {
-      console.log(action)
       const activitiesOrder = action.payload.map(({ id }) => id);
       return produce(state, (nextState) => {
         nextState.activities = Object.fromEntries(

@@ -9,12 +9,16 @@ import ConfigWidget from '../Config';
 import SpeedChart from './SpeedChart';
 import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
+import { makeStatusSelector } from '../reducers/apiStatus';
+import Spinner from '../Loading/Spinner';
 
 const Activities = () => {
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities);
   const allzones = useSelector(selectAllHeartZones);
   const listPreferences = useSelector(selectListPrerences);
+  const activitiesApiStatus = useSelector(makeStatusSelector('activities/FETCH_ACTIVITIES'));
+  console.log({ activitiesApiStatus })
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   
@@ -44,6 +48,13 @@ const Activities = () => {
     dispatch({ type: 'activities/FETCH_ACTIVITIES', forceFetch: true });
   }, [dispatch]);
 
+  if (
+    (activitiesApiStatus === 'loading' || activitiesApiStatus === 'idle')
+  ) {
+    console.log('quack')
+    return <Spinner />;
+  }
+
   return (
     <div style={{ padding: '1rem', margin: 'auto', maxWidth: 1280 }}>
       <div>
@@ -57,25 +68,30 @@ const Activities = () => {
       </div>
       <ConfigWidget />
       <ListSort />
-      {categorizeRunsByZones.map(({ runs, zones, start }) => (
-        <div className="flex flex-column gap">
-          {isGroupByZonesSet && (
-            <div className="margin-tb" style={{ marginTop: '3rem' }}>
-              <ZonesHeader zones={zones} start={start} />
+      
+      {
+        activitiesApiStatus === 'success' && (
+          categorizeRunsByZones.map(({ runs, zones, start }) => (
+            <div className="flex flex-column gap" key={start}>
+              {isGroupByZonesSet && (
+                <div className="margin-tb" style={{ marginTop: '3rem' }}>
+                  <ZonesHeader zones={zones} start={start} />
+                </div>
+              )}
+              <div className="flex flex-column gap">
+                {runs.map((activity) => (
+                  <Tile
+                    key={activity.id}
+                    activity={activity}
+                    zones={zones}
+                    backgroundIndicator={tileBackgroundIndicator}
+                  />
+                ))}
+              </div>
             </div>
-          )}
-          <div className="flex flex-column gap">
-            {runs.map((activity) => (
-              <Tile
-                key={activity.id}
-                activity={activity}
-                zones={zones}
-                backgroundIndicator={tileBackgroundIndicator}
-              />
-            ))}
-          </div>
-        </div>
-      ))}
+          ))
+        )
+      }
     </div>
   );
 };
