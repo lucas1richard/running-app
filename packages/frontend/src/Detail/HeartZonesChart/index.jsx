@@ -3,6 +3,7 @@ import HeartZonesChartDisplay from './HeartZonesChartDisplay';
 import { useSelector } from 'react-redux';
 import { selectActivity, selectStreamType } from '../../reducers/activities';
 import { selectHeartZones } from '../../reducers/heartzones';
+import usePreferenceControl from '../../hooks/usePreferenceControl';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id)) || {};
@@ -11,13 +12,52 @@ const HeartZonesChartContainer = ({ id }) => {
   const altitudeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
 
+  const [
+    zonesBandsDirection,
+    setZonesBandsDirection,
+    savePreferences,
+  ] = usePreferenceControl(['activities', id, 'zonesBandsDirection'], 'xAxis');
+
   return (
-    <HeartZonesChartDisplay
-      data={heartRateStream?.data || []}
-      velocity={velocityStream?.data || []}
-      altitude={altitudeStream?.data || []}
-      zones={zones}
-    />
+    <div>
+      <HeartZonesChartDisplay
+        data={heartRateStream?.data || []}
+        velocity={velocityStream?.data || []}
+        altitude={altitudeStream?.data || []}
+        zones={zones}
+        zonesBandsDirection={zonesBandsDirection}
+      />
+      <form onSubmit={(ev) => ev.preventDefault()}>
+        <label>
+          <input
+            type="radio"
+            value="xAxis"
+            checked={zonesBandsDirection === 'xAxis'}
+            onChange={(e) => setZonesBandsDirection('xAxis')}
+          />
+          xAxis
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="yAxis"
+            checked={zonesBandsDirection === 'yAxis'}
+            onChange={(e) => setZonesBandsDirection('yAxis')}
+          />
+          yAxis
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="none"
+            checked={zonesBandsDirection === 'none'}
+            onChange={(e) => setZonesBandsDirection('none')}
+          />
+          None
+        </label>
+        <button type="button" onClick={() => savePreferences({ activityId: id })}>Save</button>
+      </form>
+    </div>
   );
 };
 

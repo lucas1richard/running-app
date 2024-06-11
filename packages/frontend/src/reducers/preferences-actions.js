@@ -21,7 +21,7 @@ export const REDUCER_SET_ACTIVITY_PREFS_DEFAULTS = 'preferencesReducer/SET_ACTIV
 export const setActivityPrefDefaultsAct = (defaults) => ({ type: REDUCER_SET_ACTIVITY_PREFS_DEFAULTS, payload: defaults });
 
 export const REDUCER_SET_ACTIVITY_PREFS = 'preferencesReducer/SET_ACTIVITY_PREFERENCES';
-export const setActivityPrefsAct = (activityId, preferences) => ({ type: SET_ACTIVITY_PREFS, payload: { activityId, preferences } });
+export const setActivityPrefsAct = (activityId, preferences) => ({ type: REDUCER_SET_ACTIVITY_PREFS, payload: { activityId, preferences } });
 
 export const SET_GLOBAL_PREFS = 'preferencesReducer/SET_GLOBAL_PREFERENCES';
 export const setGlobalPrefsAct = (preferences) => ({ type: SET_GLOBAL_PREFS, payload: preferences });

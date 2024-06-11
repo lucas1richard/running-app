@@ -1,18 +1,49 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 
 const HeartZonesChartDisplay = ({
+  id,
   altitude,
   title,
   data,
   velocity,
   zones,
   width,
+  zonesBandsDirection,
 }) => {
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
+
+  const chartRef = useRef();
+
+  const xAxisBands = useMemo(() => hrzones.map((band, ix) => ({
+    color: hrZonesBg[band.zone],
+    id: `hrZoneBand-${ix}`,
+    ...band
+  })), [hrzones]);
+
+  const yAxisBands = useMemo(() => [1,2,3,4,5].map((z, ix) => ({
+    from: zones[`z${z}`],
+    to: (zones[`z${z + 1}`] - 1) || 220,
+    color: hrZonesBg[z],
+    id: 'hrZoneBand',
+  })), [zones]);
+  
+  useEffect(() => {
+    const chart = chartRef.current?.chart;
+    if (!chart) return;
+
+    xAxisBands.forEach(({ id }) => chart.xAxis[0].removePlotBand(id));
+    yAxisBands.forEach(({ id }) => chart.yAxis[0].removePlotBand(id));
+
+    if (zonesBandsDirection === 'xAxis') {
+      xAxisBands.forEach(band => chart.xAxis[0].addPlotBand(band));
+    } else if (zonesBandsDirection === 'yAxis') {
+      yAxisBands.forEach(band => chart.yAxis[0].addPlotBand(band));
+    }
+  }, [xAxisBands, yAxisBands, zonesBandsDirection]);
 
   /** @type {Highcharts.Options} */
   const options = useMemo(() => ({
@@ -57,10 +88,6 @@ const HeartZonesChartDisplay = ({
       
     ].filter(Boolean),
     xAxis: {
-      plotBands: hrzones.map((band) => ({
-        color: hrZonesBg[band.zone],
-        ...band
-      })),
       zoomEnabled: true,
       gridLineWidth: 2,
       alignTicks: false,
@@ -124,7 +151,7 @@ const HeartZonesChartDisplay = ({
       },
       
     ]
-  }), [data, hrzones, title, velocity]);
+  }), [altitude, data, title, velocity]);
 
   return (
     <div style={{ height: 410 }}>
@@ -132,6 +159,7 @@ const HeartZonesChartDisplay = ({
         highcharts={Highcharts}
         options={options}
         allowChartUpdate={true}
+        ref={chartRef}
       />
       <div className="flex full-width">
         {hrzones.map(({ zone, from, to }) => (
