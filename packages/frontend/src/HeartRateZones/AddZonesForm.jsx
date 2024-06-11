@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { addHeartZonesAct } from '../reducers/heartzones-actions';
 
 const AddZonesForm = () => {
   const [z1, setZ1] = useState();
@@ -12,10 +13,7 @@ const AddZonesForm = () => {
   
   const onFormSubmit = useCallback((ev) => {
     ev.preventDefault();
-    dispatch({
-      type: 'heartzones/ADD_HEART_ZONES',
-      payload: { z1, z2, z3, z4, z5, starting }
-    });
+    dispatch(addHeartZonesAct({ z1, z2, z3, z4, z5, starting }));
   }, [z1, z2, z3, z4, z5, starting, dispatch]);
 
   const z1Change = useCallback((ev) => setZ1(ev.target.value), []);

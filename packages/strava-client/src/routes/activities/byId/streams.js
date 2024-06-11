@@ -22,7 +22,7 @@ router.get('/:id/streams', async (req, res) => {
     ];
     const keys = req.query?.keys?.split?.(',') || streamKeys;
     const matchKeys = (streamData) => keys.map(
-      (key) => streamData?.find(({ type }) => type === key) || { type: key, data: [], notFound: true }
+      (key) => streamData?.find?.(({ type }) => type === key) || { type: key, data: [], notFound: true }
     );
 
     const cachedStream = await getStream(activityId);
@@ -33,7 +33,7 @@ router.get('/:id/streams', async (req, res) => {
     const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
     await addStream({ stream }, activityId);
     // await summary.setHasStreams(activityId, true);
-    const response = keys.map((key) => stream?.find(({ type }) => type === key));
+    const response = keys.map((key) => stream?.find?.(({ type }) => type === key));
     res.json({ stream: response });
   } catch (err) {
     res.status(500).send(err.message)

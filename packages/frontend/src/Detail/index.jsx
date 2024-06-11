@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
-import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
+import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
@@ -23,6 +23,8 @@ import FlexibleChart from './FlexibleChart';
 import { useGetApiStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
+import { FETCH_ACTIVITY_DETAIL, FETCH_ACTIVITY_STREAM_DATA } from '../reducers/activities-actions';
+import { FETCH_ACTIVITY_PREFS } from '../reducers/preferences-actions';
 
 const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
 const compressCoords = (coords) => {
@@ -37,9 +39,12 @@ const compressCoords = (coords) => {
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
-  const streamDataStatus = useGetApiStatus(`activities/FETCH_STREAM_DATA-${id}`);
-  const detailDataStatus = useGetApiStatus(`activities/FETCH_ACTIVITY_DETAIL-${id}`);
-  const prefDataStatus = useGetApiStatus(`preferences/FETCH_ACTIVITY_PREFERENCES-${id}`);
+
+  const isLoading = [
+    useGetApiStatus(`${FETCH_ACTIVITY_STREAM_DATA}-${id}`),
+    useGetApiStatus(`${FETCH_ACTIVITY_DETAIL}-${id}`),
+    useGetApiStatus(`${FETCH_ACTIVITY_PREFS}-${id}`),
+  ].some((apiStatus) => (apiStatus === 'idle' || apiStatus === 'loading'));
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
@@ -57,12 +62,6 @@ const ActivityDetailPage = () => {
   const details = useSelector((state) => selectActivityDetails(state, id));
 
   const { backgroundColor } = getWeatherStyles(activity.weather || {});
-
-  const isLoading = [
-    streamDataStatus,
-    detailDataStatus,
-    prefDataStatus,
-  ].some((apiStatus) => (apiStatus === 'idle' || apiStatus === 'loading'));
 
   return (
     <div className={`pad`}>

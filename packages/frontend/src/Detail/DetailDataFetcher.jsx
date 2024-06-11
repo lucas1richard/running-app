@@ -3,9 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import requestor from '../utils/requestor/index';
 import { convertHeartDataToZoneTimes } from '../utils';
 import { selectActivity, selectStreamType } from '../reducers/activities';
-import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartszones';
+import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 import { useGetApiStatus } from '../reducers/apiStatus';
+import {
+  FETCH_ACTIVITY_DETAIL,
+  FETCH_ACTIVITY_STREAM_DATA,
+  triggerFetchActivityDetail,
+  triggerFetchActivityStreamData,
+} from '../reducers/activities-actions';
+import { FETCH_ACTIVITY_PREFS, triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 
 const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude'];
 
@@ -20,20 +27,14 @@ const DetailDataFetcher = ({ id }) => {
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
 
-  const streamDataStatus = useGetApiStatus(`activities/FETCH_STREAM_DATA-${id}`);
-  const detailDataStatus = useGetApiStatus(`activities/FETCH_ACTIVITY_DETAIL-${id}`);
-  const prefDataStatus = useGetApiStatus(`preferences/FETCH_ACTIVITY_PREFERENCES-${id}`);
+  const streamDataStatus = useGetApiStatus(`${FETCH_ACTIVITY_STREAM_DATA}-${id}`);
+  const detailDataStatus = useGetApiStatus(`${FETCH_ACTIVITY_DETAIL}-${id}`);
+  const prefDataStatus = useGetApiStatus(`${FETCH_ACTIVITY_PREFS}-${id}`);
 
   useEffect(() => {
-    if (streamDataStatus === 'idle') {
-      dispatch({ type: 'activities/FETCH_STREAM_DATA', id, types: streamTypes });
-    }
-    if (detailDataStatus === 'idle') {
-      dispatch({ type: 'activities/FETCH_ACTIVITY_DETAIL', payload: id });
-    }
-    if (prefDataStatus === 'idle') {
-      dispatch({ type: 'preferences/FETCH_ACTIVITY_PREFERENCES', payload: { activityId: id } });
-    }
+    if (streamDataStatus === 'idle') dispatch(triggerFetchActivityStreamData(id, streamTypes));
+    if (detailDataStatus === 'idle') dispatch(triggerFetchActivityDetail(id));
+    if (prefDataStatus === 'idle') dispatch(triggerFetchActivityPrefs(id));
   }, [detailDataStatus, dispatch, id, prefDataStatus, streamDataStatus]);
 
   useEffect(() => {

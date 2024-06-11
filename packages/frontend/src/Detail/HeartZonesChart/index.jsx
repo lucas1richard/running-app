@@ -2,7 +2,7 @@ import React from 'react';
 import HeartZonesChartDisplay from './HeartZonesChartDisplay';
 import { useSelector } from 'react-redux';
 import { selectActivity, selectStreamType } from '../../reducers/activities';
-import { selectHeartZones } from '../../reducers/heartszones';
+import { selectHeartZones } from '../../reducers/heartzones';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id)) || {};

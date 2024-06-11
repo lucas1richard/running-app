@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAllHeartZones } from '../../reducers/heartszones';
+import { selectAllHeartZones } from '../../reducers/heartzones';
 import ZonesHeader from '../../Activities/ZonesHeader';
 import { selectGlobalPrerences } from '../../reducers/preferences';
 

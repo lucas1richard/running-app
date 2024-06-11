@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActivities } from '../reducers/activities';
 import Tile from './Tile';
-import { selectAllHeartZones } from '../reducers/heartszones';
+import { selectAllHeartZones } from '../reducers/heartzones';
 import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
 import ConfigWidget from '../Config';
@@ -18,7 +18,6 @@ const Activities = () => {
   const allzones = useSelector(selectAllHeartZones);
   const listPreferences = useSelector(selectListPrerences);
   const activitiesApiStatus = useSelector(makeStatusSelector('activities/FETCH_ACTIVITIES'));
-  console.log({ activitiesApiStatus })
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   

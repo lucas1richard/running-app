@@ -2,6 +2,16 @@ import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
 import { selectListPrerences } from './preferences';
 import deepmerge from 'deepmerge';
+import {
+  SET_ACTIVITIES,
+  SET_ACTIVITIES_SUMMARY,
+  SET_ACTIVITY_DETAIL,
+  UPDATE_ACTIVITY,
+  SET_STREAM,
+  SET_STREAMS,
+  SET_SIMILAR_WORKOUTS,
+  SET_WEATHER_DATA,
+} from './activities-actions';
 
 const activitiesInitialState = {
   activities: {},
@@ -16,7 +26,7 @@ const activitiesInitialState = {
 
 const activitiesReducer = (state = activitiesInitialState, action = {}) => {
   switch (action.type) {
-    case 'activitiesReducer/SET_ACTIVITIES': {
+    case SET_ACTIVITIES: {
       const activitiesOrder = action.payload.map(({ id }) => id);
       return produce(state, (nextState) => {
         nextState.activities = Object.fromEntries(
@@ -32,19 +42,19 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
       });
     }
 
-    case 'activitiesReducer/SET_ACTIVITIES_SUMMARY': {
+    case SET_ACTIVITIES_SUMMARY: {
       return produce(state, (nextState) => {
         nextState.summary = action.payload;
       });
     }
 
-    case 'activitiesReducer/SET_ACTIVITY_DETAIL': {
+    case SET_ACTIVITY_DETAIL: {
       return produce(state, (nextState) => {
         nextState.details[action.payload.id] = action.payload;
       });
     }
 
-    case 'activitiesReducer/UPDATE_ACTIVITY': {
+    case UPDATE_ACTIVITY: {
       return produce(state, (nextState) => {
         const activity = state.activities[action.payload.id];
         nextState.activities[activity.id] = { ...activity, ...action.payload };
@@ -56,26 +66,26 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
       });
     }
 
-    case 'activitiesReducer/SET_STREAM': {
+    case SET_STREAM: {
       return produce(state, (nextState) => {
         const { id, data } = action.payload;
         nextState.streams[id] = deepmerge(state.streams[id], data);
       });
     }
 
-    case 'activitiesReducer/SET_STREAMS': {
+    case SET_STREAMS: {
       return produce(state, (nextState) => {
         nextState.streams = action.payload.data;
       });
     }
 
-    case 'activitiesReducer/SET_SIMILAR_WORKOUTS': {
+    case SET_SIMILAR_WORKOUTS: {
       return produce(state, (nextState) => {
         nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(({ id }) => id);
       });
     }
 
-    case 'activitiesReducer/SET_WEATHER_DATA': {
+    case SET_WEATHER_DATA: {
       return produce(state, (nextState) => {
         nextState.activities[action.payload.activityId].weather = action.payload;
       });

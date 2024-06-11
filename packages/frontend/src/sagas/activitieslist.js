@@ -1,95 +1,101 @@
 import { call, put } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
-import requestorSaga from './requestorSaga';
 import { takeEveryContext } from './effects';
+import {
+  FETCH_ACTIVITIES,
+  FETCH_ACTIVITIES_SUMMARY,
+  FETCH_ACTIVITY_DETAIL,
+  FETCH_ACTIVITY_STREAM_DATA,
+  FETCH_ALL_STREAMS,
+  setActivitiesAct,
+  setActivitiesSummaryAct,
+  setActivityDetailAct,
+  setStreamAct,
+  setStreamsAct,
+} from '../reducers/activities-actions';
+import {
+  setApiErrorAct,
+  setApiLoadingAct,
+  setApiSuccessAct,
+} from '../reducers/apiStatus-actions';
 
-function* fetchActivities({ forceFetch }) {
+function* fetchActivitiesSaga({ forceFetch }) {
   const key = this.triggeredBy;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const queryParam = new URLSearchParams({
       ...forceFetch ? { force: true } : {},
     });
-    const acts = yield call(
-      [this, requestorSaga],
-      { method: 'get', key: 'activities/FETCH_ACTIVITIES' },
-      `/activities/list?${queryParam}`
-    );
-
+    const res = yield call(requestor.get, `/activities/list?${queryParam}`);
+    const acts = yield res.json();
     const sortedActs = [...acts];
     sortedActs.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
 
-    yield put({ type: 'activitiesReducer/SET_ACTIVITIES', payload: sortedActs });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    yield put(setActivitiesAct(sortedActs));
+    yield put(setApiSuccessAct(key));
   } catch (e) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
+    console.log(e)
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* fetchActivitySummary() {
+function* fetchActivitySummarySaga() {
   const key = this.triggeredBy;
-  yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+  yield put(setApiLoadingAct(key));
   try {
     const res = yield call(requestor.get, '/activities/summary');
     const summary = yield res.json();
-
-    yield put({ type: 'activitiesReducer/SET_ACTIVITIES_SUMMARY', payload: summary });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    yield put(setActivitiesSummaryAct(summary));
+    yield put(setApiSuccessAct(key));
   } catch (e) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* fetchActivityDetail({ payload }) {
+function* fetchActivityDetailSaga({ payload }) {
   const key = `${this.triggeredBy}-${payload}`;
-  yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key })
+    yield put(setApiLoadingAct(key));
     const res = yield call(requestor.get, `/activities/${payload}/detail`);
-    const summary = yield res.json();
-    yield put({ type: 'activitiesReducer/SET_ACTIVITY_DETAIL', payload: summary });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    const detail = yield res.json();
+    yield put(setActivityDetailAct(detail));
+    yield put(setApiSuccessAct(key));
   } catch (e) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key })
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* fetchAllStreams() {
+function* fetchAllStreamsSaga() {
   const key = this.triggeredBy;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const res = yield call(requestor.get, `/activities/streams/list`);
-    const summary = yield res.json();
-
-    yield put({ type: 'activitiesReducer/SET_STREAMS', payload: { data: summary } });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
-    
+    const allStreams = yield res.json();
+    yield put(setStreamsAct(allStreams));
+    yield put(setApiSuccessAct(key));
   } catch (e) {
-    yield put({ type: 'activities/FETCH_ALL_STREAMS_FAILED', message: e.message });
-    yield put({ type: 'apiReducer/SET_FAILURE', key });
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* fetchStreamData({ id, types }) {
+function* fetchStreamDataSaga({ payload: { id, types } }) {
   const key = `${this.triggeredBy}-${id}`;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const typesQuery = new URLSearchParams({ keys: types });
     const res = yield call(requestor.get, `/activities/${id}/streams?${typesQuery}`);
-    const summary = yield res.json();
-
-    yield put({ type: 'activitiesReducer/SET_STREAM', payload: { data: summary, id } });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    const stream = yield res.json();
+    yield put(setStreamAct(id, stream));
+    yield put(setApiSuccessAct(key))
   } catch (e) {
-    yield put({ type: 'activities/FETCH_STREAMS_FAILED', message: e.message });
-    yield put({ type: 'apiReducer/SET_FAILURE', key });
+    yield put(setApiErrorAct(key));
   }
 }
 
 export function* activitiesListSaga() {
-  yield takeEveryContext('activities/FETCH_ACTIVITIES', fetchActivities);
-  yield takeEveryContext('activities/FETCH_ACTIVITIES_SUMMARY', fetchActivitySummary);
-  yield takeEveryContext('activities/FETCH_ACTIVITY_DETAIL', fetchActivityDetail);
-  yield takeEveryContext('activities/FETCH_STREAM_DATA', fetchStreamData);
-  yield takeEveryContext('activities/FETCH_ALL_STREAMS', fetchAllStreams);
+  yield takeEveryContext(FETCH_ACTIVITIES, fetchActivitiesSaga);
+  yield takeEveryContext(FETCH_ACTIVITIES_SUMMARY, fetchActivitySummarySaga);
+  yield takeEveryContext(FETCH_ACTIVITY_DETAIL, fetchActivityDetailSaga);
+  yield takeEveryContext(FETCH_ACTIVITY_STREAM_DATA, fetchStreamDataSaga);
+  yield takeEveryContext(FETCH_ALL_STREAMS, fetchAllStreamsSaga);
 }

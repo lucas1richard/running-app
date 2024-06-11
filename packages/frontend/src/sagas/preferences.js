@@ -2,46 +2,52 @@ import { call, put, select } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
 import { selectActivityPreferences, selectGlobalPrerences, selectListPrerences } from '../reducers/preferences';
 import { takeEveryContext } from './effects';
+import { setApiErrorAct, setApiLoadingAct, setApiSuccessAct } from '../reducers/apiStatus-actions';
+import {
+  FETCH_ACTIVITY_PREFS,
+  FETCH_USER_PREFS,
+  SET_ACTIVITY_PREFS,
+  SET_USER_PREFS,
+  setActivityPrefDefaultsAct,
+  setActivityPrefsAct,
+  setGlobalPrefsAct,
+  setListPrefsAct,
+} from '../reducers/preferences-actions';
 
-function* fetchUserPreferences({ payload }) {
+function* fetchUserPreferencesSaga({ payload }) {
   const key = this.triggeredBy;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const response = yield call(requestor.get, '/user/preferences');
     const data = yield response.json();
-    if (data?.list) {
-      yield put({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload: data.list });
-    }
-    if (data?.global) {
-      yield put({ type: 'preferencesReducer/SET_GLOBAL_PREFERENCES', payload: data.global });
-    }
-    if (data?.activities) {
-      yield put({ type: 'preferencesReducer/SET_ACTIVITY_DEFAULTS', payload: data.activities.default });
-    }
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+
+    if (data?.list) yield put(setListPrefsAct(data.list));
+    if (data?.global) yield put(setGlobalPrefsAct(data.global));
+    if (data?.activities) yield put(setActivityPrefDefaultsAct(data.activities.default));
+
+    yield put(setApiSuccessAct(key));
   } catch (error) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* fetchActivityPreferences({ payload }) {
+function* fetchActivityPreferencesSaga({ payload }) {
   const key = `${this.triggeredBy}-${payload.activityId}`;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const response = yield call(requestor.get, `/activities/${payload.activityId}/preferences`);
     const data = yield response.json();
-    yield put({
-      type: 'preferencesReducer/SET_ACTIVITY_PREFERENCES',
-      payload: { activityId: payload.activityId, preferences: data },
-    });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    yield put(setActivityPrefsAct(payload.activityId, data));
+    yield put(setApiSuccessAct(key));
   } catch (error) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* setUserPreferences({ payload }) { // everything except the individual activity preferences
+function* setUserPreferencesSaga({ payload }) { // everything except the individual activity preferences
+  const key = this.triggeredBy;
   try {
+    yield put(setApiLoadingAct(key));
     const existingListPref = yield(select(selectListPrerences));
     const existingGlobalPref = yield(select(selectGlobalPrerences));
     const defaultActivityPref = yield(select((state) => selectActivityPreferences(state, 'default')));
@@ -52,23 +58,27 @@ function* setUserPreferences({ payload }) { // everything except the individual 
     };
 
     yield call(requestor.post, '/user/preferences', preferences);
+    yield put(setApiSuccessAct(key));
   } catch (error) {
-    yield put({ type: 'FETCH_WEATHER_FAILURE', error: error.message });
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* setActivityPreferences({ payload }) {
+function* setActivityPreferencesSaga({ payload }) {
+  const key = `${this.triggeredBy}-${payload.activityId}`;
   try {
+    yield put(setApiLoadingAct(key));
     const preferences = yield(select((state) => selectActivityPreferences(state, payload.activityId)));
     yield call(requestor.put, `/activities/${payload.activityId}/preferences`, preferences);
+    yield put(setApiSuccessAct(key));
   } catch (error) {
-    yield put({ type: 'FETCH_WEATHER_FAILURE', error: error.message });
+    yield put(setApiErrorAct(key));
   }
 }
 
 export function* preferencesSaga() {
-  yield takeEveryContext('preferences/FETCH_USER_PREFERENCES', fetchUserPreferences);
-  yield takeEveryContext('preferences/FETCH_ACTIVITY_PREFERENCES', fetchActivityPreferences);
-  yield takeEveryContext('preferences/SET_ACTIVITY_PREFERENCES', setActivityPreferences);
-  yield takeEveryContext('preferences/SET_USER_PREFERENCES', setUserPreferences);
+  yield takeEveryContext(FETCH_USER_PREFS, fetchUserPreferencesSaga);
+  yield takeEveryContext(FETCH_ACTIVITY_PREFS, fetchActivityPreferencesSaga);
+  yield takeEveryContext(SET_ACTIVITY_PREFS, setActivityPreferencesSaga);
+  yield takeEveryContext(SET_USER_PREFS, setUserPreferencesSaga);
 }

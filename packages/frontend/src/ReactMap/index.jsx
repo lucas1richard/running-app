@@ -5,7 +5,7 @@ import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { DeckGlOverlay } from './deckgl-overlay';
 import { GOOGLE_API_KEY } from '../constants';
 import { selectActivity, selectStreamType } from '../reducers/activities';
-import { selectHeartZones } from '../reducers/heartszones';
+import { selectHeartZones } from '../reducers/heartzones';
 import { condenseZonesFromHeartRate } from '../utils';
 import { hrZonesGraph } from '../colors/hrZones';
 

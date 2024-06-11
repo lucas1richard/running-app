@@ -1,17 +1,17 @@
 import { call, put } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
+import { setApiErrorAct, setApiLoadingAct, setApiSuccessAct } from '../reducers/apiStatus-actions';
 
-function* requestorSaga({ method, key: idKey } = {}, ...rest) {
-  console.log(this)
+function* requestorSaga(idKey, method, ...rest) {
   const key = idKey || `${method}-${rest}`;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const res = yield call(requestor[method], ...rest);
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
     const responseBody = yield res.json();
+    yield put(setApiSuccessAct(key));
     return responseBody;
   } catch (error) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key, error: error.message });
+    yield put(setApiErrorAct(key));
     throw error;
   }
 }

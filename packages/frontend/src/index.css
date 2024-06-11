@@ -41,7 +41,7 @@ input, select {
 }
 
 label {
-  font-size: 0.8rem;;
+  font-size: 0.8rem;
 }
 
 button {
@@ -150,10 +150,10 @@ select {
   flex-grow: 1;
 }
 .flex-align-center {
-  align-items: center;;
+  align-items: center;
 }
 .flex-column {
-  flex-direction: column;;
+  flex-direction: column;
 }
 .flex-justify-between {
   justify-content: space-between;
@@ -163,27 +163,27 @@ select {
 }
 .heading-1 {
   font-size: 2rem;
-  font-weight: bold;;
+  font-weight: bold;
 }
 .heading-2 {
   font-size: 1.8rem;
-  font-weight: bold;;
+  font-weight: bold;
 }
 .heading-3 {
   font-size: 1.6rem;
-  font-weight: bold;;
+  font-weight: bold;
 }
 .heading-4 {
   font-size: 1.4rem;
-  font-weight: bold;;
+  font-weight: bold;
 }
 .heading-5 {
   font-size: 1.2rem;
-  font-weight: bold;;
+  font-weight: bold;
 }
 .heading-6 {
   font-size: 1rem;
-  font-weight: bold;;
+  font-weight: bold;
 }
 .display-none {
   display: none !important;

@@ -4,6 +4,7 @@ import { hrZonesBg, hrZonesBgStrong, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
 
 const HeartZonesDisplay = ({ zones, nativeZones, heartData, velocityData }) => {
+  console.log({ zones, nativeZones, heartData, velocityData })
   const totalTimes = useMemo(() => {
     return convertHeartDataToZoneTimes(heartData, zones);
   }, [heartData, zones.z1, zones.z2, zones.z3, zones.z4, zones.z5]);

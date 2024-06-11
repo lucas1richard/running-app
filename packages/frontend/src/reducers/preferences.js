@@ -1,6 +1,13 @@
 import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
 import deepmerge from 'deepmerge';
+import {
+  REDUCER_SET_LIST_PREFS,
+  REDUCER_SET_ACTIVITY_PREFS_DEFAULTS,
+  REDUCER_SET_ACTIVITY_PREFS,
+  SET_GLOBAL_PREFS,
+  SET_PREFS_FREE,
+} from './preferences-actions';
 
 const initialState = {
   isModified: false,
@@ -47,7 +54,7 @@ const initialState = {
 
 const preferencesReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'preferencesReducer/SET_LIST_PREFERENCES':
+    case REDUCER_SET_LIST_PREFS:
       return produce(state, (draft) => {
         draft.isModified = true;
         draft.list.defined = Object.fromEntries(
@@ -56,7 +63,7 @@ const preferencesReducer = (state = initialState, action) => {
         );
       });
 
-    case 'preferencesReducer/SET_ACTIVITY_DEFAULTS':
+    case REDUCER_SET_ACTIVITY_PREFS_DEFAULTS:
       return produce(state, (draft) => {
         draft.isModified = true;
         // change default to activityId when backend supports it
@@ -66,14 +73,14 @@ const preferencesReducer = (state = initialState, action) => {
         );
       });
 
-    case 'preferencesReducer/SET_ACTIVITY_PREFERENCES':
+    case REDUCER_SET_ACTIVITY_PREFS:
       return produce(state, (draft) => {
         draft.isModified = true;
         const { activityId, preferences } = action.payload;
         draft.activities[activityId] = deepmerge(state.activities.default, preferences);
       });
 
-    case 'preferencesReducer/SET_GLOBAL_PREFERENCES': 
+    case SET_GLOBAL_PREFS: 
       return produce(state, (draft) => {
         draft.isModified = true;
         draft.global.defined = Object.fromEntries(
@@ -82,7 +89,7 @@ const preferencesReducer = (state = initialState, action) => {
         );
       });
 
-  case 'preferencesReducer/SET_PREFERENCE_FREE': {
+  case SET_PREFS_FREE: {
     const { keyPath, value } = action.payload;
     return produce(state, (draft) => {
       draft.isModified = true;
@@ -153,10 +160,5 @@ export const selectPreferenceFree = (state, keyPath) => {
   if (lastKey) return lastObj[lastKey];
   return lastObj;
 }
-// export const selectPreferenceFree = (state, keyPath) => {
-//   const copyPath = [...keyPath];
-//   const lastKey = copyPath.pop();
-//   return copyPath.reduce((acc, key) => acc[key] || {}, state.preferences)[lastKey];
-// }
 
 export default preferencesReducer;

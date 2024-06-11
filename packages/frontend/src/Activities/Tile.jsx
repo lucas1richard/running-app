@@ -8,7 +8,7 @@ import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
 import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline, getWeatherStyles } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
-import { selectHeartZones } from '../reducers/heartszones';
+import { selectHeartZones } from '../reducers/heartzones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
 
 const Tile = ({ activity, backgroundIndicator }) => {

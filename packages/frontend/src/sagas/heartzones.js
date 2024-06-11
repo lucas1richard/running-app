@@ -1,36 +1,44 @@
 import { call, put } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
 import { takeEveryContext } from './effects';
+import {
+  setApiErrorAct,
+  setApiLoadingAct,
+  setApiSuccessAct,
+} from '../reducers/apiStatus-actions';
+import {
+  ADD_HEART_ZONES,
+  FETCH_HEART_ZONES,
+  setHeartZonesAct,
+} from '../reducers/heartzones-actions';
 
-function* fetchHeartZones() {
+function* fetchHeartZonesSaga() {
   const key = this.triggeredBy;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const res = yield call(requestor.get, '/heartzones');
     const zones = yield res.json();
-
-    yield put({ type: 'heartzonesReducer/SET_HEART_ZONES', payload: zones });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    yield put(setHeartZonesAct(zones));
+    yield put(setApiSuccessAct(key));
   } catch (e) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
+    yield put(setApiErrorAct(key));
   }
 }
 
-function* addHeartZones({ payload }) {
+function* addHeartZonesSaga({ payload }) {
   const key = this.triggeredBy;
   try {
-    yield put({ type: `apiReducer/SET_LOADING-${key}`, key });
+    yield put(setApiLoadingAct(key));
     const res = yield call(requestor.post, '/heartzones', payload);
     const zones = yield res.json();
-
-    yield put({ type: 'heartzonesReducer/SET_HEART_ZONES', payload: zones });
-    yield put({ type: `apiReducer/SET_SUCCESS-${key}`, key });
+    yield put(setHeartZonesAct(zones));
+    yield put(setApiSuccessAct(key));
   } catch (e) {
-    yield put({ type: `apiReducer/SET_ERROR-${key}`, key });
+    yield put(setApiErrorAct(key));
   }
 }
 
 export function* heartzonesSaga() {
-  yield takeEveryContext('heartzones/ADD_HEART_ZONES', addHeartZones);
-  yield takeEveryContext('heartzones/FETCH_HEART_ZONES', fetchHeartZones);
+  yield takeEveryContext(ADD_HEART_ZONES, addHeartZonesSaga);
+  yield takeEveryContext(FETCH_HEART_ZONES, fetchHeartZonesSaga);
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { selectAllHeartZones } from '../../reducers/heartszones';
+import { selectAllHeartZones } from '../../reducers/heartzones';
 import { getDateString } from '../../utils';
 import styles from './HeartZones.module.css';
 import AddNewHRZones from './AddNewZones';

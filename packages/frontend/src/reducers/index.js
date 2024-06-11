@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
 import activitiesReducer from './activities';
-import heartzonesReducer from './heartszones';
+import heartzonesReducer from './heartzones';
 import preferencesReducer from './preferences';
 import apiStatusReducer from './apiStatus';
 

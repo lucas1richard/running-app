@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
 import { selectPreferencesZonesId } from './preferences';
+import { SET_HEART_ZONES } from './heartzones-actions';
 
 const heartzonesInitialState = {
   record: [],
@@ -8,7 +9,7 @@ const heartzonesInitialState = {
 
 const heartzonesReducer = (state = heartzonesInitialState, action = {}) => {
   switch (action.type) {
-    case 'heartzonesReducer/SET_HEART_ZONES': {
+    case SET_HEART_ZONES: {
       return produce(state, (nextState) => {
         nextState.record = action.payload;
       });
