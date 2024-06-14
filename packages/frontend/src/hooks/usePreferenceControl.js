@@ -1,25 +1,31 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectPreferenceFree } from '../reducers/preferences';
+import {
+  setPrefsFreeAct,
+  triggerSetActivityPrefs,
+  triggerSetUserPrefs,
+} from '../reducers/preferences-actions';
 
 const usePreferenceControl = (keyPath, defaultValue) => {
   const dispatch = useDispatch();
   const value = useSelector((state) => selectPreferenceFree(state, keyPath));
 
-  const setValue = useCallback((newValue) => dispatch({
-    type: 'preferencesReducer/SET_PREFERENCE_FREE',
-    payload: { keyPath: keyPath, value: newValue },
-  }),
+  const setValue = useCallback((newValue) => dispatch(setPrefsFreeAct(keyPath, newValue)),
   [dispatch, keyPath]);
   
   const savePreferences = useCallback(({ activityId } = {}) => {
     if (activityId) {
-      return dispatch({ type: 'preferences/SET_ACTIVITY_PREFERENCES', payload: { activityId } });
+      return dispatch(triggerSetActivityPrefs(activityId));
     };
-    dispatch({ type: 'preferences/SET_USER_PREFERENCES' });
+    dispatch(triggerSetUserPrefs());
   }, [dispatch]);
 
-  return [value || defaultValue, setValue, savePreferences];
+  return [
+    typeof value === 'undefined' ? defaultValue : value,
+    setValue,
+    savePreferences
+  ];
 };
 
 export default usePreferenceControl;

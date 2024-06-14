@@ -2,6 +2,7 @@ import { call, put } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
 import { takeEveryContext } from './effects';
 import { setApiErrorAct, setApiLoadingAct, setApiSuccessAct } from '../reducers/apiStatus-actions';
+import { FETCH_WEATHER, setWeatherDataAct } from '../reducers/activities-actions';
 
 function* fetchWeatherSaga({ payload }) {
   const { id, ...rest } = payload;
@@ -13,7 +14,7 @@ function* fetchWeatherSaga({ payload }) {
     );
     const response = yield call(requestor.put, `/activities/${id}/weather`, withoutUndefined);
     const data = yield response.json();
-    yield put({ type: 'activitiesReducer/SET_WEATHER_DATA', payload: data });
+    yield put(setWeatherDataAct(data));
     yield put(setApiSuccessAct(key));
   } catch (error) {
     yield put(setApiErrorAct(key));
@@ -21,5 +22,5 @@ function* fetchWeatherSaga({ payload }) {
 }
 
 export function* weatherSaga() {
-  yield takeEveryContext('weather/FETCH_WEATHER', fetchWeatherSaga);
+  yield takeEveryContext(FETCH_WEATHER, fetchWeatherSaga);
 }

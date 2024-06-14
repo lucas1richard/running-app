@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import styles from './Detail.module.css';
+import { triggerUpdateActivity } from '../reducers/activitydetail-actions';
 
 const UpdatableNameDescription = ({
   activity,
@@ -20,7 +21,7 @@ const UpdatableNameDescription = ({
   }, [details?.description]);
 
   const updateActivity = useCallback(() => {
-    dispatch({ type: 'activitydetails/UPDATE_ACTIVITY', payload: { id, name, description } });
+    dispatch(triggerUpdateActivity({ id, name, description }));
   }, [name, id, description, dispatch]);
 
   return (

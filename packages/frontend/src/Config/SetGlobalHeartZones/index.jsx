@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAllHeartZones } from '../../reducers/heartzones';
 import ZonesHeader from '../../Activities/ZonesHeader';
 import { selectGlobalPrerences } from '../../reducers/preferences';
+import { setGlobalPrefsAct } from '../../reducers/preferences-actions';
 
-const SetGlobalHeartZones = ({}) => {
+const SetGlobalHeartZones = () => {
   const allZones = useSelector(selectAllHeartZones);
   const dispatch = useDispatch();
 
   const preferences = useSelector(selectGlobalPrerences);
 
   const selectZone = useCallback((id) => {
-    dispatch({ type: 'preferencesReducer/SET_GLOBAL_PREFERENCES', payload: { zonesId: id } });
+    dispatch(setGlobalPrefsAct({ zonesId: id }));
   }, [dispatch])
   
   return (

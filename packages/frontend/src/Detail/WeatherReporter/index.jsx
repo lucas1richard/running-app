@@ -9,7 +9,7 @@ import styles from '../Detail.module.css';
 import { selectActivity } from '../../reducers/activities';
 import { useGetApiStatus } from '../../reducers/apiStatus';
 import Shimmer from '../../Loading/Shimmer';
-import classNames from 'classnames';
+import { triggerFetchWeather } from '../../reducers/activities-actions';
 
 const WeatherReporter = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id));
@@ -52,17 +52,7 @@ const WeatherReporter = ({ id }) => {
 
   const handleSubmit = useCallback((event) => {
     event.preventDefault();
-    dispatch({
-      type: 'weather/FETCH_WEATHER',
-      payload: {
-        id,
-        sky,
-        temperature,
-        humidity,
-        wind,
-        precipitation,
-      },
-    });
+    dispatch(triggerFetchWeather(id, { sky, temperature, humidity, wind, precipitation }));
   }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
 
   return (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectListPrerences } from '../reducers/preferences';
+import { triggerSetUserPrefs } from '../reducers/preferences-actions';
 
 const setPrefAction = (payload) => ({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload });
 
@@ -8,7 +9,7 @@ const ListSort = ({}) => {
   const dispatch = useDispatch();
   const listPreferences = useSelector(selectListPrerences);
 
-  const savePreferences = () => dispatch({ type: 'preferences/SET_USER_PREFERENCES', payload: undefined });
+  const savePreferences = () => dispatch(triggerSetUserPrefs(undefined));
 
   return (
     <div>

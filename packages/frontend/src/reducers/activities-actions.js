@@ -1,6 +1,6 @@
 // SAGA TRIGGERS
 export const FETCH_ACTIVITIES = 'activities/FETCH_ACTIVITIES';
-export const triggerFetchActivities = () => ({ type: FETCH_ACTIVITIES, });
+export const triggerFetchActivities = (forceFetch = false) => ({ type: FETCH_ACTIVITIES, forceFetch });
 
 export const FETCH_ACTIVITIES_SUMMARY = 'activities/FETCH_ACTIVITIES_SUMMARY';
 export const triggerFetchActivitiesSummary = () => ({ type: FETCH_ACTIVITIES_SUMMARY, });
@@ -15,6 +15,9 @@ export const FETCH_ALL_STREAMS = 'activities/FETCH_ALL_STREAMS';
 
 export const FETCH_ACTIVITY_STREAM_DATA = 'activities/FETCH_ACTIVITY_STREAM_DATA';
 export const triggerFetchActivityStreamData = (id, types) => ({ type: FETCH_ACTIVITY_STREAM_DATA, payload: { id, types } });
+
+export const FETCH_WEATHER = 'activities/FETCH_WEATHER';
+export const triggerFetchWeather = (activityId, data) => ({ type: FETCH_WEATHER, payload: { activityId, ...data } });
 
 
 // REDUCER ACTIONS
@@ -40,4 +43,4 @@ export const SET_SIMILAR_WORKOUTS = 'activitiesReducer/SET_SIMILAR_WORKOUTS';
 export const setSimilarWorkoutsAct = (id, combo) => ({ type: SET_SIMILAR_WORKOUTS, payload: { id, combo } });
 
 export const SET_WEATHER_DATA = 'activitiesReducer/SET_WEATHER_DATA';
-export const setWeatherDataAct = (activityId, data) => ({ type: SET_WEATHER_DATA, payload: { activityId, data } });
+export const setWeatherDataAct = (data) => ({ type: SET_WEATHER_DATA, payload: data });

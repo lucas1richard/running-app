@@ -9,15 +9,16 @@ import ConfigWidget from '../Config';
 import SpeedChart from './SpeedChart';
 import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
-import { makeStatusSelector } from '../reducers/apiStatus';
+import { useGetApiStatus } from '../reducers/apiStatus';
 import Shimmer from '../Loading/Shimmer';
+import { FETCH_ACTIVITIES, triggerFetchActivities } from '../reducers/activities-actions';
 
 const Activities = () => {
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities);
   const allzones = useSelector(selectAllHeartZones);
   const listPreferences = useSelector(selectListPrerences);
-  const activitiesApiStatus = useSelector(makeStatusSelector('activities/FETCH_ACTIVITIES'));
+  const activitiesApiStatus = useGetApiStatus(FETCH_ACTIVITIES);
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   
@@ -44,7 +45,7 @@ const Activities = () => {
   }, [activities, allzones, isGroupByZonesSet]);
 
   const onClickSync = useCallback(() => {
-    dispatch({ type: 'activities/FETCH_ACTIVITIES', forceFetch: true });
+    dispatch(triggerFetchActivities(true));
   }, [dispatch]);
 
   return (

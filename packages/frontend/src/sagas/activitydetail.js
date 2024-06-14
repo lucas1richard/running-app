@@ -1,8 +1,16 @@
 import { call, put } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
 import { takeEveryContext } from './effects';
-import { setApiErrorAct, setApiLoadingAct, setApiSuccessAct } from '../reducers/apiStatus-actions';
-import { updateActivityAct } from '../reducers/activities-actions';
+import {
+  setApiErrorAct,
+  setApiLoadingAct,
+  setApiSuccessAct,
+} from '../reducers/apiStatus-actions';
+import { setSimilarWorkoutsAct, updateActivityAct } from '../reducers/activities-actions';
+import {
+  FETCH_SIMILAR_WORKOUTS,
+  TRIGGER_UPDATE_ACTIVITY,
+} from '../reducers/activitydetail-actions';
 
 function* updateActivitySaga({ payload }) {
   const key = this.triggeredBy;
@@ -28,7 +36,7 @@ function* fetchSimilarWorkoutsSaga({ payload: id }) {
     const res = yield call(requestor.post, '/analysis/similar-workouts/by-route', { id });
     const { combo } = yield res.json();
 
-    yield put({ type: 'activitiesReducer/SET_SIMILAR_WORKOUTS', payload: { id, combo } });
+    yield put(setSimilarWorkoutsAct(id, combo));
     yield put(setApiSuccessAct(key));
   } catch (e) {
     yield put(setApiErrorAct(key));
@@ -36,6 +44,6 @@ function* fetchSimilarWorkoutsSaga({ payload: id }) {
 }
 
 export function* activitydetailSaga() {
-  yield takeEveryContext('activitydetails/UPDATE_ACTIVITY', updateActivitySaga);
-  yield takeEveryContext('activitydetails/FETCH_SIMILAR_WORKOUTS', fetchSimilarWorkoutsSaga);
+  yield takeEveryContext(TRIGGER_UPDATE_ACTIVITY, updateActivitySaga);
+  yield takeEveryContext(FETCH_SIMILAR_WORKOUTS, fetchSimilarWorkoutsSaga);
 }
