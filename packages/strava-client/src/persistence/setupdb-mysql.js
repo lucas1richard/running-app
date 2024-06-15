@@ -1,7 +1,7 @@
 const waitPort = require('wait-port');
 const fs = require('fs');
 const mysql = require('mysql2');
-const { createHeartRateZonesTable } = require('./mysql-heart-zones');
+const { createHeartRateZonesTable } = require('./heartzones');
 
 const {
     MYSQL_HOST: HOST,

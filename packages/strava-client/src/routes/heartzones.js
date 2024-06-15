@@ -2,8 +2,8 @@ const { Router } = require('express');
 const {
   getAllHeartRateZones,
   addHeartRateZone,
-} = require('../persistence/mysql-heart-zones');
-const ZonesCache = require('../persistence/sequelize-zones-cache');
+  createHeartZonesCacheOnce,
+} = require('../persistence/heartzones');
 
 const router = new Router();
 
@@ -29,17 +29,7 @@ router.post('/', async (req, res) => {
 router.post('/set-cache', async (req, res) => {
   try {
     const { id, times, zonesId } = req.body;
-    await ZonesCache.findOrCreate({
-      where: {
-        seconds_z1: times[0],
-        seconds_z2: times[1],
-        seconds_z3: times[2],
-        seconds_z4: times[3],
-        seconds_z5: times[4],
-        activityId: id,
-        heartZoneId: zonesId,
-      },
-    });
+    await createHeartZonesCacheOnce(id, zonesId, times);
     res.sendStatus(201)
   } catch (err) {
     res.sendStatus(500);

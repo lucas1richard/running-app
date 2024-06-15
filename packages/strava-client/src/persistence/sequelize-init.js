@@ -1,11 +1,11 @@
 const Activity = require('./sequelize-activities');
 const ActivitySegment = require('./sequelize-activity-segments');
 const AthleteSegment = require('./sequelize-athlete-segments');
-const HeartZones = require('./sequelize-heartzones');
+const HeartZones = require('./heartzones/model-heartzones');
 const { sequelizeMysql } = require('./sequelize-mysql');
 const RelatedActivities = require('./sequelize-related-activities');
 const Weather = require('./weather/weather-model');
-const ZonesCache = require('./sequelize-zones-cache');
+const ZonesCache = require('./heartzones/model-zones-cache');
 const RouteCoordinates = require('./sequelize-route-coordinates');
 
 const initSequelize = async () => {

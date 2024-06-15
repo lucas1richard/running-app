@@ -1,4 +1,4 @@
-const getMySQLConnection = require('./mysql-connection');
+const getMySQLConnection = require('../mysql-connection');
 
 const createHeartRateZonesTable = async () => {
   const pool = await getMySQLConnection();
