@@ -1,9 +1,15 @@
-const RouteCoordinates = require('../persistence/sequelize-route-coordinates');
-const { getStream, updateActivityDetail } = require('../persistence/setupdb-couchbase');
+const {
+  getRouteCoordinates,
+  bulkCreateRouteCoordinates
+} = require('../persistence/routeCoordinates');
+const {
+  getStream,
+  updateActivityDetail
+} = require('../persistence/setupdb-couchbase');
 const { getActivityDetails } = require('./getActivityDetails');
 
 const makeCompressedRoute = async (activityId, compressionLevel = 0.0001) => {
-  const existingRoute = await RouteCoordinates.getRouteCoordinates(activityId, compressionLevel);
+  const existingRoute = await getRouteCoordinates(activityId, compressionLevel);
   if (existingRoute?.length) {
     return { activityId, route: existingRoute, compressionLevel };
   }
@@ -65,16 +71,7 @@ const makeCompressedRoute = async (activityId, compressionLevel = 0.0001) => {
     }
   );
 
-  const routeCoordsPromise = RouteCoordinates.bulkCreate(
-    compressedRoute.map(([lat, lon, seconds_at_coords = 1], index) => ({
-      lat,
-      lon,
-      position_index: index,
-      seconds_at_coords,
-      activityId,
-      compression_level: compressionLevel,
-    }))
-  );
+  const routeCoordsPromise = await bulkCreateRouteCoordinates(activityId, compressedRoute, compressionLevel);
 
   await Promise.all([
     couchDbPromise,

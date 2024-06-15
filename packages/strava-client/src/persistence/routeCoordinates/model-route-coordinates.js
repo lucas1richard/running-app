@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('./sequelize-mysql');
+const { sequelizeMysql } = require('../sequelize-mysql');
 
 // get the same shape as we would get from couchdb
 const formatResponse = (route) => {
