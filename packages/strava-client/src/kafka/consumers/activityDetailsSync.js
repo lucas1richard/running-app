@@ -1,5 +1,4 @@
-const ActivitySegment = require('../../persistence/sequelize-activity-segments');
-const AthleteSegment = require('../../persistence/sequelize-athlete-segments');
+const { bulkCreateActivitySegments, bulkCreateAthleteSegments } = require('../../persistence/segments');
 const { getActivityDetail } = require('../../persistence/setupdb-couchbase');
 const { ACTIVITY_PULL } = require('../topics');
 
@@ -8,35 +7,10 @@ const syncActivityDetails = async (activityId) => {
 
   const segmentEfforts = details?.segment_efforts || [];
   try {
-    await AthleteSegment.bulkCreate(segmentEfforts.map(({ segment: se, ...rest }) => ({
-      ...rest,
-      start_date: new Date(rest.start_date),
-      activityId: activityId,
-      activitySegmentId: se.id,
-    }), {
-      ignoreDuplicates: true,
-      logging: false,
-    }), {
-      ignoreDuplicates: true,
-      logging: false,
-    });
+    await bulkCreateAthleteSegments(activityId, segmentEfforts);
     console.log('Athlete segments added');
     console.log('Now adding activity segments');
-    await ActivitySegment.bulkCreate(segmentEfforts.map(({ segment: se }) => ({
-      ...se,
-      start_latlng: {
-        type: 'Point',
-        coordinates: se.start_latlng?.length ? se.start_latlng : [0,0],
-      },
-      end_latlng: {
-        type: 'Point',
-        coordinates: se.end_latlng?.length ? se.end_latlng : [0,0],
-      },
-      activityId: activityId,
-    })), {
-      ignoreDuplicates: true,
-      logging: false,
-    });
+    await bulkCreateActivitySegments(activityId, segmentEfforts);
   } catch (err) {
     console.error(err);
   }

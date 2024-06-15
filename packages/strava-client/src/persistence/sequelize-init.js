@@ -1,6 +1,6 @@
 const Activity = require('./sequelize-activities');
-const ActivitySegment = require('./sequelize-activity-segments');
-const AthleteSegment = require('./sequelize-athlete-segments');
+const ActivitySegment = require('./segments/model-activity-segments');
+const AthleteSegment = require('./segments/model-athlete-segments');
 const HeartZones = require('./heartzones/model-heartzones');
 const { sequelizeMysql } = require('./sequelize-mysql');
 const RelatedActivities = require('./sequelize-related-activities');

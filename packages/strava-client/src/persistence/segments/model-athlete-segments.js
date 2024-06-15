@@ -1,7 +1,16 @@
 const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('./sequelize-mysql');
+const { sequelizeMysql } = require('../sequelize-mysql');
 
 class AthleteSegment extends Model {
+  static async findAllByActivityId(activityId) {
+    return AthleteSegment.findAll({
+      where: {
+        activityId,
+      },
+      order: [['start_date', 'ASC']],
+      attributes: ['activitySegmentId'],
+    });
+  }
 }
 
 AthleteSegment.init(

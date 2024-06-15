@@ -1,9 +1,11 @@
 const { Router } = require('express');
-const AthleteSegment = require('../../../persistence/sequelize-athlete-segments');
-const { sequelizeCoordsDistance } = require('../../../persistence/utils');
 const Activity = require('../../../persistence/sequelize-activities');
 const RelatedActivities = require('../../../persistence/sequelize-related-activities');
 const longestCommonSubsequence = require('../../../utils/longestCommonSubsequence');
+const {
+  findAthleteSegmentsByActivityId,
+  findNearbySegmentsWithActivity,
+} = require('../../../persistence/segments');
 
 const router = new Router();
 
@@ -12,19 +14,9 @@ router.get('/:id/segments', async (req, res) => {
     const activityId = req.params?.id;
     const compareToId = req.query?.compareTo;
     const [retrievedSegmentIds, retrievedCompareToSegments] = await Promise.all([
-      AthleteSegment.findAll({
-        where: { activityId },
-        order: [['start_date', 'ASC']],
-        attributes: ['activitySegmentId'],
-      }),
+      findAthleteSegmentsByActivityId(activityId),
       compareToId
-        ? AthleteSegment.findAll({
-          where: {
-            activityId: compareToId,
-          },
-          order: [['start_date', 'ASC']],
-          attributes: ['activitySegmentId'],
-        })
+        ? findAthleteSegmentsByActivityId(compareToId)
         : Promise.resolve([]),
     ]);
     const activitySegmentsIds = retrievedSegmentIds.map((segment) => segment.activitySegmentId);
@@ -60,18 +52,7 @@ const getComparedSegments = async (activityId) => {
     //   return acc;
     // }, {});
 
-    const allSegments = await AthleteSegment.findAll({
-      order: [['start_date', 'ASC']],
-      attributes: ['activityId', 'activitySegmentId'],
-      include: [
-        {
-          model: Activity,
-          where: {
-            isNearby: sequelizeCoordsDistance(activity.start_latlng, 0.0006, 'start_latlng'),
-          },
-        }
-      ],
-    });
+    const allSegments = await findNearbySegmentsWithActivity(activity.start_latlng);
 
     const groupedSegments = allSegments.reduce((acc, segment) => {
       const key = segment.activityId;

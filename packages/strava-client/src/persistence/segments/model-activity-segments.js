@@ -30,7 +30,7 @@ https://developers.strava.com/docs/reference/#api-models-DetailedSegment
 */
 
 const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('./sequelize-mysql');
+const { sequelizeMysql } = require('../sequelize-mysql');
 
 class ActivitySegment extends Model {
 }
