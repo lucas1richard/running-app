@@ -1,5 +1,5 @@
-const RouteCoordinates = require('../database/sequelize-route-coordinates');
-const { getStream, updateActivityDetail } = require('../database/setupdb-couchbase');
+const RouteCoordinates = require('../persistence/sequelize-route-coordinates');
+const { getStream, updateActivityDetail } = require('../persistence/setupdb-couchbase');
 const { getActivityDetails } = require('./getActivityDetails');
 
 const makeCompressedRoute = async (activityId, compressionLevel = 0.0001) => {

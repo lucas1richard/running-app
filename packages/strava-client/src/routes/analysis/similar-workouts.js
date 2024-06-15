@@ -8,8 +8,8 @@
 
 const Router = require('express').Router;
 const Sequelize = require('sequelize');
-const Activity = require('../../database/sequelize-activities');
-const { sequelizeCoordsDistance } = require('../../database/utils');
+const Activity = require('../../persistence/sequelize-activities');
+const { sequelizeCoordsDistance } = require('../../persistence/utils');
 
 const router = new Router();
 

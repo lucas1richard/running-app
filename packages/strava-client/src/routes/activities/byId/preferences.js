@@ -2,7 +2,7 @@ const { Router } = require('express');
 const {
   getActivityPreferences,
   updateActivityPreferences,
-} = require('../../../database/setupdb-couchbase');
+} = require('../../../persistence/setupdb-couchbase');
 
 const router = new Router();
 

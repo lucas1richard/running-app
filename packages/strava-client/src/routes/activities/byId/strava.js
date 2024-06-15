@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const fetchStrava = require('../../../utils/fetchStrava');
-const Activity = require('../../../database/sequelize-activities');
-const { updateActivityDetail } = require('../../../database/setupdb-couchbase');
+const Activity = require('../../../persistence/sequelize-activities');
+const { updateActivityDetail } = require('../../../persistence/setupdb-couchbase');
 
 const router = new Router();
 

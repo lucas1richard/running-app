@@ -2,9 +2,9 @@ const { Router } = require('express');
 const {
   bulkAddActivities,
   getAllStreams,
-} = require('../../database/setupdb-couchbase');
-const summary = require('../../database/mysql-activities');
-const Activity = require('../../database/sequelize-activities');
+} = require('../../persistence/setupdb-couchbase');
+const summary = require('../../persistence/mysql-activities');
+const Activity = require('../../persistence/sequelize-activities');
 const fetchStrava = require('../../utils/fetchStrava');
 const { weatherRouter } = require('./byId/weather');
 const { streamsRouter } = require('./byId/streams');

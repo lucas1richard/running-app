@@ -1,6 +1,6 @@
 const { Router } = require('express');
-const RelatedActivities = require('../database/sequelize-related-activities');
-const Activity = require('../database/sequelize-activities');
+const RelatedActivities = require('../persistence/sequelize-related-activities');
+const Activity = require('../persistence/sequelize-activities');
 const { getComparedRoutes } = require('../controllers/getComparedRoutes');
 const { Sequelize, HasOne } = require('sequelize');
 

@@ -1,6 +1,6 @@
-const ActivitySegment = require('../../database/sequelize-activity-segments');
-const AthleteSegment = require('../../database/sequelize-athlete-segments');
-const { getActivityDetail } = require('../../database/setupdb-couchbase');
+const ActivitySegment = require('../../persistence/sequelize-activity-segments');
+const AthleteSegment = require('../../persistence/sequelize-athlete-segments');
+const { getActivityDetail } = require('../../persistence/setupdb-couchbase');
 const { ACTIVITY_PULL } = require('../topics');
 
 const syncActivityDetails = async (activityId) => {

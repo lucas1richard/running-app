@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getStream, addStream } = require('../../../database/setupdb-couchbase');
+const { getStream, addStream } = require('../../../persistence/setupdb-couchbase');
 const fetchStrava = require('../../../utils/fetchStrava');
 
 const router = new Router();

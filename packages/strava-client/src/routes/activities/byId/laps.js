@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getActivityDetail, updateActivityDetail } = require('../../../database/setupdb-couchbase');
+const { getActivityDetail, updateActivityDetail } = require('../../../persistence/setupdb-couchbase');
 const fetchStrava = require('../../../utils/fetchStrava');
 
 const router = new Router();

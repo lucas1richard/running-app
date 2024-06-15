@@ -1,8 +1,8 @@
 const { Router } = require('express');
-const AthleteSegment = require('../../../database/sequelize-athlete-segments');
-const { sequelizeCoordsDistance } = require('../../../database/utils');
-const Activity = require('../../../database/sequelize-activities');
-const RelatedActivities = require('../../../database/sequelize-related-activities');
+const AthleteSegment = require('../../../persistence/sequelize-athlete-segments');
+const { sequelizeCoordsDistance } = require('../../../persistence/utils');
+const Activity = require('../../../persistence/sequelize-activities');
+const RelatedActivities = require('../../../persistence/sequelize-related-activities');
 const longestCommonSubsequence = require('../../../utils/longestCommonSubsequence');
 
 const router = new Router();

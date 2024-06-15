@@ -1,9 +1,9 @@
 const { Sequelize } = require('sequelize');
-const Activity = require('../database/sequelize-activities');
-const { sequelizeCoordsDistance } = require('../database/utils');
+const Activity = require('../persistence/sequelize-activities');
+const { sequelizeCoordsDistance } = require('../persistence/utils');
 const { makeCompressedRoute } = require('./makeCompressedRoute');
 const longestCommonSubsequence = require('../utils/longestCommonSubsequence');
-const RelatedActivities = require('../database/sequelize-related-activities');
+const RelatedActivities = require('../persistence/sequelize-related-activities');
 
 const coordsEqual = (a, b) => a[0] === b[0] && a[1] === b[1];
 

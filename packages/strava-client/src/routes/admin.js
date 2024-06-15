@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getItem, storeItem } = require('../database/setupdb-mysql');
+const { getItem, storeItem } = require('../persistence/setupdb-mysql');
 
 const router = new Router();
 

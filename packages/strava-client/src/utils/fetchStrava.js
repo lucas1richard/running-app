@@ -1,4 +1,4 @@
-const { getAccessToken } = require('../database/utils');
+const { getAccessToken } = require('../persistence/utils');
 
 const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
   const accessToken = await getAccessToken();

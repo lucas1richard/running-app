@@ -1,8 +1,8 @@
 const app = require('./app');
 const PORT = require('./port');
-const { setupdb } = require('./database/setupdb-couchbase');
-const { initMysql } = require('./database/setupdb-mysql');
-const { initSequelize } = require('./database/sequelize-init');
+const { setupdb } = require('./persistence/setupdb-couchbase');
+const { initMysql } = require('./persistence/setupdb-mysql');
+const { initSequelize } = require('./persistence/sequelize-init');
 const waitPort = require('wait-port');
 const { run } = require('./kafka/client');
 

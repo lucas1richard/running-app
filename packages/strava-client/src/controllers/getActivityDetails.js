@@ -1,4 +1,4 @@
-const { getActivityDetail, addActivityDetail } = require('../database/setupdb-couchbase');
+const { getActivityDetail, addActivityDetail } = require('../persistence/setupdb-couchbase');
 const { producer } = require('../kafka/client');
 const { ACTIVITY_PULL } = require('../kafka/topics');
 const fetchStrava = require('../utils/fetchStrava');

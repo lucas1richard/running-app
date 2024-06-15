@@ -1,6 +1,6 @@
 const { Router } = require('express');
-const Weather = require('../../../database/sequelize-weather');
-const Activity = require('../../../database/sequelize-activities');
+const Weather = require('../../../persistence/sequelize-weather');
+const Activity = require('../../../persistence/sequelize-activities');
 
 const router = new Router();
 

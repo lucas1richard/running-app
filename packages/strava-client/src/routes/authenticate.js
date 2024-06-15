@@ -4,7 +4,7 @@ const StravaStrategy = require('passport-strava-oauth2').Strategy;
 
 const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../constants');
 const PORT = require('../port');
-const { getItem, updateItem, storeItem } = require('../database/setupdb-mysql');
+const { getItem, updateItem, storeItem } = require('../persistence/setupdb-mysql');
 
 const router = new Router();
 
