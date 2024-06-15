@@ -1,5 +1,5 @@
 const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('./sequelize-mysql');
+const { sequelizeMysql } = require('../sequelize-mysql');
 
 class RelatedActivities extends Model {}
 

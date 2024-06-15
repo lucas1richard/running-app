@@ -1,11 +1,10 @@
 const { Router } = require('express');
-const Activity = require('../../../persistence/sequelize-activities');
-const RelatedActivities = require('../../../persistence/sequelize-related-activities');
 const longestCommonSubsequence = require('../../../utils/longestCommonSubsequence');
 const {
   findAthleteSegmentsByActivityId,
   findNearbySegmentsWithActivity,
 } = require('../../../persistence/segments');
+const { findActivityById, bulkCreateRelatedSegments } = require('../../../persistence/activities');
 
 const router = new Router();
 
@@ -34,7 +33,7 @@ router.get('/:id/segments', async (req, res) => {
 });
 
 const getComparedSegments = async (activityId) => {
-  const activity = await Activity.findOne({ where: { id: activityId } });
+  const activity = await findActivityById(activityId);
 
     if (!activity) {
       throw Error('Activity not found');
@@ -78,26 +77,7 @@ const getComparedSegments = async (activityId) => {
 
     comparedSegments.sort((a, b) => b.scoreLow - a.scoreLow);
 
-    await RelatedActivities.bulkCreate(
-      comparedSegments.filter(({ baseActivity }) => baseActivity !== activityId).map((segment) => ({
-        baseActivity: activityId,
-        relatedActivity: segment.id,
-        segmentScoreFromBase: segment.longestCommonSubsequence / segment.activitySegmentsIdsLength,
-        segmentScoreFromRelated: segment.longestCommonSubsequence / segment.compareSegmentsIdsLength,
-        longestCommonSegmentSubsequence: segment.longestCommonSubsequence,
-        numberBaseSegments: segment.activitySegmentsIdsLength,
-        numberRelatedSegments: segment.compareSegmentsIdsLength,
-      })),
-      {
-        updateOnDuplicate: [
-          'segmentScoreFromBase',
-          'segmentScoreFromRelated',
-          'longestCommonSegmentSubsequence',
-          'numberBaseSegments',
-          'numberRelatedSegments',
-        ],
-      }
-    );
+    await bulkCreateRelatedSegments(activityId, comparedSegments);
 
     return comparedSegments;
   };

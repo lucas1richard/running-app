@@ -1,28 +1,18 @@
-const { Sequelize } = require('sequelize');
-const Activity = require('../persistence/sequelize-activities');
-const { sequelizeCoordsDistance } = require('../persistence/utils');
 const { makeCompressedRoute } = require('./makeCompressedRoute');
 const longestCommonSubsequence = require('../utils/longestCommonSubsequence');
-const RelatedActivities = require('../persistence/sequelize-related-activities');
+const { findActivityById, findNearbyStartingActivities, bulkCreateRelatedRoutes } = require('../persistence/activities');
 
 const coordsEqual = (a, b) => a[0] === b[0] && a[1] === b[1];
 
 const getComparedRoutes = async (activityId) => {
-  const activity = await Activity.findOne({ where: { id: activityId } });
+  const activity = await findActivityById(activityId);
 
   if (!activity) {
     throw Error('Activity not found');
   }
   
   // get nearby activities
-  const nearbyActivities = await Activity.findAll({
-    where: {
-      sport_type: 'Run',
-      isNearby: sequelizeCoordsDistance(activity.start_latlng, 0.0006, 'start_latlng'),
-      [Sequelize.Op.not]: [{ id: activityId }],
-    },
-  });
-
+  const nearbyActivities = await findNearbyStartingActivities(activity);
   const activityRoute = await makeCompressedRoute(activityId, 0.0005);
   
   // get route of each activity
@@ -46,13 +36,7 @@ const getComparedRoutes = async (activityId) => {
   });
 
   // save compared routes
-  await RelatedActivities.bulkCreate(
-    data,
-    {
-      // ignoreDuplicates: true,
-      updateOnDuplicate: ['routeScoreFromRelated', 'routeScoreFromBase'],
-    }
-  );
+  await bulkCreateRelatedRoutes(data);
 
   // return compared routes
   return data;

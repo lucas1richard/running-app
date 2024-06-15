@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const fetchStrava = require('../../../utils/fetchStrava');
-const Activity = require('../../../persistence/sequelize-activities');
 const { updateActivityDetail } = require('../../../persistence/setupdb-couchbase');
+const { updateActivityById } = require('../../../persistence/activities');
 
 const router = new Router();
 
@@ -16,7 +16,7 @@ router.put('/:id', async (req, res) => {
       body: JSON.stringify(req.body),
     });
 
-    await Activity.update({ ...req.body }, { where: { id } });
+    await updateActivityById(id, body);
     if (body.description) {
       await updateActivityDetail(id, { description: body.description });
     }

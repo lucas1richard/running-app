@@ -1,4 +1,4 @@
-const Activity = require('../sequelize-activities');
+const Activity = require('../activities/model-activities');
 const { sequelizeCoordsDistance } = require('../utils');
 const bulkCreateActivitySegments = require('./bulkCreateActivitySegments');
 const bulkCreateAthleteSegments = require('./bulkCreateAthleteSegments');

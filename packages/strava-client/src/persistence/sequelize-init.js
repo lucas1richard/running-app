@@ -1,9 +1,10 @@
-const Activity = require('./sequelize-activities');
+const { sequelizeMysql } = require('./sequelize-mysql');
+
+const Activity = require('./activities/model-activities');
 const ActivitySegment = require('./segments/model-activity-segments');
 const AthleteSegment = require('./segments/model-athlete-segments');
 const HeartZones = require('./heartzones/model-heartzones');
-const { sequelizeMysql } = require('./sequelize-mysql');
-const RelatedActivities = require('./sequelize-related-activities');
+const RelatedActivities = require('./activities/model-related-activities');
 const Weather = require('./weather/weather-model');
 const ZonesCache = require('./heartzones/model-zones-cache');
 const RouteCoordinates = require('./routeCoordinates/model-route-coordinates');
@@ -67,11 +68,6 @@ const initSequelize = async () => {
     }, {
       override: true,
     });
-
-    sequelizeMysql.addScope('defaultScope', {
-      exclude: ['createdAt', 'updatedAt'],
-    });
-
   } catch (err) {
     console.error(err);
   }

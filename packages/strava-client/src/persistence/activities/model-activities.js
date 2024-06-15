@@ -1,37 +1,9 @@
 const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('./sequelize-mysql');
-const { getAllActivities } = require('./setupdb-couchbase');
-const { getSecondsPerMile } = require('../utils/unitConversions');
+const { sequelizeMysql } = require('../sequelize-mysql');
+const { getAllActivities } = require('../setupdb-couchbase');
+const { getSecondsPerMile } = require('../../utils/unitConversions');
 
 class Activity extends Model {
-  static async bulkAddFromStrava(stravaActivities) {
-    if (stravaActivities.length > 0) {
-      try {
-        const records = await this.bulkCreate(stravaActivities.map((av) => ({
-          ...av,
-          start_latlng: {
-            type: 'Point',
-            coordinates: av.start_latlng?.length ? av.start_latlng : [0, 0],
-          },
-          end_latlng: {
-            type: 'Point',
-            coordinates: av.end_latlng?.length ? av.end_latlng : [0, 0],
-          },
-          summary_polyline: av.map?.summary_polyline,
-        })), {
-          ignoreDuplicates: true,
-          logging: false,
-        });
-
-        console.log(`Bulk Add Activities Complete - ${stravaActivities.length} records`)
-
-        return records;
-      } catch (err) {
-        console.log(err);
-        return [];
-      }
-    }
-  }
   static async syncWithCouch() {
     const existingActivities = await getAllActivities();
     await this.bulkAddFromStrava(existingActivities);

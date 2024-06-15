@@ -1,13 +1,13 @@
 const { Router } = require('express');
-const Activity = require('../../../persistence/sequelize-activities');
 const { addOrUpdateWeather } = require('../../../persistence/weather');
+const { findActivityById } = require('../../../persistence/activities');
 
 const router = new Router();
 
 router.put('/:id/weather', async (req, res) => {
   try {
     const { id } = req.params;
-    const activity = await Activity.findByPk(id);
+    const activity = await findActivityById(id);
     if (!activity) {
       return res.status(404).send('Activity not found');
     }

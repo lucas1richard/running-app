@@ -4,7 +4,6 @@ const {
   getAllStreams,
 } = require('../../persistence/setupdb-couchbase');
 const summary = require('../../persistence/mysql-activities');
-const Activity = require('../../persistence/sequelize-activities');
 const fetchStrava = require('../../utils/fetchStrava');
 const { weatherRouter } = require('./byId/weather');
 const { streamsRouter } = require('./byId/streams');
@@ -14,6 +13,8 @@ const { preferencesRouter } = require('./byId/preferences');
 const { segmentsRouter } = require('./byId/segments');
 const { stravaRouter } = require('./byId/strava');
 const { routeRouter } = require('./byId/route');
+const { findAllActivities } = require('../../persistence/activities');
+const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
 
 const router = new Router();
 
@@ -36,10 +37,7 @@ router.get('/list', async (req, res) => {
     const perPage = req.query.per_page || 100;
 
     if (!forceFetch) {
-      const existingActivities = await Activity.findAll({
-        order: [['start_date', 'DESC']],
-        where: { sport_type: 'Run' },
-      });
+      const existingActivities = await findAllActivities();
       if (existingActivities.length > 0) {
         return res.json(existingActivities);
       }
@@ -47,7 +45,7 @@ router.get('/list', async (req, res) => {
 
     const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
     await bulkAddActivities(activitiesList); // couchdb
-    const records = await Activity.bulkAddFromStrava(activitiesList); // mysql
+    const records = await bulkAddActivitiesFromStrava(activitiesList); // mysql
 
     res.json(records);
   } catch (err) {
