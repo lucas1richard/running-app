@@ -3,26 +3,9 @@ const AthleteSegment = require('../../../database/sequelize-athlete-segments');
 const { sequelizeCoordsDistance } = require('../../../database/utils');
 const Activity = require('../../../database/sequelize-activities');
 const RelatedActivities = require('../../../database/sequelize-related-activities');
+const longestCommonSubsequence = require('../../../utils/longestCommonSubsequence');
 
 const router = new Router();
-
-const longestCommonSubsequence = (seq1, seq2) => {
-  const sym = Symbol('x');
-  const memo = Array.apply(null, new Array(seq1.length)).map(() => new Array(seq2.length).fill(sym));
-
-  const recurse = (i, j) => {
-    if (i >= seq1.length || j >= seq2.length) return 0;
-    
-    if (memo[i][j] === sym) {
-      if (seq1[i] === seq2[j]) memo[i][j] = 1 + recurse(i + 1, j + 1);
-      else memo[i][j] = Math.max(recurse(i + 1, j), recurse(i, j + 1));
-    }
-    
-    return memo[i][j];
-  };
-  
-  return recurse(0, 0);
-};
 
 router.get('/:id/segments', async (req, res) => {
   try {
@@ -46,7 +29,7 @@ router.get('/:id/segments', async (req, res) => {
     ]);
     const activitySegmentsIds = retrievedSegmentIds.map((segment) => segment.activitySegmentId);
     const compareSegmentsIds = retrievedCompareToSegments.map((segment) => segment.activitySegmentId);
-    res.json({
+    return res.json({
       longestCommonSubsequence: longestCommonSubsequence(activitySegmentsIds, compareSegmentsIds),
       activitySegmentsIdsLength: activitySegmentsIds.length,
       compareSegmentsIdsLength: compareSegmentsIds.length,
@@ -54,7 +37,7 @@ router.get('/:id/segments', async (req, res) => {
       compareSegmentsIds,
     });
   } catch (err) {
-    res.status(500).send(err.message)
+    return res.status(500).send(err.message)
   }
 });
 
@@ -76,7 +59,7 @@ const getComparedSegments = async (activityId) => {
     //   acc[relatedActivity] = true;
     //   return acc;
     // }, {});
-    
+
     const allSegments = await AthleteSegment.findAll({
       order: [['start_date', 'ASC']],
       attributes: ['activityId', 'activitySegmentId'],
@@ -125,7 +108,13 @@ const getComparedSegments = async (activityId) => {
         numberRelatedSegments: segment.compareSegmentsIdsLength,
       })),
       {
-        ignoreDuplicates: true,
+        updateOnDuplicate: [
+          'segmentScoreFromBase',
+          'segmentScoreFromRelated',
+          'longestCommonSegmentSubsequence',
+          'numberBaseSegments',
+          'numberRelatedSegments',
+        ],
       }
     );
 

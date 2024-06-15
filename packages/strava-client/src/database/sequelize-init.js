@@ -2,10 +2,11 @@ const Activity = require('./sequelize-activities');
 const ActivitySegment = require('./sequelize-activity-segments');
 const AthleteSegment = require('./sequelize-athlete-segments');
 const HeartZones = require('./sequelize-heartzones');
-const {sequelizeMysql} = require('./sequelize-mysql');
+const { sequelizeMysql } = require('./sequelize-mysql');
 const RelatedActivities = require('./sequelize-related-activities');
 const Weather = require('./sequelize-weather');
 const ZonesCache = require('./sequelize-zones-cache');
+const RouteCoordinates = require('./sequelize-route-coordinates');
 
 const initSequelize = async () => {
   try {
@@ -15,13 +16,13 @@ const initSequelize = async () => {
     ZonesCache.belongsTo(HeartZones);
     Activity.hasOne(Weather);
     Weather.belongsTo(Activity);
+    Activity.hasMany(RouteCoordinates);
+    RouteCoordinates.belongsTo(Activity, { foreignKey: 'activityId' });
   
-    // Activity.hasMany(ActivitySegment);
     Activity.hasMany(AthleteSegment);
   
     AthleteSegment.belongsTo(ActivitySegment, { foreignKey: 'activitySegmentId' });
     AthleteSegment.belongsTo(Activity, { foreignKey: 'activityId' });
-    // ActivitySegment.belongsTo(AthleteSegment, { foreignKey: 'athleteSegmentId' });
 
     Activity.belongsToMany(Activity, { as: 'relatedActivity', through: RelatedActivities, foreignKey: 'relatedActivity' });
     Activity.belongsToMany(Activity, { as: 'baseActivity', through: RelatedActivities, foreignKey: 'baseActivity' });
@@ -37,8 +38,12 @@ const initSequelize = async () => {
     await ZonesCache.sync();
     await HeartZones.sync();
     await Weather.sync({ force: false });
+    await RouteCoordinates.sync({ force: false });
   
     await Activity.addScope('defaultScope', {
+      where: {
+        sport_type: 'Run',
+      },
       include: [{
         model: ZonesCache,
         attributes: [

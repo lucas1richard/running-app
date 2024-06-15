@@ -7,12 +7,6 @@ const getActivityDetails = async (activityId) => {
   const detail = await getActivityDetail(activityId);
   await producer.connect();
   if (detail) {
-    await producer.send({ // process the activity some more off-cycle
-      topic: ACTIVITY_PULL,
-      messages: [
-        { value: JSON.stringify({ id: activityId }) }
-      ],
-    });
     return detail;
   }
 

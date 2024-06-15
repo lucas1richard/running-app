@@ -3,15 +3,17 @@ const PORT = require('./port');
 const { setupdb } = require('./database/setupdb-couchbase');
 const { initMysql } = require('./database/setupdb-mysql');
 const { initSequelize } = require('./database/sequelize-init');
+const waitPort = require('wait-port');
+const { run } = require('./kafka/client');
+
 const { activitiesRouter } = require('./routes/activities');
 const { adminRouter } = require('./routes/admin');
 const { authRouter } = require('./routes/authenticate');
 const { heartzonesRouter } = require('./routes/heartzones');
 const { analysisRouter } = require('./routes/analysis');
 const { userRouter } = require('./routes/user');
-const waitPort = require('wait-port');
-const { run } = require('./kafka/client');
 const { segmentsRouter } = require('./routes/segments');
+const { activityRoutesRouter } = require('./routes/activity-routes');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -21,6 +23,7 @@ app.use('/heartzones', heartzonesRouter);
 app.use('/analysis', analysisRouter);
 app.use('/user', userRouter);
 app.use('/segments', segmentsRouter);
+app.use('/routes', activityRoutesRouter);
 
 setupdb()
   .then(initMysql)

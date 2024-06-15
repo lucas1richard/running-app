@@ -2,7 +2,7 @@ const { getAccessToken } = require('../database/utils');
 
 const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
   const accessToken = await getAccessToken();
-  console.log(options)
+  console.log('FETCHING STRAVA: ', apiPath);
   const res = await fetch(`https://www.strava.com/api/v3${apiPath}`, {
     ...options,
     headers: {

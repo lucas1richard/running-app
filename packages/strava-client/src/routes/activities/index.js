@@ -13,6 +13,7 @@ const { lapsRouter } = require('./byId/laps');
 const { preferencesRouter } = require('./byId/preferences');
 const { segmentsRouter } = require('./byId/segments');
 const { stravaRouter } = require('./byId/strava');
+const { routeRouter } = require('./byId/route');
 
 const router = new Router();
 
@@ -21,10 +22,11 @@ router.use([
   detailsRouter,
   lapsRouter,
   preferencesRouter,
+  routeRouter,
   segmentsRouter,
   streamsRouter,
-  weatherRouter,
   stravaRouter,
+  weatherRouter,
 ]);
 
 router.get('/list', async (req, res) => {
