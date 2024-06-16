@@ -33,12 +33,14 @@ function* fetchSimilarWorkoutsSaga({ payload: id }) {
   try {
     yield put(setApiLoadingAct(key));
 
-    const res = yield call(requestor.post, '/analysis/similar-workouts/by-route', { id });
-    const { combo } = yield res.json();
+    const queryParams = new URLSearchParams({ activityId: id });
+    const res = yield call(requestor.get, `/routes/network?${queryParams}`);
+    const sim = yield res.json();
 
-    yield put(setSimilarWorkoutsAct(id, combo));
+    yield put(setSimilarWorkoutsAct(id, sim));
     yield put(setApiSuccessAct(key));
   } catch (e) {
+    console.log(e);
     yield put(setApiErrorAct(key));
   }
 }

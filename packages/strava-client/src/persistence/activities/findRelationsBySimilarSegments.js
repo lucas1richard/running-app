@@ -6,10 +6,11 @@ const summedSegmentScores = Sequelize.where(
   Sequelize.col('segmentScoreFromBase'), '+', Sequelize.col('segmentScoreFromRelated')
 );
 
-const findRelationsBySimilarSegments = async () => {
+const findRelationsBySimilarSegments = async (baseActivity) => {
   return RelatedActivities.findAll({
     where: {
       linked: Sequelize.where(summedSegmentScores, Sequelize.Op.gte, 1),
+      baseActivity,
     },
     order: [
       [summedSegmentScores, 'DESC']

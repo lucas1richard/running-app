@@ -6,10 +6,11 @@ const summedRouteScores = Sequelize.where(
   Sequelize.col('routeScoreFromBase'), '+', Sequelize.col('routeScoreFromRelated')
 );
 
-const findRelationsBySimilarRoute = async () => {
+const findRelationsBySimilarRoute = async (baseActivity) => {
   return RelatedActivities.findAll({
     where: {
       linked: Sequelize.where(summedRouteScores, Sequelize.Op.gte, 1),
+      baseActivity,
     },
     order: [
       [summedRouteScores, 'DESC']

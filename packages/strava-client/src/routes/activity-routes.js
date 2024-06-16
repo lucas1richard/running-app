@@ -7,6 +7,12 @@ const router = new Router();
 
 router.get('/network', async (req, res) => {
   try {
+    const activityId = req.query?.activityId;
+    if (activityId) {
+      const network = await findRelationsBySimilarRoute(activityId);
+      return res.json(network);
+    }
+
     const allActivities = await findByTimeframe();
 
     const allActivityIds = allActivities.map((activity) => activity.id);

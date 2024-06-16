@@ -14,8 +14,7 @@ const router = new Router();
 
 router.post('/by-route', async (req, res) => {
   try {
-    const { body } = req;
-    const id = body?.id;
+    const id = req.body?.id;
 
     const activity = await findActivityById(id);
 

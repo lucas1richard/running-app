@@ -4,21 +4,21 @@ const mysql = require('mysql2');
 const { createHeartRateZonesTable } = require('./heartzones');
 
 const {
-    MYSQL_HOST: HOST,
-    MYSQL_HOST_FILE: HOST_FILE,
-    MYSQL_USER: USER,
-    MYSQL_USER_FILE: USER_FILE,
-    MYSQL_PASSWORD: PASSWORD,
-    MYSQL_PASSWORD_FILE: PASSWORD_FILE,
-    MYSQL_DB: DB,
-    MYSQL_DB_FILE: DB_FILE,
+  MYSQL_HOST: HOST,
+  MYSQL_HOST_FILE: HOST_FILE,
+  MYSQL_USER: USER,
+  MYSQL_USER_FILE: USER_FILE,
+  MYSQL_PASSWORD: PASSWORD,
+  MYSQL_PASSWORD_FILE: PASSWORD_FILE,
+  MYSQL_DB: DB,
+  MYSQL_DB_FILE: DB_FILE,
 } = process.env;
 
 let pool;
 
 const createTokensTable = (dbPool) => new Promise((acc, rej) => {
   dbPool.query(
-      `
+    `
       CREATE TABLE IF NOT EXISTS tokens
       (
         id MEDIUMINT NOT NULL AUTO_INCREMENT,
@@ -29,10 +29,10 @@ const createTokensTable = (dbPool) => new Promise((acc, rej) => {
       )
       DEFAULT CHARSET utf8mb4
       `,
-      (err) => {
-          if (err) return rej(err);
-          acc();
-      }
+    (err) => {
+      if (err) return rej(err);
+      acc();
+    }
   );
 });
 
@@ -42,11 +42,11 @@ async function initMysql() {
   const password = PASSWORD_FILE ? fs.readFileSync(PASSWORD_FILE) : PASSWORD;
   const database = DB_FILE ? fs.readFileSync(DB_FILE) : DB;
 
-  await waitPort({ 
-      host, 
-      port: 3306,
-      timeout: 10000,
-      waitForDns: true,
+  await waitPort({
+    host,
+    port: 3306,
+    timeout: 10000,
+    waitForDns: true,
   });
 
   pool = mysql.createPool({
@@ -63,7 +63,7 @@ async function initMysql() {
       'CREATE DATABASE IF NOT EXISTS strava_tokens',
       err => {
         if (err) return console.error(err);
-    });
+      });
   } catch (err) {
     console.log(err);
   }
@@ -78,17 +78,17 @@ async function initMysql() {
 
 async function getItem(id) {
   return new Promise((acc, rej) => {
-      pool.query('SELECT * FROM tokens WHERE id=?', [id], (err, rows) => {
-          if (err) return rej(err);
-          acc(rows[0]);
-      });
+    pool.query('SELECT * FROM tokens WHERE id=?', [id], (err, rows) => {
+      if (err) return rej(err);
+      acc(rows[0]);
+    });
   });
 }
 
 async function storeItem(item, id) {
   return new Promise((acc, rej) => {
-      pool.query(
-          `
+    pool.query(
+      `
           INSERT INTO tokens
           (
             id,
@@ -98,12 +98,12 @@ async function storeItem(item, id) {
           )
           VALUES (?, ?, ?, ?)
           `,
-          [id, item.access_token, item.refresh_token, item.expires_at],
-          err => {
-              if (err) return rej(err);
-              acc();
-          },
-      );
+      [id, item.access_token, item.refresh_token, item.expires_at],
+      err => {
+        if (err) return rej(err);
+        acc();
+      },
+    );
   });
 }
 
@@ -118,23 +118,23 @@ async function upsertItem(item) {
 
 async function updateItem(id, item) {
   return new Promise((acc, rej) => {
-      pool.query(
-          'UPDATE tokens SET access_token=?, refresh_token=?, expires=? WHERE id=?',
-          [item.access_token, item.refresh_token, item.expires_at, id],
-          err => {
-              if (err) return rej(err);
-              acc();
-          },
-      );
+    pool.query(
+      'UPDATE tokens SET access_token=?, refresh_token=?, expires=? WHERE id=?',
+      [item.access_token, item.refresh_token, item.expires_at, id],
+      err => {
+        if (err) return rej(err);
+        acc();
+      },
+    );
   });
 }
 
 async function removeItem(id) {
   return new Promise((acc, rej) => {
-      pool.query('DELETE FROM tokens WHERE id=?', [id], err => {
-          if (err) return rej(err);
-          acc();
-      });
+    pool.query('DELETE FROM tokens WHERE id=?', [id], err => {
+      if (err) return rej(err);
+      acc();
+    });
   });
 }
 

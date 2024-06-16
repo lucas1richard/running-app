@@ -15,7 +15,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (apiStatus === 'idle') {
+    if (id && apiStatus === 'idle') {
       dispatch(triggerFetchSimilarWorkouts(id))
     }
   }, [apiStatus, dispatch, id, similarDist.length]);
@@ -23,7 +23,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
   return (
     <div>
       {similarDist.length === 0 && <p>None found</p>}
-      {similarDist.map((activity) => <Tile key={activity.id} activity={activity} zones={zones} />)}
+      {similarDist.map((activity) => <Tile key={activity.relatedActivity} activity={activity} zones={zones} />)}
     </div>
   );
 }

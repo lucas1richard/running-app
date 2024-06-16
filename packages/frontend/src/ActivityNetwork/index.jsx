@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import networkgraph from 'highcharts/modules/networkgraph';
@@ -9,10 +9,11 @@ networkgraph(Highcharts);
 const ActivityNetworkChart = () => {
   const refId = '11137630162';
   
-  const options = {
+  const options = useMemo(() => ({
     chart: {
       type: 'networkgraph',
-      plotBorderWidth: 1
+      plotBorderWidth: 1,
+      allowPointSelect: true,
     },
     title: {
       text: ''
@@ -29,6 +30,23 @@ const ActivityNetworkChart = () => {
     },
     series: [
       {
+        dataLabels: {
+          // enabled: true,
+          linkTextPath: {
+            attributes: {
+              dy: 12
+            }
+          },
+          // linkFormat: '\u2192',
+          textPath: {
+            enabled: true,
+            attributes: {
+              dy: 14,
+              startOffset: '45%',
+              textLength: 80
+            }
+          },
+        },
         layoutAlgorithm: {
           enableSimulation: true,
           initialPositions: function () {
@@ -59,7 +77,7 @@ const ActivityNetworkChart = () => {
           ])
       },
     ]
-  };
+  }), []);
 
   return (
     <HighchartsReact
