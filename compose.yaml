@@ -1,0 +1,66 @@
+services:
+  running-app-frontend:
+    image: node:18-alpine
+    command: sh -c "npm install && npm start"
+    ports:
+      - 127.0.0.1:3000:3000
+    working_dir: /app
+    volumes:
+      - ./packages/frontend:/app
+    env_file: "./frontend.env" # gitignored file
+
+  strava-service:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3001:3001"
+    working_dir: /strava-client
+    volumes:
+      - ./packages/strava-client:/strava-client
+    depends_on:
+      - running-app-kafka
+    env_file: "./strava-client.env" # gitignored file
+
+  image-service:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3002:3002"
+    working_dir: /image-service
+    volumes:
+      - ./packages/image-service:/image-service
+    env_file: "./image-service.env" # gitignored file
+
+  strava-couch-db:
+    image: couchdb:3
+    volumes:
+      - couch-db-data:/home/couchdb/data:/opt/couchdb/data
+    ports:
+      - "5984:5984"
+    env_file: "./strava-couch-db.env"
+  
+  strava-mysql:
+    image: mysql:8.0
+    volumes:
+      - strava-user-data:/var/lib/mysql
+    env_file: "./strava-couch-db.env" # gitignored file
+  
+  running-app-kafka:
+    image: wurstmeister/kafka:2.11-1.1.1
+    ports:
+      - "9092:9092"
+    volumes:
+      - ./packages/kafka-data:/var/lib/kafka/data
+    env_file: "./running-app-kafka.env" # gitignored file
+    depends_on:
+      - zookeeper
+
+  zookeeper: # dont change this name
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+    env_file: "./zookeeper.env" # gitignored file
+
+volumes:
+  couch-db-data:
+  strava-user-data:
