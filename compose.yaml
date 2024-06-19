@@ -13,13 +13,25 @@ services:
     image: node:18-alpine
     command: sh -c "npm install && npm run dev"
     ports:
-      - "3001:3001"
+      - "3003:3001"
     working_dir: /strava-client
     volumes:
       - ./packages/strava-client:/strava-client
     depends_on:
       - running-app-kafka
     env_file: "./strava-client.env" # gitignored file
+
+  activities-service:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3001:3001"
+    working_dir: /activities-service
+    volumes:
+      - ./packages/activities-service:/activities-service
+    depends_on:
+      - running-app-kafka
+    env_file: "./activities-service.env" # gitignored file
 
   image-service:
     image: node:18-alpine

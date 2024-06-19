@@ -4,6 +4,7 @@
 
 ### Create the following files if they don't already exist (see `./*.example.env` files)
 
+- ./activities-service.env
 - ./frontend.env
 - ./image-service.env
 - ./running-app-kafka.env
