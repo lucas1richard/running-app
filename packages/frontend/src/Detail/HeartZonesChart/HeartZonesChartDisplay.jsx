@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { condenseZonesFromHeartRate } from '../../utils';
+import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 
 const HeartZonesChartDisplay = ({
@@ -10,11 +10,22 @@ const HeartZonesChartDisplay = ({
   title,
   data,
   velocity,
+  time,
   zones,
   width,
   zonesBandsDirection,
 }) => {
-  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data), [zones, data]);
+  const fullTime = useMemo(() => {
+    const maxTime = time[time.length - 1];
+    const timeArr = new Array(maxTime).fill(0).map((_, ix) => ix);
+    for (let i = 0, j = 0; i < timeArr.length; i++) {
+      if (time[j] === i) j++;
+      else timeArr[i] = null;
+    }
+    return timeArr;
+  }, [time]);
+
+  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data, fullTime), [zones, data, fullTime]);
 
   const chartRef = useRef();
 
@@ -30,7 +41,7 @@ const HeartZonesChartDisplay = ({
     color: hrZonesBg[z],
     id: 'hrZoneBand',
   })), [zones]);
-  
+
   useEffect(() => {
     const chart = chartRef.current?.chart;
     if (!chart) return;
@@ -59,10 +70,15 @@ const HeartZonesChartDisplay = ({
     zooming: {
       type: 'x',
     },
+    plotOptions: {
+      connectEnds: false,
+      connectNulls: false,
+    },
     series: [
       {
         name: 'HeartRate',
-        data,
+        // data: time.map((val, ix) => [val, data[ix]]),
+        data: fullTime.map((val, ix) => [val, data[val]]),
         yAxis: 0,
         color: 'red',
         lineWidth: 2,
@@ -70,7 +86,7 @@ const HeartZonesChartDisplay = ({
       },
       altitude && {
         name: 'altitude',
-        data: altitude,
+        data: fullTime.map((val, ix) => [val, altitude[val]]),
         yAxis: 1,
         lineWidth: 1,
         color: 'rgba(165, 42, 42, 0.5)',
@@ -79,10 +95,12 @@ const HeartZonesChartDisplay = ({
       },
       velocity && {
         name: 'Velocity',
-        data: velocity.map(val => Math.round((val * 100 * 2.237)) / 100),
+        // data: velocity.map((val, ix) => [time[ix], Math.round((val * 100 * 2.237)) / 100]),
+        data: fullTime.map((val, ix) => [val, convertMetricSpeedToMPH(velocity[val])]),
         yAxis: 2,
         lineWidth: 1,
         color: 'black',
+        connectNulls: false,
         animation: false,
       },
       

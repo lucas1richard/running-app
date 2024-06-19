@@ -14,7 +14,7 @@ import {
 } from '../reducers/activities-actions';
 import { FETCH_ACTIVITY_PREFS, triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 
-const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude'];
+const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time'];
 
 const DetailDataFetcher = ({ id }) => {
   const dispatch = useDispatch();
