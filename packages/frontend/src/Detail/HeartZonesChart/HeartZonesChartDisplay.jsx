@@ -1,8 +1,22 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
+
+const seriesDefaultConfig = {
+  states: {
+    inactive: {
+      opacity: 1
+    },
+    hover: {
+      lineWidthPlus: 0,
+    }
+  },
+  fillOpacity: 0.3,
+  lineWidth: 3,
+  animation: false,
+};
 
 const HeartZonesChartDisplay = ({
   id,
@@ -14,7 +28,10 @@ const HeartZonesChartDisplay = ({
   zones,
   width,
   zonesBandsDirection,
+  minScrollWidth = 10,
 }) => {
+  const [plotLines, setPlotLines] = useState([]);
+  const chartHeight = 600;
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
     const timeArr = new Array(maxTime).fill(0).map((_, ix) => ix);
@@ -27,6 +44,7 @@ const HeartZonesChartDisplay = ({
 
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data, fullTime), [zones, data, fullTime]);
 
+  /** @type {React.MutableRefObject<{ chart: Highcharts.Chart }>} */
   const chartRef = useRef();
 
   const xAxisBands = useMemo(() => hrzones.map((band, ix) => ({
@@ -42,6 +60,32 @@ const HeartZonesChartDisplay = ({
     id: 'hrZoneBand',
   })), [zones]);
 
+  const heartRateData = useMemo(() => fullTime.map((val, ix) => [val, data[val]]), [data, fullTime]);
+  const altitudeData = useMemo(() => fullTime.map((val, ix) => [val, altitude[val]]), [altitude, fullTime]);
+  const velocityData = useMemo(() => fullTime.map((val, ix) => [val, convertMetricSpeedToMPH(velocity[val])]), [velocity, fullTime]);
+
+  const addXAxisPlotLine = useCallback((xVal, color) => {
+    const chart = chartRef.current?.chart;
+    if (!chart) return;
+
+    const existingPlotline = chart.xAxis[0].plotLinesAndBands.find(({ id }) => id === xVal);
+    if (existingPlotline) {
+      chart.xAxis[0].removePlotLine(xVal);
+      setPlotLines((lines) => lines.filter((val) => val !== xVal));
+    } else {
+      chart.xAxis[0].addPlotLine({
+        value: xVal,
+        color,
+        width: 5,
+        id: xVal,
+        label: {
+          text: xVal
+        }
+      });
+      setPlotLines((lines) => [...lines, xVal]);
+    }
+  }, []);
+
   useEffect(() => {
     const chart = chartRef.current?.chart;
     if (!chart) return;
@@ -56,57 +100,88 @@ const HeartZonesChartDisplay = ({
     }
   }, [xAxisBands, yAxisBands, zonesBandsDirection]);
 
-  /** @type {Highcharts.Options} */
-  const options = useMemo(() => ({
+  const options = useMemo(() => 
+    /** @type {Highcharts.Options} */
+    ({
     chart: {
-      type: 'line',
-      height: 400,
+      type: 'spline',
+      height: chartHeight,
       alignThresholds: true,
       alignTicks: true,
+      zooming: {
+        type: 'x',
+      },
+      scrollablePlotArea: {
+        minWidth: minScrollWidth,
+        scrollPositionX: 1
+      },
+    },
+    legend: {
+      enabled: false,
     },
     title: {
       text: title,
-    },
-    zooming: {
-      type: 'x',
     },
     plotOptions: {
       connectEnds: false,
       connectNulls: false,
     },
+    tooltip: {
+      formatter() {
+        return `
+          <b>${this.x} seconds</b>
+          <br>
+          ${this.y.toFixed(2)}
+        `;
+      }
+    },
     series: [
       {
+        ...seriesDefaultConfig,
         name: 'HeartRate',
-        // data: time.map((val, ix) => [val, data[ix]]),
-        data: fullTime.map((val, ix) => [val, data[val]]),
+        data: heartRateData,
         yAxis: 0,
         color: 'red',
-        lineWidth: 2,
-        animation: false,
+        point: {
+          events: {
+            click() {
+              addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)')
+            }
+          },
+        },
       },
-      altitude && {
-        name: 'altitude',
-        data: fullTime.map((val, ix) => [val, altitude[val]]),
+      {
+        ...seriesDefaultConfig,
+        name: 'Elevation',
+        data: altitudeData,
         yAxis: 1,
-        lineWidth: 1,
-        color: 'rgba(165, 42, 42, 0.5)',
-        animation: false,
+        fillOpacity: 0.9,
         type: 'area',
+        color: 'rgba(165, 42, 42, 0.5)',
+        point: {
+          events: {
+            click() {
+              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)')
+            }
+          },
+        },
       },
-      velocity && {
+      {
+        ...seriesDefaultConfig,
         name: 'Velocity',
-        // data: velocity.map((val, ix) => [time[ix], Math.round((val * 100 * 2.237)) / 100]),
-        data: fullTime.map((val, ix) => [val, convertMetricSpeedToMPH(velocity[val])]),
+        data: velocityData,
         yAxis: 2,
-        lineWidth: 1,
         color: 'black',
-        connectNulls: false,
-        animation: false,
+        point: {
+          events: {
+            click() {
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)')
+            }
+          },
+        },
       },
-      
-    ].filter(Boolean),
+    ],
     xAxis: {
-      zoomEnabled: true,
       gridLineWidth: 2,
       alignTicks: false,
       tickInterval: 240,
@@ -114,32 +189,36 @@ const HeartZonesChartDisplay = ({
       minorTicks: true,
       minorTickInterval: 60,
       minorTickLength: 4,
+      type: 'linear',
       minorGridLineColor: 'rgba(0,0,0,0.3)',
       gridLineColor: 'rgba(0,0,0,0.4)'
     },
     yAxis: [
       { // Primary yAxis
-        height: '75%',
+        height: '33.33%',
         labels: {
           style: {
-            color: 'red'
+            color: 'red',
           }
         },
         title: {
-          text: 'HeartRate',
+          text: 'Heart Rate',
           style: {
-            color: 'red'
+            color: 'red',
+            fontSize: '1.25rem'
           }
         },
       },
       { // Secondary yAxis
-        gridLineWidth: 0,
-        height: '25%',
-        top: '75%',
+        gridLineWidth: 1,
+        height: '33.33%',
+        top: '66.66%',
+        offset: 0,
         title: {
-          text: 'Altitude',
+          text: 'Elevation',
           style: {
-            color: 'brown'
+            color: 'brown',
+            fontSize: '1.25rem'
           }
         },
         labels: {
@@ -151,34 +230,37 @@ const HeartZonesChartDisplay = ({
         opposite: false,
       },
       { // Secondary yAxis
-        gridLineWidth: 0,
-        height: '75%',
+        gridLineWidth: 1,
+        height: '33.33%',
+        top: '33.33%',
         title: {
           text: 'Velocity',
           style: {
-            color: 'black'
+            color: 'black',
+            fontSize: '1.25rem'
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'black'
+            color: 'black',
           }
         },
         opposite: true,
       },
-      
     ]
-  }), [altitude, data, title, velocity]);
+  }), [addXAxisPlotLine, altitudeData, heartRateData, minScrollWidth, title, velocityData]);
 
   return (
-    <div style={{ height: 410 }}>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-        allowChartUpdate={true}
-        ref={chartRef}
-      />
+    <div>
+      <div style={{ height: chartHeight }}>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+          allowChartUpdate={true}
+          ref={chartRef}
+        />
+      </div>
       <div className="flex full-width">
         {hrzones.map(({ zone, from, to }) => (
           <div
@@ -189,6 +271,23 @@ const HeartZonesChartDisplay = ({
               width: `${100 * ((to - from) / data.length)}%`,
             }}
           >
+          </div>
+        ))}
+      </div>
+      <div>
+        {plotLines.sort((a,b) => a - b).map((val) => (
+          <div>
+            <button
+              key={val}
+              onClick={() => {
+                const chart = chartRef.current?.chart;
+                if (!chart) return;
+                chart.xAxis[0].removePlotLine(val);
+                setPlotLines((lines) => lines.filter((v) => v !== val));
+              }}
+            >
+              Remove Plotline at {val} seconds
+            </button>
           </div>
         ))}
       </div>

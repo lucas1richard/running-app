@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import HeartZonesChartDisplay from './HeartZonesChartDisplay';
 import { useSelector } from 'react-redux';
 import { selectActivity, selectStreamType } from '../../reducers/activities';
@@ -19,14 +19,21 @@ const HeartZonesChartContainer = ({ id }) => {
     savePreferences,
   ] = usePreferenceControl(['activities', id, 'zonesBandsDirection'], 'xAxis');
 
+  // scrollFactor is actually the scrollablePlotArea.minWidth from HighCharts
+  const [scrollFactor, setScrollFactor] = useState(0);
+
   return (
     <div>
+      <button onClick={() => setScrollFactor(scrollFactor + 500)}>-</button>
+      Scroll Window Size
+      <button onClick={() => setScrollFactor(scrollFactor - 500 > 0 ? scrollFactor - 500 : 0)}>+</button>
       <HeartZonesChartDisplay
         data={heartRateStream?.data || []}
         velocity={velocityStream?.data || []}
         altitude={altitudeStream?.data || []}
         time={timeStream?.data || []}
         zones={zones}
+        minScrollWidth={scrollFactor}
         zonesBandsDirection={zonesBandsDirection}
       />
       <form onSubmit={(ev) => ev.preventDefault()}>

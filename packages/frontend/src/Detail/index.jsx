@@ -19,23 +19,23 @@ import WeatherReporter from './WeatherReporter';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
-import FlexibleChart from './FlexibleChart';
+// import FlexibleChart from './FlexibleChart';
 import { useGetApiStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
 import { FETCH_ACTIVITY_DETAIL, FETCH_ACTIVITY_STREAM_DATA } from '../reducers/activities-actions';
 import { FETCH_ACTIVITY_PREFS } from '../reducers/preferences-actions';
 
-const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
-const compressCoords = (coords) => {
-  const compressed = [coords[0]];
-  for (let i = 1; i < coords.length; i++) {
-    if (coords[i][0] !== coords[i - 1][0] || coords[i][1] !== coords[i - 1][1]) {
-      compressed.push(coords[i]);
-    }
-  }
-  return compressed;
-};
+// const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
+// const compressCoords = (coords) => {
+//   const compressed = [coords[0]];
+//   for (let i = 1; i < coords.length; i++) {
+//     if (coords[i][0] !== coords[i - 1][0] || coords[i][1] !== coords[i - 1][1]) {
+//       compressed.push(coords[i]);
+//     }
+//   }
+//   return compressed;
+// };
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -50,7 +50,7 @@ const ActivityDetailPage = () => {
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
   const [showMap, setShowMap] = useState(false);
-  const { data: latlngStreamData = [] } = useSelector((state) => selectStreamType(state, id, 'latlng')) || {};
+  // const { data: latlngStreamData = [] } = useSelector((state) => selectStreamType(state, id, 'latlng')) || {};
 
   const configZonesId = useSelector(selectPreferencesZonesId);
   const allZones = useSelector(selectAllHeartZones);
@@ -116,7 +116,7 @@ const ActivityDetailPage = () => {
               </div>
             </div>
 
-            <FlexibleChart data={compressCoords(roundCoords(latlngStreamData))} width={600} />
+            {/* <FlexibleChart data={compressCoords(roundCoords(latlngStreamData))} width={600} /> */}
 
             <HeartZonesDisplay
               zones={zones}
