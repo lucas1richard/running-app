@@ -3,7 +3,7 @@ const topics = require('./topics');
 const { setupKafkaConsumers } = require('./consumers');
 
 const kafkaClient = new Kafka({
-  clientId: 'strava-client',
+  clientId: 'activities-service',
   brokers: [`running-app-kafka:9092`],
   retry: {
     initialRetryTime: 1000,
@@ -13,7 +13,7 @@ const kafkaClient = new Kafka({
 })
 
 const producer = kafkaClient.producer();
-const consumer = kafkaClient.consumer({ groupId: 'strava-client' });
+const consumer = kafkaClient.consumer({ groupId: 'activities-service' });
 
 const defaultTopicConfig = { numPartitions: 1, replicationFactor: 1 };
 const allTopics = {

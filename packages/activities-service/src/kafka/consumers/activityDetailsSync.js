@@ -19,7 +19,7 @@ const syncActivityDetails = async (activityId) => {
 };
 
 const activityDetailsSync = async (kafkaClient) => {
-  const consumer = kafkaClient.consumer({ groupId: 'strava-client' });
+  const consumer = kafkaClient.consumer({ groupId: 'activities-service' });
   await consumer.connect();
   await consumer.subscribe({ topic: ACTIVITY_PULL, fromBeginning: true });
 
