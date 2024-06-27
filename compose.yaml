@@ -9,18 +9,6 @@ services:
       - ./packages/frontend:/app
     env_file: "./frontend.env" # gitignored file
 
-  strava-service:
-    image: node:18-alpine
-    command: sh -c "npm install && npm run dev"
-    ports:
-      - "3003:3001"
-    working_dir: /strava-client
-    volumes:
-      - ./packages/strava-client:/strava-client
-    depends_on:
-      - running-app-kafka
-    env_file: "./strava-client.env" # gitignored file
-
   activities-service:
     image: node:18-alpine
     command: sh -c "npm install && npm run dev"
@@ -32,6 +20,17 @@ services:
     depends_on:
       - running-app-kafka
     env_file: "./activities-service.env" # gitignored file
+
+  tcp-service:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run start"
+    ports:
+      - "7070:7070"
+    working_dir: /tcp-server
+    volumes:
+      - ./packages/tcp-server:/tcp-server
+    depends_on:
+      - running-app-kafka
 
   image-service:
     image: node:18-alpine
