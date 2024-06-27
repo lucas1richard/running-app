@@ -13,7 +13,7 @@ import {
 } from '../reducers/activitydetail-actions';
 
 function* updateActivitySaga({ payload }) {
-  const key = this.triggeredBy;
+  const key = `${this.triggeredBy}-${payload.id}`;
   try {
     yield put(setApiLoadingAct(key));
 

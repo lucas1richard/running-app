@@ -8,6 +8,7 @@ const RelatedActivities = require('./activities/model-related-activities');
 const Weather = require('./weather/weather-model');
 const ZonesCache = require('./heartzones/model-zones-cache');
 const RouteCoordinates = require('./routeCoordinates/model-route-coordinates');
+const { Sequelize } = require('sequelize');
 
 const initSequelize = async () => {
   try {
@@ -43,6 +44,10 @@ const initSequelize = async () => {
     await Activity.addScope('defaultScope', {
       where: {
         sport_type: 'Run',
+        [Sequelize.Op.or]: [
+          { hidden: false },
+          { hidden: null },
+        ],
       },
       include: [{
         model: ZonesCache,

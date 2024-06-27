@@ -215,6 +215,9 @@ Activity.init(
     summary_polyline: {
       type: DataTypes.TEXT
     },
+    hidden: {
+      type: DataTypes.BOOLEAN
+    },
   },
   {
     sequelize: sequelizeMysql,

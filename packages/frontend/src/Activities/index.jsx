@@ -9,9 +9,11 @@ import ConfigWidget from '../Config';
 import SpeedChart from './SpeedChart';
 import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
-import { useGetApiStatus } from '../reducers/apiStatus';
+import { useGetApiStatus, useGetLoadingKeys } from '../reducers/apiStatus';
 import Shimmer from '../Loading/Shimmer';
 import { FETCH_ACTIVITIES, triggerFetchActivities } from '../reducers/activities-actions';
+import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
+import Spinner from '../Loading/Spinner';
 
 const Activities = () => {
   const dispatch = useDispatch();
@@ -19,6 +21,7 @@ const Activities = () => {
   const allzones = useSelector(selectAllHeartZones);
   const listPreferences = useSelector(selectListPrerences);
   const activitiesApiStatus = useGetApiStatus(FETCH_ACTIVITIES);
+  const loadingKeys = useGetLoadingKeys();
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   
@@ -74,12 +77,28 @@ const Activities = () => {
               )}
               <div className="flex flex-column gap">
                 {runs.map((activity) => (
-                  <Tile
-                    key={activity.id}
-                    activity={activity}
-                    zones={zones}
-                    backgroundIndicator={tileBackgroundIndicator}
-                  />
+                  <div key={activity.id}>
+                    <Tile
+                      activity={activity}
+                      zones={zones}
+                      backgroundIndicator={tileBackgroundIndicator}
+                    />
+                    <div className="text-right">
+                      {loadingKeys.includes(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`)
+                        ? <Spinner />
+                        : (
+                        <label htmlFor={`${activity.id}-hider`}>
+                          Hide
+                          <input
+                            id={`${activity.id}-hider`}
+                            type="checkbox"
+                            checked={activity.hidden}
+                            onChange={() => dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }))}
+                          />
+                        </label>
+                        )}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>

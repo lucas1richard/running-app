@@ -41,7 +41,9 @@ const apiStatusReducer = (state = initialState, action) => {
 };
 
 export const selectApiStatus = (state, key) => state.apiStatus[key]?.status || 'idle';
+export const selectLoadingKeys = (state) => Object.keys(state.apiStatus).filter((key) => state.apiStatus[key].status === 'loading');
 export const makeStatusSelector = (key) => (state) => selectApiStatus(state, key);
 export const useGetApiStatus = (key) => useSelector(makeStatusSelector(key));
+export const useGetLoadingKeys = () => useSelector(selectLoadingKeys);
 
 export default apiStatusReducer;
