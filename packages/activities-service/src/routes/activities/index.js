@@ -45,8 +45,10 @@ router.get('/list', async (req, res) => {
 
     const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
     await bulkAddActivities(activitiesList); // couchdb
-    const records = await bulkAddActivitiesFromStrava(activitiesList); // mysql
+    await bulkAddActivitiesFromStrava(activitiesList); // mysql
 
+    const records = await findAllActivities();
+    
     res.json(records);
   } catch (err) {
     res.status(500).send(err.message);
