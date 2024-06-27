@@ -17,7 +17,7 @@ export const FETCH_ACTIVITY_STREAM_DATA = 'activities/FETCH_ACTIVITY_STREAM_DATA
 export const triggerFetchActivityStreamData = (id, types) => ({ type: FETCH_ACTIVITY_STREAM_DATA, payload: { id, types } });
 
 export const FETCH_WEATHER = 'activities/FETCH_WEATHER';
-export const triggerFetchWeather = (activityId, data) => ({ type: FETCH_WEATHER, payload: { activityId, ...data } });
+export const triggerFetchWeather = (activityId, data) => ({ type: FETCH_WEATHER, payload: { id: activityId, ...data } });
 
 
 // REDUCER ACTIONS
