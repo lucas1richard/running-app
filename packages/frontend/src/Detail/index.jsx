@@ -25,6 +25,11 @@ import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
 import { FETCH_ACTIVITY_DETAIL, FETCH_ACTIVITY_STREAM_DATA } from '../reducers/activities-actions';
 import { FETCH_ACTIVITY_PREFS } from '../reducers/preferences-actions';
+import {
+  activityShouldShowLaps,
+  activityShouldShowSegments,
+  activityShouldShowSimilarWorkouts,
+} from '../PreferenceControl/keyPaths';
 
 // const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
 // const compressCoords = (coords) => {
@@ -138,7 +143,7 @@ const ActivityDetailPage = () => {
 
             <PreferenceControl
               subject="Laps"
-              keyPath={['activities', id, 'shouldShowLaps']}
+              keyPath={activityShouldShowLaps(id)}
               saveConfig={{ activityId: id }}
             >
               <Laps id={id} />
@@ -153,7 +158,7 @@ const ActivityDetailPage = () => {
 
             <PreferenceControl
               subject="Segments"
-              keyPath={['activities', id, 'shouldShowSegments']}
+              keyPath={activityShouldShowSegments(id)}
               saveConfig={{ activityId: id }}
             >
               <SegmentsDetailDisplay
@@ -165,7 +170,7 @@ const ActivityDetailPage = () => {
 
             <PreferenceControl
               subject="Similar Workouts"
-              keyPath={['activities', id, 'shouldShowSimilar']}
+              keyPath={activityShouldShowSimilarWorkouts(id)}
               saveConfig={{ activityId: id }}
             >
               <SimilarWorkouts

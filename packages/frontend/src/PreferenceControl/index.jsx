@@ -3,12 +3,14 @@ import usePreferenceControl from '../hooks/usePreferenceControl';
 
 const PreferenceControl = ({
   subject = '',
-  keyPath, // string[]
+  /** @type {[string, string, ...string[]]} keyPath should be length >= 2 */
+  keyPath,
   showSaveButton = false,
+  defaultValue = true,
   saveConfig, // { activityId: string }
   children,
 }) => {
-  const [preference, setPreference, savePreferences] = usePreferenceControl(keyPath);
+  const [preference, setPreference, savePreferences] = usePreferenceControl(keyPath, defaultValue);
 
   const onClick = useCallback(() => {
     setPreference(!preference);

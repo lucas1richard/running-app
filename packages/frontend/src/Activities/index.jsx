@@ -14,6 +14,9 @@ import Shimmer from '../Loading/Shimmer';
 import { FETCH_ACTIVITIES, triggerFetchActivities } from '../reducers/activities-actions';
 import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
 import Spinner from '../Loading/Spinner';
+import PreferenceControl from '../PreferenceControl';
+import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
+import usePreferenceControl from '../hooks/usePreferenceControl';
 
 const Activities = () => {
   const dispatch = useDispatch();
@@ -22,10 +25,10 @@ const Activities = () => {
   const listPreferences = useSelector(selectListPrerences);
   const activitiesApiStatus = useGetApiStatus(FETCH_ACTIVITIES);
   const loadingKeys = useGetLoadingKeys();
+  const [showHideFunction, setShowHideFunction] = usePreferenceControl(listDisplayHideFunction(), false);
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   
-
   const categorizeRunsByZones = useMemo(() => {
     if (!isGroupByZonesSet) {
       return [{ runs: activities, zones: {}, start: '' }];
@@ -63,8 +66,18 @@ const Activities = () => {
       <div>
         <CurrentSummary activities={activities} />
       </div>
-      <ConfigWidget />
-      <ListSort />
+      <PreferenceControl
+        subject="Display Config"
+        keyPath={listDisplayConfigControls()}
+        showSaveButton={true}
+        defaultValue={true}
+      >
+        <ConfigWidget />
+        <ListSort />
+        <button onClick={() => setShowHideFunction(!showHideFunction)}>
+          Toggle Display of Hide Functionality
+        </button>
+      </PreferenceControl>
       
       {
         activitiesApiStatus === 'success' && (
@@ -83,21 +96,23 @@ const Activities = () => {
                       zones={zones}
                       backgroundIndicator={tileBackgroundIndicator}
                     />
-                    <div className="text-right">
-                      {loadingKeys.includes(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`)
-                        ? <Spinner />
-                        : (
-                        <label htmlFor={`${activity.id}-hider`}>
-                          Hide
-                          <input
-                            id={`${activity.id}-hider`}
-                            type="checkbox"
-                            checked={activity.hidden}
-                            onChange={() => dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }))}
-                          />
-                        </label>
-                        )}
-                    </div>
+                    {showHideFunction && (
+                      <div className="text-right">
+                        {loadingKeys.includes(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`)
+                          ? <Spinner />
+                          : (
+                          <label htmlFor={`${activity.id}-hider`}>
+                            Hide Activity
+                            <input
+                              id={`${activity.id}-hider`}
+                              type="checkbox"
+                              checked={activity.hidden}
+                              onChange={() => dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }))}
+                            />
+                          </label>
+                          )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

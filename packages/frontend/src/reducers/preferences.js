@@ -147,6 +147,11 @@ export const selectActivityPreferences = createDeepEqualSelector(
   }
 );
 
+/**
+ * @param {Object} state
+ * @param {[string, string, ...string[]]} keyPath should be length >= 2
+ * @returns {any}
+ */
 export const selectPreferenceFree = (state, keyPath) => {
   const copyPath = [...keyPath];
   const firstMainArea = copyPath.shift();
