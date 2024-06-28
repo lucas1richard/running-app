@@ -1,61 +1,46 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
+import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectActivities } from '../reducers/activities';
-import Tile from './Tile';
-import { selectAllHeartZones } from '../reducers/heartzones';
+import { selectActivities, selectZoneGroupedRuns } from '../reducers/activities';
 import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
 import ConfigWidget from '../Config';
 import SpeedChart from './SpeedChart';
 import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
-import { useGetApiStatus, useGetLoadingKeys } from '../reducers/apiStatus';
+import { useGetApiStatus } from '../reducers/apiStatus';
 import Shimmer from '../Loading/Shimmer';
 import { FETCH_ACTIVITIES, triggerFetchActivities } from '../reducers/activities-actions';
-import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
-import Spinner from '../Loading/Spinner';
 import PreferenceControl from '../PreferenceControl';
 import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
 import usePreferenceControl from '../hooks/usePreferenceControl';
+import ActivityTile from './ActivityTile';
+
+const style = { padding: '1rem', margin: 'auto', maxWidth: 1280 };
+const hideFunctionKeypath = listDisplayHideFunction();
+const listDisplayControlsKeypath = listDisplayConfigControls();
 
 const Activities = () => {
   const dispatch = useDispatch();
-  const activities = useSelector(selectActivities);
-  const allzones = useSelector(selectAllHeartZones);
+  const activities = useSelector(selectActivities, fastDeepEqual);
   const listPreferences = useSelector(selectListPrerences);
   const activitiesApiStatus = useGetApiStatus(FETCH_ACTIVITIES);
-  const loadingKeys = useGetLoadingKeys();
-  const [showHideFunction, setShowHideFunction] = usePreferenceControl(listDisplayHideFunction(), false);
+  const [showHideFunction, setShowHideFunction] = usePreferenceControl(hideFunctionKeypath, false);
+  const hideFn = useCallback(
+    () => setShowHideFunction(!showHideFunction),
+    [setShowHideFunction, showHideFunction]
+  );
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   
-  const categorizeRunsByZones = useMemo(() => {
-    if (!isGroupByZonesSet) {
-      return [{ runs: activities, zones: {}, start: '' }];
-    }
-    const dict = new Map();
-    activities.forEach((run) => {
-      const currDate = new Date(run.start_date_local);
-      const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
-      const { start_date } = zones;
-      if (!dict.has(start_date)) {
-        dict.set(start_date, { start: start_date, runs: [], zones });
-      }
-      dict.get(start_date).runs.push(run);
-    });
-
-    const vals = Array.from(dict.values());
-    vals.sort((a, b) => new Date(b.start) - new Date(a.start));
-    
-    return vals;
-  }, [activities, allzones, isGroupByZonesSet]);
+  const categorizeRunsByZones = useSelector(selectZoneGroupedRuns);
 
   const onClickSync = useCallback(() => {
     dispatch(triggerFetchActivities(true));
   }, [dispatch]);
 
   return (
-    <div style={{ padding: '1rem', margin: 'auto', maxWidth: 1280 }}>
+    <div style={style}>
       <Shimmer isVisible={(activitiesApiStatus === 'loading' || activitiesApiStatus === 'idle')} />
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
@@ -68,13 +53,13 @@ const Activities = () => {
       </div>
       <PreferenceControl
         subject="Display Config"
-        keyPath={listDisplayConfigControls()}
+        keyPath={listDisplayControlsKeypath}
         showSaveButton={true}
         defaultValue={true}
       >
         <ConfigWidget />
         <ListSort />
-        <button onClick={() => setShowHideFunction(!showHideFunction)}>
+        <button onClick={hideFn}>
           Toggle Display of Hide Functionality
         </button>
       </PreferenceControl>
@@ -90,30 +75,12 @@ const Activities = () => {
               )}
               <div className="flex flex-column gap">
                 {runs.map((activity) => (
-                  <div key={activity.id}>
-                    <Tile
-                      activity={activity}
-                      zones={zones}
-                      backgroundIndicator={tileBackgroundIndicator}
-                    />
-                    {showHideFunction && (
-                      <div className="text-right">
-                        {loadingKeys.includes(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`)
-                          ? <Spinner />
-                          : (
-                          <label htmlFor={`${activity.id}-hider`}>
-                            Hide Activity
-                            <input
-                              id={`${activity.id}-hider`}
-                              type="checkbox"
-                              checked={activity.hidden}
-                              onChange={() => dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }))}
-                            />
-                          </label>
-                          )}
-                      </div>
-                    )}
-                  </div>
+                  <ActivityTile
+                    key={activity.id}
+                    activity={activity}
+                    backgroundIndicator={tileBackgroundIndicator}
+                    showHideFunction={showHideFunction}
+                  />
                 ))}
               </div>
             </div>

@@ -12,6 +12,7 @@ import {
   SET_SIMILAR_WORKOUTS,
   SET_WEATHER_DATA,
 } from './activities-actions';
+import { selectAllHeartZones } from './heartzones';
 
 const activitiesInitialState = {
   activities: {},
@@ -146,6 +147,32 @@ export const selectSimilarWorkouts = createDeepEqualSelector(
   getActivitiesState,
   (state, id) => id,
   (activities, id) => (activities.similarWorkouts[id] || []).map((id) => activities.activities[id])
+);
+
+export const selectZoneGroupedRuns = createDeepEqualSelector(
+  selectActivities,
+  selectListPrerences,
+  selectAllHeartZones,
+  (activities, { isGroupByZonesSet }, allzones) => {
+      if (!isGroupByZonesSet) {
+        return [{ runs: activities, zones: {}, start: '' }];
+      }
+      const dict = new Map();
+      activities.forEach((run) => {
+        const currDate = new Date(run.start_date_local);
+        const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
+        const { start_date } = zones;
+        if (!dict.has(start_date)) {
+          dict.set(start_date, { start: start_date, runs: [], zones });
+        }
+        dict.get(start_date).runs.push(run);
+      });
+  
+      const vals = Array.from(dict.values());
+      vals.sort((a, b) => new Date(b.start) - new Date(a.start));
+      
+      return vals;
+  }
 );
 
 export default activitiesReducer;

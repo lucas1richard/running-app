@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import fastDeepEqual from 'fast-deep-equal';
 import { selectPreferenceFree } from '../reducers/preferences';
 import {
   setPrefsFreeAct,
@@ -12,7 +13,7 @@ const usePreferenceControl = (
   defaultValue: any
 ) => {
   const dispatch = useDispatch();
-  const value = useSelector((state) => selectPreferenceFree(state, keyPath));
+  const value = useSelector((state) => selectPreferenceFree(state, keyPath), fastDeepEqual);
 
   const setValue = useCallback((newValue: any) => dispatch(setPrefsFreeAct(keyPath, newValue)),
   [dispatch, keyPath]);
