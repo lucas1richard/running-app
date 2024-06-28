@@ -7,7 +7,10 @@ import {
   triggerSetUserPrefs,
 } from '../reducers/preferences-actions';
 
-const usePreferenceControl = (keyPath: [string, string, ...string[]], defaultValue: any) => {
+const usePreferenceControl = (
+  keyPath: [string, string, ...string[]],
+  defaultValue: any
+) => {
   const dispatch = useDispatch();
   const value = useSelector((state) => selectPreferenceFree(state, keyPath));
 

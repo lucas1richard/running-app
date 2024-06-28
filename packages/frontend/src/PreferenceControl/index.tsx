@@ -1,22 +1,31 @@
-import React, { useCallback } from 'react';
+import React, { KeyboardEventHandler, MouseEventHandler, useCallback } from 'react';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 
-const PreferenceControl = ({
+type PreferenceControlProps = {
+  subject: string,
+  keyPath: [string, string, ...string[]],
+  showSaveButton?: boolean,
+  defaultValue?: boolean,
+  saveConfig?: any & { activityId: string },
+  children: React.ReactNode,
+}
+
+const PreferenceControl: React.FC<PreferenceControlProps> = ({
   subject = '',
   /** @type {[string, string, ...string[]]} keyPath should be length >= 2 */
   keyPath,
   showSaveButton = false,
   defaultValue = true,
-  saveConfig, // { activityId: string }
+  saveConfig,
   children,
 }) => {
   const [preference, setPreference, savePreferences] = usePreferenceControl(keyPath, defaultValue);
 
-  const onClick = useCallback(() => {
+  const onClick = useCallback<MouseEventHandler<HTMLDivElement>>(() => {
     setPreference(!preference);
   }, [setPreference, preference]);
 
-  const onKeyPress = useCallback((e) => {
+  const onKeyPress = useCallback<KeyboardEventHandler<HTMLDivElement>>((e) => {
     if (e.key === 'Enter') {
       setPreference(!preference);
     }
