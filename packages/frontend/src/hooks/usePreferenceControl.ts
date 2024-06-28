@@ -7,14 +7,14 @@ import {
   triggerSetUserPrefs,
 } from '../reducers/preferences-actions';
 
-const usePreferenceControl = (keyPath, defaultValue) => {
+const usePreferenceControl = (keyPath: [string, string, ...string[]], defaultValue: any) => {
   const dispatch = useDispatch();
   const value = useSelector((state) => selectPreferenceFree(state, keyPath));
 
-  const setValue = useCallback((newValue) => dispatch(setPrefsFreeAct(keyPath, newValue)),
+  const setValue = useCallback((newValue: any) => dispatch(setPrefsFreeAct(keyPath, newValue)),
   [dispatch, keyPath]);
   
-  const savePreferences = useCallback(({ activityId } = {}) => {
+  const savePreferences = useCallback(({ activityId }: any & { activityId: string } = {}) => {
     if (activityId) {
       return dispatch(triggerSetActivityPrefs(activityId));
     };

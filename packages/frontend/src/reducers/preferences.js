@@ -148,7 +148,7 @@ export const selectActivityPreferences = createDeepEqualSelector(
 );
 
 /**
- * @param {Object} state
+ * @param {unknown} state
  * @param {[string, string, ...string[]]} keyPath should be length >= 2
  * @returns {any}
  */
