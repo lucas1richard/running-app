@@ -3,7 +3,11 @@ export const FETCH_USER_PREFS = 'preferences/FETCH_USER_PREFERENCES';
 export const triggerFetchUserPrefs = () => ({ type: FETCH_USER_PREFS });
 
 export const FETCH_ACTIVITY_PREFS = 'preferences/FETCH_ACTIVITY_PREFERENCES';
-export const triggerFetchActivityPrefs = (activityId) => ({ type: FETCH_ACTIVITY_PREFS, payload: { activityId } });
+export const triggerFetchActivityPrefs = (activityId) => ({
+  type: FETCH_ACTIVITY_PREFS,
+  payload: { activityId },
+  key: `${FETCH_ACTIVITY_PREFS}-${activityId}`,
+});
 
 export const SET_ACTIVITY_PREFS = 'preferences/SET_ACTIVITY_PREFERENCES';
 export const triggerSetActivityPrefs = (activityId, preferences) => ({ type: SET_ACTIVITY_PREFS, payload: { activityId, preferences } });

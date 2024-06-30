@@ -19,8 +19,7 @@ import {
   setApiSuccessAct,
 } from '../reducers/apiStatus-actions';
 
-function* fetchActivitiesSaga({ forceFetch }) {
-  const key = this.triggeredBy;
+function* fetchActivitiesSaga({ forceFetch, key }) {
   try {
     yield put(setApiLoadingAct(key));
     const queryParam = new URLSearchParams({
@@ -39,8 +38,7 @@ function* fetchActivitiesSaga({ forceFetch }) {
   }
 }
 
-function* fetchActivitySummarySaga() {
-  const key = this.triggeredBy;
+function* fetchActivitySummarySaga({ key }) {
   yield put(setApiLoadingAct(key));
   try {
     const res = yield call(requestor.get, '/activities/summary');
@@ -52,8 +50,7 @@ function* fetchActivitySummarySaga() {
   }
 }
 
-function* fetchActivityDetailSaga({ payload }) {
-  const key = `${this.triggeredBy}-${payload}`;
+function* fetchActivityDetailSaga({ payload, key }) {
   try {
     yield put(setApiLoadingAct(key));
     const res = yield call(requestor.get, `/activities/${payload}/detail`);
@@ -65,8 +62,7 @@ function* fetchActivityDetailSaga({ payload }) {
   }
 }
 
-function* fetchAllStreamsSaga() {
-  const key = this.triggeredBy;
+function* fetchAllStreamsSaga({ key }) {
   try {
     yield put(setApiLoadingAct(key));
     const res = yield call(requestor.get, `/activities/streams/list`);
@@ -78,8 +74,7 @@ function* fetchAllStreamsSaga() {
   }
 }
 
-function* fetchStreamDataSaga({ payload: { id, types } }) {
-  const key = `${this.triggeredBy}-${id}`;
+function* fetchStreamDataSaga({ payload: { id, types }, key }) {
   try {
     yield put(setApiLoadingAct(key));
     const typesQuery = new URLSearchParams({ keys: types });

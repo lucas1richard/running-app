@@ -20,11 +20,11 @@ import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 // import FlexibleChart from './FlexibleChart';
-import { useGetApiStatus } from '../reducers/apiStatus';
+import { useTriggerActionIfStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
-import { FETCH_ACTIVITY_DETAIL, FETCH_ACTIVITY_STREAM_DATA } from '../reducers/activities-actions';
-import { FETCH_ACTIVITY_PREFS } from '../reducers/preferences-actions';
+import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
+import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import {
   activityShouldShowLaps,
   activityShouldShowSegments,
@@ -46,9 +46,9 @@ const ActivityDetailPage = () => {
   const { id } = useParams();
 
   const isLoading = [
-    useGetApiStatus(`${FETCH_ACTIVITY_STREAM_DATA}-${id}`),
-    useGetApiStatus(`${FETCH_ACTIVITY_DETAIL}-${id}`),
-    useGetApiStatus(`${FETCH_ACTIVITY_PREFS}-${id}`),
+    useTriggerActionIfStatus(triggerFetchActivityStreamData(id)),
+    useTriggerActionIfStatus(triggerFetchActivityDetail(id)),
+    useTriggerActionIfStatus(triggerFetchActivityPrefs(id)),
   ].some((apiStatus) => (apiStatus === 'idle' || apiStatus === 'loading'));
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));

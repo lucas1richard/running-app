@@ -1,12 +1,18 @@
 // SAGA TRIGGERS
 export const FETCH_ACTIVITIES = 'activities/FETCH_ACTIVITIES';
-export const triggerFetchActivities = (forceFetch = false) => ({ type: FETCH_ACTIVITIES, forceFetch });
+export const triggerFetchActivities = (forceFetch = false) => ({
+  type: FETCH_ACTIVITIES, forceFetch, key: FETCH_ACTIVITIES,
+});
 
 export const FETCH_ACTIVITIES_SUMMARY = 'activities/FETCH_ACTIVITIES_SUMMARY';
-export const triggerFetchActivitiesSummary = () => ({ type: FETCH_ACTIVITIES_SUMMARY, });
+export const triggerFetchActivitiesSummary = () => ({
+  type: FETCH_ACTIVITIES_SUMMARY, key: FETCH_ACTIVITIES_SUMMARY,
+});
 
 export const FETCH_ACTIVITY_DETAIL = 'activities/FETCH_ACTIVITY_DETAIL';
-export const triggerFetchActivityDetail = (id) => ({ type: FETCH_ACTIVITY_DETAIL, payload: id });
+export const triggerFetchActivityDetail = (id) => ({
+  type: FETCH_ACTIVITY_DETAIL, payload: id, key: `${FETCH_ACTIVITY_DETAIL}-${id}`,
+});
 
 export const FETCH_STREAMS = 'activities/FETCH_STREAMS';
 export const triggerFetchStreams = () => ({ type: FETCH_STREAMS, });
@@ -14,10 +20,14 @@ export const triggerFetchStreams = () => ({ type: FETCH_STREAMS, });
 export const FETCH_ALL_STREAMS = 'activities/FETCH_ALL_STREAMS';
 
 export const FETCH_ACTIVITY_STREAM_DATA = 'activities/FETCH_ACTIVITY_STREAM_DATA';
-export const triggerFetchActivityStreamData = (id, types) => ({ type: FETCH_ACTIVITY_STREAM_DATA, payload: { id, types } });
+export const triggerFetchActivityStreamData = (id, types) => ({
+  type: FETCH_ACTIVITY_STREAM_DATA, payload: { id, types }, key: `${FETCH_ACTIVITY_STREAM_DATA}-${id}`,
+});
 
 export const FETCH_WEATHER = 'activities/FETCH_WEATHER';
-export const triggerFetchWeather = (activityId, data) => ({ type: FETCH_WEATHER, payload: { id: activityId, ...data } });
+export const triggerFetchWeather = (activityId, data) => ({
+  type: FETCH_WEATHER, payload: { id: activityId, ...data }, key: `${FETCH_WEATHER}-${activityId}`,
+});
 
 
 // REDUCER ACTIONS

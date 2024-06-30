@@ -1,11 +1,12 @@
 import { produce } from 'immer';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import {
   SET_API_ERROR,
   SET_API_LOADING,
   SET_API_SUCCESS,
 } from './apiStatus-actions';
 import { createDeepEqualSelector } from '../utils';
+import { useEffect } from 'react';
 
 const initialState = {
   // give a custom key to every API request, use uuid if you have to
@@ -55,7 +56,17 @@ export const selectLoadingKeys = createDeepEqualSelector(
 );
 
 export const makeStatusSelector = (key) => (state) => selectApiStatus(state, key);
-export const useGetApiStatus = (key) => useSelector(makeStatusSelector(key));
+export const useGetApiStatus = (key) => useSelector(makeStatusSelector(key?.key || key));
 export const useGetLoadingKeys = () => useSelector(selectLoadingKeys, shallowEqual);
+
+export const useTriggerActionIfStatus = (action, status = 'idle') => {
+  const dispatch = useDispatch();
+  const apiStatus = useGetApiStatus(action);
+  useEffect(() => {
+    if (apiStatus === status) dispatch(action);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- don't depend on action
+  }, [apiStatus, dispatch, status]);
+  return apiStatus;
+};
 
 export default apiStatusReducer;

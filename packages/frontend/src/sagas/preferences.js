@@ -31,8 +31,7 @@ function* fetchUserPreferencesSaga({ payload }) {
   }
 }
 
-function* fetchActivityPreferencesSaga({ payload }) {
-  const key = `${this.triggeredBy}-${payload.activityId}`;
+function* fetchActivityPreferencesSaga({ payload, key }) {
   try {
     yield put(setApiLoadingAct(key));
     const response = yield call(requestor.get, `/activities/${payload.activityId}/preferences`);
