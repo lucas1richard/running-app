@@ -23,17 +23,16 @@ function* fetchActivitiesSaga({ forceFetch, key }) {
   try {
     yield put(setApiLoadingAct(key));
     const queryParam = new URLSearchParams({
-      ...forceFetch ? { force: true } : {},
+      ...forceFetch ? { force: String(true) } : {},
     });
     const res = yield call(requestor.get, `/activities/list?${queryParam}`);
     const acts = yield res.json();
     const sortedActs = [...acts];
-    sortedActs.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
+    sortedActs.sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime());
 
     yield put(setActivitiesAct(sortedActs));
     yield put(setApiSuccessAct(key));
   } catch (e) {
-    console.log(e)
     yield put(setApiErrorAct(key));
   }
 }

@@ -1,5 +1,7 @@
 import timeoutFetch from './timeoutFetch';
 
+type RequestorCallOptions = Parameters<typeof timeoutFetch>[1];
+
 const requestor = {
   headers: {
     'Content-Type': 'application/json',
@@ -10,40 +12,55 @@ const requestor = {
   setHeaders: (headers = {}) => {
     Object.assign(requestor.headers, headers);
   },
-  post: (path, data = {}, options = {}) => timeoutFetch(`${requestor.domain}${path}`, {
+  post: (
+    path: string,
+    data: unknown = {},
+    options: RequestorCallOptions = {}
+  ) => timeoutFetch(`${requestor.domain}${path}`, {
+    body: JSON.stringify(data),
+    ...options,
+    headers: {
+      ...requestor.headers,
+      ...options.headers
+    },
     method: 'POST',
+  }),
+  put: (
+    path: string,
+    data: unknown = {},
+    options: RequestorCallOptions = {}
+  ) => timeoutFetch(`${requestor.domain}${path}`, {
     body: JSON.stringify(data),
     ...options,
     headers: {
       ...requestor.headers,
       ...options.headers
     },
-  }),
-  put: (path, data = {}, options = {}) => timeoutFetch(`${requestor.domain}${path}`, {
     method: 'PUT',
+  }),
+  delete: (
+    path: string,
+    data: unknown = {},
+    options: RequestorCallOptions = {}
+  ) => timeoutFetch(`${requestor.domain}${path}`, {
     body: JSON.stringify(data),
     ...options,
     headers: {
       ...requestor.headers,
       ...options.headers
     },
-  }),
-  delete: (path, data = {}, options = {}) => timeoutFetch(`${requestor.domain}${path}`, {
     method: 'DELETE',
-    body: JSON.stringify(data),
-    ...options,
-    headers: {
-      ...requestor.headers,
-      ...options.headers
-    },
   }),
-  get: (path, options = {}) => timeoutFetch(`${requestor.domain}${path}`, {
-    method: 'GET',
+  get: (
+    path: string,
+    options: RequestorCallOptions = {}
+  ) => timeoutFetch(`${requestor.domain}${path}`, {
     ...options,
     headers: {
       ...requestor.headers,
       ...options.headers
     },
+    method: 'GET',
   }),
 };
 
