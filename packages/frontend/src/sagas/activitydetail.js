@@ -40,7 +40,6 @@ function* fetchSimilarWorkoutsSaga({ payload: id }) {
     yield put(setSimilarWorkoutsAct(id, sim));
     yield put(setApiSuccessAct(key));
   } catch (e) {
-    console.log(e);
     yield put(setApiErrorAct(key));
   }
 }

@@ -1,8 +1,3 @@
-// Sky
-// Temperature
-// Moisture
-// Wind
-
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styles from '../Detail.module.css';
@@ -63,8 +58,6 @@ const WeatherReporter = ({ id }) => {
       <div>
         <form onSubmit={handleSubmit}>
           <div className="flex gap flex-align-center">
-
-
             <select
               id="sky"
               name="sky"
@@ -79,7 +72,6 @@ const WeatherReporter = ({ id }) => {
               <option value="overcast">Overcast</option>
             </select>
           </div>
-
 
           <div className="flex gap flex-align-center">
             <select

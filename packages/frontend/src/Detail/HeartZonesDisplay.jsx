@@ -4,14 +4,15 @@ import { hrZonesBg, hrZonesBgStrong, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
 
 const HeartZonesDisplay = ({ zones, nativeZones, heartData, velocityData }) => {
-  console.log({ zones, nativeZones, heartData, velocityData })
   const totalTimes = useMemo(() => {
     return convertHeartDataToZoneTimes(heartData, zones);
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- we have the sub-array in the dependency array
   }, [heartData, zones.z1, zones.z2, zones.z3, zones.z4, zones.z5]);
 
-  const percents = useMemo(() => {
-    return totalTimes.map((time) => (100 * time / heartData?.length).toFixed(2));
-  }, [totalTimes, heartData?.length]);
+  const percents = useMemo(
+    () => totalTimes.map((time) => (100 * time / heartData?.length).toFixed(2)),
+    [totalTimes, heartData?.length]
+  );
 
   const avg = useMemo(() => convertHeartDataToZoneSpeeds(zones, heartData, velocityData), [heartData, velocityData, zones]);
 
@@ -71,7 +72,7 @@ const HeartZonesDisplay = ({ zones, nativeZones, heartData, velocityData }) => {
           <small>Note: Using Non-native Heart Rate Zones</small>
         </div>
       )}
-      <div style={{ border: '1px solid black' }}>
+      <div className="border-1">
         <div className="flex">
           <Cell ix={0} title="Zone 1" range={`${zones.z1} - ${zones.z2 - 1}`} />
           <Cell ix={1} title="Zone 2" range={`${zones.z2} - ${zones.z3 - 1}`} />

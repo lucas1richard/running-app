@@ -23,7 +23,9 @@ const SimilarWorkouts = ({ activity, zones }) => {
   return (
     <div>
       {similarDist.length === 0 && <p>None found</p>}
-      {similarDist.map((activity) => <Tile key={activity.relatedActivity} activity={activity} zones={zones} />)}
+      {similarDist.map((activity) => (
+        <Tile key={activity.relatedActivity} activity={activity} zones={zones} />
+      ))}
     </div>
   );
 }

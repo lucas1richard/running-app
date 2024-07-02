@@ -7,8 +7,6 @@ import testdata from './testdata.json';
 networkgraph(Highcharts);
 
 const ActivityNetworkChart = () => {
-  const refId = '11137630162';
-  
   const options = useMemo(() => ({
     chart: {
       type: 'networkgraph',
@@ -24,7 +22,6 @@ const ActivityNetworkChart = () => {
     tooltip: {
       useHtml: true,
       formatter: function () {
-        console.log(this.point)
         return `<b target="_blank" href="http://localhost:3000/${this.point.name}/detail">${this.point.name}</b>`;
       }
     },

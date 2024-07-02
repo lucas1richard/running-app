@@ -40,8 +40,13 @@ const UpdatableNameDescription = ({
         onChange={(ev) => setDescription(ev.target.value)}
       /> 
       <button
-        className={classNames('full-width', { 'display-none': name === activity.name && description === details?.description})}
         onClick={updateActivity}
+        className={classNames(
+          'full-width',
+          {
+            'display-none': name === activity.name && description === details?.description
+          }
+        )}
       >
         Update
       </button>

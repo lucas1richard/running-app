@@ -82,7 +82,6 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
 
     case SET_SIMILAR_WORKOUTS: {
       return produce(state, (nextState) => {
-        console.log(action.payload);
         nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(({ relatedActivity }) => relatedActivity);
       });
     }

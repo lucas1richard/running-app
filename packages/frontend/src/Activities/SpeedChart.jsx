@@ -26,7 +26,7 @@ const yAxisDefaultConfig = {
   tickInterval: 1,
   gridLineColor: 'rgba(0,0,0,0.4)',
   minorGridLineColor: 'rgba(0,0,0,0.1)',
-  height: '50%',
+  height: '33%',
   opposite: false,
 }
 
@@ -36,11 +36,12 @@ const SpeedChart = ({ activities: actProp }) => {
     [actProp]
   );
 
-  /** @type {Highcharts.Options} */
-  const options = useMemo(() => ({
+  const options = useMemo(() =>
+    /** @type {Highcharts.Options} */
+    ({
     chart: {
       type: 'line',
-      height: 400,
+      height: 600,
       zooming: {
         type: 'x',
       },
@@ -63,7 +64,6 @@ const SpeedChart = ({ activities: actProp }) => {
           linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
           stops: [[0, '#0f0'], [1, '#f00']],
         },
-        
         ...seriesDefaultConfig,
       },
       {
@@ -74,6 +74,16 @@ const SpeedChart = ({ activities: actProp }) => {
         color: {
           linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
           stops: [[0, 'rgba(0,0,255,1)'], [1, 'rgba(0,0,55,1)']],
+        },
+        ...seriesDefaultConfig,
+      },
+      {
+        name: 'Average HR',
+        data: activities.map(({ start_date, average_heartrate }) => [new Date(start_date).getTime(), average_heartrate]),
+        yAxis: 2,
+        color: {
+          linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+          stops: [[0, '#f00'], [0.5, '#0f0'], [1, '#f00']],
         },
         ...seriesDefaultConfig,
       },
@@ -107,7 +117,7 @@ const SpeedChart = ({ activities: actProp }) => {
       },
       { // Secondary yAxis
         ...yAxisDefaultConfig,
-        top: '50%',
+        top: '33%',
         title: {
           text: 'Distance',
           style: {
@@ -121,10 +131,29 @@ const SpeedChart = ({ activities: actProp }) => {
           },
         },
         opposite: true,
-      }
+      },
+      {
+        ...yAxisDefaultConfig,
+        top: '66%',
+        title: {
+          text: 'Avg HR',
+          style: {
+            color: 'black'
+          }
+        },
+        tickInterval: 10,
+        offset: 0,
+        labels: {
+          format: '{value}',
+          style: {
+            color: 'black',
+          },
+        },
+      },
     ],
     tooltip: {
       useHTML: true,
+      animation: false,
       positioner: function () {
         return {
           // right aligned
@@ -139,9 +168,13 @@ const SpeedChart = ({ activities: actProp }) => {
           <div class="text-right dls-white-bg pad border-1">
             <b>${dayjs(activity.start_date).format('MMM DD')}</b>
             <br />
-            ${activities[index].distance_miles.toFixed(2)} miles
+            ${activity.name}
+            <br />
+            ${activity.distance_miles.toFixed(2)} miles
             <br /> 
-            ${convertMetricSpeedToMPH(activities[index].average_speed).toFixed(2)} mph
+            ${convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+            <br />
+            ${activity.average_heartrate} bpm
           </div>
         `;
       },
@@ -157,7 +190,7 @@ const SpeedChart = ({ activities: actProp }) => {
   }), [activities]);
 
   return (
-    <div style={{ height: 410 }}>
+    <div style={{ height: 610 }}>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
