@@ -20,7 +20,7 @@ import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 // import FlexibleChart from './FlexibleChart';
-import { useTriggerActionIfStatus } from '../reducers/apiStatus';
+import { idle, loading, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
@@ -30,7 +30,6 @@ import {
   activityShouldShowSegments,
   activityShouldShowSimilarWorkouts,
 } from '../PreferenceControl/keyPaths';
-
 // const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
 // const compressCoords = (coords) => {
 //   const compressed = [coords[0]];
@@ -49,7 +48,7 @@ const ActivityDetailPage = () => {
     useTriggerActionIfStatus(triggerFetchActivityStreamData(id)),
     useTriggerActionIfStatus(triggerFetchActivityDetail(id)),
     useTriggerActionIfStatus(triggerFetchActivityPrefs(id)),
-  ].some((apiStatus) => (apiStatus === 'idle' || apiStatus === 'loading'));
+  ].some((apiStatus) => (apiStatus === idle || apiStatus === loading));
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));

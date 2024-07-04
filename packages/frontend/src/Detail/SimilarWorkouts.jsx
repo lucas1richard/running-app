@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectSimilarWorkouts } from '../reducers/activities';
 import Tile from '../Activities/Tile';
-import { useGetApiStatus } from '../reducers/apiStatus';
+import { idle, useGetApiStatus } from '../reducers/apiStatus';
 import {
   FETCH_SIMILAR_WORKOUTS,
   triggerFetchSimilarWorkouts,
@@ -15,7 +15,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (id && apiStatus === 'idle') {
+    if (id && apiStatus === idle) {
       dispatch(triggerFetchSimilarWorkouts(id))
     }
   }, [apiStatus, dispatch, id, similarDist.length]);

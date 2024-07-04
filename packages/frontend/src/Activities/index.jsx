@@ -8,7 +8,7 @@ import ConfigWidget from '../Config';
 import SpeedChart from './SpeedChart';
 import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
-import { useGetApiStatus } from '../reducers/apiStatus';
+import { idle, loading, success, useGetApiStatus } from '../reducers/apiStatus';
 import Shimmer from '../Loading/Shimmer';
 import { FETCH_ACTIVITIES, triggerFetchActivities } from '../reducers/activities-actions';
 import PreferenceControl from '../PreferenceControl';
@@ -41,7 +41,7 @@ const Activities = () => {
 
   return (
     <div style={style}>
-      <Shimmer isVisible={(activitiesApiStatus === 'loading' || activitiesApiStatus === 'idle')} />
+      <Shimmer isVisible={(activitiesApiStatus === loading || activitiesApiStatus === idle)} />
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
       </div>
@@ -65,7 +65,7 @@ const Activities = () => {
       </PreferenceControl>
 
       {
-        activitiesApiStatus === 'success' && (
+        activitiesApiStatus === success && (
           categorizeRunsByZones.map(({ runs, zones, start }) => (
             <div className="flex flex-column gap" key={start}>
               {isGroupByZonesSet && (

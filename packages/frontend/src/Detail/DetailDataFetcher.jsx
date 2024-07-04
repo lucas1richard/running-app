@@ -5,7 +5,7 @@ import { convertHeartDataToZoneTimes } from '../utils';
 import { selectActivity, selectStreamType } from '../reducers/activities';
 import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import { selectPreferencesZonesId } from '../reducers/preferences';
-import { useTriggerActionIfStatus } from '../reducers/apiStatus';
+import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 
@@ -27,7 +27,7 @@ const DetailDataFetcher = ({ id }) => {
   const streamStatus = useTriggerActionIfStatus(triggerFetchActivityStreamData(id, streamTypes));
 
   useEffect(() => {
-    if (!zones || streamStatus !== 'success') return;
+    if (!zones || streamStatus !== success) return;
     if (activity?.zonesCaches?.[zones.id]) return;
 
     requestor.post('/heartzones/set-cache', {
