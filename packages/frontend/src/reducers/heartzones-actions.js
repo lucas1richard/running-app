@@ -1,6 +1,11 @@
+import type { AsyncAction } from '../types.ts';
+
 // SAGA TRIGGERS
 export const FETCH_HEART_ZONES = 'heartzones/FETCH_HEART_ZONES';
-export const triggerFetchHeartZones = () => ({ type: FETCH_HEART_ZONES });
+export const triggerFetchHeartZones = (): AsyncAction => ({
+  type: FETCH_HEART_ZONES,
+  key: FETCH_HEART_ZONES,
+});
 
 // REDUCER ACTIONS
 export const ADD_HEART_ZONES = 'heartzonesReducer/ADD_HEART_ZONES';

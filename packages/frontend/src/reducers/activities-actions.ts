@@ -43,7 +43,6 @@ export const triggerFetchWeather = (activityId: number, data): AsyncAction => ({
   key: `${FETCH_WEATHER}-${activityId}`,
 });
 
-
 // REDUCER ACTIONS
 export const SET_ACTIVITIES = 'activitiesReducer/SET_ACTIVITIES';
 export const setActivitiesAct = (activities: Activitiy[]) => ({ type: SET_ACTIVITIES, payload: activities });
