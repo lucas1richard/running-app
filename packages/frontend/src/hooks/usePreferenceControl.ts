@@ -7,22 +7,26 @@ import {
   triggerSetActivityPrefs,
   triggerSetUserPrefs,
 } from '../reducers/preferences-actions';
+import useDispatchAsyncAction from './useDispatchAsyncAction';
 
 const usePreferenceControl = (
   keyPath: [string, string, ...string[]],
   defaultValue: any
 ) => {
   const dispatch = useDispatch();
+  const dispatchAsync = useDispatchAsyncAction();
   const value = useSelector((state) => selectPreferenceFree(state, keyPath), fastDeepEqual);
 
-  const setValue = useCallback((newValue: any) => dispatch(setPrefsFreeAct(keyPath, newValue)),
-  [dispatch, keyPath]);
+  const setValue = useCallback(
+    (newValue: any) => dispatch(setPrefsFreeAct(keyPath, newValue)),
+    [dispatch, keyPath]
+  );
   
   const savePreferences = useCallback(({ activityId }: any & { activityId: string } = {}) => {
     if (activityId) {
-      return dispatch(triggerSetActivityPrefs(activityId));
+      return dispatchAsync(triggerSetActivityPrefs(activityId));
     };
-    dispatch(triggerSetUserPrefs());
+    dispatchAsync(triggerSetUserPrefs());
   }, [dispatch]);
 
   return [
@@ -33,3 +37,4 @@ const usePreferenceControl = (
 };
 
 export default usePreferenceControl;
+

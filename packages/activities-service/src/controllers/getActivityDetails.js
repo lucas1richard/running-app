@@ -18,6 +18,7 @@ const getActivityDetails = async (activityId) => {
       { value: JSON.stringify({ id: activitiy.id }) }
     ],
   });
+
   return activitiy;
 };
 

@@ -8,7 +8,6 @@ const setPrefAction = (payload) => ({ type: 'preferencesReducer/SET_LIST_PREFERE
 const ListSort = ({}) => {
   const dispatch = useDispatch();
   const listPreferences = useSelector(selectListPrerences);
-
   const savePreferences = () => dispatch(triggerSetUserPrefs(undefined));
 
   return (
