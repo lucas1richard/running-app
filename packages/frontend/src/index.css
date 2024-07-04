@@ -52,6 +52,9 @@ button {
   font-weight: bolder;
   cursor: pointer;
 }
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
 
 /* button with onclick prop */
 button:active {
@@ -145,6 +148,9 @@ select {
 }
 .flex {
   display: flex;
+}
+.flex-even > * {
+  flex: 1;
 }
 .flex-item-grow {
   flex-grow: 1;

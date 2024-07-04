@@ -1,12 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { convertMetersToMiles } from '../utils';
-
-interface Activitiy {
-  start_date: string;
-  start_date_local: string;
-  distance: number;
-}
 
 const findRecent = (allActivities: Activitiy[], numDays: number) => {
   const currentDateUTC = dayjs.utc();
@@ -26,21 +20,27 @@ const sumDistance = (activities: Activitiy[]) => {
   return convertMetersToMiles(meters);
 };
 
-const CurrentSummary = ({
+const CurrentSummary: React.FC<{ activities: Activitiy[] }> = ({
   activities,
 }) => {
-  const recentRuns = findRecent(activities, 7);
-  const sameYearRuns = findSameYear(activities);
+  const recentRuns = useMemo(() => findRecent(activities, 7), []);
+  const sameYearRuns = useMemo(() => findSameYear(activities), []);
+
   return (
-    <div className="dls-white-bg pad">
-      <div className="heading-5">
-        {sumDistance(recentRuns).toFixed(2)} miles in the last week
+    <div className="dls-white-bg pad flex flex-even">
+      <div className="flex-item-grow text-center">
+        <h2 className="heading-5">Miles in the last week</h2>
+        <div className="heading-5">{sumDistance(recentRuns).toFixed(2)}</div>
       </div>
-      <div className="heading-5">
-        {sumDistance(sameYearRuns).toFixed(2)} miles this year
+
+      <div className="flex-item-grow text-center">
+        <h2 className="heading-5">Miles this year</h2>
+        <div className="heading-5">{sumDistance(sameYearRuns).toFixed(2)}</div>
       </div>
-      <div className="heading-6">
-        {sumDistance(activities).toFixed(2)} miles all time
+
+      <div className="flex-item-grow text-center">
+        <h2 className="heading-5">All time</h2>
+        <div className="heading-5">{sumDistance(activities).toFixed(2)}</div>
       </div>
     </div>
   );
