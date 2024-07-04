@@ -32,7 +32,7 @@ const Activities = () => {
   );
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
-  
+
   const categorizeRunsByZones = useSelector(selectZoneGroupedRuns);
 
   const onClickSync = useCallback(() => {
@@ -63,7 +63,7 @@ const Activities = () => {
           Toggle Display of Hide Functionality
         </button>
       </PreferenceControl>
-      
+
       {
         activitiesApiStatus === 'success' && (
           categorizeRunsByZones.map(({ runs, zones, start }) => (

@@ -14,7 +14,7 @@ import {
 } from '../reducers/activities-actions';
 import makeApiSaga from './apiSaga';
 
-function* fetchActivitiesSaga({ forceFetch, key }) {
+function* fetchActivitiesSaga({ forceFetch }) {
   const queryParam = new URLSearchParams({
     ...forceFetch ? { force: String(true) } : {},
   });
@@ -43,7 +43,7 @@ function* fetchAllStreamsSaga() {
   yield put(setStreamsAct(allStreams));
 }
 
-function* fetchStreamDataSaga({ payload: { id, types }, key }) {
+function* fetchStreamDataSaga({ payload: { id, types } }) {
   const typesQuery = new URLSearchParams({ keys: types });
   const res = yield call(requestor.get, `/activities/${id}/streams?${typesQuery}`);
   const stream = yield res.json();
