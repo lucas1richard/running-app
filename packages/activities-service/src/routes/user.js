@@ -4,7 +4,7 @@ const {
   updateUserPreferences,
 } = require('../persistence/setupdb-couchbase');
 
-const router = new Router();
+const router = Router();
 
 router.get('/preferences', async (req, res) => {
   try {

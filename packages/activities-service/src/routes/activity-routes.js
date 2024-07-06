@@ -3,7 +3,7 @@ const { getComparedRoutes } = require('../controllers/getComparedRoutes');
 const findByTimeframe = require('../persistence/activities/findByTimeframe');
 const { findRelationsBySimilarRoute } = require('../persistence/activities');
 
-const router = new Router();
+const router = Router();
 
 router.get('/network', async (req, res) => {
   try {

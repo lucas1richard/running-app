@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { similarWorkoutsRouter } = require('./similar-workouts');
 
-const router = new Router();
+const router = Router();
 
 router.use('/similar-workouts', similarWorkoutsRouter);
 

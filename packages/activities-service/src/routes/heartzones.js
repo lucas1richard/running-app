@@ -5,7 +5,7 @@ const {
   createHeartZonesCacheOnce,
 } = require('../persistence/heartzones');
 
-const router = new Router();
+const router = Router();
 
 router.get('/', async (req, res) => {
   try {

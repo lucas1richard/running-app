@@ -10,7 +10,7 @@ const Router = require('express').Router;
 const { findActivityById } = require('../../persistence/activities');
 const findSimilarStartDistance = require('../../persistence/activities/findSimilarStartDistance');
 
-const router = new Router();
+const router = Router();
 
 router.post('/by-route', async (req, res) => {
   try {

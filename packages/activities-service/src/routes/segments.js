@@ -5,7 +5,7 @@ const {
   findRelationsBySimilarSegments,
 } = require('../persistence/activities');
 
-const router = new Router();
+const router = Router();
 
 router.get('/network', async (req, res) => {
   try {

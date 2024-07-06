@@ -6,7 +6,7 @@ const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../constants');
 const PORT = require('../port');
 const { getItem, updateItem, storeItem } = require('../persistence/setupdb-mysql');
 
-const router = new Router();
+const router = Router();
 
 // Passport session setup.
 //   To support persistent login sessions, Passport needs to be able to
@@ -56,19 +56,19 @@ router.get('/exchange_token', async (req, res) => {
   try {
     const code = req.query?.code;
     const record = await getItem(1);
-  
     const query = `client_id=${STRAVA_CLIENT_ID}&client_secret=${STRAVA_CLIENT_SECRET}&code=${code}&grant_type=authorization_code`;
+
     const tokenRes = await fetch(`https://www.strava.com/api/v3/oauth/token?${query}`, {
       method: 'POST',
     });
-  
+
     const token = await tokenRes.json();
     if (record) {
       await updateItem(1, token)
     } else {
       await storeItem(token)
     }
-  
+
     res.json(token);
   } catch (err) {
     res.status(500).send(err.message);

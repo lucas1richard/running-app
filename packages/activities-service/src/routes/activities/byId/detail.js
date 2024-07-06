@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const { getActivityDetails } = require('../../../controllers/getActivityDetails');
 
-const router = new Router();
+const router = Router();
 
 router.get('/:id/detail', async (req, res) => {
   try {

@@ -16,7 +16,7 @@ const { routeRouter } = require('./byId/route');
 const { findAllActivities } = require('../../persistence/activities');
 const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
 
-const router = new Router();
+const router = Router();
 
 // byId routes
 router.use([
