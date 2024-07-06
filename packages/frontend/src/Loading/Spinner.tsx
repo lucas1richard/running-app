@@ -20,7 +20,14 @@ const presets = {
   },
 };
 
-const Spinner = ({
+interface SpinnerProps {
+  color?: string;
+  size?: keyof typeof presets;
+  diameter?: string;
+  duration?: string;
+}
+
+const Spinner: React.FC<SpinnerProps> = ({
   color = '#333',
   size = 'medium',
   diameter = presets[size].diameter,
@@ -33,7 +40,7 @@ const Spinner = ({
         '--diameter': diameter,
         '--color': color,
         '--duration': duration,
-      }}
+      } as React.CSSProperties}
     >
       <div className={styles['spinner-inner']}>
         &nbsp;

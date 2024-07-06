@@ -13,7 +13,16 @@ const presets = {
   },
 };
 
-const Shimmer = ({
+interface ShimmerProps {
+  preset?: keyof typeof presets;
+  duration?: number;
+  color?: string;
+  backgroundColor?: string;
+  className?: string;
+  isVisible?: boolean;
+}
+
+const Shimmer: React.FC<ShimmerProps> = ({
   preset = 'hideBackground',
   duration = presets[preset].duration,
   color = presets[preset].shimmerColor,
@@ -28,7 +37,7 @@ const Shimmer = ({
         '--backgroundColor': backgroundColor,
         '--shimmerColor': color,
         '--duration': duration,
-      }}
+      } as React.CSSProperties}
     />
   );
 };
