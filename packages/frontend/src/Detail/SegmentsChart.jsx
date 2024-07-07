@@ -1,34 +1,34 @@
+import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import styles from './Detail.module.css';
 
-const getPlotbandConfig = ({ ix, text, to, from } = {}) => {
-    return {
-      from,
-      to,
-      label: {
-        align: 'left',
-        style: {
-          color: 'contrast',
-          fontWeight: 'bold',
-        },
-        y: 16 * (ix % 18) + 16,
-        useHTML: true,
-        formatter() {
-          return `<div class="${styles.bandLabel}">${text}</div>`
-        },
-      },
-      borderWidth: 1,
-      borderColor: 'black',
-      color: 'rgba(0,0,0,0.05)',
-      useHTML: true,
-      id: ix
-    };
-};
+const getPlotbandConfig = ({ ix, text, to, from } = {}) => ({
+  from,
+  to,
+  label: {
+    align: 'left',
+    style: {
+      color: 'contrast',
+      fontWeight: 'bold',
+    },
+    y: 16 * (ix % 18) + 16,
+    useHTML: true,
+    formatter() {
+      return `<div class="${styles.bandLabel}">${text}</div>`
+    },
+  },
+  borderWidth: 1,
+  borderColor: 'black',
+  color: 'rgba(0,0,0,0.05)',
+  useHTML: true,
+  id: ix
+});
 
 const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
-  /** @type {Highcharts.Options} */
-  const options = {
+  const options = useMemo(() => 
+    /** @type {Highcharts.Options} */
+  ({
     chart: {
       type: 'line',
       height: 400,
@@ -101,7 +101,7 @@ const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
         opposite: true,
       }
     ]
-  };
+  }), [data, segments, title, velocity, width]);
 
   return (
     <div>

@@ -24,26 +24,31 @@ const ZonesHeader = ({ zones, start, isCompact }) => {
               </div>
             </div>
           )}
+
           <div className="flex-item-grow" style={{ padding, background: hrZonesBg[1] }}>
             <div className="text-center">
               <b>Zone 1</b> ({zones.z1} - {zones.z2 - 1})
             </div>
           </div>
+
           <div className="flex-item-grow" style={{ padding, background: hrZonesBg[2] }}>
             <div className="text-center">
               <b>Zone 2</b> ({zones.z2} - {zones.z3 - 1})
             </div>
           </div>
+
           <div className="flex-item-grow" style={{ padding, background: hrZonesBg[3] }}>
             <div className="text-center">
               <b>Zone 3</b> ({zones.z3} - {zones.z4 - 1})
             </div>
           </div>
+
           <div className="flex-item-grow" style={{ padding, background: hrZonesBg[4] }}>
             <div className="text-center">
               <b>Zone 4</b> ({zones.z4} - {zones.z5 - 1})
             </div>
           </div>
+
           <div className="flex-item-grow" style={{ padding, background: hrZonesBg[5] }}>
             <div className="text-center">
               <b>Zone 5</b> (>={zones.z5})

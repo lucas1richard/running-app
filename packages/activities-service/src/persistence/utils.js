@@ -5,7 +5,7 @@ const { getItem, upsertItem } = require('./setupdb-mysql');
 const getAccessToken = async () => {
   const { access_token, expires } = await getItem(1) || {};
 
-  if (new Date(expires) < (new Date() / 1000)) {
+  if (new Date(expires).getTime() < (new Date().getTime() / 1000)) {
     const record = await refreshAccessToken();
     return record.access_token;
   }

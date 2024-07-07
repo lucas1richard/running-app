@@ -1,10 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styles from '../Detail.module.css';
+
 import { selectActivity } from '../../reducers/activities';
 import { useGetApiStatus } from '../../reducers/apiStatus';
 import Shimmer from '../../Loading/Shimmer';
 import { triggerFetchWeather } from '../../reducers/activities-actions';
+import styles from '../Detail.module.css';
 
 const WeatherReporter = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id));

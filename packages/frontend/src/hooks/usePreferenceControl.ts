@@ -21,7 +21,7 @@ const usePreferenceControl = (
     (newValue: any) => dispatch(setPrefsFreeAct(keyPath, newValue)),
     [dispatch, keyPath]
   );
-  
+
   const savePreferences = useCallback(({ activityId }: any & { activityId: string } = {}) => {
     if (activityId) {
       return dispatchAsync(triggerSetActivityPrefs(activityId));

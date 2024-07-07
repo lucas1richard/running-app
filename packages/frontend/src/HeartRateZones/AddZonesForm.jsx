@@ -10,7 +10,7 @@ const AddZonesForm = () => {
   const [z5, setZ5] = useState();
   const [starting, setStarting] = useState();
   const dispatch = useDispatch();
-  
+
   const onFormSubmit = useCallback((ev) => {
     ev.preventDefault();
     dispatch(addHeartZonesAct({ z1, z2, z3, z4, z5, starting }));

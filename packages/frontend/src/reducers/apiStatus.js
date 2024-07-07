@@ -64,13 +64,13 @@ export const makeStatusSelector = (key) => (state) => selectApiStatus(state, key
 export const useGetApiStatus = (key) => useSelector(makeStatusSelector(key?.key || key));
 export const useGetLoadingKeys = () => useSelector(selectLoadingKeys, shallowEqual);
 
-export const useTriggerActionIfStatus = (action, status = idle) => {
+export const useTriggerActionIfStatus = (action, status = idle, { defer = false } = {}) => {
   const dispatch = useDispatch();
   const apiStatus = useGetApiStatus(action);
   useEffect(() => {
-    if (apiStatus === status) dispatch(action);
+    if (apiStatus === status && !defer) dispatch(action);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- don't depend on action
-  }, [apiStatus, dispatch, status]);
+  }, [apiStatus, dispatch, status, defer]);
   return apiStatus;
 };
 

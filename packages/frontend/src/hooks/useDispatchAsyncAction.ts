@@ -1,9 +1,9 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import type { AsyncAction } from '../types';
 
 const useDispatchAsyncAction = () => {
-  const dispatch = useDispatch();
+ const dispatch = useDispatch();
 
   const asyncActionDispatch = useCallback((action: AsyncAction) => {
     dispatch(action);

@@ -1,24 +1,14 @@
-import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { selectSimilarWorkouts } from '../reducers/activities';
 import Tile from '../Activities/Tile';
-import { idle, useGetApiStatus } from '../reducers/apiStatus';
-import {
-  FETCH_SIMILAR_WORKOUTS,
-  triggerFetchSimilarWorkouts,
-} from '../reducers/activitydetail-actions';
+import { idle, useTriggerActionIfStatus } from '../reducers/apiStatus';
+import { triggerFetchSimilarWorkouts } from '../reducers/activitydetail-actions';
 
 const SimilarWorkouts = ({ activity, zones }) => {
   const id = activity.id;
   const similarDist = useSelector((state) => selectSimilarWorkouts(state, id));
-  const apiStatus = useGetApiStatus(`${FETCH_SIMILAR_WORKOUTS}-${id}`);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (id && apiStatus === idle) {
-      dispatch(triggerFetchSimilarWorkouts(id))
-    }
-  }, [apiStatus, dispatch, id, similarDist.length]);
+  useTriggerActionIfStatus(triggerFetchSimilarWorkouts(id), idle, { defer: !id });
 
   return (
     <div>

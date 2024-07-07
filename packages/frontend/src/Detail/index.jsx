@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
@@ -19,7 +19,6 @@ import WeatherReporter from './WeatherReporter';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
-// import FlexibleChart from './FlexibleChart';
 import { idle, loading, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
@@ -30,31 +29,22 @@ import {
   activityShouldShowSegments,
   activityShouldShowSimilarWorkouts,
 } from '../PreferenceControl/keyPaths';
-// const roundCoords = (coords, byNum = 5000) => coords.map(([lat, lng]) => [Math.round(lng * byNum) / byNum, Math.round(lat * byNum) / byNum]);
-// const compressCoords = (coords) => {
-//   const compressed = [coords[0]];
-//   for (let i = 1; i < coords.length; i++) {
-//     if (coords[i][0] !== coords[i - 1][0] || coords[i][1] !== coords[i - 1][1]) {
-//       compressed.push(coords[i]);
-//     }
-//   }
-//   return compressed;
-// };
+import getWalking from './utils/getWalking';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
-
+  const streamApiStatus = useTriggerActionIfStatus(triggerFetchActivityStreamData(id));
   const isLoading = [
-    useTriggerActionIfStatus(triggerFetchActivityStreamData(id)),
+    streamApiStatus,
     useTriggerActionIfStatus(triggerFetchActivityDetail(id)),
     useTriggerActionIfStatus(triggerFetchActivityPrefs(id)),
   ].some((apiStatus) => (apiStatus === idle || apiStatus === loading));
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
+  const timeStream = useSelector((state) => selectStreamType(state, id, 'time'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
   const [showMap, setShowMap] = useState(false);
-  // const { data: latlngStreamData = [] } = useSelector((state) => selectStreamType(state, id, 'latlng')) || {};
 
   const configZonesId = useSelector(selectPreferencesZonesId);
   const allZones = useSelector(selectAllHeartZones);
@@ -67,6 +57,10 @@ const ActivityDetailPage = () => {
 
   const { backgroundColor } = getWeatherStyles(activity.weather || {});
 
+  const { secondsWalking } = useMemo(
+    () => getWalking(velocityStream?.data, timeStream?.data),
+    [timeStream?.data, velocityStream?.data]
+  );
   return (
     <div className={`pad`}>
       <DetailDataFetcher id={id} />
@@ -77,6 +71,7 @@ const ActivityDetailPage = () => {
         : (
           <>
             <div className="flex flex-justify-center gap margin-b">
+      	      <div>{secondsWalking}</div>
               <GoogleMapImage
                 activityId={id}
                 polyline={details?.map?.polyline}
@@ -120,8 +115,6 @@ const ActivityDetailPage = () => {
               </div>
             </div>
 
-            {/* <FlexibleChart data={compressCoords(roundCoords(latlngStreamData))} width={600} /> */}
-
             <HeartZonesDisplay
               zones={zones}
               nativeZones={nativeZones}
@@ -147,13 +140,6 @@ const ActivityDetailPage = () => {
             >
               <Laps id={id} />
             </PreferenceControl>
-
-            {/* <ElevationChart
-              data={heartRateStream.data}
-              velocity={velocityStream?.data}
-              grade={gradeStream?.data}
-              zones={zones}
-            /> */}
 
             <PreferenceControl
               subject="Segments"

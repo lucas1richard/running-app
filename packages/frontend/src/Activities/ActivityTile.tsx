@@ -8,12 +8,14 @@ import { useGetApiStatus } from '../reducers/apiStatus';
 const ActivityTile = ({ activity, backgroundIndicator, showHideFunction }) => {
   const dispatch = useDispatch();
   const isLoading = useGetApiStatus(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`) === 'loading';
+
   return (
     <div key={activity.id}>
       <Tile
         activity={activity}
         backgroundIndicator={backgroundIndicator}
       />
+
       {showHideFunction && (
         <div className="text-right">
           {isLoading

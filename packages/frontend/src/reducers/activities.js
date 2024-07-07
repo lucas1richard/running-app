@@ -82,7 +82,9 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
 
     case SET_SIMILAR_WORKOUTS: {
       return produce(state, (nextState) => {
-        nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(({ relatedActivity }) => relatedActivity);
+        nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(
+          ({ relatedActivity }) => relatedActivity
+        );
       });
     }
 
@@ -110,7 +112,9 @@ export const selectActivities = createDeepEqualSelector(
       const second = sortOrder === 'asc' ? b : a;
 
       if (sortBy === 'start_date') {
-        return new Date(activities.activities[first].start_date_local) - new Date(activities.activities[second].start_date_local)
+        const sStart = new Date(activities.activities[first].start_date_local); 
+        const sEnd = new Date(activities.activities[second].start_date_local);
+        return sStart - sEnd;
       }
 
       return (activities.activities[first][sortBy]) - (activities.activities[second][sortBy]);

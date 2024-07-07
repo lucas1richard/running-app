@@ -14,7 +14,7 @@ const SetGlobalHeartZones = () => {
   const selectZone = useCallback((id) => {
     dispatch(setGlobalPrefsAct({ zonesId: id }));
   }, [dispatch])
-  
+
   return (
     <div>
       <button onClick={() => selectZone(-1)} disabled={-1 === preferences.zonesId}>

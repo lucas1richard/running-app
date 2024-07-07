@@ -38,6 +38,6 @@ const DetailDataFetcher = ({ id }) => {
   }, [activity.id, activity?.zonesCaches, heartRateStream?.data, streamStatus, zones]);
 
   return null;
-}
+};
 
 export default DetailDataFetcher;

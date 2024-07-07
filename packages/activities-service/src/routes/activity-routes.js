@@ -14,7 +14,6 @@ router.get('/network', async (req, res) => {
     }
 
     const allActivities = await findByTimeframe();
-
     const allActivityIds = allActivities.map((activity) => activity.id);
 
     await Promise.allSettled(allActivityIds.map(getComparedRoutes));
