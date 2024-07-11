@@ -5,7 +5,7 @@ import { convertMetersToMiles } from '../utils';
 const findRecent = (allActivities: Activitiy[], numDays: number) => {
   const currentDateUTC = dayjs.utc();
   return allActivities.filter(({ start_date }) => {
-    const activityDateUTC = dayjs(start_date).utc().diff(currentDateUTC);
+    const activityDateUTC = currentDateUTC.diff(dayjs(start_date).utc());
     return Math.floor(activityDateUTC / (24 * 60 * 60 * 1000)) < numDays;
   });
 };
@@ -23,8 +23,8 @@ const sumDistance = (activities: Activitiy[]) => {
 const CurrentSummary: React.FC<{ activities: Activitiy[] }> = ({
   activities,
 }) => {
-  const recentRuns = useMemo(() => findRecent(activities, 7), []);
-  const sameYearRuns = useMemo(() => findSameYear(activities), []);
+  const recentRuns = useMemo(() => findRecent(activities, 7), [activities.length]);
+  const sameYearRuns = useMemo(() => findSameYear(activities), [activities.length]);
 
   return (
     <div className="dls-white-bg pad flex flex-even">
