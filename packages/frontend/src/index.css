@@ -101,6 +101,12 @@ button:active {
 .margin-t {
   margin-top: 1rem;
 }
+.margin-2-t {
+  margin-top: 2rem;
+}
+.margin-3-t {
+  margin-top: 3rem;
+}
 .margin-tb {
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -120,6 +126,9 @@ button:active {
 }
 .pad {
   padding: 1rem;
+}
+.pad-compact {
+  padding: 0.5rem;
 }
 select {
   appearance: none;
@@ -295,3 +304,53 @@ label:has(> input):hover {
 *:has(.shine) {
   position: relative !important;
 }
+
+/* HEART RATE ZONE CLASSES */
+.hr-zone-1-bg {
+  background-color: rgba(0, 132, 255, 0.2);
+}
+.hr-zone-2-bg {
+  background-color: rgba(0,255,0,0.2);
+}
+.hr-zone-3-bg {
+  background-color: rgba(255, 251, 0, 0.1);
+}
+.hr-zone-4-bg {
+  background-color: rgba(255, 115, 0, 0.1);
+}
+.hr-zone-5-bg {
+  background-color: rgba(255,0,0,0.2);
+}
+
+.hr-zone-1-bg-strong {
+  background-color: rgba(0, 132, 255, 0.5);
+}
+.hr-zone-2-bg-strong {
+  background-color: rgba(0,255,0,0.5);
+}
+.hr-zone-3-bg-strong {
+  background-color: rgba(255, 251, 0, 0.5);
+}
+.hr-zone-4-bg-strong {
+  background-color: rgba(255, 115, 0, 0.5);
+}
+.hr-zone-5-bg-strong {
+  background-color: rgba(255,0,0,0.5);
+}
+
+.hr-zone-1-text {
+  color: rgba(0, 132, 255, 1);
+}
+.hr-zone-2-text {
+  color: rgba(0,255,0,1);
+}
+.hr-zone-3-text {
+  color: rgba(255, 251, 0, 1);
+}
+.hr-zone-4-text {
+  color: rgba(255, 115, 0, 1);
+}
+.hr-zone-5-text {
+  color: rgba(255,0,0,1);
+}
+/* END HEART RATE ZONE CLASSES */

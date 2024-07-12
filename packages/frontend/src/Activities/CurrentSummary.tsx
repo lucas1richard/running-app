@@ -30,17 +30,17 @@ const CurrentSummary: React.FC<{ activities: Activitiy[] }> = ({
     <div className="dls-white-bg pad flex flex-even">
       <div className="flex-item-grow text-center">
         <h2 className="heading-5">Miles in the last week</h2>
-        <div className="heading-5">{sumDistance(recentRuns).toFixed(2)}</div>
+        <div className="heading-2">{sumDistance(recentRuns).toFixed(2)}</div>
       </div>
 
       <div className="flex-item-grow text-center">
         <h2 className="heading-5">Miles this year</h2>
-        <div className="heading-5">{sumDistance(sameYearRuns).toFixed(2)}</div>
+        <div className="heading-2">{sumDistance(sameYearRuns).toFixed(2)}</div>
       </div>
 
       <div className="flex-item-grow text-center">
         <h2 className="heading-5">All time</h2>
-        <div className="heading-5">{sumDistance(activities).toFixed(2)}</div>
+        <div className="heading-2">{sumDistance(activities).toFixed(2)}</div>
       </div>
     </div>
   );
