@@ -89,7 +89,7 @@ const ActivityDetailPage = () => {
                     details={details}
                   />
                   <h2 className="text-center">
-                    {activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}
+                    <date>{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</date>
                   </h2>
                   <h3 className="text-center">
                     {activity.start_date_local ? dayjs.utc(activity.start_date_local).format('h:mm A') : ''}

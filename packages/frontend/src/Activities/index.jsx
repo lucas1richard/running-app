@@ -15,8 +15,9 @@ import PreferenceControl from '../PreferenceControl';
 import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
+import VolumeIndicator from '../VolumeIndicator';
 
-const style = { padding: '1rem', margin: 'auto', maxWidth: 1280 };
+const style = { padding: '1rem', margin: 'auto', maxWidth: 1600 };
 const hideFunctionKeypath = listDisplayHideFunction();
 const listDisplayControlsKeypath = listDisplayConfigControls();
 
@@ -64,29 +65,34 @@ const Activities = () => {
         </button>
       </PreferenceControl>
 
-      {
-        activitiesApiStatus === success && (
-          categorizeRunsByZones.map(({ runs, zones, start }) => (
-            <div className="flex flex-column gap" key={start}>
-              {isGroupByZonesSet && (
-                <div className="margin-tb" style={{ marginTop: '3rem' }}>
-                  <ZonesHeader zones={zones} start={start} />
+      <div className="flex">
+        <div className="flex-item-grow">
+          {
+            activitiesApiStatus === success && (
+              categorizeRunsByZones.map(({ runs, zones, start }) => (
+                <div className="flex flex-column gap" key={start}>
+                  {isGroupByZonesSet && (
+                    <div className="margin-tb" style={{ marginTop: '3rem' }}>
+                      <ZonesHeader zones={zones} start={start} />
+                    </div>
+                  )}
+                  <div className="flex flex-column gap">
+                    {runs.map((activity) => (
+                      <ActivityTile
+                        key={activity.id}
+                        activity={activity}
+                        backgroundIndicator={tileBackgroundIndicator}
+                        showHideFunction={showHideFunction}
+                      />
+                    ))}
+                  </div>
                 </div>
-              )}
-              <div className="flex flex-column gap">
-                {runs.map((activity) => (
-                  <ActivityTile
-                    key={activity.id}
-                    activity={activity}
-                    backgroundIndicator={tileBackgroundIndicator}
-                    showHideFunction={showHideFunction}
-                  />
-                ))}
-              </div>
-            </div>
-          ))
-        )
-      }
+              ))
+            )
+          }
+        </div>
+        <VolumeIndicator />
+      </div>
     </div>
   );
 };

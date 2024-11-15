@@ -26,6 +26,7 @@ app.get('*/routes/:img', async (req, res, next) => {
       try {
         // get the image from google maps
         fs.mkdirSync(rootDir, { recursive: true });
+        console.log(`https://maps.googleapis.com/maps/api/staticmap?size=${size}&maptype=${maptype}&path=${routepath}&key=${googleAPIKey}`);
         await downloadImage(
           `https://maps.googleapis.com/maps/api/staticmap?size=${size}&maptype=${maptype}&path=${routepath}&key=${googleAPIKey}`,
           path.join(__dirname, 'static', size, maptype, file)

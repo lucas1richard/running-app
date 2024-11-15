@@ -69,7 +69,12 @@ button:active {
   border: 1px solid #444;
 }
 
-
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+}
 .img {
   border-radius: 1rem;
 }
@@ -175,6 +180,9 @@ select {
 }
 .flex-justify-center {
   justify-content: center;
+}
+.flex-wrap {
+  flex-wrap: wrap;
 }
 .heading-1 {
   font-size: 2rem;

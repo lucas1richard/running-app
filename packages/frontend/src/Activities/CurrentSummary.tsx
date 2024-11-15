@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { convertMetersToMiles } from '../utils';
 
+const NUMBER_OF_DAYS = 7;
+
 const findRecent = (allActivities: Activitiy[], numDays: number) => {
   const currentDateUTC = dayjs.utc();
   return allActivities.filter(({ start_date }) => {
@@ -23,13 +25,13 @@ const sumDistance = (activities: Activitiy[]) => {
 const CurrentSummary: React.FC<{ activities: Activitiy[] }> = ({
   activities,
 }) => {
-  const recentRuns = useMemo(() => findRecent(activities, 7), [activities.length]);
+  const recentRuns = useMemo(() => findRecent(activities, NUMBER_OF_DAYS), [activities.length]);
   const sameYearRuns = useMemo(() => findSameYear(activities), [activities.length]);
 
   return (
     <div className="dls-white-bg pad flex flex-even">
       <div className="flex-item-grow text-center">
-        <h2 className="heading-5">Miles in the last week</h2>
+        <h2 className="heading-5">Miles in the last {NUMBER_OF_DAYS} days</h2>
         <div className="heading-2">{sumDistance(recentRuns).toFixed(2)}</div>
       </div>
 

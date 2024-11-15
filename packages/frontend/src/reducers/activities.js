@@ -1,7 +1,10 @@
 import { produce } from 'immer';
+import deepmerge from 'deepmerge';
+import dayjs, { OpUnitType } from 'dayjs';
+import weekday from 'dayjs/plugin/weekday';
+
 import { createDeepEqualSelector } from '../utils';
 import { selectListPrerences } from './preferences';
-import deepmerge from 'deepmerge';
 import {
   SET_ACTIVITIES,
   SET_ACTIVITIES_SUMMARY,
@@ -13,6 +16,8 @@ import {
   SET_WEATHER_DATA,
 } from './activities-actions';
 import { selectAllHeartZones } from './heartzones';
+
+dayjs.extend(weekday);
 
 const activitiesInitialState = {
   activities: {},
@@ -102,10 +107,25 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
 const getActivitiesState = (state) => state.activities;
 
 export const selectActivities = createDeepEqualSelector(
+  [getActivitiesState],
+  (activities) => {
+    const order = [...activities.activitiesOrder];
+
+    order.sort((a, b) => {
+      const sStart = new Date(activities.activities[b].start_date_local); 
+      const sEnd = new Date(activities.activities[a].start_date_local);
+      return sStart - sEnd;
+    });
+
+    return order.map((id) => activities.activities[id]);
+  }
+);
+
+export const selectListActivities = createDeepEqualSelector(
   [getActivitiesState,
   selectListPrerences],
   (activities, { sortBy, sortOrder }) => {
-    const order = activities.activitiesOrder.slice();
+    const order = [...activities.activitiesOrder];
 
     order.sort((a, b) => {
       const first = sortOrder === 'asc' ? a : b;
@@ -153,7 +173,7 @@ export const selectSimilarWorkouts = createDeepEqualSelector(
 );
 
 export const selectZoneGroupedRuns = createDeepEqualSelector(
-  selectActivities,
+  selectListActivities,
   selectListPrerences,
   selectAllHeartZones,
   (activities, { isGroupByZonesSet }, allzones) => {
@@ -175,6 +195,37 @@ export const selectZoneGroupedRuns = createDeepEqualSelector(
       vals.sort((a, b) => new Date(b.start) - new Date(a.start));
       
       return vals;
+  }
+);
+
+export const selectTimeGroupedRuns = createDeepEqualSelector(
+  [
+    selectActivities,
+    (state, timeGroup: OpUnitType = 'week') => timeGroup
+  ],
+  (activities, timeGroup = 'week') => {
+    const nextSunday = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
+    const boxes = [];
+    let curr = nextSunday;
+    let next = curr.subtract(1, timeGroup);
+    let runs = [];
+    let sum = 0;
+    const numActivities = activities.length;
+
+    for (let i = 0; i < numActivities; i++) {
+      const run = activities[i];
+      if (dayjs(run.start_date_local).isBefore(next)) {
+        boxes.push({ start: next, sum, runs });
+        runs = [];
+        curr = next;
+        sum = 0;
+        next = curr.subtract(1, timeGroup);
+      }
+      runs.push(run);
+      sum += run.distance_miles;
+    }
+
+    return boxes;
   }
 );
 

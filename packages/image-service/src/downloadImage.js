@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const downloadImage = (url, toFile) => new Promise((acc, rej) => {
   const file = fs.createWriteStream(toFile); // where to save the file, and its name
-  const request = https.get(url, function(response) {
+  https.get(url, function(response) {
     response.pipe(file);
   
     // after download completed close filestream
