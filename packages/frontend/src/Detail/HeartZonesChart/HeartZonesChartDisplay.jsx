@@ -3,6 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
+import getSmoothVal from './getSmoothVal';
 
 const seriesDefaultConfig = {
   states: {
@@ -30,6 +31,7 @@ const HeartZonesChartDisplay = ({
   zonesBandsDirection,
   minScrollWidth = 10,
 }) => {
+  const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const [plotLines, setPlotLines] = useState([]);
   const chartHeight = 600;
   const fullTime = useMemo(() => {
@@ -42,7 +44,38 @@ const HeartZonesChartDisplay = ({
     return timeArr;
   }, [time]);
 
-  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, data, fullTime), [zones, data, fullTime]);
+  const yAxisBands = useMemo(() => [1,2,3,4,5].map((z, ix) => ({
+    from: zones[`z${z}`],
+    to: (zones[`z${z + 1}`] - 1) || 220,
+    color: hrZonesBg[z],
+    id: 'hrZoneBand',
+  })), [zones]);
+
+  const smoothHeartRate = useMemo(
+    () => getSmoothVal(fullTime, data, smoothAverageWindow),
+    [fullTime, data, smoothAverageWindow]
+  );
+  const heartRateData = useMemo(
+    () => fullTime.map((val) => [val, smoothHeartRate[val]]),
+    [smoothHeartRate, fullTime]
+  );
+  const altitudeData = useMemo(
+    () => fullTime.map((val) => [val, altitude[val]]),
+    [altitude, fullTime]
+  );
+  const smoothVelocity = useMemo(
+    () => getSmoothVal(fullTime, velocity, smoothAverageWindow),
+    [fullTime, velocity, smoothAverageWindow]
+  );
+  const velocityData = useMemo(
+    () => fullTime.map((val) => [val, convertMetricSpeedToMPH(smoothVelocity[val])]),
+    [smoothVelocity, fullTime]
+  );
+
+  const hrzones = useMemo(
+    () => condenseZonesFromHeartRate(zones, smoothHeartRate, fullTime),
+    [zones, smoothHeartRate, fullTime]
+  );
 
   /** @type {React.MutableRefObject<{ chart: Highcharts.Chart }>} */
   const chartRef = useRef();
@@ -52,17 +85,6 @@ const HeartZonesChartDisplay = ({
     id: `hrZoneBand-${ix}`,
     ...band
   })), [hrzones]);
-
-  const yAxisBands = useMemo(() => [1,2,3,4,5].map((z, ix) => ({
-    from: zones[`z${z}`],
-    to: (zones[`z${z + 1}`] - 1) || 220,
-    color: hrZonesBg[z],
-    id: 'hrZoneBand',
-  })), [zones]);
-
-  const heartRateData = useMemo(() => fullTime.map((val, ix) => [val, data[val]]), [data, fullTime]);
-  const altitudeData = useMemo(() => fullTime.map((val, ix) => [val, altitude[val]]), [altitude, fullTime]);
-  const velocityData = useMemo(() => fullTime.map((val, ix) => [val, convertMetricSpeedToMPH(velocity[val])]), [velocity, fullTime]);
 
   const addXAxisPlotLine = useCallback((xVal, color) => {
     const chart = chartRef.current?.chart;
@@ -86,6 +108,17 @@ const HeartZonesChartDisplay = ({
     }
   }, []);
 
+  const updateSmoothAverageWindow = useCallback((e) => {
+    const val = parseInt(e.target.value, 10);
+    if (val < 1 || val > time.length) return;
+
+    const chart = chartRef.current?.chart;
+    if (!chart) return;
+
+    xAxisBands.forEach(({ id }) => chart.xAxis[0].removePlotBand(id));
+    setSmoothAverageWindow(val);
+  }, [time.length, xAxisBands]);
+
   useEffect(() => {
     const chart = chartRef.current?.chart;
     if (!chart) return;
@@ -98,7 +131,7 @@ const HeartZonesChartDisplay = ({
     } else if (zonesBandsDirection === 'yAxis') {
       yAxisBands.forEach(band => chart.yAxis[0].addPlotBand(band));
     }
-  }, [xAxisBands, yAxisBands, zonesBandsDirection]);
+  }, [xAxisBands, yAxisBands, zonesBandsDirection, smoothAverageWindow]);
 
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
@@ -253,6 +286,18 @@ const HeartZonesChartDisplay = ({
 
   return (
     <div>
+      <div>
+        <label>
+          Smooth Average Window (seconds):{' '}
+          <input
+            type="number"
+            min={1}
+            max={time.length}
+            value={smoothAverageWindow}
+            onChange={updateSmoothAverageWindow}
+          />
+        </label>
+      </div>
       <div style={{ height: chartHeight }}>
         <HighchartsReact
           highcharts={Highcharts}
