@@ -5,6 +5,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import createSagaMiddleware from 'redux-saga'
 import {
   createBrowserRouter,
+  Outlet,
   RouterProvider,
 } from 'react-router-dom';
 import './index.css';
@@ -17,8 +18,18 @@ import ActivityDetailPage from './Detail';
 import DataLayer from './DataLayer';
 import HeartRateZones from './HeartRateZones';
 import AdminDashboard from './Admin';
+import SideNav from './SideNav';
 
 enableMapSet();
+
+const AppLayout = () => (
+  <div>
+    <SideNav />
+    <div className="flex-item-grow content">
+      <Outlet />
+    </div>
+  </div>
+);
 
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware()
@@ -33,20 +44,25 @@ sagaMiddleware.run(mySaga);
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    Component: App,
-  },
-  {
-    path: '/:id/detail',
-    Component: ActivityDetailPage,
-  },
-  {
-    path: '/heart-zones',
-    Component: HeartRateZones,
-  },
-  {
-    path: '/admin',
-    Component: AdminDashboard,
+    element: <AppLayout />,
+    children: [
+      {
+        path: '/',
+        Component: App,
+      },
+      {
+        path: '/:id/detail',
+        Component: ActivityDetailPage,
+      },
+      {
+        path: '/heart-zones',
+        Component: HeartRateZones,
+      },
+      {
+        path: '/admin',
+        Component: AdminDashboard,
+      },
+    ],
   },
 ]);
 
