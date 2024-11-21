@@ -7,6 +7,7 @@ import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
 
 const seriesDefaultConfig = {
+  type: 'area',
   states: {
     inactive: {
       opacity: 1
@@ -132,24 +133,12 @@ const HeartZonesChartDisplay = ({
       height: chartHeight,
       alignThresholds: true,
       alignTicks: true,
-      zooming: {
-        type: 'x',
-      },
-      scrollablePlotArea: {
-        minWidth: magnificationFactor,
-        scrollPositionX: 0
-      },
+      zooming: { type: 'x' },
+      scrollablePlotArea: { minWidth: magnificationFactor, scrollPositionX: 0 },
     },
-    legend: {
-      enabled: false,
-    },
-    title: {
-      text: title,
-    },
-    plotOptions: {
-      connectEnds: false,
-      connectNulls: false,
-    },
+    legend: { enabled: false },
+    title: { text: title },
+    plotOptions: { connectEnds: false, connectNulls: false },
     tooltip: {
       formatter() {
         return `
@@ -167,7 +156,6 @@ const HeartZonesChartDisplay = ({
         yAxis: 0,
         color: 'red',
         fillOpacity: 0.1,
-        type: 'area',
         point: {
           events: {
             click() {
@@ -183,7 +171,6 @@ const HeartZonesChartDisplay = ({
         yAxis: 1,
         fillOpacity: 0.1,
         color: 'black',
-        type: 'area',
         point: {
           events: {
             click() {
@@ -198,7 +185,6 @@ const HeartZonesChartDisplay = ({
         data: altitudeData,
         yAxis: 2,
         fillOpacity: 0.9,
-        type: 'area',
         color: 'rgba(165, 42, 42, 0.5)',
         point: {
           events: {
@@ -224,36 +210,16 @@ const HeartZonesChartDisplay = ({
     yAxis: [
       { // Primary yAxis
         height: '33.33%',
-        labels: {
-          style: {
-            color: 'red',
-          }
-        },
-        title: {
-          text: 'Heart Rate',
-          style: {
-            color: 'red',
-            fontSize: '1.25rem'
-          }
-        },
+        top: '0%',
+        labels: { style: { color: 'red' } },
+        title: { text: 'Heart Rate', style: { color: 'red', fontSize: '1.25rem' } },
       },
       { // Secondary yAxis
         gridLineWidth: 1,
         height: '33.33%',
         top: '33.33%',
-        title: {
-          text: 'Velocity',
-          style: {
-            color: 'black',
-            fontSize: '1.25rem'
-          }
-        },
-        labels: {
-          format: '{value} mph',
-          style: {
-            color: 'black',
-          }
-        },
+        title: { text: 'Velocity', style: { color: 'black', fontSize: '1.25rem' } },
+        labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
       { // Secondary yAxis
@@ -261,19 +227,8 @@ const HeartZonesChartDisplay = ({
         height: '33.33%',
         top: '66.66%',
         offset: 0,
-        title: {
-          text: 'Elevation',
-          style: {
-            color: 'brown',
-            fontSize: '1.25rem'
-          }
-        },
-        labels: {
-          format: '{value}',
-          style: {
-            color: 'brown'
-          }
-        },
+        title: { text: 'Elevation', style: { color: 'brown', fontSize: '1.25rem' } },
+        labels: { format: '{value}', style: { color: 'brown' } },
         opposite: false,
       },
     ]
@@ -329,16 +284,11 @@ const HeartZonesChartDisplay = ({
             about='Magnification factor for the chart'
           />
           <div className="flex flex-justify-between">
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 1)}>1x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 2)}>2x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 3)}>3x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 4)}>4x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 5)}>5x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 6)}>6x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 7)}>7x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 8)}>8x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 9)}>9x</button>
-            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 10)}>10x</button>
+            {[1,2,3,4,5,6,7,8,9,10].map((val) => (
+              <button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
+                {val}x
+              </button>
+            ))}
           </div>
         </div>
       </div>
