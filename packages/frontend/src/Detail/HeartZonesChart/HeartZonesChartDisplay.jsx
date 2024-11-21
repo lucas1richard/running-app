@@ -6,6 +6,7 @@ import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
+import useMinMax from './useMinMax';
 
 variwide(Highcharts);
 
@@ -143,6 +144,10 @@ const HeartZonesChartDisplay = ({
     }
   }, [xAxisBands, yAxisBands, zonesBandsDirection, smoothAverageWindow]);
 
+  const [hrMin, hrMax] = useMinMax(heartRateData);
+  const [velMin, velMax] = useMinMax(velocityData);
+  const [altMin, altMax] = useMinMax(altitudeData);
+
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
     ({
@@ -243,6 +248,8 @@ const HeartZonesChartDisplay = ({
       { // Primary yAxis
         height: '33.33%',
         top: '0%',
+        min: hrMin,
+        max: hrMax,
         labels: { style: { color: 'red' } },
         title: { text: 'Heart Rate', style: { color: 'red', fontSize: '1.25rem' } },
       },
@@ -250,15 +257,16 @@ const HeartZonesChartDisplay = ({
         gridLineWidth: 1,
         height: '33.33%',
         top: '33.33%',
+        min: velMin,
+        max: velMax,
         title: { text: 'Velocity', style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
       { // Secondary yAxis
         gridLineWidth: 1,
-        height: '20%',
-        top: '13.33%',
-        // offset: '13.33%',
+        height: '15%',
+        top: '18.33%',
         title: { text: 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
@@ -268,12 +276,14 @@ const HeartZonesChartDisplay = ({
         height: '33.33%',
         top: '66.66%',
         offset: 0,
+        min: altMin,
+        max: altMax,
         title: { text: 'Elevation', style: { color: 'brown', fontSize: '1.25rem' } },
         labels: { format: '{value}', style: { color: 'brown' } },
         opposite: false,
       },
     ]
-  }), [altitudeData, heartRateData, magnificationFactor, title, velocityData, lapsData]);
+  }), [altitudeData, heartRateData, magnificationFactor, title, velocityData, lapsData, hrMin, hrMax, velMin, velMax, altMin, altMax]);
 
   return (
     <div>
