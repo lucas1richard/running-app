@@ -1,7 +1,7 @@
 import React from 'react';
 import HeartZonesChartDisplay from './HeartZonesChartDisplay';
 import { useSelector } from 'react-redux';
-import { selectActivity, selectStreamType } from '../../reducers/activities';
+import { selectActivity, selectActivityDetails, selectStreamType } from '../../reducers/activities';
 import { selectHeartZones } from '../../reducers/heartzones';
 import usePreferenceControl from '../../hooks/usePreferenceControl';
 
@@ -12,14 +12,14 @@ const HeartZonesChartContainer = ({ id }) => {
   const altitudeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
   const timeStream = useSelector((state) => selectStreamType(state, id, 'time'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
+  const details = useSelector((state) => selectActivityDetails(state, id));
+  const laps = details?.laps || [];
 
   const [
     zonesBandsDirection,
     setZonesBandsDirection,
     savePreferences,
   ] = usePreferenceControl(['activities', id, 'zonesBandsDirection'], 'xAxis');
-
-  
 
   return (
     <div>
@@ -31,6 +31,7 @@ const HeartZonesChartContainer = ({ id }) => {
         time={timeStream?.data || []}
         zones={zones}
         zonesBandsDirection={zonesBandsDirection}
+        laps={laps}
       />
       <form onSubmit={(ev) => ev.preventDefault()}>
         <label>

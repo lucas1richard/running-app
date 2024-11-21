@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import variwide from 'highcharts/modules/variwide';
 import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
+
+variwide(Highcharts);
 
 const seriesDefaultConfig = {
   type: 'area',
@@ -21,7 +24,7 @@ const seriesDefaultConfig = {
   animation: false,
 };
 
-const chartHeight = 600;
+const chartHeight = 900;
 
 const HeartZonesChartDisplay = ({
   id,
@@ -32,6 +35,7 @@ const HeartZonesChartDisplay = ({
   time,
   zones,
   width,
+  laps,
   zonesBandsDirection,
 }) => {
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
@@ -73,6 +77,20 @@ const HeartZonesChartDisplay = ({
   const velocityData = useMemo(
     () => fullTime.map((val) => [val, convertMetricSpeedToMPH(smoothVelocity[val])]),
     [smoothVelocity, fullTime]
+  );
+  const lapsData = useMemo(
+    () => {
+      let offset = 0;
+      return laps.map((val, ix) => {
+        const datum = [
+          offset,
+          convertMetricSpeedToMPH(val.average_speed),
+          val.elapsed_time
+        ];
+        offset += val.elapsed_time;
+        return datum;
+      })},
+    [laps]
   );
 
   const hrzones = useMemo(
@@ -181,9 +199,23 @@ const HeartZonesChartDisplay = ({
       },
       {
         ...seriesDefaultConfig,
+        name: 'Laps',
+        type: 'variwide',
+        data: lapsData,
+        yAxis: 2,
+        fillOpacity: 0.1,
+        borderColor: 'rgba(0,0,0, 1)',
+        borderWidth: 3,
+        dataLabels: {
+          enabled: false,
+        },
+        color: 'rgba(0,0,0, 0.1)',
+      },
+      {
+        ...seriesDefaultConfig,
         name: 'Elevation',
         data: altitudeData,
-        yAxis: 2,
+        yAxis: 3,
         fillOpacity: 0.9,
         color: 'rgba(165, 42, 42, 0.5)',
         point: {
@@ -224,6 +256,15 @@ const HeartZonesChartDisplay = ({
       },
       { // Secondary yAxis
         gridLineWidth: 1,
+        height: '20%',
+        top: '13.33%',
+        // offset: '13.33%',
+        title: { text: 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
+        labels: { format: '{value} mph', style: { color: 'black' } },
+        opposite: true,
+      },
+      { // Secondary yAxis
+        gridLineWidth: 1,
         height: '33.33%',
         top: '66.66%',
         offset: 0,
@@ -232,7 +273,7 @@ const HeartZonesChartDisplay = ({
         opposite: false,
       },
     ]
-  }), [altitudeData, heartRateData, magnificationFactor, title, velocityData]);
+  }), [altitudeData, heartRateData, magnificationFactor, title, velocityData, lapsData]);
 
   return (
     <div>
