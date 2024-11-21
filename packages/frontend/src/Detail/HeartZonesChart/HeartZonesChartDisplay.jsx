@@ -4,6 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
+import addXAxisPlotLine from './addXAxisPlotline';
 
 const seriesDefaultConfig = {
   states: {
@@ -19,6 +20,8 @@ const seriesDefaultConfig = {
   animation: false,
 };
 
+const chartHeight = 600;
+
 const HeartZonesChartDisplay = ({
   id,
   altitude,
@@ -32,7 +35,7 @@ const HeartZonesChartDisplay = ({
 }) => {
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const [plotLines, setPlotLines] = useState([]);
-  const chartHeight = 600;
+
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
     const timeArr = new Array(maxTime).fill(0).map((_, ix) => ix);
@@ -85,27 +88,7 @@ const HeartZonesChartDisplay = ({
     ...band
   })), [hrzones]);
 
-  const addXAxisPlotLine = useCallback((xVal, color) => {
-    const chart = chartRef.current?.chart;
-    if (!chart) return;
-
-    const existingPlotline = chart.xAxis[0].plotLinesAndBands.find(({ id }) => id === xVal);
-    if (existingPlotline) {
-      chart.xAxis[0].removePlotLine(xVal);
-      setPlotLines((lines) => lines.filter((val) => val !== xVal));
-    } else {
-      chart.xAxis[0].addPlotLine({
-        value: xVal,
-        color,
-        width: 5,
-        id: xVal,
-        label: {
-          text: xVal
-        }
-      });
-      setPlotLines((lines) => [...lines, xVal]);
-    }
-  }, []);
+  
 
   const updateSmoothAverageWindow = useCallback((e) => {
     const val = parseInt(e.target.value, 10);
@@ -154,7 +137,7 @@ const HeartZonesChartDisplay = ({
       },
       scrollablePlotArea: {
         minWidth: magnificationFactor,
-        scrollPositionX: 1
+        scrollPositionX: 0
       },
     },
     legend: {
@@ -188,7 +171,7 @@ const HeartZonesChartDisplay = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)')
+              addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)', chartRef, setPlotLines);
             }
           },
         },
@@ -204,7 +187,7 @@ const HeartZonesChartDisplay = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)')
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines)
             }
           },
         },
@@ -220,7 +203,7 @@ const HeartZonesChartDisplay = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)')
+              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines)
             }
           },
         },
@@ -294,7 +277,7 @@ const HeartZonesChartDisplay = ({
         opposite: false,
       },
     ]
-  }), [addXAxisPlotLine, altitudeData, heartRateData, magnificationFactor, title, velocityData]);
+  }), [altitudeData, heartRateData, magnificationFactor, title, velocityData]);
 
   return (
     <div>
