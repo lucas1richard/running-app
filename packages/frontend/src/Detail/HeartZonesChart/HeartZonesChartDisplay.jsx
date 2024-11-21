@@ -183,6 +183,8 @@ const HeartZonesChartDisplay = ({
         data: heartRateData,
         yAxis: 0,
         color: 'red',
+        fillOpacity: 0.1,
+        type: 'area',
         point: {
           events: {
             click() {
@@ -193,9 +195,25 @@ const HeartZonesChartDisplay = ({
       },
       {
         ...seriesDefaultConfig,
+        name: 'Velocity',
+        data: velocityData,
+        yAxis: 1,
+        fillOpacity: 0.1,
+        color: 'black',
+        type: 'area',
+        point: {
+          events: {
+            click() {
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)')
+            }
+          },
+        },
+      },
+      {
+        ...seriesDefaultConfig,
         name: 'Elevation',
         data: altitudeData,
-        yAxis: 1,
+        yAxis: 2,
         fillOpacity: 0.9,
         type: 'area',
         color: 'rgba(165, 42, 42, 0.5)',
@@ -203,20 +221,6 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)')
-            }
-          },
-        },
-      },
-      {
-        ...seriesDefaultConfig,
-        name: 'Velocity',
-        data: velocityData,
-        yAxis: 2,
-        color: 'black',
-        point: {
-          events: {
-            click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)')
             }
           },
         },
@@ -253,6 +257,25 @@ const HeartZonesChartDisplay = ({
       { // Secondary yAxis
         gridLineWidth: 1,
         height: '33.33%',
+        top: '33.33%',
+        title: {
+          text: 'Velocity',
+          style: {
+            color: 'black',
+            fontSize: '1.25rem'
+          }
+        },
+        labels: {
+          format: '{value} mph',
+          style: {
+            color: 'black',
+          }
+        },
+        opposite: true,
+      },
+      { // Secondary yAxis
+        gridLineWidth: 1,
+        height: '33.33%',
         top: '66.66%',
         offset: 0,
         title: {
@@ -269,25 +292,6 @@ const HeartZonesChartDisplay = ({
           }
         },
         opposite: false,
-      },
-      { // Secondary yAxis
-        gridLineWidth: 1,
-        height: '33.33%',
-        top: '33.33%',
-        title: {
-          text: 'Velocity',
-          style: {
-            color: 'black',
-            fontSize: '1.25rem'
-          }
-        },
-        labels: {
-          format: '{value} mph',
-          style: {
-            color: 'black',
-          }
-        },
-        opposite: true,
       },
     ]
   }), [addXAxisPlotLine, altitudeData, heartRateData, magnificationFactor, title, velocityData]);
