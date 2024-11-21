@@ -15,7 +15,6 @@ const VolumeIndicator: React.FC<{ timeGroup: OpUnitType }> = ({ timeGroup = 'mon
 
   return (
     <div className="card">
-      <h2>Volume Indicator</h2>
       <label htmlFor="timeGroupSelect">Time Group:</label>
       &nbsp;
       <select id="timeGroupSelect" value={tg} onChange={handleChange}>
@@ -23,13 +22,14 @@ const VolumeIndicator: React.FC<{ timeGroup: OpUnitType }> = ({ timeGroup = 'mon
         <option value="month">Month</option>
         <option value="year">Year</option>
       </select>
+
       <div className="">
         <table className="">
         {
           activities.map(({ start, sum, runs }) => (
             <Fragment key={start.toString()}>
                 <tr>
-                  <th colSpan={3}>The {tg} starting {start.format('dddd MMMM, DD YYYY')}</th>
+                  <th colSpan={3}>The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;</th>
                 </tr>
                 {
                   runs.map((run, ix) => (

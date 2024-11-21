@@ -29,7 +29,6 @@ const HeartZonesChartDisplay = ({
   zones,
   width,
   zonesBandsDirection,
-  minScrollWidth = 10,
 }) => {
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const [plotLines, setPlotLines] = useState([]);
@@ -119,6 +118,15 @@ const HeartZonesChartDisplay = ({
     setSmoothAverageWindow(val);
   }, [time.length, xAxisBands]);
 
+  // magnificationFactor is actually the scrollablePlotArea.minWidth from HighCharts
+  const [magnificationFactor, setMagnificationFactor] = useState(0);
+  const [initialMagnificationFactor, setInitialMagnificationFactor] = useState(0);
+
+  useEffect(() => {
+    setMagnificationFactor(chartRef.current?.chart.plotWidth || 0);
+    setInitialMagnificationFactor(chartRef.current?.chart.plotWidth || 0);
+  }, [chartRef.current]);
+
   useEffect(() => {
     const chart = chartRef.current?.chart;
     if (!chart) return;
@@ -145,7 +153,7 @@ const HeartZonesChartDisplay = ({
         type: 'x',
       },
       scrollablePlotArea: {
-        minWidth: minScrollWidth,
+        minWidth: magnificationFactor,
         scrollPositionX: 1
       },
     },
@@ -282,7 +290,7 @@ const HeartZonesChartDisplay = ({
         opposite: true,
       },
     ]
-  }), [addXAxisPlotLine, altitudeData, heartRateData, minScrollWidth, title, velocityData]);
+  }), [addXAxisPlotLine, altitudeData, heartRateData, magnificationFactor, title, velocityData]);
 
   return (
     <div>
@@ -318,6 +326,34 @@ const HeartZonesChartDisplay = ({
           >
           </div>
         ))}
+      </div>
+      <div className="flex valign-middle margin-t">
+        <label htmlFor="magnificationFactor-range">Magnification: </label>
+        <div className="flex-item-grow margin-l">
+          <input
+            type="range"
+            id="magnificationFactor-range"
+            min={initialMagnificationFactor}
+            max={initialMagnificationFactor * 10}
+            value={magnificationFactor}
+            onChange={(e) => setMagnificationFactor(parseInt(e.target.value, 10))}
+            className="flex-item-grow"
+            draggable={false}
+            about='Magnification factor for the chart'
+          />
+          <div className="flex flex-justify-between">
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 1)}>1x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 2)}>2x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 3)}>3x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 4)}>4x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 5)}>5x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 6)}>6x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 7)}>7x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 8)}>8x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 9)}>9x</button>
+            <button onClick={() => setMagnificationFactor(initialMagnificationFactor * 10)}>10x</button>
+          </div>
+        </div>
       </div>
       <div>
         {plotLines.sort((a,b) => a - b).map((val) => (
