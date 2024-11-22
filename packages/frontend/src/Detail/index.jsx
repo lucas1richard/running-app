@@ -57,10 +57,6 @@ const ActivityDetailPage = () => {
 
   const { backgroundColor } = getWeatherStyles(activity.weather || {});
 
-  const { secondsWalking } = useMemo(
-    () => getWalking(velocityStream?.data, timeStream?.data),
-    [timeStream?.data, velocityStream?.data]
-  );
   return (
     <div className={`pad`}>
       <DetailDataFetcher id={id} />
@@ -71,7 +67,6 @@ const ActivityDetailPage = () => {
         : (
           <>
             <div className="flex flex-justify-center gap margin-b">
-      	      <div>{secondsWalking}</div>
               <GoogleMapImage
                 activityId={id}
                 polyline={details?.map?.polyline}
@@ -81,31 +76,40 @@ const ActivityDetailPage = () => {
                 width={600}
                 alt="route"
               />
-              <div className="border-radius-1" style={{ width: 600, background: '#fff', border: '1px solid black' }}>
+              <div className="card">
                 <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
                   <button onClick={() => setTileBgColor('weather')}>Show Weather Background</button>
                   <UpdatableNameDescription
                     activity={activity}
                     details={details}
                   />
-                  <h2 className="text-center">
+                  <h2 className="text-center margin-2-t">
                     <date>{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</date>
                   </h2>
                   <h3 className="text-center">
                     {activity.start_date_local ? dayjs.utc(activity.start_date_local).format('h:mm A') : ''}
                   </h3>
                   <div className="text-center margin-tb">
-                    <div>
+                    <h3>
                       <strong>{activity.distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
-                    </div>
-                    <div>
-                      Avg Speed - {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-                    </div>
-                    <div>
-                      Avg Pace - <DurationDisplay numSeconds={activity.average_seconds_per_mile} />/mi
-                    </div>
-                    <div>
-                      Avg HR - {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+                    </h3>
+                    <div className="flex flex-justify-between">
+                      <div className="margin-t">
+                        <div className="heading-2">
+                          <DurationDisplay numSeconds={activity.average_seconds_per_mile} /><small>/mi</small>
+                        </div>
+                        <div className="heading-4">
+                          {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+                        </div>
+                      </div>
+                      <div className="margin-t">
+                        <div className="heading-2">
+                          {Math.round(activity.average_heartrate)} bpm
+                        </div>
+                        <div className="heading-4">
+                          Max {activity.max_heartrate} bpm
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div>
@@ -163,8 +167,6 @@ const ActivityDetailPage = () => {
                 zones={zones}
               />
             </PreferenceControl>
-
-            <ActivityNetworkChart />
             <div>
               <button onClick={savePreferences}>
                 Save Preferences as a General Rule

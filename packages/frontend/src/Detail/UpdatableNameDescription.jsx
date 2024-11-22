@@ -28,7 +28,7 @@ const UpdatableNameDescription = ({
     <div className="flex flex-column">
       <input
         type="string"
-        className={`heading-1 text-center ${styles.quietInput}`}
+        className={`heading-1 dls-dark-gold text-center ${styles.quietInput}`}
         value={name}
         onChange={(ev) => setName(ev.target.value)}
       />

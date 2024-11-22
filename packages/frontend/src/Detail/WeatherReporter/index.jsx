@@ -57,70 +57,74 @@ const WeatherReporter = ({ id }) => {
         isVisible={weatherDataStatus === 'loading'}
       />
       <div>
-        <form onSubmit={handleSubmit}>
-          <div className="flex gap flex-align-center">
-            <select
-              id="sky"
-              name="sky"
-              value={sky}
-              onChange={handleSkyChange}
-              className={`${styles.quietInput} heading-4`}
-            >
-              <option value={undefined}>Weather</option>
-              <option value="sunny">Sunny</option>
-              <option value="partly cloudy">Partly Cloudy</option>
-              <option value="mostly cloudy">Mostly Cloudy</option>
-              <option value="overcast">Overcast</option>
-            </select>
+        <form onSubmit={handleSubmit} className="border">
+          <div className="flex flex-wrap gap">
+            <div className="flex gap flex-align-center">
+              <select
+                id="sky"
+                name="sky"
+                value={sky}
+                onChange={handleSkyChange}
+                className="flex-item-grow"
+              >
+                <option value={undefined}>Weather</option>
+                <option value="sunny">Sunny</option>
+                <option value="partly cloudy">Partly Cloudy</option>
+                <option value="mostly cloudy">Mostly Cloudy</option>
+                <option value="overcast">Overcast</option>
+              </select>
+            </div>
+
+            <div className="flex gap flex-align-center">
+              <select
+                id="rain"
+                name="rain"
+                value={precipitation}
+                onChange={handlePrecipChange}
+                // className={`${styles.quietInput}`}
+              >
+                <option value={undefined}>Rain Condition</option>
+                <option value="none">No Rain</option>
+                <option value="light">Light Rain</option>
+                <option value="moderate">Moderate Rain</option>
+                <option value="heavy">Heavy Rain</option>
+                <option value="torrential">Torrential Rain</option>
+              </select>
+            </div>
           </div>
 
-          <div className="flex gap flex-align-center">
-            <select
-              id="rain"
-              name="rain"
-              value={precipitation}
-              onChange={handlePrecipChange}
-              className={`${styles.quietInput} heading-4`}
-            >
-              <option value={undefined}>Rain Condition</option>
-              <option value="none">No Rain</option>
-              <option value="light">Light Rain</option>
-              <option value="moderate">Moderate Rain</option>
-              <option value="heavy">Heavy Rain</option>
-              <option value="torrential">Torrential Rain</option>
-            </select>
-          </div>
+          <div className="flex gap flex-wrap">
+            <div className="flex gap flex-align-center">
+              <input 
+                type="number"
+                id="temperature" 
+                name="temperature" 
+                value={temperature} 
+                onChange={handleTemperatureChange}
+                className={`text-right`}
+                style={{ paddingRight: 30 }}
+                min={-100}
+                max={150}
+                placeholder="Temp"
+              />
+              <span style={{ marginLeft: -40 }}>&deg;F</span>
+            </div>
 
-          <div className="flex gap flex-align-center">
-            <input 
-              type="number"
-              id="temperature" 
-              name="temperature" 
-              value={temperature} 
-              onChange={handleTemperatureChange}
-              className={`${styles.quietInput} heading-4 text-right`}
-              style={{ paddingRight: 30 }}
-              min={-100}
-              max={150}
-              placeholder="Temp"
-            />
-            <span style={{ marginLeft: -40 }} className="heading-4">&deg;F</span>
-          </div>
-
-          <div className="flex gap flex-align-center">
-            <input 
-              type="number" 
-              id="humidity" 
-              name="humidity" 
-              value={humidity} 
-              onChange={handleHumidityChange}
-              style={{ paddingRight: 30 }}
-              min={0}
-              max={100}
-              className={`${styles.quietInput} heading-4 text-right`}
-              placeholder="Humidity"
-            />
-            <span style={{ marginLeft: -40 }} className="heading-4">%</span>
+            <div className="flex gap flex-align-center">
+              <input 
+                type="number" 
+                id="humidity" 
+                name="humidity" 
+                value={humidity} 
+                onChange={handleHumidityChange}
+                style={{ paddingRight: 30 }}
+                min={0}
+                max={100}
+                className={`text-right`}
+                placeholder="Humidity"
+              />
+              <span style={{ marginLeft: -40 }}>%</span>
+            </div>
           </div>
 
           <div className="flex gap flex-align-center">
@@ -129,7 +133,7 @@ const WeatherReporter = ({ id }) => {
               name="wind"
               value={wind}
               onChange={handleWindChange}
-              className={`${styles.quietInput} heading-4`}
+              className="full-width"
             >
               <option value={undefined}>Select a wind condition</option>
               <option value="calm">Calm</option>
@@ -139,7 +143,7 @@ const WeatherReporter = ({ id }) => {
             </select>
           </div>
 
-          <button type="submit">Submit</button>
+          <button type="submit" className="full-width">Submit</button>
         </form>
       </div>
     </div>
