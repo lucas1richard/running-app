@@ -10,11 +10,13 @@ import { convertMetersToMiles, convertMetricSpeedToMPH, getSummaryPolyline, getW
 import GoogleMapImage from '../Common/GoogleMapImage';
 import { selectHeartZones } from '../reducers/heartzones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
+import PRMedal from '../Common/Icons/PRMedal';
 
 const Tile = ({ activity, backgroundIndicator }) => {
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date))
+  const bestEfforts = activity?.bestEfforts || [];
 
   const onMouseEnter = useCallback(() => {
     setHovered(true);
@@ -76,6 +78,18 @@ const Tile = ({ activity, backgroundIndicator }) => {
               />
             )}
           </div>
+          {bestEfforts.length > 0 && (
+            <div className="flex gap flex-wrap margin-t">
+              {bestEfforts.map((effort) => (
+                <div key={effort.id} className="valign-middle">
+                  <span><PRMedal color={effort.pr_rank} type="native" /></span>
+                  <small>
+                    {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
+                  </small>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

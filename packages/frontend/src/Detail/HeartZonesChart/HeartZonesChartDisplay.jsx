@@ -2,13 +2,24 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variwide from 'highcharts/modules/variwide';
-import { condenseZonesFromHeartRate, convertMetricSpeedToMPH } from '../../utils';
+import gantt from 'highcharts/modules/gantt';
+import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDuration } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
 import useMinMax from './useMinMax';
+import { prColors } from '../../Common/colors';
 
 variwide(Highcharts);
+gantt(Highcharts);
+
+const prColorsArr = [
+  { value: 0, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
+  { value: 1, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
+  { value: 2, color: 'rgba(192, 192, 192, 0.9)', borderColor: prColors.silver.stroke },
+  { value: 3, color: 'rgba(205, 127, 50, 0.9)', borderColor: prColors.bronze.stroke },
+  { color: 'red' }
+]
 
 const seriesDefaultConfig = {
   type: 'area',
@@ -30,6 +41,7 @@ const chartHeight = 900;
 const HeartZonesChartDisplay = ({
   id,
   altitude,
+  bestEfforts,
   title,
   data,
   velocity,
@@ -94,6 +106,17 @@ const HeartZonesChartDisplay = ({
     [laps]
   );
 
+  const bestEffortsData = useMemo(
+    () => bestEfforts.map((val, ix) => ({
+      start: fullTime[val.start_index],
+      y: ix + 1,
+      end: fullTime[val.start_index] + val.elapsed_time,
+      color: (prColorsArr[val.pr_rank] || prColorsArr[prColorsArr.length - 1]).color,
+      borderColor: (prColorsArr[val.pr_rank] || prColorsArr[prColorsArr.length - 1]).borderColor,
+    })),
+    [bestEfforts, fullTime]
+  );
+  
   const hrzones = useMemo(
     () => condenseZonesFromHeartRate(zones, smoothHeartRate, fullTime),
     [zones, smoothHeartRate, fullTime]
@@ -162,15 +185,6 @@ const HeartZonesChartDisplay = ({
     legend: { enabled: false },
     title: { text: title },
     plotOptions: { connectEnds: false, connectNulls: false },
-    tooltip: {
-      formatter() {
-        return `
-          <b>${this.x} seconds</b>
-          <br>
-          ${this.y.toFixed(2)}
-        `;
-      }
-    },
     series: [
       {
         ...seriesDefaultConfig,
@@ -179,6 +193,10 @@ const HeartZonesChartDisplay = ({
         yAxis: 0,
         color: 'red',
         fillOpacity: 0.1,
+        tooltip: {
+          valueSuffix: ' bpm',
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+        },
         point: {
           events: {
             click() {
@@ -194,6 +212,10 @@ const HeartZonesChartDisplay = ({
         yAxis: 1,
         fillOpacity: 0.1,
         color: 'black',
+        tooltip: {
+          valueSuffix: ' bpm',
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+        },
         point: {
           events: {
             click() {
@@ -215,6 +237,10 @@ const HeartZonesChartDisplay = ({
           enabled: false,
         },
         color: 'rgba(0,0,0, 0.1)',
+        tooltip: {
+          valueSuffix: ' bpm',
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+        },
       },
       {
         ...seriesDefaultConfig,
@@ -223,12 +249,45 @@ const HeartZonesChartDisplay = ({
         yAxis: 3,
         fillOpacity: 0.9,
         color: 'rgba(165, 42, 42, 0.5)',
+        tooltip: {
+          valueSuffix: ' bpm',
+          pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+        },
         point: {
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines)
             }
           },
+        },
+      },
+      {
+        ...seriesDefaultConfig,
+        name: 'Best Efforts',
+        type: 'gantt',
+        data: bestEffortsData,
+        yAxis: 4,
+        fillOpacity: 0.1,
+        borderWidth: 1,
+        dataLabels: {
+          enabled: true,
+          animation: true,
+          align: 'left',
+          formatter() {
+            return `
+                <span>${bestEfforts[this.point.index].name} - ${getDuration(bestEfforts[this.point.index].elapsed_time).map(([num, str]) => `${num}${str}`).join(' ')}</span>
+            `;
+          },
+        },
+        tooltip: {
+          headerFormat: '<br />',
+          pointFormatter() {
+            return `
+              <span style="color:${this.color}">\u25CF</span> Distance: <b>${bestEfforts[this.index].name}</b><br/>
+              <span style="color:${this.color}">\u25CF</span> Time: <b>${getDuration(bestEfforts[this.index].elapsed_time).map(([num, str]) => `${num}${str}`).join(' ')}</b><br/>
+              <span style="color:${this.color}">\u25CF</span> Rank: <b>${bestEfforts[this.index].pr_rank}</b><br/>
+            `;
+          }
         },
       },
     ],
@@ -246,44 +305,58 @@ const HeartZonesChartDisplay = ({
     },
     yAxis: [
       { // Primary yAxis
-        height: '33.33%',
+        height: '25%',
         top: '0%',
         min: hrMin,
         max: hrMax,
+        id: 'hr',
         labels: { style: { color: 'red' } },
         title: { text: 'Heart Rate', style: { color: 'red', fontSize: '1.25rem' } },
       },
       { // Secondary yAxis
         gridLineWidth: 1,
-        height: '33.33%',
-        top: '33.33%',
+        height: '25%',
+        top: '25%',
         min: velMin,
         max: velMax,
+        id: 'vel',
         title: { text: 'Velocity', style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
       { // Secondary yAxis
-        gridLineWidth: 1,
+        gridLineWidth: 0,
         height: '15%',
-        top: '18.33%',
+        top: '10%',
+        id: 'laps',
         title: { text: 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
       { // Secondary yAxis
         gridLineWidth: 1,
-        height: '33.33%',
-        top: '66.66%',
+        height: '25%',
+        top: '50%',
         offset: 0,
         min: altMin,
         max: altMax,
+        id: 'alt',
         title: { text: 'Elevation', style: { color: 'brown', fontSize: '1.25rem' } },
         labels: { format: '{value}', style: { color: 'brown' } },
         opposite: false,
       },
+      { // Secondary yAxis
+        gridLineWidth: 0,
+        height: '25%',
+        top: '75%',
+        offset: 0,
+        id: 'bestEfforts',
+        title: { text: 'Best Efforts', style: { color: 'gold', fontSize: '1.25rem' } },
+        labels: { format: '{value}', style: { color: 'gold' } },
+        opposite: true,
+      },
     ]
-  }), [altitudeData, heartRateData, magnificationFactor, title, velocityData, lapsData, hrMin, hrMax, velMin, velMax, altMin, altMax]);
+  }), [magnificationFactor, title, heartRateData, velocityData, lapsData, altitudeData, bestEffortsData, hrMin, hrMax, velMin, velMax, altMin, altMax, bestEfforts]);
 
   return (
     <div>

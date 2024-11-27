@@ -3,6 +3,7 @@ const { sequelizeMysql } = require('./sequelize-mysql');
 const Activity = require('./activities/model-activities');
 const ActivitySegment = require('./segments/model-activity-segments');
 const AthleteSegment = require('./segments/model-athlete-segments');
+const BestEfforts = require('./activities/model-best-efforts');
 const HeartZones = require('./heartzones/model-heartzones');
 const RelatedActivities = require('./activities/model-related-activities');
 const Weather = require('./weather/weather-model');
@@ -12,8 +13,10 @@ const { Sequelize } = require('sequelize');
 
 const initSequelize = async () => {
   try {
+    Activity.hasMany(BestEfforts);
     Activity.hasMany(ZonesCache);
     ZonesCache.belongsTo(Activity);
+    BestEfforts.belongsTo(Activity);
     ZonesCache.belongsTo(HeartZones);
     Activity.hasOne(Weather);
     Weather.belongsTo(Activity);
@@ -36,6 +39,7 @@ const initSequelize = async () => {
     await RelatedActivities.sync({ force: false });
     await ActivitySegment.sync({ force: false });
     await Activity.sync();
+    await BestEfforts.sync();
     await ZonesCache.sync();
     await HeartZones.sync();
     await Weather.sync({ force: false });
@@ -69,6 +73,8 @@ const initSequelize = async () => {
           'humidity',
           'wind'
         ],
+      }, {
+        model: BestEfforts,
       }]
     }, {
       override: true,
@@ -77,6 +83,7 @@ const initSequelize = async () => {
     console.error(err);
   }
 };
+
 
 module.exports = {
   initSequelize,

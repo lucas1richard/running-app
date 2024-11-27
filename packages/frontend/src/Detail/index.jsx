@@ -20,7 +20,6 @@ import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import { idle, loading, useTriggerActionIfStatus } from '../reducers/apiStatus';
-import ActivityNetworkChart from '../ActivityNetwork';
 import Spinner from '../Loading/Spinner';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
@@ -29,7 +28,7 @@ import {
   activityShouldShowSegments,
   activityShouldShowSimilarWorkouts,
 } from '../PreferenceControl/keyPaths';
-import getWalking from './utils/getWalking';
+import BestEfforts from './BestEfforts';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -42,7 +41,6 @@ const ActivityDetailPage = () => {
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
-  const timeStream = useSelector((state) => selectStreamType(state, id, 'time'));
   const activity = useSelector((state) => selectActivity(state, id)) || {};
   const [showMap, setShowMap] = useState(false);
 
@@ -138,11 +136,14 @@ const ActivityDetailPage = () => {
             </div>
 
             <PreferenceControl
-              subject="Laps"
+              subject="Laps & Best Efforts"
               keyPath={activityShouldShowLaps(id)}
               saveConfig={{ activityId: id }}
             >
-              <Laps id={id} />
+              <div className="flex gap">
+                <Laps id={id} />
+                <BestEfforts bestEfforts={details.best_efforts} />
+              </div>
             </PreferenceControl>
 
             <PreferenceControl

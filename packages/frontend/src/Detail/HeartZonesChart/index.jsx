@@ -13,6 +13,7 @@ const HeartZonesChartContainer = ({ id }) => {
   const timeStream = useSelector((state) => selectStreamType(state, id, 'time'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
   const details = useSelector((state) => selectActivityDetails(state, id));
+  const bestEfforts = details?.best_efforts || [];
   const laps = details?.laps || [];
 
   const [
@@ -23,7 +24,6 @@ const HeartZonesChartContainer = ({ id }) => {
 
   return (
     <div>
-      
       <HeartZonesChartDisplay
         data={heartRateStream?.data || []}
         velocity={velocityStream?.data || []}
@@ -32,6 +32,7 @@ const HeartZonesChartContainer = ({ id }) => {
         zones={zones}
         zonesBandsDirection={zonesBandsDirection}
         laps={laps}
+        bestEfforts={bestEfforts.filter(({ pr_rank }) => pr_rank !== null)}
       />
       <form onSubmit={(ev) => ev.preventDefault()}>
         <label>

@@ -57,6 +57,12 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
     case SET_ACTIVITY_DETAIL: {
       return produce(state, (nextState) => {
         nextState.details[action.payload.id] = action.payload;
+        nextState.activities[action.payload.id] = {
+          ...state.activities[action.payload.id],
+          bestEfforts: [
+            ...action.payload.best_efforts.filter(({ pr_rank }) => !!pr_rank)
+          ],
+        };
       });
     }
 

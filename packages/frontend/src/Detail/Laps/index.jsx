@@ -51,6 +51,9 @@ const Laps = ({ id }) => {
       <table className="dls-white-bg">
         <thead>
           <tr>
+            <th colSpan="7" className="text-center">Laps</th>
+          </tr>
+          <tr>
             <th>Name</th>
             <th>Time</th>
             <th>Distance</th>
