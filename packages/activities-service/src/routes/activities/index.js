@@ -15,6 +15,8 @@ const { stravaRouter } = require('./byId/strava');
 const { routeRouter } = require('./byId/route');
 const { findAllActivities } = require('../../persistence/activities');
 const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
+const getPRsByDate = require('../../controllers/getPRsByDate');
+const getPRs = require('../../controllers/getPRs');
 
 const router = Router();
 
@@ -71,6 +73,24 @@ router.get('/streams/list', async (req, res) => {
     res.json(Object.fromEntries(allStreams.map((str) => [str._id, str])));
   } catch (err) {
     res.status(500).send(err.message)
+  }
+});
+
+router.get('/prs/by-date', async (req, res) => {
+  try {
+    const prs = await getPRsByDate();
+    res.json(prs);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+router.get('/prs', async (req, res) => {
+  try {
+    const prs = await getPRs();
+    res.json(prs);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 

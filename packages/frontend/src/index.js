@@ -19,6 +19,7 @@ import DataLayer from './DataLayer';
 import HeartRateZones from './HeartRateZones';
 import AdminDashboard from './Admin';
 import SideNav from './SideNav';
+import PersonalRecords from './PersonalRecords';
 
 enableMapSet();
 
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
       {
         path: '/:id/detail',
         Component: ActivityDetailPage,
+      },
+      {
+        path: '/personal-records',
+        Component: PersonalRecords,
       },
       {
         path: '/heart-zones',

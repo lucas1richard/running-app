@@ -152,7 +152,6 @@ export const selectListActivities = createDeepEqualSelector(
 
 export const makeSelectActivitySummary = (id) => (state) => state.activities.summary[id];
 
-
 export const selectActivity = createDeepEqualSelector(
   getActivitiesState,
   (state, id) => id,

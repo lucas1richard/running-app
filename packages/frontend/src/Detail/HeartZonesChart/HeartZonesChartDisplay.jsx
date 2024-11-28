@@ -267,7 +267,7 @@ const HeartZonesChartDisplay = ({
         fillOpacity: 0.9,
         color: 'rgba(165, 42, 42, 0.5)',
         tooltip: {
-          valueSuffix: ' bpm',
+          valueSuffix: ' m',
           pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
         },
         point: {

@@ -16,6 +16,7 @@ import { listDisplayConfigControls, listDisplayHideFunction } from '../Preferenc
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
 import VolumeIndicator from '../VolumeIndicator';
+import PRs from './PRs';
 
 const style = { padding: '1rem', margin: 'auto', maxWidth: 1600 };
 const hideFunctionKeypath = listDisplayHideFunction();
@@ -46,7 +47,10 @@ const Activities = () => {
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
       </div>
-      <div>
+      <div className="margin-t">
+        <PRs />
+      </div>
+      <div className="margin-t">
         <SpeedChart activities={activities} />
       </div>
       <div>

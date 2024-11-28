@@ -4,6 +4,7 @@ import { activitiesListSaga } from './activitieslist'
 import { heartzonesSaga } from './heartzones';
 import { weatherSaga } from './weather';
 import { preferencesSaga } from './preferences';
+import { prsSaga } from './prs';
 
 function* mySaga() {
   yield fork(activitydetailSaga);
@@ -11,6 +12,7 @@ function* mySaga() {
   yield fork(heartzonesSaga);
   yield fork(weatherSaga);
   yield fork(preferencesSaga);
+  yield fork(prsSaga);
 }
 
 export default mySaga;
