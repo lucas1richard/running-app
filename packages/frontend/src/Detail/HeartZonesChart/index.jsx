@@ -15,6 +15,7 @@ const HeartZonesChartContainer = ({ id }) => {
   const details = useSelector((state) => selectActivityDetails(state, id));
   const bestEfforts = details?.best_efforts || [];
   const laps = details?.laps || [];
+  const splitsMi = details?.splits_standard || [];
 
   const [
     zonesBandsDirection,
@@ -32,7 +33,8 @@ const HeartZonesChartContainer = ({ id }) => {
         zones={zones}
         zonesBandsDirection={zonesBandsDirection}
         laps={laps}
-        bestEfforts={bestEfforts.filter(({ pr_rank }) => pr_rank !== null)}
+        bestEfforts={bestEfforts}
+        splitsMi={splitsMi}
       />
       <form onSubmit={(ev) => ev.preventDefault()}>
         <label>

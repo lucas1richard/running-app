@@ -18,7 +18,7 @@ const prColorsArr = [
   { value: 1, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
   { value: 2, color: 'rgba(192, 192, 192, 0.9)', borderColor: prColors.silver.stroke },
   { value: 3, color: 'rgba(205, 127, 50, 0.9)', borderColor: prColors.bronze.stroke },
-  { color: 'red' }
+  { color: 'white', borderColor: 'black' },
 ]
 
 const seriesDefaultConfig = {
@@ -49,6 +49,7 @@ const HeartZonesChartDisplay = ({
   zones,
   width,
   laps,
+  splitsMi,
   zonesBandsDirection,
 }) => {
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
@@ -104,6 +105,20 @@ const HeartZonesChartDisplay = ({
         return datum;
       })},
     [laps]
+  );
+  const splitsMiData = useMemo(
+    () => {
+      let offset = 0;
+      return splitsMi.map((val, ix) => {
+        const datum = [
+          offset,
+          val.average_speed,
+          val.elapsed_time
+        ];
+        offset += val.elapsed_time;
+        return datum;
+      })},
+    [splitsMi]
   );
 
   const bestEffortsData = useMemo(
@@ -170,6 +185,8 @@ const HeartZonesChartDisplay = ({
   const [hrMin, hrMax] = useMinMax(heartRateData);
   const [velMin, velMax] = useMinMax(velocityData);
   const [altMin, altMax] = useMinMax(altitudeData);
+  const [splitsMin] = useMinMax(splitsMiData);
+  const [lapsMin] = useMinMax(lapsData);
 
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
@@ -226,9 +243,9 @@ const HeartZonesChartDisplay = ({
       },
       {
         ...seriesDefaultConfig,
-        name: 'Laps',
+        name: lapsData.length < 2 ? 'Mile Split' : 'Laps',
         type: 'variwide',
-        data: lapsData,
+        data: lapsData.length < 2 ? splitsMiData : lapsData,
         yAxis: 2,
         fillOpacity: 0.1,
         borderColor: 'rgba(0,0,0, 1)',
@@ -238,7 +255,7 @@ const HeartZonesChartDisplay = ({
         },
         color: 'rgba(0,0,0, 0.1)',
         tooltip: {
-          valueSuffix: ' bpm',
+          valueSuffix: ' mph',
           pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
         },
       },
@@ -329,7 +346,8 @@ const HeartZonesChartDisplay = ({
         height: '15%',
         top: '10%',
         id: 'laps',
-        title: { text: 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
+        min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin,
+        title: { text: lapsData.length < 2 ? 'Miles' : 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
@@ -356,7 +374,7 @@ const HeartZonesChartDisplay = ({
         opposite: true,
       },
     ]
-  }), [magnificationFactor, title, heartRateData, velocityData, lapsData, altitudeData, bestEffortsData, hrMin, hrMax, velMin, velMax, altMin, altMax, bestEfforts]);
+  }), [magnificationFactor, title, heartRateData, velocityData, lapsData, splitsMiData, altitudeData, bestEffortsData, hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, bestEfforts]);
 
   return (
     <div>
