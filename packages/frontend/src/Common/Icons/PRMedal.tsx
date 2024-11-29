@@ -6,7 +6,7 @@ type PRMedalProps = {
   color: 'gold' | 'silver' | 'bronze';
   type: 'native' | 'svg';
 };
-const rankMap = {
+export const rankMap = {
   gold: '🥇',
   silver: '🥈',
   bronze: '🥉',

@@ -5,6 +5,7 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
 import PRDateCard from './PRDateCard';
+import PRChart from './PRChart';
 
 const PRs = () => {
   const allTimePrs = useSelector(getPRs);
@@ -16,7 +17,7 @@ const PRs = () => {
       <h2>All Time PRs</h2>
       <div className="flex flex-wrap gap">
         {allTimePrs.map((pr) => (
-          <div key={pr.id} className="card text-center flex-item-grow">
+          <div key={pr.effort_id} className="card text-center flex-item-grow">
             <div className="heading-1">
               <PRMedal type="native" color="gold" />
             </div>
@@ -44,9 +45,10 @@ const PRs = () => {
                   &rarr;
                 </div>
                 {prsByDate[name].map((pr) => (
-                  <PRDateCard pr={pr} />
+                  <PRDateCard pr={pr} key={pr.effort_id} />
                 ))}
               </div>
+              <PRChart records={prsByDate[name]} title={name} />
             </div>
             ))
           }
