@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
@@ -29,6 +29,7 @@ import {
   activityShouldShowSimilarWorkouts,
 } from '../PreferenceControl/keyPaths';
 import BestEfforts from './BestEfforts';
+import MapChart from './RouteMap';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();

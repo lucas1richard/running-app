@@ -7,6 +7,7 @@ import usePreferenceControl from '../../hooks/usePreferenceControl';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useSelector((state) => selectActivity(state, id)) || {};
+  const latlngStream = useSelector((state) => selectStreamType(state, id, 'latlng'));
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   const altitudeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
@@ -26,7 +27,9 @@ const HeartZonesChartContainer = ({ id }) => {
   return (
     <div>
       <HeartZonesChartDisplay
+        id={id}
         data={heartRateStream?.data || []}
+        latlng={latlngStream?.data || []}
         velocity={velocityStream?.data || []}
         altitude={altitudeStream?.data || []}
         time={timeStream?.data || []}

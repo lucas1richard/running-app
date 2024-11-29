@@ -9,6 +9,7 @@ import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
 import useMinMax from './useMinMax';
 import { prColors } from '../../Common/colors';
+import RouteMap from '../RouteMap';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -44,6 +45,7 @@ const HeartZonesChartDisplay = ({
   bestEfforts,
   title,
   data,
+  latlng,
   velocity,
   time,
   zones,
@@ -54,6 +56,7 @@ const HeartZonesChartDisplay = ({
 }) => {
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const [plotLines, setPlotLines] = useState([]);
+  const [latlngPointer, setLatlngPointer] = useState(0);
 
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
@@ -218,6 +221,9 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)', chartRef, setPlotLines);
+            },
+            mouseOver() {
+              setLatlngPointer(this.index);
             }
           },
         },
@@ -237,6 +243,9 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines)
+            },
+            mouseOver() {
+              setLatlngPointer(this.index);
             }
           },
         },
@@ -274,6 +283,9 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines)
+            },
+            mouseOver() {
+              setLatlngPointer(this.index);
             }
           },
         },
@@ -377,79 +389,84 @@ const HeartZonesChartDisplay = ({
   }), [magnificationFactor, title, heartRateData, velocityData, lapsData, splitsMiData, altitudeData, bestEffortsData, hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, bestEfforts]);
 
   return (
-    <div>
-      <div>
-        <label>
-          Smooth Average Window (seconds):{' '}
-          <input
-            type="number"
-            min={1}
-            max={time.length}
-            value={smoothAverageWindow}
-            onChange={updateSmoothAverageWindow}
-          />
-        </label>
-      </div>
-      <div style={{ height: chartHeight }}>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={options}
-          allowChartUpdate={true}
-          ref={chartRef}
-        />
-      </div>
-      <div className="flex full-width">
-        {hrzones.map(({ zone, from, to }) => (
-          <div
-            key={`${zone}-${from}-${to}`}
-            style={{
-              backgroundColor: hrZonesText[zone],
-              height: 10,
-              width: `${100 * ((to - from) / data.length)}%`,
-            }}
-          >
-          </div>
-        ))}
-      </div>
-      <div className="flex valign-middle margin-t">
-        <label htmlFor="magnificationFactor-range">Magnification: </label>
-        <div className="flex-item-grow margin-l">
-          <input
-            type="range"
-            id="magnificationFactor-range"
-            min={initialMagnificationFactor}
-            max={initialMagnificationFactor * 10}
-            value={magnificationFactor}
-            onChange={(e) => setMagnificationFactor(parseInt(e.target.value, 10))}
-            className="flex-item-grow"
-            draggable={false}
-            about='Magnification factor for the chart'
-          />
-          <div className="flex flex-justify-between">
-            {[1,2,3,4,5,6,7,8,9,10].map((val) => (
-              <button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
-                {val}x
-              </button>
-            ))}
-          </div>
+    <div className="flex">
+      <div className="flex-item-grow">
+        <div>
+          <label>
+            Smooth Average Window (seconds):{' '}
+            <input
+              type="number"
+              min={1}
+              max={time.length}
+              value={smoothAverageWindow}
+              onChange={updateSmoothAverageWindow}
+            />
+          </label>
         </div>
-      </div>
-      <div>
-        {plotLines.sort((a,b) => a - b).map((val) => (
-          <div>
-            <button
-              key={val}
-              onClick={() => {
-                const chart = chartRef.current?.chart;
-                if (!chart) return;
-                chart.xAxis[0].removePlotLine(val);
-                setPlotLines((lines) => lines.filter((v) => v !== val));
+        <div style={{ height: chartHeight }}>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={options}
+            allowChartUpdate={true}
+            ref={chartRef}
+          />
+        </div>
+        <div className="flex full-width">
+          {hrzones.map(({ zone, from, to }) => (
+            <div
+              key={`${zone}-${from}-${to}`}
+              style={{
+                backgroundColor: hrZonesText[zone],
+                height: 10,
+                width: `${100 * ((to - from) / data.length)}%`,
               }}
             >
-              Remove Plotline at {val} seconds
-            </button>
+            </div>
+          ))}
+        </div>
+        <div className="flex valign-middle margin-t">
+          <label htmlFor="magnificationFactor-range">Magnification: </label>
+          <div className="flex-item-grow margin-l">
+            <input
+              type="range"
+              id="magnificationFactor-range"
+              min={initialMagnificationFactor}
+              max={initialMagnificationFactor * 10}
+              value={magnificationFactor}
+              onChange={(e) => setMagnificationFactor(parseInt(e.target.value, 10))}
+              className="flex-item-grow"
+              draggable={false}
+              about='Magnification factor for the chart'
+            />
+            <div className="flex flex-justify-between">
+              {[1,2,3,4,5,6,7,8,9,10].map((val) => (
+                <button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
+                  {val}x
+                </button>
+              ))}
+            </div>
           </div>
-        ))}
+        </div>
+        <div>
+          {plotLines.sort((a,b) => a - b).map((val) => (
+            <div>
+              <button
+                key={val}
+                onClick={() => {
+                  const chart = chartRef.current?.chart;
+                  if (!chart) return;
+                  chart.xAxis[0].removePlotLine(val);
+                  setPlotLines((lines) => lines.filter((v) => v !== val));
+                }}
+              >
+                Remove Plotline at {val} seconds
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="flex-item-grow">
+        <RouteMap id={id} pointer={latlngPointer} />
       </div>
     </div>
   );
