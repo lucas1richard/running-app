@@ -20,6 +20,7 @@ import HeartRateZones from './HeartRateZones';
 import AdminDashboard from './Admin';
 import SideNav from './SideNav';
 import PersonalRecords from './PersonalRecords';
+import Volume from './Volume';
 
 enableMapSet();
 
@@ -58,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: '/personal-records',
         Component: PersonalRecords,
+      },
+      {
+        path: '/volume',
+        Component: Volume,
       },
       {
         path: '/heart-zones',

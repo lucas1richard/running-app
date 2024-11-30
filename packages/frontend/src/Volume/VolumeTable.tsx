@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { selectTimeGroupedRuns } from '../reducers/activities';
 import { Fragment } from 'react/jsx-runtime';
 
-const VolumeIndicator: React.FC<{ timeGroup: OpUnitType }> = ({ timeGroup = 'month' }) => {
+const VolumeTable: React.FC<{ timeGroup: OpUnitType }> = ({ timeGroup = 'month' }) => {
   const [tg, setTimeGroup] = useState<OpUnitType>(timeGroup);
   const handleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
     setTimeGroup(e.target.value as OpUnitType);
@@ -53,4 +53,4 @@ const VolumeIndicator: React.FC<{ timeGroup: OpUnitType }> = ({ timeGroup = 'mon
   );
 };
 
-export default VolumeIndicator;
+export default VolumeTable;

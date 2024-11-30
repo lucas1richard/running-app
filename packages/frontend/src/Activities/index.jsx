@@ -15,7 +15,6 @@ import PreferenceControl from '../PreferenceControl';
 import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
-import VolumeIndicator from '../VolumeIndicator';
 import PRs from './PRs';
 
 const style = { padding: '1rem', margin: 'auto', maxWidth: 1600 };
@@ -95,7 +94,6 @@ const Activities = () => {
             )
           }
         </div>
-        <VolumeIndicator />
       </div>
     </div>
   );
