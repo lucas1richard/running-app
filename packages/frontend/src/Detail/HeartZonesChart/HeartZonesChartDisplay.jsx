@@ -466,7 +466,11 @@ const HeartZonesChartDisplay = ({
         </div>
       </div>
       <div className="flex-item-grow">
-        <RouteMap id={id} pointer={latlngPointer} />
+        <RouteMap
+          id={id}
+          pointer={latlngPointer}
+          segments={lapsData.length > 1 ? lapsData : splitsMiData}
+        />
       </div>
     </div>
   );

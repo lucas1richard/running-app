@@ -7,33 +7,29 @@ import { useSelector } from 'react-redux';
 
 HighchartsMap(Highcharts);
 
-const RouteMap = ({ id, pointer }) => {
+const RouteMap = ({ id, pointer, segments }) => {
   const latlngStream = useSelector((state) => selectStreamType(state, id, 'latlng'));
 
   const coordsPure = useMemo(() => {
-    if (!latlngStream?.data) {
-      return [];
-    }
-
+    if (!latlngStream?.data) return [];
     return latlngStream.data.map(([lat, lon]) => ({ lon, lat }));
   }, [latlngStream]);
 
-  const routeData = useMemo(() => {
-    if (!latlngStream?.data) {
-      return {
-        coordsRoute: [],
-      };
-    }
-
-    const coordsRoute = [];
-    for (let i = 0; i < latlngStream.data.length; i += 6) {
-      coordsRoute.push(latlngStream.data[i]);
-    }
-
-    return {
-      coordsRoute: coordsRoute.map(([lat, lon]) => [lon, lat]),
-    };
-  }, [latlngStream]);
+  const series = useMemo(() => {
+    return segments.map((segment, ix) => ({
+      type: 'mapline',
+      name: `Segment ${ix + 1}`,
+      data: [{
+        geometry: {
+          type: 'LineString',
+          coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
+        },
+      }],
+      animation: false,
+      lineWidth: 6,
+      enableMouseTracking: false,
+    }));
+  }, [coordsPure, segments]);
 
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
@@ -47,31 +43,19 @@ const RouteMap = ({ id, pointer }) => {
       text: 'Route',
     },
     series: [
-      {
-        type: 'mapline',
-        name: 'Route',
-        data: [{
-          geometry: {
-            type: 'LineString',
-            coordinates: routeData.coordsRoute,
-          },
-        }],
-        animation: false,
-        lineWidth: 4,
-        enableMouseTracking: false,
-      },
+      ...series,
       {
         type: 'mappoint',
         name: 'Location',
         data: [coordsPure[pointer]],
         marker: {
           symbol: 'circle',
-          radius: 8,
+          radius: 10,
         },
         color: 'red',
       },
     ],
-  }), [coordsPure, pointer, routeData.coordsRoute]);
+  }), [coordsPure, pointer, series]);
 
   return (
     <HighchartsReact
