@@ -81,7 +81,7 @@ const Tile = ({ activity, backgroundIndicator }) => {
           {bestEfforts.length > 0 && (
             <div className="flex gap flex-wrap margin-t">
               {bestEfforts.map((effort) => (
-                <div key={effort.id} className="valign-middle">
+                <div key={effort.effort_id} className="valign-middle">
                   <span><PRMedal color={effort.pr_rank} type="native" /></span>
                   <small>
                     {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />

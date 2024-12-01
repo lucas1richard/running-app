@@ -139,6 +139,10 @@ const HeartZonesChartDisplay = ({
     () => condenseZonesFromHeartRate(zones, smoothHeartRate, fullTime),
     [zones, smoothHeartRate, fullTime]
   );
+  const hrzonesPure = useMemo(
+    () => condenseZonesFromHeartRate(zones, data, fullTime),
+    [zones, data, fullTime]
+  );
 
   /** @type {React.MutableRefObject<{ chart: Highcharts.Chart }>} */
   const chartRef = useRef();
@@ -470,6 +474,8 @@ const HeartZonesChartDisplay = ({
           id={id}
           pointer={latlngPointer}
           segments={lapsData.length > 1 ? lapsData : splitsMiData}
+          velocity={smoothVelocity}
+          hrzones={hrzones}
         />
       </div>
     </div>
