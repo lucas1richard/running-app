@@ -10,6 +10,7 @@ import addXAxisPlotLine from './addXAxisPlotline';
 import useMinMax from './useMinMax';
 import { prColors } from '../../Common/colors';
 import RouteMap from '../RouteMap';
+import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -95,6 +96,13 @@ const HeartZonesChartDisplay = ({
     () => fullTime.map((val) => [val, convertMetricSpeedToMPH(smoothVelocity[val])]),
     [smoothVelocity, fullTime]
   );
+  const efficiencyFactorData = useMemo(
+    () => fullTime.map((val) => [
+      val,
+      calcEfficiencyFactor(smoothVelocity[val], smoothHeartRate[val]),
+    ]),
+    [fullTime, smoothVelocity, smoothHeartRate]
+  );
   const lapsData = useMemo(
     () => {
       let offset = 0;
@@ -138,10 +146,6 @@ const HeartZonesChartDisplay = ({
   const hrzones = useMemo(
     () => condenseZonesFromHeartRate(zones, smoothHeartRate, fullTime),
     [zones, smoothHeartRate, fullTime]
-  );
-  const hrzonesPure = useMemo(
-    () => condenseZonesFromHeartRate(zones, data, fullTime),
-    [zones, data, fullTime]
   );
 
   /** @type {React.MutableRefObject<{ chart: Highcharts.Chart }>} */
@@ -323,6 +327,32 @@ const HeartZonesChartDisplay = ({
           }
         },
       },
+      {
+        ...seriesDefaultConfig,
+        name: 'Efficiency Factor',
+        data: efficiencyFactorData,
+        yAxis: 5,
+        fillOpacity: 0.1,
+        color: 'blue',
+        tooltip: {
+          valueSuffix: ' yards/beat',
+          pointFormatter() {
+            return `
+              <span style="color:${this.color}">\u25CF</span> ${this.series.name}: <b>${this.y.toFixed(2)} y/b</b><br/>
+            `;
+          },
+        },
+        point: {
+          events: {
+            click() {
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines)
+            },
+            mouseOver() {
+              setLatlngPointer(this.index);
+            }
+          },
+        },
+      },
     ],
     xAxis: {
       gridLineWidth: 2,
@@ -389,8 +419,18 @@ const HeartZonesChartDisplay = ({
         labels: { format: '{value}', style: { color: 'gold' } },
         opposite: true,
       },
+      { // Secondary yAxis
+        gridLineWidth: 0,
+        height: '15%',
+        top: '35%',
+        offset: 0,
+        id: 'EfficiencyFactor',
+        title: { text: 'Efficiency Factor', style: { color: 'blue', fontSize: '1.25rem' } },
+        labels: { format: '{value}', style: { color: 'blue' } },
+        opposite: false,
+      },
     ]
-  }), [magnificationFactor, title, heartRateData, velocityData, lapsData, splitsMiData, altitudeData, bestEffortsData, hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, bestEfforts]);
+  }), [magnificationFactor, title, heartRateData, velocityData, lapsData, splitsMiData, altitudeData, bestEffortsData, efficiencyFactorData, hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, bestEfforts]);
 
   return (
     <div className="flex">

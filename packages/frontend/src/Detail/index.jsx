@@ -29,7 +29,7 @@ import {
   activityShouldShowSimilarWorkouts,
 } from '../PreferenceControl/keyPaths';
 import BestEfforts from './BestEfforts';
-import MapChart from './RouteMap';
+import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -109,6 +109,17 @@ const ActivityDetailPage = () => {
                           Max {activity.max_heartrate} bpm
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  <div className="text-center dls-blue">
+                    <div className="heading-5">
+                      Efficiency Factor
+                    </div>
+                    <div className="heading-2">
+                      {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)}
+                    </div>
+                    <div>
+                    yards per beat
                     </div>
                   </div>
                   <div>
