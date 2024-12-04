@@ -11,6 +11,7 @@ import GoogleMapImage from '../Common/GoogleMapImage';
 import { selectHeartZones } from '../reducers/heartzones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
 import PRMedal from '../Common/Icons/PRMedal';
+import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 
 const Tile = ({ activity, backgroundIndicator }) => {
   const [hovered, setHovered] = React.useState(false);
@@ -64,6 +65,12 @@ const Tile = ({ activity, backgroundIndicator }) => {
                 <small>Average HR</small>
                 <span className="margin-l heading-4">
                   {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+                </span>
+              </div>
+              <div className="dls-blue">
+                <small>Efficiency Factor</small>
+                <span className="margin-l heading-4">
+                  {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
                 </span>
               </div>
             </div>

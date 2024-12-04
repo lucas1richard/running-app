@@ -3,6 +3,10 @@ import { createSelectorCreator, weakMapMemoize } from 'reselect';
 import fastDeepEqual from 'fast-deep-equal';
 import gradientScale from './colors/gradient-scale';
 
+/**
+ * @param {number} s number of seconds
+ * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
+ */
 export const getDuration = (s, text = [' sec ', ' min ', ' hr ']) => {
   if (s === Infinity || !s) {
     return [];
@@ -16,6 +20,16 @@ export const getDuration = (s, text = [' sec ', ' min ', ' hr ']) => {
   const real = display.map((val, ix) => [val, text[ix]]);
 
   return real.reverse().slice(real.findIndex(([val]) => !!val));
+};
+
+/**
+ * @param {number} s number of seconds
+ * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
+ * @param {string} joinOn the string to join the units on
+ */
+export const getDurationString = (s, text, joinOn = ' ') => {
+  const durationArr = getDuration(s, text);
+  return durationArr.map(([num, str]) => `${num}${str}`).join(joinOn);
 };
 
 export const condenseZonesFromHeartRate = (zones, heartrate) => {

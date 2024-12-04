@@ -1,10 +1,9 @@
 import React from 'react';
 import HeartZones from './HeartZones';
 
-const AdminDashboard = ({}) => {
+const AdminDashboard = () => {
   return (
     <div>
-      AdminDashboard
       <HeartZones />
     </div>
   );

@@ -4,11 +4,11 @@ import { addHeartZonesAct } from '../../reducers/heartzones-actions';
 
 const AddNewHRZones = ({ latestZone }) => {
   const dispatch = useDispatch();
-  const [z1, setZ1] = useState(latestZone.z1);
-  const [z2, setZ2] = useState(latestZone.z2);
-  const [z3, setZ3] = useState(latestZone.z3);
-  const [z4, setZ4] = useState(latestZone.z4);
-  const [z5, setZ5] = useState(latestZone.z5);
+  const [z1, setZ1] = useState(latestZone?.z1);
+  const [z2, setZ2] = useState(latestZone?.z2);
+  const [z3, setZ3] = useState(latestZone?.z3);
+  const [z4, setZ4] = useState(latestZone?.z4);
+  const [z5, setZ5] = useState(latestZone?.z5);
   const [startDate, setStartDate] = useState();
 
   const onFormSubmit = useCallback((ev) => {
@@ -17,7 +17,7 @@ const AddNewHRZones = ({ latestZone }) => {
   }, [z1, z2, z3, z4, z5, startDate, dispatch]);
 
   return (
-    <div>
+    <div className="card">
       <form onSubmit={onFormSubmit}>
         <div className="flex gap">
           <div className="flex flex-align-center">

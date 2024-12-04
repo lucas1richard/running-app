@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useMemo } from 'react';
 import { prColors } from '../Common/colors';
 import classNames from 'classnames';
-import { getDuration } from '../utils';
+import { getDuration, getDurationString } from '../utils';
 import { rankMap } from '../Common/Icons/PRMedal';
 
 const prColorsArr = [
@@ -77,13 +77,20 @@ const PRChart = ({ records: recordsProp, title }) => {
         pointWidth: 15,
         dataLabels: {
           enabled: true,
+          useHTML: true,
           formatter: function () {
             const className = classNames({
               'gold-text': this.point.pr_rank === 1,
               'silver-text': this.point.pr_rank === 2,
               'bronze-text': this.point.pr_rank === 3,
             });
-            return `<div class="${className}">${dayjs(this.x).format('MMM DD')}</div>`;
+            const duration = getDurationString(this.y, ['',':',':'], '');
+            return `
+              <div class="text-center">
+              <div class="${className}">${dayjs(this.x).format('MMM DD')}</div>
+              <div><b>${duration}</b></div>
+              </div>
+            `;
           },
           style: {
             color: 'black',

@@ -7,8 +7,12 @@ const SideNav: FC<SideNavProps> = () => {
   return (
     <div className="sidebar card">
       <Link to="/">Home</Link>
+      <hr />
       <Link to="/personal-records">Personal Records</Link>
+      <hr />
       <Link to="/volume">Volume</Link>
+      <hr />
+      <Link to="/admin">Admin</Link>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
-import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDuration } from '../../utils';
+import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDuration, getDurationString } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
@@ -11,6 +11,7 @@ import useMinMax from './useMinMax';
 import { prColors } from '../../Common/colors';
 import RouteMap from '../RouteMap';
 import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
+import roundToNearest from '../../utils/roundToNearest';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -93,7 +94,10 @@ const HeartZonesChartDisplay = ({
     [fullTime, velocity, smoothAverageWindow]
   );
   const velocityData = useMemo(
-    () => fullTime.map((val) => [val, convertMetricSpeedToMPH(smoothVelocity[val])]),
+    () => fullTime.map((val) => [
+      val,
+      roundToNearest(convertMetricSpeedToMPH(smoothVelocity[val]), 100)
+    ]),
     [smoothVelocity, fullTime]
   );
   const efficiencyFactorData = useMemo(
@@ -109,7 +113,7 @@ const HeartZonesChartDisplay = ({
       return laps.map((val, ix) => {
         const datum = [
           offset,
-          convertMetricSpeedToMPH(val.average_speed),
+          roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
           val.elapsed_time
         ];
         offset += val.elapsed_time;
@@ -123,7 +127,7 @@ const HeartZonesChartDisplay = ({
       return splitsMi.map((val, ix) => {
         const datum = [
           offset,
-          val.average_speed,
+          roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
           val.elapsed_time
         ];
         offset += val.elapsed_time;
@@ -244,13 +248,13 @@ const HeartZonesChartDisplay = ({
         fillOpacity: 0.1,
         color: 'black',
         tooltip: {
-          valueSuffix: ' bpm',
+          valueSuffix: ' mph',
           pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
         },
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines)
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -290,7 +294,7 @@ const HeartZonesChartDisplay = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines)
+              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -311,18 +315,20 @@ const HeartZonesChartDisplay = ({
           animation: true,
           align: 'left',
           formatter() {
+            const effort = bestEfforts[this.point.index];
             return `
-                <span>${bestEfforts[this.point.index].name} - ${getDuration(bestEfforts[this.point.index].elapsed_time).map(([num, str]) => `${num}${str}`).join(' ')}</span>
+                <span>${effort.name} - ${getDurationString(effort.elapsed_time)}</span>
             `;
           },
         },
         tooltip: {
           headerFormat: '<br />',
           pointFormatter() {
+            const effort = bestEfforts[this.index];
             return `
-              <span style="color:${this.color}">\u25CF</span> Distance: <b>${bestEfforts[this.index].name}</b><br/>
-              <span style="color:${this.color}">\u25CF</span> Time: <b>${getDuration(bestEfforts[this.index].elapsed_time).map(([num, str]) => `${num}${str}`).join(' ')}</b><br/>
-              <span style="color:${this.color}">\u25CF</span> Rank: <b>${bestEfforts[this.index].pr_rank}</b><br/>
+              <span style="color:${this.color}">\u25CF</span> Distance: <b>${effort.name}</b><br/>
+              <span style="color:${this.color}">\u25CF</span> Time: <b>${getDurationString(effort.elapsed_time)}</b><br/>
+              <span style="color:${this.color}">\u25CF</span> Rank: <b>${effort.pr_rank}</b><br/>
             `;
           }
         },
@@ -345,7 +351,7 @@ const HeartZonesChartDisplay = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines)
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -447,7 +453,7 @@ const HeartZonesChartDisplay = ({
             />
           </label>
         </div>
-        <div style={{ height: chartHeight }}>
+        <div>
           <HighchartsReact
             highcharts={Highcharts}
             options={options}
