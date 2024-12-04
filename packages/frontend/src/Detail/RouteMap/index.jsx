@@ -9,14 +9,23 @@ import { convertMetricSpeedToMPH } from '../../utils';
 
 HighchartsMap(Highcharts);
 
-const RouteMap = ({ id, pointer, segments, hrzones, velocity }) => {
+const RouteMap = ({
+  id,
+  pointer,
+  pins,
+  segments,
+  hrzones,
+  velocity,
+  highlightedSegment = { start: 0, end: 0, color: 'white' },
+}) => {
+
   const latlngStream = useSelector((state) => selectStreamType(state, id, 'latlng'));
 
   const [animating, setAnimating] = React.useState(false);
   const [animationPointer, setAnimationPointer] = React.useState(0);
   const intervalRef = useRef(null);
 
-  const  usedPointer = animating ? animationPointer : pointer;
+  const usedPointer = animating ? animationPointer : pointer;
 
   const coordsPure = useMemo(() => {
     if (!latlngStream?.data) return [];
@@ -59,6 +68,42 @@ const RouteMap = ({ id, pointer, segments, hrzones, velocity }) => {
     }));
   }, [coordsPure, segments]);
 
+  const memoHighlightedSegment = useMemo(() => {
+    return {
+      type: 'mapline',
+      name: `Segment Highlight`,
+      data: [{
+        geometry: {
+          type: 'LineString',
+          coordinates: coordsPure
+            .slice(highlightedSegment.start, highlightedSegment.end)
+            .map(({ lon, lat }) => [lon, lat]),
+        },
+        color: highlightedSegment.color,
+        borderColor: 'black',
+      }],
+      animation: false,
+      lineWidth: 12,
+      enableMouseTracking: false,
+    };
+  }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start]);
+
+  const memoPins = useMemo(() => ({
+      type: 'mappoint',
+      name: 'pins',
+      data: pins.map((pin) => ({
+        ...pin,
+        ...coordsPure[pin.index],
+        marker: {
+          symbol: pin.symbol,
+          radius: pin.radius || 7,
+          lineColor: pin.lineColor || pin.color || 'black',
+          lineWidth: pin.lineWidth || 1,
+        },
+      })),
+      animation: false,
+    }), [pins, coordsPure]);
+
   useEffect(() => {
     if (animating && !intervalRef.current) {
       intervalRef.current = setInterval(animate, 20);
@@ -86,6 +131,8 @@ const RouteMap = ({ id, pointer, segments, hrzones, velocity }) => {
     },
     series: [
       ...series,
+      memoHighlightedSegment,
+      memoPins,
       {
         type: 'mappoint',
         name: 'Location',
@@ -100,7 +147,15 @@ const RouteMap = ({ id, pointer, segments, hrzones, velocity }) => {
         color: indicatorColor.fill,
       },
     ],
-  }), [coordsPure, indicatorColor, usedPointer, series]);
+  }), [
+    series,
+    memoHighlightedSegment,
+    memoPins,
+    coordsPure,
+    usedPointer,
+    indicatorColor.stroke,
+    indicatorColor.fill
+  ]);
 
   return (
     <div>

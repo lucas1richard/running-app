@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
-import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDuration, getDurationString } from '../../utils';
+import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDurationString } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
@@ -59,6 +59,20 @@ const HeartZonesChartDisplay = ({
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const [plotLines, setPlotLines] = useState([]);
   const [latlngPointer, setLatlngPointer] = useState(0);
+  const [pins, setPins] = useState([]);
+  const [highlightedSegment, setHighlightedSegment] = useState(undefined);
+
+  const addPin = useCallback(function() {
+    setPins((prev) => {
+      console.log(this);
+      const name = this.series.name;
+      const next = [...prev];
+      const existing = next.find((pin) => pin.index === this.index && pin.name === name);
+      if (existing) return next.filter((pin) => pin !== existing);
+      next.push({ index: this.index, color: this.color, name, symbol: this.series.symbol });
+      return next;
+    });
+  }, []);
 
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
@@ -220,7 +234,7 @@ const HeartZonesChartDisplay = ({
     series: [
       {
         ...seriesDefaultConfig,
-        name: 'HeartRate',
+        name: 'HR',
         data: heartRateData,
         yAxis: 0,
         color: 'red',
@@ -233,6 +247,7 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)', chartRef, setPlotLines);
+              addPin.apply(this);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -255,6 +270,7 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines);
+              addPin.apply(this);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -295,6 +311,7 @@ const HeartZonesChartDisplay = ({
           events: {
             click() {
               addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines);
+              addPin.apply(this);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -332,10 +349,24 @@ const HeartZonesChartDisplay = ({
             `;
           }
         },
+        point: {
+          events: {
+            click() {
+              setHighlightedSegment((prev) => {
+                const color = this.color === 'white' ? 'black' : this.color;
+                const next = { start: this.start, end: this.end, color, borderColor: this.borderColor };
+                if (prev && prev.start === next.start && prev.end === next.end) return;
+                return next;
+              });
+            },
+            mouseOver() {
+            }
+          },
+        },
       },
       {
         ...seriesDefaultConfig,
-        name: 'Efficiency Factor',
+        name: 'EF', // Efficiency Factor 
         data: efficiencyFactorData,
         yAxis: 5,
         fillOpacity: 0.1,
@@ -351,7 +382,8 @@ const HeartZonesChartDisplay = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines);
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 255, 0.5)', chartRef, setPlotLines);
+              addPin.apply(this);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -398,7 +430,7 @@ const HeartZonesChartDisplay = ({
         height: '15%',
         top: '10%',
         id: 'laps',
-        min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin,
+        min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin * 0.97,
         title: { text: lapsData.length < 2 ? 'Miles' : 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
@@ -436,7 +468,18 @@ const HeartZonesChartDisplay = ({
         opposite: false,
       },
     ]
-  }), [magnificationFactor, title, heartRateData, velocityData, lapsData, splitsMiData, altitudeData, bestEffortsData, efficiencyFactorData, hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, bestEfforts]);
+  }), [
+    magnificationFactor,
+    title,
+    heartRateData,
+    velocityData,
+    lapsData,
+    splitsMiData,
+    altitudeData,
+    bestEffortsData,
+    efficiencyFactorData,
+    hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, addPin, bestEfforts
+  ]);
 
   return (
     <div className="flex">
@@ -498,7 +541,7 @@ const HeartZonesChartDisplay = ({
           </div>
         </div>
         <div>
-          {plotLines.sort((a,b) => a - b).map((val) => (
+          {plotLines.sort((a, b) => a - b).map((val) => (
             <div>
               <button
                 key={val}
@@ -507,6 +550,7 @@ const HeartZonesChartDisplay = ({
                   if (!chart) return;
                   chart.xAxis[0].removePlotLine(val);
                   setPlotLines((lines) => lines.filter((v) => v !== val));
+                  setPins((pins) => pins.filter((pin) => pin.index !== val));
                 }}
               >
                 Remove Plotline at {val} seconds
@@ -522,6 +566,8 @@ const HeartZonesChartDisplay = ({
           segments={lapsData.length > 1 ? lapsData : splitsMiData}
           velocity={smoothVelocity}
           hrzones={hrzones}
+          pins={pins}
+          highlightedSegment={highlightedSegment}
         />
       </div>
     </div>
