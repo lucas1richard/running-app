@@ -2,23 +2,28 @@ import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
-import { selectStreamType } from '../../reducers/activities';
+import { selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
 import { hrZonesText } from '../../colors/hrZones';
 import { convertMetricSpeedToMPH } from '../../utils';
 
 HighchartsMap(Highcharts);
 
-const RouteMap = ({
-  id,
-  pointer,
-  pins,
-  segments,
-  hrzones,
-  velocity,
-  highlightedSegment = { start: 0, end: 0, color: 'white' },
-}) => {
-  const latlngStream = useSelector((state) => selectStreamType(state, id, 'latlng'));
+const emptyArray = [];
+
+const RouteMapMulti = ({ activityConfigs }) => {
+  const {
+    pointer,
+    pins,
+    hrzones,
+    velocity,
+    highlightedSegment = { start: 0, end: 0, color: 'white' },
+  } = activityConfigs[0];
+
+  const ids = activityConfigs.map(({ id }) => id);
+  const segmentsArray = useMemo(() => activityConfigs.map(({ segments }) => segments), [activityConfigs]);
+
+  const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
 
   const [animating, setAnimating] = React.useState(false);
   const [animationPointer, setAnimationPointer] = React.useState(0);
@@ -27,9 +32,8 @@ const RouteMap = ({
   const usedPointer = animating ? animationPointer : pointer;
 
   const coordsPure = useMemo(() => {
-    if (!latlngStream?.data) return [];
-    return latlngStream.data.map(([lat, lon]) => ({ lon, lat }));
-  }, [latlngStream]);
+    return latlngStreamArray.map((latlngStream) => latlngStream.data.map(([lat, lon]) => ({ lon, lat })));
+  }, [latlngStreamArray]);
 
   const indicatorColor = useMemo(() => {
     if (!hrzones) return 'black';
@@ -52,20 +56,20 @@ const RouteMap = ({
   }, [coordsPure.length]);
 
   const series = useMemo(() => {
-    return segments.map((segment, ix) => ({
+    return segmentsArray.map((segments, ix) => segments.map((segment, iy) => ({
       type: 'mapline',
-      name: `Segment ${ix + 1}`,
+      name: `Segment ${iy + 1}`,
       data: [{
         geometry: {
           type: 'LineString',
-          coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
+          coordinates: coordsPure[ix].slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
         },
       }],
       animation: false,
       lineWidth: 6,
       enableMouseTracking: false,
-    }));
-  }, [coordsPure, segments]);
+    })), []);
+  }, [coordsPure, segmentsArray]);
 
   const memoHighlightedSegment = useMemo(() => {
     return {
@@ -129,22 +133,26 @@ const RouteMap = ({
       text: 'Route',
     },
     series: [
-      ...series,
+      ...series.map((series) => series).flat(),
       memoHighlightedSegment,
       memoPins,
-      {
+      ...coordsPure.map((coords, ix) => ({
         type: 'mappoint',
         name: 'Location',
-        data: [coordsPure[usedPointer]],
+        data: [coords[usedPointer]],
+        dataLabels: {
+          enabled: true,
+          format: ix === 0 ? 'Current' : 'Reference',
+        },
         marker: {
-          symbol: 'circle',
+          symbol: ix === 0 ? 'circle' : 'diamond',
           radius: 10,
           lineColor: indicatorColor.stroke,
           lineWidth: 4,
         },
         animation: false,
         color: indicatorColor.fill,
-      },
+      })),
     ],
   }), [
     series,
@@ -171,4 +179,4 @@ const RouteMap = ({
   );
 };
 
-export default RouteMap;
+export default RouteMapMulti;

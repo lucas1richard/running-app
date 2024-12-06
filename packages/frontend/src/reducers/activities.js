@@ -171,6 +171,15 @@ export const selectStreamType = createDeepEqualSelector(
   (activities, id, findType) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)
 );
 
+export const selectStreamTypeMulti = createDeepEqualSelector(
+  getActivitiesState,
+  (state, ids) => ids,
+  (state, ids, findType) => findType,
+  (activities, ids, findType) => ids.map(
+    (id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)
+  )
+);
+
 export const selectSimilarWorkouts = createDeepEqualSelector(
   getActivitiesState,
   (state, id) => id,
