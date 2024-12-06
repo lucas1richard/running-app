@@ -5,7 +5,6 @@ import HighchartsMap from 'highcharts/modules/map';
 import { selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
 import { hrZonesText } from '../../colors/hrZones';
-import { convertMetricSpeedToMPH } from '../../utils';
 
 HighchartsMap(Highcharts);
 
@@ -15,15 +14,14 @@ const RouteMapMulti = ({ activityConfigs }) => {
   const {
     pointer,
     pins,
-    hrzones,
-    velocity,
     highlightedSegment = { start: 0, end: 0, color: 'white' },
   } = activityConfigs[0];
 
   const ids = activityConfigs.map(({ id }) => id);
+  
   const segmentsArray = useMemo(() => activityConfigs.map(({ segments }) => segments), [activityConfigs]);
-
   const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
+  const hrzonesArray = useMemo(() => activityConfigs.map(({ hrzones }) => hrzones), [activityConfigs]);
 
   const [animating, setAnimating] = React.useState(false);
   const [animationPointer, setAnimationPointer] = React.useState(0);
@@ -35,13 +33,16 @@ const RouteMapMulti = ({ activityConfigs }) => {
     return latlngStreamArray.map((latlngStream) => latlngStream.data.map(([lat, lon]) => ({ lon, lat })));
   }, [latlngStreamArray]);
 
-  const indicatorColor = useMemo(() => {
-    if (!hrzones) return 'black';
-    const { zone } = hrzones.find(
-      ({ from }, ix) => from <= usedPointer && hrzones[ix + 1]?.from > usedPointer
-    ) || hrzones[hrzones.length - 1];
-    return { fill: hrZonesText[zone], stroke: 'black' };
-  }, [hrzones, usedPointer]);
+  const indicatorColors = useMemo(() => {
+    return ids.map((id, ix) => {
+      const hrzones = hrzonesArray[ix];
+      if (!hrzones) return 'black';
+      const { zone } = hrzones.find(
+        ({ from }, ix) => from <= usedPointer && hrzones[ix + 1]?.from > usedPointer
+      ) || hrzones[hrzones.length - 1];
+      return { fill: hrZonesText[zone], stroke: ix === 0 ? 'black' : 'red' };
+    });
+  }, [hrzonesArray, ids, usedPointer]);
 
   const animate = useCallback(() => {
     setAnimationPointer((prev) => {
@@ -65,6 +66,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
           coordinates: coordsPure[ix].slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
         },
       }],
+      showInLegend: false,
       animation: false,
       lineWidth: 6,
       enableMouseTracking: false,
@@ -138,35 +140,26 @@ const RouteMapMulti = ({ activityConfigs }) => {
       memoPins,
       ...coordsPure.map((coords, ix) => ({
         type: 'mappoint',
-        name: 'Location',
+        name: ix === 0 ? 'Current' : 'Reference',
         data: [coords[usedPointer]],
         dataLabels: {
-          enabled: true,
+          enabled: false,
           format: ix === 0 ? 'Current' : 'Reference',
         },
         marker: {
           symbol: ix === 0 ? 'circle' : 'diamond',
           radius: 10,
-          lineColor: indicatorColor.stroke,
-          lineWidth: 4,
+          lineColor: indicatorColors[ix].stroke,
+          lineWidth: 2,
         },
         animation: false,
-        color: indicatorColor.fill,
+        color: indicatorColors[ix].fill,
       })),
     ],
-  }), [
-    series,
-    memoHighlightedSegment,
-    memoPins,
-    coordsPure,
-    usedPointer,
-    indicatorColor.stroke,
-    indicatorColor.fill
-  ]);
+  }), [series, memoHighlightedSegment, memoPins, coordsPure, usedPointer, indicatorColors]);
 
   return (
     <div>
-      {`${convertMetricSpeedToMPH(velocity[usedPointer]).toFixed(2)} mph`}
       <HighchartsReact
         highcharts={Highcharts}
         constructorType={'mapChart'}
