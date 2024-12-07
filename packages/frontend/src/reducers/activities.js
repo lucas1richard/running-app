@@ -164,6 +164,12 @@ export const selectActivityDetails = createDeepEqualSelector(
   (activities, id) => activities.details[id]
 );
 
+export const selectActivityDetailsMulti = createDeepEqualSelector(
+  getActivitiesState,
+  (state, ids) => ids,
+  (activities, ids) => ids?.map((id) => activities.details[id]) || []
+);
+
 export const selectStreamType = createDeepEqualSelector(
   getActivitiesState,
   (state, id) => id,

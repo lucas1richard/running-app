@@ -6,6 +6,7 @@ import { selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
 import { hrZonesText } from '../../colors/hrZones';
 import DetailDataFetcher from '../DetailDataFetcher';
+import useSegments from '../HeartZonesChart/useSegments';
 
 HighchartsMap(Highcharts);
 
@@ -20,7 +21,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
 
   const ids = activityConfigs.map(({ id }) => id);
   
-  const segmentsArray = useMemo(() => activityConfigs.map(({ segments }) => segments), [activityConfigs]);
+  const segmentsArray = useSegments(ids);
   const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
   const hrzonesArray = useMemo(() => activityConfigs.map(({ hrzones }) => hrzones), [activityConfigs]);
 
@@ -61,7 +62,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
   }, [coordsPure.length]);
 
   const series = useMemo(() => {
-    return segmentsArray.map((segments, ix) => segments.map((segment, iy) => ({
+    return segmentsArray.map((segments, ix) => segments?.data?.map((segment, iy) => ({
       type: 'mapline',
       name: `Segment ${iy + 1}`,
       data: [{
@@ -74,7 +75,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
       animation: false,
       lineWidth: 6,
       enableMouseTracking: false,
-    })), []);
+    })) || [], []);
   }, [coordsPure, segmentsArray]);
 
   const memoHighlightedSegment = useMemo(() => {
@@ -144,11 +145,11 @@ const RouteMapMulti = ({ activityConfigs }) => {
       memoPins,
       ...coordsPure.map((coords, ix) => ({
         type: 'mappoint',
-        name: ix === 0 ? 'Current' : 'Reference',
-        data: [coords[usedPointer]],
+        name: ix === 0 ? 'Current' : ids[ix],
+        data: [usedPointer < coords.length ? coords[usedPointer] : coords[coords.length - 1]],
         dataLabels: {
           enabled: false,
-          format: ix === 0 ? 'Current' : 'Reference',
+          format: ix === 0 ? 'Current' : ids[ix],
         },
         marker: {
           symbol: ix === 0 ? 'circle' : 'diamond',
