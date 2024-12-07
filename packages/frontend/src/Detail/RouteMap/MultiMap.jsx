@@ -2,11 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
-import { selectStreamTypeMulti } from '../../reducers/activities';
+import { selectActivity, selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
 import DetailDataFetcher from '../DetailDataFetcher';
 import useSegments from '../HeartZonesChart/useSegments';
 import useHRZoneIndicators from './useHRZoneIndicators';
+import dayjs from 'dayjs';
 
 HighchartsMap(Highcharts);
 
@@ -14,6 +15,8 @@ const emptyArray = [];
 const defHighlightedSegment = { start: 0, end: 0, color: 'white' };
 const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) => {
   const ids = activityConfigs.map(({ id }) => id);
+  const activities = useSelector((state) => ids.map((id) => selectActivity(state, id)));
+
   const [progress, setProgress] = useState(0);
   
   const segmentsArray = useSegments(ids);
@@ -124,23 +127,23 @@ const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) =
       memoHighlightedSegment,
       ...coordsPure.map((coords, ix) => ({
         type: 'mappoint',
-        name: ix === 0 ? 'Current' : ids[ix],
+        name: ix === 0 ? 'Current' : dayjs(activities[ix].start_date_local).format('YYYY-MM-DD'),
         data: [usedPointer < coords.length ? coords[usedPointer] : coords[coords.length - 1]],
         dataLabels: {
-          enabled: false,
-          format: ix === 0 ? 'Current' : ids[ix],
+          enabled: true,
+          format: ix === 0 ? 'Current' : dayjs(activities[ix].start_date_local).format('YYYY-MM-DD'),
         },
         marker: {
-          symbol: ix === 0 ? 'circle' : 'diamond',
+          symbol: ix === 0 ? 'circle' : undefined,
           radius: 10,
           lineColor: indicatorColors[ix].stroke || 'black',
-          lineWidth: 2,
+          lineWidth: ix === 0 ? 6 : 2,
         },
         animation: false,
         color: indicatorColors[ix].fill,
       })),
     ],
-  }), [series, memoHighlightedSegment, coordsPure, ids, usedPointer, indicatorColors]);
+  }), [series, memoHighlightedSegment, coordsPure, activities, usedPointer, indicatorColors]);
 
   return (
     <div>
