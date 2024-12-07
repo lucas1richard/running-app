@@ -5,6 +5,7 @@ import HighchartsMap from 'highcharts/modules/map';
 import { selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
 import { hrZonesText } from '../../colors/hrZones';
+import DetailDataFetcher from '../DetailDataFetcher';
 
 HighchartsMap(Highcharts);
 
@@ -29,9 +30,12 @@ const RouteMapMulti = ({ activityConfigs }) => {
 
   const usedPointer = animating ? animationPointer : pointer;
 
-  const coordsPure = useMemo(() => {
-    return latlngStreamArray.map((latlngStream) => latlngStream.data.map(([lat, lon]) => ({ lon, lat })));
-  }, [latlngStreamArray]);
+  const coordsPure = useMemo(
+    () => latlngStreamArray.map(
+      (latlngStream) => latlngStream?.data?.map(([lat, lon]) => ({ lon, lat })) || []
+    ),
+    [latlngStreamArray]
+  );
 
   const indicatorColors = useMemo(() => {
     return ids.map((id, ix) => {
@@ -160,6 +164,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
 
   return (
     <div>
+      {ids.map((id, ix) => <DetailDataFetcher key={id} id={id} />)}
       <HighchartsReact
         highcharts={Highcharts}
         constructorType={'mapChart'}
