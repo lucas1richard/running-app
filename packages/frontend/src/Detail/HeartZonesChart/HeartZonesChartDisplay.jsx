@@ -577,7 +577,6 @@ const HeartZonesChartDisplay = ({
           activityConfigs={[
             {
               id,
-              pins,
               highlightedSegment,
             },
             {

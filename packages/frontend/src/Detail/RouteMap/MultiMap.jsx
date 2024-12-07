@@ -12,9 +12,8 @@ HighchartsMap(Highcharts);
 
 const emptyArray = [];
 
-const RouteMapMulti = ({ indexPointer, activityConfigs }) => {
+const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) => {
   const {
-    pins,
     highlightedSegment = { start: 0, end: 0, color: 'white' },
   } = activityConfigs[0];
 
@@ -66,11 +65,12 @@ const RouteMapMulti = ({ indexPointer, activityConfigs }) => {
         },
       }],
       showInLegend: false,
+      color: showSegments ? undefined : 'gray',
       animation: false,
       lineWidth: 6,
       enableMouseTracking: false,
     })) || [], []);
-  }, [coordsPure, segmentsArray]);
+  }, [coordsPure, segmentsArray, showSegments]);
 
   const memoHighlightedSegment = useMemo(() => {
     return {
@@ -91,22 +91,6 @@ const RouteMapMulti = ({ indexPointer, activityConfigs }) => {
       enableMouseTracking: false,
     };
   }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start]);
-
-  const memoPins = useMemo(() => ({
-      type: 'mappoint',
-      name: 'pins',
-      data: pins.map((pin) => ({
-        ...pin,
-        ...coordsPure[pin.index],
-        marker: {
-          symbol: pin.symbol,
-          radius: pin.radius || 7,
-          lineColor: pin.lineColor || pin.color || 'black',
-          lineWidth: pin.lineWidth || 1,
-        },
-      })),
-      animation: false,
-    }), [pins, coordsPure]);
 
   useEffect(() => {
     if (animating && !intervalRef.current) {
@@ -136,7 +120,6 @@ const RouteMapMulti = ({ indexPointer, activityConfigs }) => {
     series: [
       ...series.map((series) => series).flat(),
       memoHighlightedSegment,
-      memoPins,
       ...coordsPure.map((coords, ix) => ({
         type: 'mappoint',
         name: ix === 0 ? 'Current' : ids[ix],
@@ -155,7 +138,7 @@ const RouteMapMulti = ({ indexPointer, activityConfigs }) => {
         color: indicatorColors[ix].fill,
       })),
     ],
-  }), [series, memoHighlightedSegment, memoPins, coordsPure, ids, usedPointer, indicatorColors]);
+  }), [series, memoHighlightedSegment, coordsPure, ids, usedPointer, indicatorColors]);
 
   return (
     <div>
