@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
@@ -20,16 +20,21 @@ const RouteMapMulti = ({ activityConfigs }) => {
   } = activityConfigs[0];
 
   const ids = activityConfigs.map(({ id }) => id);
+  const [progress, setProgress] = useState(0);
   
   const segmentsArray = useSegments(ids);
   const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
+  const longestStream = latlngStreamArray.reduce((acc, val) => Math.max(acc, val?.data?.length || 0), 0);
+
   const hrzonesArray = useMemo(() => activityConfigs.map(({ hrzones }) => hrzones), [activityConfigs]);
 
-  const [animating, setAnimating] = React.useState(false);
-  const [animationPointer, setAnimationPointer] = React.useState(0);
+  const [animating, setAnimating] = useState(false);
+  const [animationPointer, setAnimationPointer] = useState(0);
   const intervalRef = useRef(null);
 
-  const usedPointer = animating ? animationPointer : pointer;
+  const usedPointer = animating
+    ? animationPointer
+    : pointer || progress;
 
   const coordsPure = useMemo(
     () => latlngStreamArray.map(
@@ -50,16 +55,17 @@ const RouteMapMulti = ({ activityConfigs }) => {
   }, [hrzonesArray, ids, usedPointer]);
 
   const animate = useCallback(() => {
+    const INCREMENT = 2;
     setAnimationPointer((prev) => {
-      const nextPointer = (prev + 2) % coordsPure.length;
-      if (nextPointer === 0 || nextPointer === 1) {
+      const nextPointer = (prev + INCREMENT) % longestStream;
+      if (nextPointer < INCREMENT) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
         setAnimating(false);
       }
       return nextPointer;
     });
-  }, [coordsPure.length]);
+  }, [longestStream]);
 
   const series = useMemo(() => {
     return segmentsArray.map((segments, ix) => segments?.data?.map((segment, iy) => ({
@@ -85,7 +91,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
       data: [{
         geometry: {
           type: 'LineString',
-          coordinates: coordsPure
+          coordinates: coordsPure[0]
             .slice(highlightedSegment.start, highlightedSegment.end)
             .map(({ lon, lat }) => [lon, lat]),
         },
@@ -154,14 +160,14 @@ const RouteMapMulti = ({ activityConfigs }) => {
         marker: {
           symbol: ix === 0 ? 'circle' : 'diamond',
           radius: 10,
-          lineColor: indicatorColors[ix].stroke,
+          lineColor: indicatorColors[ix].stroke || 'black',
           lineWidth: 2,
         },
         animation: false,
         color: indicatorColors[ix].fill,
       })),
     ],
-  }), [series, memoHighlightedSegment, memoPins, coordsPure, usedPointer, indicatorColors]);
+  }), [series, memoHighlightedSegment, memoPins, coordsPure, ids, usedPointer, indicatorColors]);
 
   return (
     <div>
@@ -174,6 +180,17 @@ const RouteMapMulti = ({ activityConfigs }) => {
       <div>
         <button onClick={() => setAnimating((prev) => !prev)}>Animate</button>
       </div>
+      {!pointer && (
+        <div>
+          <input
+            type={'range'}
+            min={0}
+            max={longestStream}
+            step={1}
+            onChange={(ev) => setProgress(Number(ev.target.value))}
+          />
+        </div>
+      )}
     </div>
   );
 };

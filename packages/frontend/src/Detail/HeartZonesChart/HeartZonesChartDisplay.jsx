@@ -578,7 +578,6 @@ const HeartZonesChartDisplay = ({
               id,
               pointer: latlngPointer,
               pins,
-              segments: lapsData.length > 1 ? lapsData : splitsMiData,
               hrzones,
               highlightedSegment,
             },
