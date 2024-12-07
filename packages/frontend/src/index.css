@@ -188,6 +188,9 @@ select {
 .flex-item-grow {
   flex-grow: 1;
 }
+.flex-item-shrink {
+  flex-shrink: 0;
+}
 .flex-align-center {
   align-items: center;
 }
@@ -226,6 +229,9 @@ select {
 .heading-6 {
   font-size: 1rem;
   font-weight: bold;
+}
+.height-4rem {
+  height: 4rem;
 }
 .display-none {
   display: none !important;

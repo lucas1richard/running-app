@@ -12,9 +12,8 @@ HighchartsMap(Highcharts);
 
 const emptyArray = [];
 
-const RouteMapMulti = ({ activityConfigs }) => {
+const RouteMapMulti = ({ indexPointer, activityConfigs }) => {
   const {
-    pointer,
     pins,
     highlightedSegment = { start: 0, end: 0, color: 'white' },
   } = activityConfigs[0];
@@ -32,7 +31,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
 
   const usedPointer = animating
     ? animationPointer
-    : pointer || progress;
+    : indexPointer || progress;
 
   const coordsPure = useMemo(
     () => latlngStreamArray.map(
@@ -169,15 +168,15 @@ const RouteMapMulti = ({ activityConfigs }) => {
       <div>
         <button onClick={() => setAnimating((prev) => !prev)}>Animate</button>
       </div>
-      {!pointer && (
+
+      {isNaN(indexPointer) && (
         <div>
-          <input
-            type={'range'}
-            min={0}
-            max={longestStream}
-            step={1}
-            onChange={(ev) => setProgress(Number(ev.target.value))}
-          />
+          Hover to see progress on the map &darr;
+          <div className="flex flex-wrap height-4rem full-width border dls-white-bg">
+            {new Array(longestStream).fill(0).map((_, ix) => (
+              <div className="flex-item-grow flex-item-shrink" key={ix} onMouseOver={() => setProgress(ix)} />
+            ))}
+          </div>
         </div>
       )}
     </div>

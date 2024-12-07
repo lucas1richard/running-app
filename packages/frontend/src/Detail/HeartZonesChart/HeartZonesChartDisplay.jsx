@@ -573,12 +573,11 @@ const HeartZonesChartDisplay = ({
       </div> */}
       <div className="flex-item-grow">
         <RouteMapMulti
+          indexPointer={latlngPointer}
           activityConfigs={[
             {
               id,
-              pointer: latlngPointer,
               pins,
-              hrzones,
               highlightedSegment,
             },
             {
