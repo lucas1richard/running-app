@@ -11,18 +11,18 @@ import useHRZoneIndicators from './useHRZoneIndicators';
 HighchartsMap(Highcharts);
 
 const emptyArray = [];
-
+const defHighlightedSegment = { start: 0, end: 0, color: 'white' };
 const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) => {
-  const {
-    highlightedSegment = { start: 0, end: 0, color: 'white' },
-  } = activityConfigs[0];
-
   const ids = activityConfigs.map(({ id }) => id);
   const [progress, setProgress] = useState(0);
   
   const segmentsArray = useSegments(ids);
   const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
   const longestStream = latlngStreamArray.reduce((acc, val) => Math.max(acc, val?.data?.length || 0), 0);
+  const highlightedSegmentArray = useMemo(
+    () => activityConfigs.map(({ highlightedSegment }) => highlightedSegment || defHighlightedSegment),
+    [activityConfigs]
+  );
 
   const [animating, setAnimating] = useState(false);
   const [animationPointer, setAnimationPointer] = useState(0);
@@ -61,7 +61,9 @@ const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) =
       data: [{
         geometry: {
           type: 'LineString',
-          coordinates: coordsPure[ix].slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
+          coordinates: coordsPure[ix]
+            .slice(segment[0], segment[0] + segment[2])
+            .map(({ lon, lat }) => [lon, lat]),
         },
       }],
       showInLegend: false,
@@ -76,7 +78,7 @@ const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) =
     return {
       type: 'mapline',
       name: `Segment Highlight`,
-      data: [{
+      data: highlightedSegmentArray.map((highlightedSegment) => ({
         geometry: {
           type: 'LineString',
           coordinates: coordsPure[0]
@@ -85,12 +87,12 @@ const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) =
         },
         color: highlightedSegment.color,
         borderColor: 'black',
-      }],
+      })),
       animation: false,
       lineWidth: 12,
       enableMouseTracking: false,
     };
-  }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start]);
+  }, [coordsPure, highlightedSegmentArray]);
 
   useEffect(() => {
     if (animating && !intervalRef.current) {
