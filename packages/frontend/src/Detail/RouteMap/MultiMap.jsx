@@ -4,9 +4,9 @@ import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
 import { selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
-import { hrZonesText } from '../../colors/hrZones';
 import DetailDataFetcher from '../DetailDataFetcher';
 import useSegments from '../HeartZonesChart/useSegments';
+import useHRZoneIndicators from './useHRZoneIndicators';
 
 HighchartsMap(Highcharts);
 
@@ -26,8 +26,6 @@ const RouteMapMulti = ({ activityConfigs }) => {
   const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
   const longestStream = latlngStreamArray.reduce((acc, val) => Math.max(acc, val?.data?.length || 0), 0);
 
-  const hrzonesArray = useMemo(() => activityConfigs.map(({ hrzones }) => hrzones), [activityConfigs]);
-
   const [animating, setAnimating] = useState(false);
   const [animationPointer, setAnimationPointer] = useState(0);
   const intervalRef = useRef(null);
@@ -43,16 +41,7 @@ const RouteMapMulti = ({ activityConfigs }) => {
     [latlngStreamArray]
   );
 
-  const indicatorColors = useMemo(() => {
-    return ids.map((id, ix) => {
-      const hrzones = hrzonesArray[ix];
-      if (!hrzones) return 'black';
-      const { zone } = hrzones.find(
-        ({ from }, ix) => from <= usedPointer && hrzones[ix + 1]?.from > usedPointer
-      ) || hrzones[hrzones.length - 1];
-      return { fill: hrZonesText[zone], stroke: ix === 0 ? 'black' : 'red' };
-    });
-  }, [hrzonesArray, ids, usedPointer]);
+  const indicatorColors = useHRZoneIndicators(ids, usedPointer, 20);
 
   const animate = useCallback(() => {
     const INCREMENT = 2;
