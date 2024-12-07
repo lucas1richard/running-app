@@ -12,6 +12,8 @@ const SideNav: FC<SideNavProps> = () => {
       <hr />
       <Link to="/volume">Volume</Link>
       <hr />
+      <Link to="/multi-map">Multi Map</Link>
+      <hr />
       <Link to="/admin">Admin</Link>
     </div>
   );

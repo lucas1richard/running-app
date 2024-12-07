@@ -2,18 +2,18 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
-import { selectActivity, selectStreamTypeMulti } from '../../reducers/activities';
 import { useSelector } from 'react-redux';
-import DetailDataFetcher from '../DetailDataFetcher';
-import useSegments from '../HeartZonesChart/useSegments';
-import useHRZoneIndicators from './useHRZoneIndicators';
+import { selectActivity, selectStreamTypeMulti } from '../reducers/activities';
+import DetailDataFetcher from '../Detail/DetailDataFetcher';
+import useSegments from '../Detail/HeartZonesChart/useSegments';
+import useHRZoneIndicators from '../Detail/RouteMap/useHRZoneIndicators';
 import dayjs from 'dayjs';
 
 HighchartsMap(Highcharts);
 
 const emptyArray = [];
 const defHighlightedSegment = { start: 0, end: 0, color: 'white' };
-const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) => {
+const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
   const ids = activityConfigs.map(({ id }) => id);
   const activities = useSelector((state) => ids.map((id) => selectActivity(state, id)));
 
@@ -130,7 +130,7 @@ const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) =
         name: ix === 0 ? 'Current' : dayjs(activities[ix].start_date_local).format('YYYY-MM-DD'),
         data: [usedPointer < coords.length ? coords[usedPointer] : coords[coords.length - 1]],
         dataLabels: {
-          enabled: true,
+          enabled: false,
           format: ix === 0 ? 'Current' : dayjs(activities[ix].start_date_local).format('YYYY-MM-DD'),
         },
         marker: {
@@ -171,4 +171,4 @@ const RouteMapMulti = ({ indexPointer, activityConfigs, showSegments = true }) =
   );
 };
 
-export default RouteMapMulti;
+export default MultiMap;

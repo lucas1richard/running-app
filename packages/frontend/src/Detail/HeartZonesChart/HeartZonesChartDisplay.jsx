@@ -12,7 +12,6 @@ import { prColors } from '../../Common/colors';
 import RouteMap from '../RouteMap';
 import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
 import roundToNearest from '../../utils/roundToNearest';
-import RouteMapMulti from '../RouteMap/MultiMap';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -560,7 +559,7 @@ const HeartZonesChartDisplay = ({
           ))}
         </div>
       </div>
-      {/* <div className="flex-item-grow">
+      <div className="flex-item-grow">
         <RouteMap
           id={id}
           pointer={latlngPointer}
@@ -569,23 +568,6 @@ const HeartZonesChartDisplay = ({
           hrzones={hrzones}
           pins={pins}
           highlightedSegment={highlightedSegment}
-        />
-      </div> */}
-      <div className="flex-item-grow">
-        <RouteMapMulti
-          indexPointer={latlngPointer}
-          activityConfigs={[
-            {
-              id,
-              highlightedSegment,
-            },
-            {
-              "id": 13026364645,
-            },
-            {
-              id: 13055565325,
-            },
-          ]}
         />
       </div>
     </div>

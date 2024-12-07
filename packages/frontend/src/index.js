@@ -21,6 +21,7 @@ import AdminDashboard from './Admin';
 import SideNav from './SideNav';
 import PersonalRecords from './PersonalRecords';
 import Volume from './Volume';
+import MultiMapPage from './MultiMap';
 
 enableMapSet();
 
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: '/heart-zones',
         Component: HeartRateZones,
+      },
+      {
+        path: '/multi-map',
+        Component: MultiMapPage,
       },
       {
         path: '/admin',
