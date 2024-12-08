@@ -38,7 +38,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
 
   const handlePrecipChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
-    setPrecipitation(event.target.value);
+    setPrecipitation(Number(event.target.value));
   }, []);
 
   const handleSkyChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
@@ -46,11 +46,11 @@ const WeatherReporter: FC<Props> = ({ id }) => {
   }, []);
 
   const handleTemperatureChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
-    setTemperature(event.target.value);
+    setTemperature(Number(event.target.value));
   }, []);
 
   const handleHumidityChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
-    setHumidity(event.target.value);
+    setHumidity(Number(event.target.value));
   }, []);
 
   const handleWindChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {

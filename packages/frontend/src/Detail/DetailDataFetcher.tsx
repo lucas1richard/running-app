@@ -8,7 +8,6 @@ import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import { useAppSelector } from '../hooks/redux';
-import { emptyObject } from '../constants';
 
 const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time'];
 
@@ -17,11 +16,11 @@ type Props = {
 }
 
 const DetailDataFetcher: FC<Props> = ({ id }) => {
-  const activity = useAppSelector((state) => selectActivity(state, id)) || emptyObject;
+  const activity = useAppSelector((state) => selectActivity(state, id));
   const configZonesId = useAppSelector(selectPreferencesZonesId);
   const allZones = useAppSelector(selectAllHeartZones);
-  const nativeZones = useAppSelector((state) => selectApplicableHeartZone(state, activity.start_date));
-  const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
+  const nativeZones = useAppSelector((state) => selectApplicableHeartZone(state, activity?.start_date));
+  const zonesId = configZonesId === -1 ? nativeZones?.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
   const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
@@ -32,14 +31,14 @@ const DetailDataFetcher: FC<Props> = ({ id }) => {
 
   useEffect(() => {
     if (!zones || streamStatus !== success) return;
-    if (activity?.zonesCaches?.[zones.id]) return;
+    if (activity?.zonesCaches?.[zones?.id]) return;
 
     requestor.post('/heartzones/set-cache', {
       times: convertHeartDataToZoneTimes(heartRateStream.data, zones),
-      id: activity.id,
-      zonesId: zones.id,
+      id: activity?.id,
+      zonesId: zones?.id,
     });
-  }, [activity.id, activity?.zonesCaches, heartRateStream?.data, streamStatus, zones]);
+  }, [activity?.id, activity?.zonesCaches, heartRateStream?.data, streamStatus, zones]);
 
   return null;
 };

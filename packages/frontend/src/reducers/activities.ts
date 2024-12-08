@@ -21,7 +21,18 @@ import type { RootState } from '.';
 
 dayjs.extend(weekday);
 
-const activitiesInitialState = {
+type ActivitiesState = {
+  activities: Record<number, Activitiy>;
+  activitiesOrder: number[];
+  details: Record<number, any>;
+  summary: any;
+  streams: Record<number, any>;
+  similarWorkouts: Record<number, any>;
+  loading: boolean;
+  error: any;
+};
+
+const activitiesInitialState: ActivitiesState = {
   activities: {},
   activitiesOrder: [],
   details: {},
