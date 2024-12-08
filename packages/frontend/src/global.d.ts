@@ -3,7 +3,16 @@ declare module '*.css' {
   export default content;
 }
 
-type BestEffort = {};
+type BestEffort = {
+  pr_rank: number;
+  name: string;
+  elapsed_time: number;
+  effort_id: number;
+  activityId: number;
+  start_date_local: string;
+  distance: number;
+};
+
 type Weather = {
   sky: string;
   temperature: number;
@@ -11,6 +20,7 @@ type Weather = {
   wind: string;
   precipitation: number;
 };
+
 type ZonesCaches = {};
 
 interface Activitiy {
@@ -22,14 +32,4 @@ interface Activitiy {
   bestEfforts: BestEffort[];
   weather: Weather;
   zonesCaches: ZonesCaches[];
-}
-
-interface PR {
-  id: number;
-  name: string;
-  distance: number;
-  start_date_local: string;
-  elapsed_time: number;
-  pr_rank: number;
-  activityId: number;
 }

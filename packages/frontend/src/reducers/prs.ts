@@ -1,8 +1,14 @@
 import { produce } from 'immer';
-import { SET_PRS, SET_PRS_BY_DATE } from './prs-actions';
 import { createSelector } from 'reselect';
+import { SET_PRS, SET_PRS_BY_DATE } from './prs-actions';
 
-const initialState = {
+import { type RootState } from '.';
+type PRInitialState = {
+  prs: BestEffort[];
+  byDate: Record<string, BestEffort[]>;
+};
+
+const initialState: PRInitialState = {
   prs: [],
   byDate: {},
 };
@@ -19,14 +25,10 @@ export const prsReducer = (state = initialState, action) =>
     }
   });
 
-const getPRsState = (state) => state.prs;
+const getPRsState = (state: RootState) => state.prs;
 
-export const getPRs = createSelector([
-  getPRsState,
-], (prs) => prs.prs);
+export const getPRs = createSelector(getPRsState, (prs) => prs.prs);
 
-export const getPRsByDate = createSelector([
-  getPRsState,
-], (prs) => prs.byDate);
+export const getPRsByDate = createSelector(getPRsState, (prs) => prs.byDate);
 
 export default prsReducer;

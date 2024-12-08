@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { type FC, useMemo } from 'react';
 import DurationDisplay from '../Common/DurationDisplay';
 
 const rankMap = {
@@ -7,7 +7,11 @@ const rankMap = {
   3: '🥉',
 }
 
-const BestEfforts = ({ bestEfforts }) => {
+type Props = {
+  bestEfforts: BestEffort[];
+};
+
+const BestEfforts: FC<Props> = ({ bestEfforts }) => {
   const bestEffortsList = useMemo(() => bestEfforts.filter(({ pr_rank }) => pr_rank !== null), [bestEfforts]);
 
   return (

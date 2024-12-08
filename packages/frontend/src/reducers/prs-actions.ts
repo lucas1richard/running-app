@@ -16,8 +16,8 @@ export const triggerFetchPrsByDate = (): AsyncAction => ({
 
 // REDUCER ACTIONS
 export const SET_PRS = 'prsReducer/SET_PRS';
-export const setPrsAct = (prs: PR[]) => ({ type: SET_PRS, payload: prs });
+export const setPrsAct = (prs: BestEffort[]) => ({ type: SET_PRS, payload: prs });
 
 export const SET_PRS_BY_DATE = 'prsReducer/SET_PRS_BY_DATE';
-export const setPrsByDateAct = (prs: PR[]) => ({ type: SET_PRS_BY_DATE, payload: prs });
+export const setPrsByDateAct = (prs: BestEffort[]) => ({ type: SET_PRS_BY_DATE, payload: prs });
 
