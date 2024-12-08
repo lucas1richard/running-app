@@ -9,8 +9,32 @@ import {
   SET_PREFS_FREE,
 } from './preferences-actions';
 import { emptyObject } from '../constants';
+import type { RootState } from '.';
 
-const initialState = {
+export type PreferencesKeyPath = [string, string, ...string[]];
+
+type ActivitiesPreferences = {
+  shouldShowLaps: boolean;
+  shouldShowSegments: boolean;
+  shouldShowSimilar: boolean;
+};
+
+type InitialState = {
+  isModified: boolean;
+  activities: {
+    default: ActivitiesPreferences & Record<string, any>;
+  } & Record<string, Record<string, any>>;
+  list: {
+    default: Record<string, any>;
+    defined: Record<string, any>;
+  };
+  global: {
+    default: Record<string, any>;
+    defined: Record<string, any>;
+  };
+};
+
+const initialState: InitialState = {
   isModified: false,
   activities: {
     default: {
@@ -71,7 +95,7 @@ const preferencesReducer = (state = initialState, action) => {
         draft.activities.default = Object.fromEntries(
           Object.entries({ ...state.activities.default, ...action.payload })
             .filter(([key, value]) => value !== undefined)
-        );
+        ) as typeof state.activities.default;
       });
 
     case REDUCER_SET_ACTIVITY_PREFS:
@@ -111,7 +135,7 @@ const preferencesReducer = (state = initialState, action) => {
   }
 };
 
-export const getPreferencesState = (state) => state.preferences;
+export const getPreferencesState = (state: RootState) => state.preferences;
 
 export const selectListPrerences = createDeepEqualSelector(
   getPreferencesState,
@@ -139,21 +163,16 @@ export const selectPreferencesZonesId = createDeepEqualSelector(
   }
 );
 
+const getActivityPreferences = (state: RootState, id: number) => {
+  const { default: defaultPreferences, [String(id)]: idPrefs } = getPreferencesState(state).activities;
+  return { ...defaultPreferences, ...idPrefs };
+};
+
 export const selectActivityPreferences = createDeepEqualSelector(
-  getPreferencesState,
-  (state, id) => id,
-  (state, id) => {
-    const { default: defaultPreferences, [id]: idPrefs } = state.activities;
-    return { ...defaultPreferences, ...idPrefs };
-  }
+  getActivityPreferences, (res) => res
 );
 
-/**
- * @param {unknown} state
- * @param {[string, string, ...string[]]} keyPath should be length >= 2
- * @returns {any}
- */
-export const selectPreferenceFree = (state, keyPath) => {
+export const getPreferenceFree = (state: RootState, keyPath: PreferencesKeyPath) => {
   const copyPath = [...keyPath];
   const firstMainArea = copyPath.shift();
   const localArea = copyPath.shift();
@@ -166,5 +185,9 @@ export const selectPreferenceFree = (state, keyPath) => {
   if (lastKey) return lastObj[lastKey];
   return lastObj;
 }
+
+export const selectPreferenceFree = createDeepEqualSelector(
+  getPreferenceFree, (res) => res
+);
 
 export default preferencesReducer;

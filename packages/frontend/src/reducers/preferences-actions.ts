@@ -1,4 +1,5 @@
-import type { AsyncAction } from '../types.ts';
+import type { AsyncAction } from '../types';
+import { PreferencesKeyPath } from './preferences';
 
 // SAGA TRIGGERS
 export const FETCH_USER_PREFS = 'preferences/FETCH_USER_PREFERENCES';
@@ -8,21 +9,21 @@ export const triggerFetchUserPrefs = (): AsyncAction => ({
 });
 
 export const FETCH_ACTIVITY_PREFS = 'preferences/FETCH_ACTIVITY_PREFERENCES';
-export const triggerFetchActivityPrefs = (activityId): AsyncAction => ({
+export const triggerFetchActivityPrefs = (activityId: number): AsyncAction => ({
   type: FETCH_ACTIVITY_PREFS,
   payload: { activityId },
   key: `${FETCH_ACTIVITY_PREFS}-${activityId}`,
 });
 
 export const SET_ACTIVITY_PREFS = 'preferences/SET_ACTIVITY_PREFERENCES';
-export const triggerSetActivityPrefs = (activityId, preferences): AsyncAction => ({
+export const triggerSetActivityPrefs = (activityId: number, preferences?: any): AsyncAction => ({
   type: SET_ACTIVITY_PREFS,
   payload: { activityId, preferences },
   key: SET_ACTIVITY_PREFS,
 });
 
 export const SET_USER_PREFS = 'preferences/SET_USER_PREFERENCES';
-export const triggerSetUserPrefs = (preferences): AsyncAction => ({
+export const triggerSetUserPrefs = (preferences?: any): AsyncAction => ({
   type: SET_USER_PREFS,
   payload: preferences,
   key: SET_USER_PREFS,
@@ -41,7 +42,7 @@ export const setActivityPrefDefaultsAct = (defaults) => ({
 });
 
 export const REDUCER_SET_ACTIVITY_PREFS = 'preferencesReducer/SET_ACTIVITY_PREFERENCES';
-export const setActivityPrefsAct = (activityId, preferences) => ({
+export const setActivityPrefsAct = (activityId: number, preferences) => ({
   type: REDUCER_SET_ACTIVITY_PREFS,
   payload: { activityId, preferences },
 });
@@ -53,7 +54,7 @@ export const setGlobalPrefsAct = (preferences) => ({
 });
 
 export const SET_PREFS_FREE = 'preferencesReducer/SET_PREFERENCE_FREE';
-export const setPrefsFreeAct = (keyPath, value) => ({
+export const setPrefsFreeAct = (keyPath: PreferencesKeyPath, value) => ({
   type: SET_PREFS_FREE,
   payload: { keyPath, value },
 });
