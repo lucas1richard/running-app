@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import { TOGGLE_COMPARED_ACTIVITY } from './multimap-actions';
 import { selectActivity } from './activities';
 import { createDeepEqualSelector } from '../utils';
+import type { RootState } from '.';
 
 const initialState = {
   comparedActivityIds: [],
@@ -21,15 +22,14 @@ const multimapReducer = (state = initialState, action) => {
   }
 };
 
-export const getMultimapState = (state) => state.multimap;
+export const getMultimapState = (state: RootState) => state.multimap;
 
 export const selectComparedActivityIds = createDeepEqualSelector(
   [getMultimapState],
   (state) => state.comparedActivityIds
 );
 
-export const selectComparedActivities = createDeepEqualSelector(
-  [(state) => state, selectComparedActivityIds],
-  (state, ids) => ids.map((id) => selectActivity(state, id)));
+const getComparedActivities = (state: RootState, ids: number[]) => ids.map((id) => selectActivity(state, id));
+export const selectComparedActivities = createDeepEqualSelector(getComparedActivities, (res) => res);
 
 export default multimapReducer;
