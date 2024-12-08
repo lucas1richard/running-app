@@ -1,13 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  type FC,
+  type ChangeEventHandler,
+  type FormEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
+import { useDispatch } from 'react-redux';
 
 import { selectActivity } from '../../reducers/activities';
 import { useGetApiStatus } from '../../reducers/apiStatus';
-import Shimmer from '../../Loading/Shimmer';
 import { triggerFetchWeather } from '../../reducers/activities-actions';
+import { useAppSelector } from '../../hooks/redux';
+import Shimmer from '../../Loading/Shimmer';
 
-const WeatherReporter = ({ id }) => {
-  const activity = useSelector((state) => selectActivity(state, id));
+type Props = {
+  id: number;
+};
+
+const WeatherReporter: FC<Props> = ({ id }) => {
+  const activity = useAppSelector((state) => selectActivity(state, id));
   const [sky, setSky] = useState(activity?.weather?.sky);
   const [temperature, setTemperature] = useState(activity?.weather?.temperature);
   const [humidity, setHumidity] = useState(activity?.weather?.humidity);
@@ -25,27 +37,27 @@ const WeatherReporter = ({ id }) => {
 
   const dispatch = useDispatch();
 
-  const handlePrecipChange = useCallback((event) => {
+  const handlePrecipChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
     setPrecipitation(event.target.value);
   }, []);
 
-  const handleSkyChange = useCallback((event) => {
+  const handleSkyChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
     setSky(event.target.value);
   }, []);
 
-  const handleTemperatureChange = useCallback((event) => {
+  const handleTemperatureChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
     setTemperature(event.target.value);
   }, []);
 
-  const handleHumidityChange = useCallback((event) => {
+  const handleHumidityChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
     setHumidity(event.target.value);
   }, []);
 
-  const handleWindChange = useCallback((event) => {
+  const handleWindChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
     setWind(event.target.value);
   }, []);
 
-  const handleSubmit = useCallback((event) => {
+  const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => {
     event.preventDefault();
     dispatch(triggerFetchWeather(id, { sky, temperature, humidity, wind, precipitation }));
   }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
@@ -80,7 +92,6 @@ const WeatherReporter = ({ id }) => {
                 name="rain"
                 value={precipitation}
                 onChange={handlePrecipChange}
-                // className={`${styles.quietInput}`}
               >
                 <option value={undefined}>Rain Condition</option>
                 <option value="none">No Rain</option>

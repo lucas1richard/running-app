@@ -1,6 +1,11 @@
-import React from 'react';
+import { type FC } from 'react';
 
-const SunIcon = ({ stroke = 'yellow', fill = 'yellow' }) => (
+type Props = {
+  stroke?: string;
+  fill?: string;
+};
+
+const SunIcon: FC<Props> = ({ stroke = 'yellow', fill = 'yellow' }) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={fill} stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="12" cy="12" r="5" fill={fill} />
     <line x1="12" y1="1" x2="12" y2="3" fill={fill} />
