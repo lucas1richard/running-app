@@ -1,4 +1,4 @@
-import type { AsyncAction } from '../types.ts';
+import type { AsyncAction } from '../types';
 
 // SAGA TRIGGERS
 export const FETCH_HEART_ZONES = 'heartzones/FETCH_HEART_ZONES';

@@ -157,29 +157,29 @@ export const selectListActivities = createDeepEqualSelector(
   }
 );
 
-const getActivity = (state: RootState, id: string) => getActivitiesState(state).activities[id];
+const getActivity = (state: RootState, id: number) => getActivitiesState(state).activities[id];
 export const selectActivity = createDeepEqualSelector(getActivity, (res) => res)
 
-const getActivityDetails = (state: RootState, id: string) => getActivitiesState(state).details[id];
+const getActivityDetails = (state: RootState, id: number) => getActivitiesState(state).details[id];
 export const selectActivityDetails = createDeepEqualSelector(getActivityDetails, (res) => res);
 
-const getActivityDetailsMulti = (state: RootState, ids: string[]) => {
+const getActivityDetailsMulti = (state: RootState, ids: number[]) => {
   const activities = getActivitiesState(state);
   return ids?.map((id) => activities.details[id])
 };
 export const selectActivityDetailsMulti = createDeepEqualSelector(getActivityDetailsMulti, (res) => res);
 
-const getStreamType = (state: RootState, id: string, findType: string) => getActivitiesState(state)
+const getStreamType = (state: RootState, id: number, findType: string) => getActivitiesState(state)
   .streams?.[id]?.stream?.find?.(({ type }) => type === findType);
 export const selectStreamType = createDeepEqualSelector(getStreamType, (res) => res);
 
-const getStreamTypeMulti = (state: RootState, ids: string[], findType: string) => {
+const getStreamTypeMulti = (state: RootState, ids: number[], findType: string) => {
   const activities = getActivitiesState(state);
   return ids?.map((id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType));
 }
 export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res);
 
-const getSimilarWorkouts = (state: RootState, id: string) => getActivitiesState(state).similarWorkouts[id] || emptyArray;
+const getSimilarWorkouts = (state: RootState, id: number) => getActivitiesState(state).similarWorkouts[id] || emptyArray;
 export const selectSimilarWorkouts = createDeepEqualSelector(getSimilarWorkouts, (res) => res);
 
 export const selectZoneGroupedRuns = createDeepEqualSelector(

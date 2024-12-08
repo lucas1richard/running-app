@@ -40,7 +40,7 @@ const getApplicableHeartZone = (state: RootState, date: string) => {
   // heart rate zones should be ordered by `start_date` descending
   return allzones.find(({ start_date }) => new Date(start_date) < currDate) || emptyObject;
 };
-export const makeSelectApplicableHeartZone = createDeepEqualSelector(getApplicableHeartZone, (res) => res);
+export const selectApplicableHeartZone = createDeepEqualSelector(getApplicableHeartZone, (res) => res);
 
 // /**
 //  * - If zones are configured to be relative to date, get the applicable zone.

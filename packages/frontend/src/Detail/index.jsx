@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
-import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
+import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
@@ -48,7 +48,7 @@ const ActivityDetailPage = () => {
 
   const configZonesId = useSelector(selectPreferencesZonesId);
   const allZones = useSelector(selectAllHeartZones);
-  const nativeZones = useSelector((state) => makeSelectApplicableHeartZone(state, activity.start_date));
+  const nativeZones = useSelector((state) => selectApplicableHeartZone(state, activity.start_date));
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
   const [tileBgColor, setTileBgColor, savePreferences] = usePreferenceControl(['activities', id, 'tileBackgroundIndicator']);

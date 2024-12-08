@@ -1,26 +1,30 @@
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { FC, useEffect } from 'react';
 import requestor from '../utils/requestor/index';
 import { convertHeartDataToZoneTimes } from '../utils';
 import { selectActivity, selectStreamType } from '../reducers/activities';
-import { makeSelectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
+import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
+import { useAppSelector } from '../hooks/redux';
+import { emptyObject } from '../constants';
 
 const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time'];
-const emptyObj = {};
 
-const DetailDataFetcher = ({ id }) => {
-  const activity = useSelector((state) => selectActivity(state, id)) || emptyObj;
-  const configZonesId = useSelector(selectPreferencesZonesId);
-  const allZones = useSelector(selectAllHeartZones);
-  const nativeZones = useSelector((state) => makeSelectApplicableHeartZone(state, activity.start_date));
+type Props = {
+  id: number;
+}
+
+const DetailDataFetcher: FC<Props> = ({ id }) => {
+  const activity = useAppSelector((state) => selectActivity(state, id)) || emptyObject;
+  const configZonesId = useAppSelector(selectPreferencesZonesId);
+  const allZones = useAppSelector(selectAllHeartZones);
+  const nativeZones = useAppSelector((state) => selectApplicableHeartZone(state, activity.start_date));
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
-  const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
+  const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
 
   useTriggerActionIfStatus(triggerFetchActivityDetail(id));
   useTriggerActionIfStatus(triggerFetchActivityPrefs(id));
