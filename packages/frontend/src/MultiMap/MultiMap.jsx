@@ -14,11 +14,11 @@ HighchartsMap(Highcharts);
 const emptyArray = [];
 const defHighlightedSegment = { start: 0, end: 0, color: 'white' };
 const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
-  const ids = activityConfigs.map(({ id }) => id);
+  const ids = useMemo(() => activityConfigs.map(({ id }) => id), [activityConfigs]);
   const activities = useSelector((state) => ids.map((id) => selectActivity(state, id)));
 
   const [progress, setProgress] = useState(0);
-  
+
   const segmentsArray = useSegments(ids);
   const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
   const longestStream = latlngStreamArray.reduce((acc, val) => Math.max(acc, val?.data?.length || 0), 0);
@@ -57,25 +57,37 @@ const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
     });
   }, [longestStream]);
 
-  const series = useMemo(() => {
-    return segmentsArray.map((segments, ix) => segments?.data?.map((segment, iy) => ({
+  const series = useMemo(() => showSegments
+    ? segmentsArray.map((segments, ix) => segments?.data?.map(([start, velocity, duration], iy) => ({
       type: 'mapline',
       name: `Segment ${iy + 1}`,
       data: [{
         geometry: {
           type: 'LineString',
           coordinates: coordsPure[ix]
-            .slice(segment[0], segment[0] + segment[2])
+            .slice(start, start + duration)
             .map(({ lon, lat }) => [lon, lat]),
         },
       }],
       showInLegend: false,
-      color: showSegments ? undefined : 'gray',
       animation: false,
       lineWidth: 6,
       enableMouseTracking: false,
-    })) || [], []);
-  }, [coordsPure, segmentsArray, showSegments]);
+    })) || [], [])
+    : [{
+      type: 'mapline',
+      data: coordsPure.map((coords) => ({
+        geometry: {
+          type: 'LineString',
+          coordinates: coords.map(({ lon, lat }) => [lon, lat]),
+        },
+      })),
+      showInLegend: false,
+      color: undefined,
+      animation: false,
+      lineWidth: 6,
+      enableMouseTracking: false,
+    }], [coordsPure, segmentsArray, showSegments]);
 
   const memoHighlightedSegment = useMemo(() => {
     return {
@@ -111,12 +123,23 @@ const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
     };
   }, [animate, animating, coordsPure.length]);
 
-  const options = useMemo(() => 
-    /** @type {Highcharts.Options} */
-    ({
+  const hoverProgress = useMemo(() => (
+    <div className="flex flex-wrap height-4rem full-width border dls-white-bg">
+    {new Array(longestStream).fill(0).map((_, ix) => (
+      <div
+        key={ix}
+        className="flex-item-grow flex-item-shrink"
+        onMouseOver={() => setProgress(ix)}
+      />
+    ))}
+  </div>), [longestStream]);
+
+  const options = useMemo(() =>
+  /** @type {Highcharts.Options} */
+  ({
     chart: {
       map: 'custom/world',
-      height: 900,
+      height: 1200,
       animation: false,
     },
     title: {
@@ -154,17 +177,15 @@ const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
         options={options}
       />
       <div>
-        <button onClick={() => setAnimating((prev) => !prev)}>Animate</button>
+        <button onClick={() => setAnimating((prev) => !prev)}>
+          {animating ? 'Stop Animation' : 'Animate'}
+        </button>
       </div>
 
       {isNaN(indexPointer) && (
         <div>
           Hover to see progress on the map &darr;
-          <div className="flex flex-wrap height-4rem full-width border dls-white-bg">
-            {new Array(longestStream).fill(0).map((_, ix) => (
-              <div className="flex-item-grow flex-item-shrink" key={ix} onMouseOver={() => setProgress(ix)} />
-            ))}
-          </div>
+          {hoverProgress}
         </div>
       )}
     </div>
