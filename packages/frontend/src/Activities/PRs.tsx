@@ -1,13 +1,12 @@
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
-import { getPRs, getPRsByDate } from '../reducers/prs';
+import { getPRs } from '../reducers/prs';
 import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
+import { useAppSelector } from '../hooks/redux';
 
 const PRs = () => {
-  const allTimePrs = useSelector(getPRs);
-  const prsByDate = useSelector(getPRsByDate);
+  const allTimePrs = useAppSelector(getPRs);
 
   return (
     <div>
@@ -30,12 +29,6 @@ const PRs = () => {
           </div>
         ))}
       </div>
-      {/* <h3>PRs By Date</h3>
-      <ul>
-        {prsByDate.map((pr) => (
-          <li key={pr.id}>{pr.name}</li>
-        ))}
-      </ul> */}
     </div>
   );
 };

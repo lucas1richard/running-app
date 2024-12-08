@@ -1,9 +1,8 @@
 import { useCallback, useState } from 'react';
 import dayjs, { type ManipulateType } from 'dayjs';
-import { useSelector } from 'react-redux';
 import { selectTimeGroupedRuns } from '../reducers/activities';
 import { Fragment } from 'react/jsx-runtime';
-import { RootState } from '../reducers';
+import { useAppSelector } from '../hooks/redux';
 
 const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'month' }) => {
   const [tg, setTimeGroup] = useState<ManipulateType>(timeGroup);
@@ -11,7 +10,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
     setTimeGroup(e.target.value as ManipulateType);
   }, []);
   
-  const activities = useSelector<RootState, ReturnType<typeof selectTimeGroupedRuns>>((state) => selectTimeGroupedRuns(state, tg));
+  const activities = useAppSelector((state) => selectTimeGroupedRuns(state, tg));
 
   return (
     <div className="card">
