@@ -30,6 +30,7 @@ import {
 } from '../PreferenceControl/keyPaths';
 import BestEfforts from './BestEfforts';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
+import { emptyArray, emptyObject } from '../constants';
 
 const ActivityDetailPage = () => {
   const { id } = useParams();
@@ -42,7 +43,7 @@ const ActivityDetailPage = () => {
 
   const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
-  const activity = useSelector((state) => selectActivity(state, id)) || {};
+  const activity = useSelector((state) => selectActivity(state, id)) || emptyObject;
   const [showMap, setShowMap] = useState(false);
 
   const configZonesId = useSelector(selectPreferencesZonesId);
@@ -54,7 +55,7 @@ const ActivityDetailPage = () => {
 
   const details = useSelector((state) => selectActivityDetails(state, id));
 
-  const { backgroundColor } = getWeatherStyles(activity.weather || {});
+  const { backgroundColor } = getWeatherStyles(activity.weather || emptyObject);
 
   return (
     <div className={`pad`}>
@@ -166,7 +167,7 @@ const ActivityDetailPage = () => {
               <SegmentsDetailDisplay
                 heartData={heartRateStream?.data}
                 velocityData={velocityStream?.data}
-                segments={details?.segment_efforts || []}
+                segments={details?.segment_efforts || emptyArray}
               />
             </PreferenceControl>
 

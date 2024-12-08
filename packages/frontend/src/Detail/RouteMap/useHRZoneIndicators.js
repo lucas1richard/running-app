@@ -5,14 +5,15 @@ import getSmoothVal from '../HeartZonesChart/getSmoothVal';
 import { condenseZonesFromHeartRate } from '../../utils';
 import { selectHeartZones } from '../../reducers/heartzones';
 import { hrZonesText } from '../../colors/hrZones';
+import { emptyArray, emptyObject } from '../../constants';
 
 const useHRZoneIndicators = (ids = [], pointer, smoothAverageWindow) => {
-  const activity = useSelector((state) => selectActivity(state, ids[0])) || {};
-  const heartRateStreamMulti = useSelector((state) => selectStreamTypeMulti(state, ids, 'heartrate')) || [];
-  const heartRateArray = heartRateStreamMulti.map((stream) => stream?.data || []);
+  const activity = useSelector((state) => selectActivity(state, ids[0])) || emptyObject;
+  const heartRateStreamMulti = useSelector((state) => selectStreamTypeMulti(state, ids, 'heartrate')) || emptyArray;
+  const heartRateArray = heartRateStreamMulti.map((stream) => stream?.data || emptyArray);
 
   const timeStreamMulti = useSelector((state) => selectStreamTypeMulti(state, ids, 'time'));
-  const timeArray = timeStreamMulti.map((stream) => stream?.data || []);
+  const timeArray = timeStreamMulti.map((stream) => stream?.data || emptyArray);
 
   const fullTimeArray = useMemo(() => {
     return timeArray.map((time) => {

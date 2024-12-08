@@ -12,12 +12,13 @@ import { selectHeartZones } from '../reducers/heartzones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
 import PRMedal from '../Common/Icons/PRMedal';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
+import { emptyArray, emptyObject } from '../constants';
 
 const Tile = ({ activity, backgroundIndicator }) => {
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date))
-  const bestEfforts = activity?.bestEfforts || [];
+  const bestEfforts = activity?.bestEfforts || emptyArray;
 
   const onMouseEnter = useCallback(() => {
     setHovered(true);
@@ -25,7 +26,7 @@ const Tile = ({ activity, backgroundIndicator }) => {
 
   const duration = <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />;
   
-  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather || {})) || {};
+  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather || emptyObject)) || emptyObject;
   
   return (
     <div className="dls-white-bg border-radius-1 border-2">

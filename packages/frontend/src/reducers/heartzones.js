@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
 import { selectPreferencesZonesId } from './preferences';
 import { SET_HEART_ZONES } from './heartzones-actions';
+import { emptyObject } from '../constants';
 
 const heartzonesInitialState = {
   record: [],
@@ -33,7 +34,7 @@ export const makeSelectApplicableHeartZone = createDeepEqualSelector(
   (allzones, date) => {
     const currDate = new Date(date);
     // heart rate zones should be ordered by `start_date` descending
-    return allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
+    return allzones.find(({ start_date }) => new Date(start_date) < currDate) || emptyObject;
   }
 );
 

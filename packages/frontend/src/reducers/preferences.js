@@ -8,6 +8,7 @@ import {
   SET_GLOBAL_PREFS,
   SET_PREFS_FREE,
 } from './preferences-actions';
+import { emptyObject } from '../constants';
 
 const initialState = {
   isModified: false,
@@ -161,7 +162,7 @@ export const selectPreferenceFree = (state, keyPath) => {
     ...state.preferences[firstMainArea][localArea],
   };
   const lastKey = copyPath.pop();
-  const lastObj = copyPath.reduce((acc, key) => acc[key] || {}, combined);
+  const lastObj = copyPath.reduce((acc, key) => acc[key] || emptyObject, combined);
   if (lastKey) return lastObj[lastKey];
   return lastObj;
 }

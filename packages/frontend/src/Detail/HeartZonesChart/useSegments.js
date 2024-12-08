@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { selectActivityDetailsMulti } from '../../reducers/activities';
 import roundToNearest from '../../utils/roundToNearest';
 import { convertMetricSpeedToMPH } from '../../utils';
+import { emptyArray } from '../../constants';
 
 /**
  * Returns the segments for the given activity ids.
@@ -10,8 +11,8 @@ import { convertMetricSpeedToMPH } from '../../utils';
  */
 const useSegments = (ids = []) => {
   const multiDetails = useSelector((state) => selectActivityDetailsMulti(state, ids));
-  const lapsMulti = useMemo(() => multiDetails.map((val) => val?.laps || []), [multiDetails]);
-  const splitsMiMulti = useMemo(() => multiDetails.map((val) => val?.splits_standard || []), [multiDetails]);
+  const lapsMulti = useMemo(() => multiDetails.map((val) => val?.laps || emptyArray), [multiDetails]);
+  const splitsMiMulti = useMemo(() => multiDetails.map((val) => val?.splits_standard || emptyArray), [multiDetails]);
 
   const lapsData = useMemo(
     () => {

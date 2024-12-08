@@ -37,7 +37,7 @@ const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
 
   const coordsPure = useMemo(
     () => latlngStreamArray.map(
-      (latlngStream) => latlngStream?.data?.map(([lat, lon]) => ({ lon, lat })) || []
+      (latlngStream) => latlngStream?.data?.map(([lat, lon]) => ({ lon, lat })) || emptyArray
     ),
     [latlngStreamArray]
   );
@@ -73,7 +73,7 @@ const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
       animation: false,
       lineWidth: 6,
       enableMouseTracking: false,
-    })) || [], [])
+    })) || emptyArray, [])
     : [{
       type: 'mapline',
       data: coordsPure.map((coords) => ({

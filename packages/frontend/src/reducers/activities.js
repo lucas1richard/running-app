@@ -16,6 +16,7 @@ import {
   SET_WEATHER_DATA,
 } from './activities-actions';
 import { selectAllHeartZones } from './heartzones';
+import { emptyArray, emptyObject } from '../constants';
 
 dayjs.extend(weekday);
 
@@ -38,7 +39,7 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
         nextState.activities = Object.fromEntries(
           action.payload.map((activity) => [activity.id, {
             ...activity, zonesCaches: Object.fromEntries(
-              activity.zonesCaches?.map?.((zoneCache) => [zoneCache.heartZoneId, zoneCache]) || []
+              activity.zonesCaches?.map?.((zoneCache) => [zoneCache.heartZoneId, zoneCache]) || emptyArray
             )
           }])
         );
@@ -167,7 +168,7 @@ export const selectActivityDetails = createDeepEqualSelector(
 export const selectActivityDetailsMulti = createDeepEqualSelector(
   getActivitiesState,
   (state, ids) => ids,
-  (activities, ids) => ids?.map((id) => activities.details[id]) || []
+  (activities, ids) => ids?.map((id) => activities.details[id]) || emptyArray
 );
 
 export const selectStreamType = createDeepEqualSelector(
@@ -189,7 +190,7 @@ export const selectStreamTypeMulti = createDeepEqualSelector(
 export const selectSimilarWorkouts = createDeepEqualSelector(
   getActivitiesState,
   (state, id) => id,
-  (activities, id) => (activities.similarWorkouts[id] || []).map((id) => activities.activities[id])
+  (activities, id) => (activities.similarWorkouts[id] || emptyArray).map((id) => activities.activities[id])
 );
 
 export const selectZoneGroupedRuns = createDeepEqualSelector(
@@ -203,7 +204,7 @@ export const selectZoneGroupedRuns = createDeepEqualSelector(
       const dict = new Map();
       activities.forEach((run) => {
         const currDate = new Date(run.start_date_local);
-        const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || {};
+        const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || emptyObject;
         const { start_date } = zones;
         if (!dict.has(start_date)) {
           dict.set(start_date, { start: start_date, runs: [], zones });
