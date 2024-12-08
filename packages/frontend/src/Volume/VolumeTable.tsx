@@ -1,17 +1,17 @@
 import { useCallback, useState } from 'react';
-import dayjs, { OpUnitType } from 'dayjs';
+import dayjs, { type ManipulateType } from 'dayjs';
 import { useSelector } from 'react-redux';
 import { selectTimeGroupedRuns } from '../reducers/activities';
 import { Fragment } from 'react/jsx-runtime';
+import { RootState } from '../reducers';
 
-const VolumeTable: React.FC<{ timeGroup: OpUnitType }> = ({ timeGroup = 'month' }) => {
-  const [tg, setTimeGroup] = useState<OpUnitType>(timeGroup);
+const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'month' }) => {
+  const [tg, setTimeGroup] = useState<ManipulateType>(timeGroup);
   const handleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
-    setTimeGroup(e.target.value as OpUnitType);
+    setTimeGroup(e.target.value as ManipulateType);
   }, []);
   
-  // @ts-ignore-next-line - this is a selector
-  const activities = useSelector((state) => selectTimeGroupedRuns(state, tg));
+  const activities = useSelector<RootState, ReturnType<typeof selectTimeGroupedRuns>>((state) => selectTimeGroupedRuns(state, tg));
 
   return (
     <div className="card">

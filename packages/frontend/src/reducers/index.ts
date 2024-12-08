@@ -15,4 +15,6 @@ const reducer = combineReducers({
   prs: prsReducer,
 });
 
+export type RootState = ReturnType<typeof reducer>;
+
 export default reducer;

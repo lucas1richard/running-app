@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import deepmerge from 'deepmerge';
-import dayjs, { OpUnitType } from 'dayjs';
+import dayjs, { type ManipulateType } from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 
 import { createDeepEqualSelector } from '../utils';
@@ -17,6 +17,7 @@ import {
 } from './activities-actions';
 import { selectAllHeartZones } from './heartzones';
 import { emptyArray, emptyObject } from '../constants';
+import type { RootState } from '.';
 
 dayjs.extend(weekday);
 
@@ -31,7 +32,12 @@ const activitiesInitialState = {
   error: undefined,
 };
 
-const activitiesReducer = (state = activitiesInitialState, action = {}) => {
+interface Action {
+  type: string;
+  payload?: any;
+}
+
+const activitiesReducer = (state = activitiesInitialState, action: Action = { type: '' }) => {
   switch (action.type) {
     case SET_ACTIVITIES: {
       const activitiesOrder = action.payload.map(({ id }) => id);
@@ -111,7 +117,7 @@ const activitiesReducer = (state = activitiesInitialState, action = {}) => {
   }
 };
 
-const getActivitiesState = (state) => state.activities;
+const getActivitiesState = (state: RootState) => state.activities;
 
 export const selectActivities = createDeepEqualSelector(
   [getActivitiesState],
@@ -119,8 +125,8 @@ export const selectActivities = createDeepEqualSelector(
     const order = [...activities.activitiesOrder];
 
     order.sort((a, b) => {
-      const sStart = new Date(activities.activities[b].start_date_local); 
-      const sEnd = new Date(activities.activities[a].start_date_local);
+      const sStart = new Date(activities.activities[b].start_date_local).getTime(); 
+      const sEnd = new Date(activities.activities[a].start_date_local).getTime();
       return sStart - sEnd;
     });
 
@@ -139,8 +145,8 @@ export const selectListActivities = createDeepEqualSelector(
       const second = sortOrder === 'asc' ? b : a;
 
       if (sortBy === 'start_date') {
-        const sStart = new Date(activities.activities[first].start_date_local); 
-        const sEnd = new Date(activities.activities[second].start_date_local);
+        const sStart = new Date(activities.activities[first].start_date_local).getTime(); 
+        const sEnd = new Date(activities.activities[second].start_date_local).getTime();
         return sStart - sEnd;
       }
 
@@ -151,47 +157,30 @@ export const selectListActivities = createDeepEqualSelector(
   }
 );
 
-export const makeSelectActivitySummary = (id) => (state) => state.activities.summary[id];
+const getActivity = (state: RootState, id: string) => getActivitiesState(state).activities[id];
+export const selectActivity = createDeepEqualSelector(getActivity, (res) => res)
 
-export const selectActivity = createDeepEqualSelector(
-  getActivitiesState,
-  (state, id) => id,
-  (activities, id) => activities.activities[id]
-)
+const getActivityDetails = (state: RootState, id: string) => getActivitiesState(state).details[id];
+export const selectActivityDetails = createDeepEqualSelector(getActivityDetails, (res) => res);
 
-export const selectActivityDetails = createDeepEqualSelector(
-  getActivitiesState,
-  (state, id) => id,
-  (activities, id) => activities.details[id]
-);
+const getActivityDetailsMulti = (state: RootState, ids: string[]) => {
+  const activities = getActivitiesState(state);
+  return ids?.map((id) => activities.details[id])
+};
+export const selectActivityDetailsMulti = createDeepEqualSelector(getActivityDetailsMulti, (res) => res);
 
-export const selectActivityDetailsMulti = createDeepEqualSelector(
-  getActivitiesState,
-  (state, ids) => ids,
-  (activities, ids) => ids?.map((id) => activities.details[id]) || emptyArray
-);
+const getStreamType = (state: RootState, id: string, findType: string) => getActivitiesState(state)
+  .streams?.[id]?.stream?.find?.(({ type }) => type === findType);
+export const selectStreamType = createDeepEqualSelector(getStreamType, (res) => res);
 
-export const selectStreamType = createDeepEqualSelector(
-  getActivitiesState,
-  (state, id) => id,
-  (state, id, findType) => findType,
-  (activities, id, findType) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)
-);
+const getStreamTypeMulti = (state: RootState, ids: string[], findType: string) => {
+  const activities = getActivitiesState(state);
+  return ids?.map((id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType));
+}
+export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res);
 
-export const selectStreamTypeMulti = createDeepEqualSelector(
-  getActivitiesState,
-  (state, ids) => ids,
-  (state, ids, findType) => findType,
-  (activities, ids, findType) => ids.map(
-    (id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)
-  )
-);
-
-export const selectSimilarWorkouts = createDeepEqualSelector(
-  getActivitiesState,
-  (state, id) => id,
-  (activities, id) => (activities.similarWorkouts[id] || emptyArray).map((id) => activities.activities[id])
-);
+const getSimilarWorkouts = (state: RootState, id: string) => getActivitiesState(state).similarWorkouts[id] || emptyArray;
+export const selectSimilarWorkouts = createDeepEqualSelector(getSimilarWorkouts, (res) => res);
 
 export const selectZoneGroupedRuns = createDeepEqualSelector(
   selectListActivities,
@@ -213,41 +202,37 @@ export const selectZoneGroupedRuns = createDeepEqualSelector(
       });
   
       const vals = Array.from(dict.values());
-      vals.sort((a, b) => new Date(b.start) - new Date(a.start));
+      vals.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
       
       return vals;
   }
 );
 
-export const selectTimeGroupedRuns = createDeepEqualSelector(
-  [
-    selectActivities,
-    (state, timeGroup: OpUnitType = 'week') => timeGroup
-  ],
-  (activities, timeGroup = 'week') => {
-    const nextSunday = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
-    const boxes = [];
-    let curr = nextSunday;
-    let next = curr.subtract(1, timeGroup);
-    let runs = [];
-    let sum = 0;
-    const numActivities = activities.length;
+const getTimeGroupedRuns = (state: RootState, timeGroup: ManipulateType = 'week') => {
+  const activities = selectActivities(state);
+  const nextSunday = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
+  const boxes = [];
+  let curr = nextSunday;
+  let next = curr.subtract(1, timeGroup);
+  let runs = [];
+  let sum = 0;
+  const numActivities = activities.length;
 
-    for (let i = 0; i < numActivities; i++) {
-      const run = activities[i];
-      if (dayjs(run.start_date_local).isBefore(next)) {
-        boxes.push({ start: next, sum, runs });
-        runs = [];
-        curr = next;
-        sum = 0;
-        next = curr.subtract(1, timeGroup);
-      }
-      runs.push(run);
-      sum += run.distance_miles;
+  for (let i = 0; i < numActivities; i++) {
+    const run = activities[i];
+    if (dayjs(run.start_date_local).isBefore(next)) {
+      boxes.push({ start: next, sum, runs });
+      runs = [];
+      curr = next;
+      sum = 0;
+      next = curr.subtract(1, timeGroup);
     }
-
-    return boxes;
+    runs.push(run);
+    sum += run.distance_miles;
   }
-);
+
+  return boxes;
+};
+export const selectTimeGroupedRuns = createDeepEqualSelector(getTimeGroupedRuns, (res) => res);
 
 export default activitiesReducer;
