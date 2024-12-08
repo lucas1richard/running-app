@@ -1,5 +1,5 @@
 import { produce } from 'immer';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch } from 'react-redux';
 import {
   SET_API_ERROR,
   SET_API_LOADING,
@@ -7,6 +7,9 @@ import {
 } from './apiStatus-actions';
 import { createDeepEqualSelector } from '../utils';
 import { useEffect } from 'react';
+import type { RootState } from '.';
+import { useAppSelector } from '../hooks/redux';
+import { AsyncAction } from '../types';
 
 export const loading = 'loading';
 export const success = 'success';
@@ -47,24 +50,22 @@ const apiStatusReducer = (state = initialState, action) => {
   return state;
 };
 
-const getApiStatusState = (state) => state.apiStatus;
+const getApiStatusState = (state: RootState) => state.apiStatus;
 
-export const selectApiStatus = createDeepEqualSelector(
-  getApiStatusState,
-  (state, key) => key,
-  (state, key) => state[key]?.status || idle
-);
+const getApiStatus = (state: RootState, key: string) => getApiStatusState(state)[key]?.status || idle;
+export const selectApiStatus = createDeepEqualSelector(getApiStatus, (status) => status);
 
 export const selectLoadingKeys = createDeepEqualSelector(
   getApiStatusState,
   (state) => Object.keys(state).filter((key) => state[key].status === loading)
 );
 
-export const makeStatusSelector = (key) => (state) => selectApiStatus(state, key);
-export const useGetApiStatus = (key) => useSelector(makeStatusSelector(key?.key || key));
-export const useGetLoadingKeys = () => useSelector(selectLoadingKeys, shallowEqual);
+export const useGetApiStatus = (key: AsyncAction | string) => useAppSelector(
+  (state) => selectApiStatus(state, typeof key === 'string' ? key : key?.key)
+);
+export const useGetLoadingKeys = () => useAppSelector(selectLoadingKeys, shallowEqual);
 
-export const useTriggerActionIfStatus = (action, status = idle, { defer = false } = {}) => {
+export const useTriggerActionIfStatus = (action: AsyncAction, status = idle, { defer = false } = {}) => {
   const dispatch = useDispatch();
   const apiStatus = useGetApiStatus(action);
   useEffect(() => {
