@@ -1,7 +1,7 @@
-import React from 'react';
+import { type FC } from 'react';
 import AddZonesForm from './AddZonesForm';
 
-const HeartRateZones = () => {
+const HeartRateZones: FC = () => {
   return (
     <div>
       <h1>Heart Rate Zones</h1>

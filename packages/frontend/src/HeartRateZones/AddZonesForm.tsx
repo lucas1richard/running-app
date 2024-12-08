@@ -1,27 +1,45 @@
-import React, { useCallback, useState } from 'react';
+import {
+  type FC,
+  type ChangeEventHandler,
+  type FormEventHandler,
+  useCallback,
+  useState
+} from 'react';
 import { useDispatch } from 'react-redux';
 import { addHeartZonesAct } from '../reducers/heartzones-actions';
 
-const AddZonesForm = () => {
-  const [z1, setZ1] = useState();
-  const [z2, setZ2] = useState();
-  const [z3, setZ3] = useState();
-  const [z4, setZ4] = useState();
-  const [z5, setZ5] = useState();
-  const [starting, setStarting] = useState();
+const AddZonesForm: FC = () => {
+  const [z1, setZ1] = useState('');
+  const [z2, setZ2] = useState('');
+  const [z3, setZ3] = useState('');
+  const [z4, setZ4] = useState('');
+  const [z5, setZ5] = useState('');
+  const [starting, setStarting] = useState('');
   const dispatch = useDispatch();
 
-  const onFormSubmit = useCallback((ev) => {
+  const onFormSubmit = useCallback<FormEventHandler<HTMLFormElement>>((ev) => {
     ev.preventDefault();
     dispatch(addHeartZonesAct({ z1, z2, z3, z4, z5, starting }));
   }, [z1, z2, z3, z4, z5, starting, dispatch]);
 
-  const z1Change = useCallback((ev) => setZ1(ev.target.value), []);
-  const z2Change = useCallback((ev) => setZ2(ev.target.value), []);
-  const z3Change = useCallback((ev) => setZ3(ev.target.value), []);
-  const z4Change = useCallback((ev) => setZ4(ev.target.value), []);
-  const z5Change = useCallback((ev) => setZ5(ev.target.value), []);
-  const startingChange = useCallback((ev) => setStarting(ev.target.value), []);
+  const z1Change = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => setZ1(ev.target.value), []
+  );
+  const z2Change = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => setZ2(ev.target.value), []
+  );
+  const z3Change = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => setZ3(ev.target.value), []
+  );
+  const z4Change = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => setZ4(ev.target.value), []
+  );
+  const z5Change = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => setZ5(ev.target.value), []
+  );
+  const startingChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    (ev) => setStarting(ev.target.value), []
+  );
 
   return (
     <form onSubmit={onFormSubmit} style={{ display: 'flex', gap: '2rem', textAlign: 'center' }}>
@@ -64,9 +82,6 @@ const AddZonesForm = () => {
       <button type="submit">Submit</button>
     </form>
   );
-}
-
-AddZonesForm.propTypes = {
 };
 
 export default AddZonesForm;
