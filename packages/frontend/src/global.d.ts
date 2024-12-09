@@ -23,7 +23,7 @@ type Weather = {
 
 type ZonesCaches = {};
 
-interface Activitiy {
+interface Activity {
   id: number;
   start_date: string;
   start_date_local: string;
@@ -37,9 +37,30 @@ interface Activitiy {
   average_speed: number;
   average_heartrate: number;
   max_heartrate: number;
-  
+  summary_polyline?: string;
+  map: {
+    summary_polyline: string;
+  };
 }
 
 interface ActivityDetails {
   
 }
+
+type HeartZone = {
+  id: number;
+  z1: number;
+  z2: number;
+  z3: number;
+  z4: number;
+  z5: number;
+};
+
+type HeartZoneCache = {
+  heartZoneId: number;
+  seconds_z1: number;
+  seconds_z2: number;
+  seconds_z3: number;
+  seconds_z4: number;
+  seconds_z5: number;
+};

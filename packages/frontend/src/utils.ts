@@ -4,16 +4,16 @@ import fastDeepEqual from 'fast-deep-equal';
 import gradientScale from './colors/gradient-scale';
 
 /**
- * @param {number} s number of seconds
+ * @param {number} numSeconds number of seconds
  * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
  */
-export const getDuration = (s, text = [' sec ', ' min ', ' hr ']) => {
-  if (s === Infinity || !s) {
+export const getDuration = (numSeconds: number, text = [' sec ', ' min ', ' hr ']) => {
+  if (numSeconds === Infinity || !numSeconds) {
     return [];
   }
-  const seconds = s % 60;
-  const hours = Math.floor(s / 3600);
-  const minutes = Math.floor(s / 60) % 60;
+  const seconds = numSeconds % 60;
+  const hours = Math.floor(numSeconds / 3600);
+  const minutes = Math.floor(numSeconds / 60) % 60;
 
   const display = [seconds, minutes, hours];
 
@@ -23,16 +23,16 @@ export const getDuration = (s, text = [' sec ', ' min ', ' hr ']) => {
 };
 
 /**
- * @param {number} s number of seconds
+ * @param {number} numSeconds number of seconds
  * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
  * @param {string} joinOn the string to join the units on
  */
-export const getDurationString = (s, text = undefined, joinOn = ' ') => {
-  const durationArr = getDuration(s, text);
+export const getDurationString = (numSeconds: number, text = undefined, joinOn = ' ') => {
+  const durationArr = getDuration(numSeconds, text);
   return durationArr.map(([num, str]) => `${num}${str}`).join(joinOn);
 };
 
-export const condenseZonesFromHeartRate = (zones, heartrate) => {
+export const condenseZonesFromHeartRate = (zones: HeartZone, heartrate: number[]) => {
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
   const zone = rangeMap.findIndex(
@@ -58,7 +58,7 @@ export const condenseZonesFromHeartRate = (zones, heartrate) => {
 };
 
 // numIxAvailable referring to the length of a constant array of X (for ex: number gradient colors)
-export const getPercentileToIx = (numIxAvailable, data, refIx) => {
+export const getPercentileToIx = (numIxAvailable: number, data: number[], refIx: number) => {
   // where among the original data does refVal rank?
 
   // but we care about what's normal, don't we? otherwise is it useful under normal human consciousness?
@@ -70,7 +70,7 @@ export const getPercentileToIx = (numIxAvailable, data, refIx) => {
   return Math.floor(numIxAvailable * (data[refIx] / 100));
 };
 
-export const condenseGradeColorToPlot = (colors) => {
+export const condenseGradeColorToPlot = (colors: string[]) => {
   const ans = [{
     color: colors[0],
     from: 0,
@@ -91,7 +91,7 @@ export const condenseGradeColorToPlot = (colors) => {
   return ans;
 };
 
-export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
+export const getGradeColor = (dataArr: number[], { relativeMode = false, vertex = 10 } = {}) => {
   // high, min, percentile diff
   const high = Math.max.apply(null, dataArr);
   const low = relativeMode ? Math.min.apply(null, dataArr) : -1 * vertex;
@@ -107,7 +107,7 @@ export const getGradeColor = (dataArr, { relativeMode, vertex = 10 } = {}) => {
   return condenseGradeColorToPlot(colors);
 };
 
-export const convertHeartDataToZoneTimes = (heartData, zones) => {
+export const convertHeartDataToZoneTimes = (heartData: number[], zones: HeartZone) => {
   if (!heartData) return [];
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
@@ -118,14 +118,14 @@ export const convertHeartDataToZoneTimes = (heartData, zones) => {
     return newacc;
   }, new Array(5).fill(0));
 };
-export const convertHeartDataToZoneSpeeds = (zones, heartData, velocityData) => {
+export const convertHeartDataToZoneSpeeds = (zones: HeartZone, heartData: number[], velocityData: number[]) => {
   if (!heartData || !velocityData) return [];
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
   const zoneSpeeds = heartData.reduce((acc, heartrate, index) => {
     const zone = rangeMap.findIndex((threshhold, ix) => threshhold <= heartrate && rangeMap[ix + 1] > heartrate);
     const newacc = [...acc];
-    newacc[zone] = (newacc[zone] || { zone: zone + 1, mps: 0, count: 0 });
+    newacc[zone] = (newacc[zone] || { zone: zone + 1, mps: 0, count: 0, min: 0, max: 0 });
     newacc[zone].mps += velocityData[index];
     newacc[zone].count += 1;
     newacc[zone].max = Math.max(newacc[zone].max, velocityData[index]);
@@ -141,12 +141,12 @@ export const convertHeartDataToZoneSpeeds = (zones, heartData, velocityData) => 
   });
 };
 
-export const convertHeartDataToZonePercents = (heartData, zones) => convertHeartDataToZoneTimes(
+export const convertHeartDataToZonePercents = (heartData: number[], zones: HeartZone) => convertHeartDataToZoneTimes(
   heartData,
   zones
 ).map((time) => (100 * time / heartData?.length).toFixed(2));
 
-export const convertZonesCacheToPercents = (caches) => {
+export const convertZonesCacheToPercents = (caches: HeartZoneCache) => {
   const arr = [
     caches.seconds_z1,
     caches.seconds_z2,
@@ -159,19 +159,22 @@ export const convertZonesCacheToPercents = (caches) => {
   return arr.map((time) => (100 * time / total).toFixed(2))
 };
 
-export const convertMetersToMiles = (distance) => Math.round((distance * 0.000621371) * 100) / 100;
-export const convertMetersToFt = (distance) => Math.round(distance * 3.28084);
-export const convertMetricSpeedToMPH = (metersPerSecond) => metersPerSecond * 2.237;
-export const getSecondsPerMile = (metersPerSecond) => {
+export const convertMetersToMiles = (distance: number) => Math.round((distance * 0.000621371) * 100) / 100;
+export const convertMetersToFt = (distance: number) => Math.round(distance * 3.28084);
+export const convertMetricSpeedToMPH = (metersPerSecond: number) => metersPerSecond * 2.237;
+export const getSecondsPerMile = (metersPerSecond: number) => {
   const milesPerSecond = metersPerSecond * 0.0006213712;
   const secondsPerMile = 1 / milesPerSecond;
   return Math.round(secondsPerMile);
 };
 
-export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal = (val) => val } = {}) => {
+export const longestCommonSubString = <ResultType = any>(
+  x: any[], y: any[],
+  { getXVal = (val: any) => val, getYVal = (val: any) => val } = {}
+) => {
   const m = x.length;
   const n = y.length;
-  const cache = Array(m + 1).fill().map(() => Array(n + 1).fill(0));
+  const cache = Array(m + 1).fill(0).map(() => Array(n + 1).fill(0));
 
   const matchingSegments = [];
 
@@ -188,16 +191,17 @@ export const longestCommonSubString = (x, y, { getXVal = (val) => val, getYVal =
         cache[i][j] = 0;
     }
   }
-  return matchingSegments;
+  return matchingSegments as ResultType[];
 }
 
-export const getDateString = (date) => dayjs(date).format('MMMM DD, YYYY');
-export const getActivityStartDate = (activity) => getDateString(activity.start_date_local);
+export const getDateString = (date: string) => dayjs(date).format('MMMM DD, YYYY');
+export const getActivityStartDate = (activity: Activity) => getDateString(activity.start_date_local);
 
-export const getSummaryPolyline = (activity) => activity?.summary_polyline || activity?.map?.summary_polyline;
+export const getSummaryPolyline = (activity: Activity) => activity?.summary_polyline || activity?.map?.summary_polyline;
 
 export const createDeepEqualSelector = createSelectorCreator(
   weakMapMemoize,
+  // @ts-ignore
   fastDeepEqual
 );
 
@@ -205,12 +209,12 @@ export const createDeepEqualSelector = createSelectorCreator(
  * @param {number} speed 
  * @returns seconds per mile
  */
-export const convertSpeedToPace = (speed) => {
+export const convertSpeedToPace = (speed: number) => {
   return Math.floor((3660 / convertMetricSpeedToMPH(speed)));
 };
 
-export const getWeatherStyles = (weather) => {
-  let backgroundColor;
+export const getWeatherStyles = (weather: Weather) => {
+  let backgroundColor = '';
   switch (weather?.sky) {
     case 'sunny':
       backgroundColor = 'dls-sunshine-bg';

@@ -52,7 +52,7 @@ type Props = {
   data: number[];
   velocity: number[];
   time: number[];
-  zones: { z1: number; z2: number; z3: number; z4: number; z5: number };
+  zones: HeartZone;
   laps: { average_speed: number; elapsed_time: number }[];
   splitsMi: { average_speed: number; elapsed_time: number }[];
   zonesBandsDirection: 'xAxis' | 'yAxis' | 'none';

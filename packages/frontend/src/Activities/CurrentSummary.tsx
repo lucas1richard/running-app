@@ -4,7 +4,7 @@ import { convertMetersToMiles } from '../utils';
 
 const NUMBER_OF_DAYS = 7;
 
-const findRecent = (allActivities: Activitiy[], numDays: number) => {
+const findRecent = (allActivities: Activity[], numDays: number) => {
   const currentDateUTC = dayjs.utc();
   return allActivities.filter(({ start_date }) => {
     const activityDateUTC = currentDateUTC.diff(dayjs(start_date).utc());
@@ -12,21 +12,21 @@ const findRecent = (allActivities: Activitiy[], numDays: number) => {
   });
 };
 
-const findSameYear = (allActivities: Activitiy[]) => {
+const findSameYear = (allActivities: Activity[]) => {
   const currentDate = dayjs();
   return allActivities.filter(({ start_date_local }) => dayjs(start_date_local).isSame(currentDate, 'year'));
 };
 
-const sumDistance = (activities: Activitiy[]) => {
+const sumDistance = (activities: Activity[]) => {
   const meters = activities.reduce((acc, { distance }) => acc + distance, 0);
   return convertMetersToMiles(meters);
 };
 
-const CurrentSummary: React.FC<{ activities: Activitiy[] }> = ({
+const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
   activities,
 }) => {
-  const recentRuns = useMemo(() => findRecent(activities, NUMBER_OF_DAYS), [activities.length]);
-  const sameYearRuns = useMemo(() => findSameYear(activities), [activities.length]);
+  const recentRuns = useMemo(() => findRecent(activities, NUMBER_OF_DAYS), [activities]);
+  const sameYearRuns = useMemo(() => findSameYear(activities), [activities]);
 
   return (
     <div className="dls-white-bg pad flex flex-even">

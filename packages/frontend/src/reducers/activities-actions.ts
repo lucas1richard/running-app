@@ -45,16 +45,16 @@ export const triggerFetchWeather = (activityId: number, data): AsyncAction => ({
 
 // REDUCER ACTIONS
 export const SET_ACTIVITIES = 'activitiesReducer/SET_ACTIVITIES';
-export const setActivitiesAct = (activities: Activitiy[]) => ({ type: SET_ACTIVITIES, payload: activities });
+export const setActivitiesAct = (activities: Activity[]) => ({ type: SET_ACTIVITIES, payload: activities });
 
 export const SET_ACTIVITIES_SUMMARY = 'activitiesReducer/SET_ACTIVITIES_SUMMARY';
 export const setActivitiesSummaryAct = (summary) => ({ type: SET_ACTIVITIES_SUMMARY, payload: summary });
 
 export const SET_ACTIVITY_DETAIL = 'activitiesReducer/SET_ACTIVITY_DETAIL';
-export const setActivityDetailAct = (activity: Activitiy) => ({ type: SET_ACTIVITY_DETAIL, payload: activity });
+export const setActivityDetailAct = (activity: Activity) => ({ type: SET_ACTIVITY_DETAIL, payload: activity });
 
 export const UPDATE_ACTIVITY = 'activitiesReducer/UPDATE_ACTIVITY';
-export const updateActivityAct = (activity: Activitiy) => ({ type: UPDATE_ACTIVITY, payload: activity });
+export const updateActivityAct = (activity: Activity) => ({ type: UPDATE_ACTIVITY, payload: activity });
 
 export const SET_STREAM = 'activitiesReducer/SET_STREAM';
 export const setStreamAct = (id: number, data) => ({ type: SET_STREAM, payload: { id, data } });

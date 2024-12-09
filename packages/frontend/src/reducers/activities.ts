@@ -22,7 +22,7 @@ import type { RootState } from '.';
 dayjs.extend(weekday);
 
 type ActivitiesState = {
-  activities: Record<number, Activitiy>;
+  activities: Record<number, Activity>;
   activitiesOrder: number[];
   details: Record<number, ActivityDetails>;
   summary: any;

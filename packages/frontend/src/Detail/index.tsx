@@ -56,7 +56,7 @@ const ActivityDetailPage = () => {
 
   const details = useAppSelector((state) => selectActivityDetails(state, id));
 
-  const { backgroundColor } = getWeatherStyles(activity?.weather || emptyObject);
+  const { backgroundColor } = getWeatherStyles(activity?.weather);
 
   if (isLoading) {
     return (
