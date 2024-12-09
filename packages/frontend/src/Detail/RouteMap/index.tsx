@@ -3,23 +3,33 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
 import { selectStreamType } from '../../reducers/activities';
-import { useSelector } from 'react-redux';
-import { hrZonesText } from '../../colors/hrZones';
 import { convertMetricSpeedToMPH } from '../../utils';
+import { useAppSelector } from '../../hooks/redux';
+import useHRZoneIndicators from './useHRZoneIndicators';
 
 HighchartsMap(Highcharts);
 
-const RouteMap = ({
+type Props = {
+  id: number;
+  pointer: number;
+  pins: { index: number; symbol: string; color: string; radius?: number; lineColor?: string; lineWidth?: number }[];
+  segments: [number, number, number][];
+  velocity: number[];
+  smoothAverageWindow: number;
+  highlightedSegment?: { start: number; end: number; color: string };
+};
+
+const RouteMap: React.FC<Props> = ({
   id,
   pointer,
   pins,
   segments,
-  hrzones,
   velocity,
+  smoothAverageWindow,
   highlightedSegment = { start: 0, end: 0, color: 'white' },
 }) => {
 
-  const latlngStream = useSelector((state) => selectStreamType(state, id, 'latlng'));
+  const latlngStream = useAppSelector((state) => selectStreamType(state, id, 'latlng'));
 
   const [animating, setAnimating] = React.useState(false);
   const [animationPointer, setAnimationPointer] = React.useState(0);
@@ -32,13 +42,7 @@ const RouteMap = ({
     return latlngStream.data.map(([lat, lon]) => ({ lon, lat }));
   }, [latlngStream]);
 
-  const indicatorColor = useMemo(() => {
-    if (!hrzones) return 'black';
-    const { zone } = hrzones.find(
-      ({ from }, ix) => from <= usedPointer && hrzones[ix + 1]?.from > usedPointer
-    ) || hrzones[hrzones.length - 1];
-    return { fill: hrZonesText[zone], stroke: 'black' };
-  }, [hrzones, usedPointer]);
+  const [indicatorColor] = useHRZoneIndicators([id], usedPointer, smoothAverageWindow);
 
   const animate = useCallback(() => {
     setAnimationPointer((prev) => {

@@ -29,7 +29,7 @@ export const selectComparedActivityIds = createDeepEqualSelector(
   (state) => state.comparedActivityIds
 );
 
-const getComparedActivities = (state: RootState, ids: number[]) => ids.map((id) => selectActivity(state, id));
+const getComparedActivities = (state: RootState) => selectComparedActivityIds(state).map((id) => selectActivity(state, id));
 export const selectComparedActivities = createDeepEqualSelector(getComparedActivities, (res) => res);
 
 export default multimapReducer;

@@ -1,18 +1,18 @@
-import { useSelector } from 'react-redux';
 import { selectActivity, selectStreamTypeMulti } from '../../reducers/activities';
 import { useMemo } from 'react';
 import getSmoothVal from '../HeartZonesChart/getSmoothVal';
 import { condenseZonesFromHeartRate } from '../../utils';
 import { selectHeartZones } from '../../reducers/heartzones';
 import { hrZonesText } from '../../colors/hrZones';
-import { emptyArray, emptyObject } from '../../constants';
+import { emptyArray } from '../../constants';
+import { useAppSelector } from '../../hooks/redux';
 
-const useHRZoneIndicators = (ids = [], pointer, smoothAverageWindow) => {
-  const activity = useSelector((state) => selectActivity(state, ids[0])) || emptyObject;
-  const heartRateStreamMulti = useSelector((state) => selectStreamTypeMulti(state, ids, 'heartrate')) || emptyArray;
+const useHRZoneIndicators = (ids: number[], pointer: number, smoothAverageWindow: number) => {
+  const activity = useAppSelector((state) => selectActivity(state, ids[0]));
+  const heartRateStreamMulti = useAppSelector((state) => selectStreamTypeMulti(state, ids, 'heartrate')) || emptyArray;
   const heartRateArray = heartRateStreamMulti.map((stream) => stream?.data || emptyArray);
 
-  const timeStreamMulti = useSelector((state) => selectStreamTypeMulti(state, ids, 'time'));
+  const timeStreamMulti = useAppSelector((state) => selectStreamTypeMulti(state, ids, 'time'));
   const timeArray = timeStreamMulti.map((stream) => stream?.data || emptyArray);
 
   const fullTimeArray = useMemo(() => {
@@ -32,11 +32,11 @@ const useHRZoneIndicators = (ids = [], pointer, smoothAverageWindow) => {
     [fullTimeArray, heartRateArray, smoothAverageWindow]
   );
 
-  const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
+  const zones = useAppSelector((state) => selectHeartZones(state, activity?.start_date));
 
   const hrzonesArray = useMemo(
-    () => ids.map((_, ix) => condenseZonesFromHeartRate(zones, smoothHeartRateArray[ix], fullTimeArray[ix])),
-    [ids, zones, smoothHeartRateArray, fullTimeArray]
+    () => ids.map((_, ix) => condenseZonesFromHeartRate(zones, smoothHeartRateArray[ix])),
+    [ids, zones, smoothHeartRateArray]
   );
 
   const indicatorColors = useMemo(() => {

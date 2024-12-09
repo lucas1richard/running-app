@@ -19,7 +19,6 @@ import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import { idle, loading, useTriggerActionIfStatus } from '../reducers/apiStatus';
-import Spinner from '../Loading/Spinner';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import {

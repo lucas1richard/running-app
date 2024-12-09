@@ -565,9 +565,9 @@ const HeartZonesChartDisplay = ({
           pointer={latlngPointer}
           segments={lapsData.length > 1 ? lapsData : splitsMiData}
           velocity={smoothVelocity}
-          hrzones={hrzones}
           pins={pins}
           highlightedSegment={highlightedSegment}
+          smoothAverageWindow={smoothAverageWindow}
         />
       </div>
     </div>
