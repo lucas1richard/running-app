@@ -32,4 +32,14 @@ interface Activitiy {
   bestEfforts: BestEffort[];
   weather: Weather;
   zonesCaches: ZonesCaches[];
+  elapsed_time: number;
+  average_seconds_per_mile: number;
+  average_speed: number;
+  average_heartrate: number;
+  max_heartrate: number;
+  
+}
+
+interface ActivityDetails {
+  
 }

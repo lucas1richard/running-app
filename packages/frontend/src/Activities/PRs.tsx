@@ -13,7 +13,7 @@ const PRs = () => {
       <h2>All Time PRs</h2>
       <div className="flex flex-wrap gap">
         {allTimePrs.map((pr) => (
-          <div key={pr.id} className="card text-center flex-item-grow">
+          <div key={pr.effort_id} className="card text-center flex-item-grow">
             <div className="heading-1">
               <PRMedal type="native" color="gold" />
             </div>

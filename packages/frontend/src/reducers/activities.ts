@@ -24,7 +24,7 @@ dayjs.extend(weekday);
 type ActivitiesState = {
   activities: Record<number, Activitiy>;
   activitiesOrder: number[];
-  details: Record<number, any>;
+  details: Record<number, ActivityDetails>;
   summary: any;
   streams: Record<number, any>;
   similarWorkouts: Record<number, any>;

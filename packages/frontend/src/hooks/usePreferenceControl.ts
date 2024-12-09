@@ -12,7 +12,7 @@ import { useAppSelector } from './redux';
 
 const usePreferenceControl = (
   keyPath: PreferencesKeyPath,
-  defaultValue: any
+  defaultValue?: any
 ) => {
   const dispatch = useDispatch();
   const dispatchAsync = useDispatchAsyncAction();

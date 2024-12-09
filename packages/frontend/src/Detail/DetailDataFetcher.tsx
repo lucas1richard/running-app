@@ -9,7 +9,7 @@ import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../r
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import { useAppSelector } from '../hooks/redux';
 
-const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time'];
+export const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time'];
 
 type Props = {
   id: number;

@@ -16,7 +16,10 @@ export const success = 'success';
 export const error = 'error';
 export const idle = 'idle';
 
-const initialState = {
+type ApiStatusInitialState = {
+};
+
+const initialState: ApiStatusInitialState = {
   // give a custom key to every API request, use uuid if you have to
 };
 
