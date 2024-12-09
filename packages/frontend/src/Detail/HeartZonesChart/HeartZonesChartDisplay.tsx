@@ -3,7 +3,6 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
-import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDurationString } from '../../utils';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine from './addXAxisPlotline';
@@ -12,6 +11,11 @@ import { prColors } from '../../Common/colors';
 import RouteMap from '../RouteMap';
 import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
 import roundToNearest from '../../utils/roundToNearest';
+import {
+  condenseZonesFromHeartRate,
+  convertMetricSpeedToMPH,
+  getDurationString,
+} from '../../utils';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -41,17 +45,27 @@ const seriesDefaultConfig = {
 
 const chartHeight = 900;
 
-const HeartZonesChartDisplay = ({
+type Props = {
+  id: number;
+  altitude: number[];
+  bestEfforts: { start_index: number; elapsed_time: number; pr_rank: number; name: string }[];
+  data: number[];
+  velocity: number[];
+  time: number[];
+  zones: { z1: number; z2: number; z3: number; z4: number; z5: number };
+  laps: { average_speed: number; elapsed_time: number }[];
+  splitsMi: { average_speed: number; elapsed_time: number }[];
+  zonesBandsDirection: 'xAxis' | 'yAxis' | 'none';
+}
+
+const HeartZonesChartDisplay: React.FC<Props> = ({
   id,
   altitude,
   bestEfforts,
-  title,
   data,
-  latlng,
   velocity,
   time,
   zones,
-  width,
   laps,
   splitsMi,
   zonesBandsDirection,
@@ -95,11 +109,11 @@ const HeartZonesChartDisplay = ({
     () => getSmoothVal(fullTime, data, smoothAverageWindow),
     [fullTime, data, smoothAverageWindow]
   );
-  const heartRateData = useMemo(
+  const heartRateData = useMemo<[number, number][]>(
     () => fullTime.map((val) => [val, smoothHeartRate[val]]),
     [smoothHeartRate, fullTime]
   );
-  const altitudeData = useMemo(
+  const altitudeData = useMemo<[number, number][]>(
     () => fullTime.map((val) => [val, altitude[val]]),
     [altitude, fullTime]
   );
@@ -107,7 +121,7 @@ const HeartZonesChartDisplay = ({
     () => getSmoothVal(fullTime, velocity, smoothAverageWindow),
     [fullTime, velocity, smoothAverageWindow]
   );
-  const velocityData = useMemo(
+  const velocityData = useMemo<[number, number][]>(
     () => fullTime.map((val) => [
       val,
       roundToNearest(convertMetricSpeedToMPH(smoothVelocity[val]), 100)
@@ -125,7 +139,7 @@ const HeartZonesChartDisplay = ({
     () => {
       let offset = 0;
       return laps.map((val, ix) => {
-        const datum = [
+        const datum: [number, number, number] = [
           offset,
           roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
           val.elapsed_time
@@ -139,7 +153,7 @@ const HeartZonesChartDisplay = ({
     () => {
       let offset = 0;
       return splitsMi.map((val, ix) => {
-        const datum = [
+        const datum: [number, number, number]= [
           offset,
           roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
           val.elapsed_time
@@ -162,20 +176,17 @@ const HeartZonesChartDisplay = ({
   );
   
   const hrzones = useMemo(
-    () => condenseZonesFromHeartRate(zones, smoothHeartRate, fullTime),
-    [zones, smoothHeartRate, fullTime]
+    () => condenseZonesFromHeartRate(zones, smoothHeartRate),
+    [zones, smoothHeartRate]
   );
 
-  /** @type {React.MutableRefObject<{ chart: Highcharts.Chart }>} */
-  const chartRef = useRef();
+  const chartRef = useRef<{ chart: Highcharts.Chart; container: React.RefObject<HTMLDivElement> }>();
 
   const xAxisBands = useMemo(() => hrzones.map((band, ix) => ({
     color: hrZonesBg[band.zone],
     id: `hrZoneBand-${ix}`,
     ...band
   })), [hrzones]);
-
-  
 
   const updateSmoothAverageWindow = useCallback((e) => {
     const val = parseInt(e.target.value, 10);
@@ -195,7 +206,7 @@ const HeartZonesChartDisplay = ({
   useEffect(() => {
     setMagnificationFactor(chartRef.current?.chart.plotWidth || 0);
     setInitialMagnificationFactor(chartRef.current?.chart.plotWidth || 0);
-  }, [chartRef.current]);
+  }, []);
 
   useEffect(() => {
     const chart = chartRef.current?.chart;
@@ -229,7 +240,7 @@ const HeartZonesChartDisplay = ({
       scrollablePlotArea: { minWidth: magnificationFactor, scrollPositionX: 0 },
     },
     legend: { enabled: false },
-    title: { text: title },
+    title: { text: '' },
     plotOptions: { connectEnds: false, connectNulls: false },
     series: [
       {
@@ -470,7 +481,6 @@ const HeartZonesChartDisplay = ({
     ]
   }), [
     magnificationFactor,
-    title,
     heartRateData,
     velocityData,
     lapsData,

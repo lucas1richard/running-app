@@ -27,7 +27,7 @@ export const getDuration = (s, text = [' sec ', ' min ', ' hr ']) => {
  * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
  * @param {string} joinOn the string to join the units on
  */
-export const getDurationString = (s, text, joinOn = ' ') => {
+export const getDurationString = (s, text = undefined, joinOn = ' ') => {
   const durationArr = getDuration(s, text);
   return durationArr.map(([num, str]) => `${num}${str}`).join(joinOn);
 };

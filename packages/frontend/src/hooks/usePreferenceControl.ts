@@ -10,7 +10,7 @@ import {
 import useDispatchAsyncAction from './useDispatchAsyncAction';
 import { useAppSelector } from './redux';
 
-const usePreferenceControl = (
+const usePreferenceControl = <T = any>(
   keyPath: PreferencesKeyPath,
   defaultValue?: any
 ) => {
@@ -31,10 +31,10 @@ const usePreferenceControl = (
   }, [dispatchAsync]);
 
   return [
-    typeof value === 'undefined' ? defaultValue : value,
+    (typeof value === 'undefined' ? defaultValue : value) as T,
     setValue,
     savePreferences
-  ];
+  ] as const;
 };
 
 export default usePreferenceControl;

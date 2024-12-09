@@ -1,20 +1,18 @@
-import React from 'react';
 import HeartZonesChartDisplay from './HeartZonesChartDisplay';
-import { useSelector } from 'react-redux';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../../reducers/activities';
 import { selectHeartZones } from '../../reducers/heartzones';
 import usePreferenceControl from '../../hooks/usePreferenceControl';
-import { emptyArray, emptyObject } from '../../constants';
+import { emptyArray } from '../../constants';
+import { useAppSelector } from '../../hooks/redux';
 
 const HeartZonesChartContainer = ({ id }) => {
-  const activity = useSelector((state) => selectActivity(state, id)) || emptyObject;
-  const latlngStream = useSelector((state) => selectStreamType(state, id, 'latlng'));
-  const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
-  const velocityStream = useSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
-  const altitudeStream = useSelector((state) => selectStreamType(state, id, 'altitude'));
-  const timeStream = useSelector((state) => selectStreamType(state, id, 'time'));
-  const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
-  const details = useSelector((state) => selectActivityDetails(state, id));
+  const activity = useAppSelector((state) => selectActivity(state, id));
+  const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
+  const velocityStream = useAppSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
+  const altitudeStream = useAppSelector((state) => selectStreamType(state, id, 'altitude'));
+  const timeStream = useAppSelector((state) => selectStreamType(state, id, 'time'));
+  const zones = useAppSelector((state) => selectHeartZones(state, activity?.start_date));
+  const details = useAppSelector((state) => selectActivityDetails(state, id));
   const bestEfforts = details?.best_efforts || emptyArray;
   const laps = details?.laps || emptyArray;
   const splitsMi = details?.splits_standard || emptyArray;
@@ -23,14 +21,16 @@ const HeartZonesChartContainer = ({ id }) => {
     zonesBandsDirection,
     setZonesBandsDirection,
     savePreferences,
-  ] = usePreferenceControl(['activities', id, 'zonesBandsDirection'], 'xAxis');
+  ] = usePreferenceControl<'xAxis' | 'yAxis' | 'none'>(
+    ['activities', id, 'zonesBandsDirection'],
+    'xAxis'
+  );
 
   return (
     <div>
       <HeartZonesChartDisplay
         id={id}
         data={heartRateStream?.data || emptyArray}
-        latlng={latlngStream?.data || emptyArray}
         velocity={velocityStream?.data || emptyArray}
         altitude={altitudeStream?.data || emptyArray}
         time={timeStream?.data || emptyArray}

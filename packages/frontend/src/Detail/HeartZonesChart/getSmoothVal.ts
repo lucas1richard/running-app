@@ -1,5 +1,5 @@
 const getSmoothVal = (timeSeries: any[], valSeries: number[], factor = 20) => {
-  const smoothVal = [];
+  const smoothVal: number[] = [];
   for (let i = 0; i < timeSeries.length; i++) {
     const val = valSeries[i];
     if (i <= factor - 2) {
