@@ -12,8 +12,15 @@ HighchartsMap(Highcharts);
 type Props = {
   id: number;
   pointer: number;
-  pins: { index: number; symbol: string; color: string; radius?: number; lineColor?: string; lineWidth?: number }[];
-  segments: [number, number, number][];
+  pins: Array<{
+    index: number;
+    symbol: string;
+    color: string;
+    radius?: number;
+    lineColor?: string;
+    lineWidth?: number
+  }>;
+  segments: Array<[number, number, number]>;
   velocity: number[];
   smoothAverageWindow: number;
   highlightedSegment?: { start: number; end: number; color: string };

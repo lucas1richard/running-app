@@ -25,6 +25,7 @@ type ZonesCaches = {};
 
 interface Activity {
   id: number;
+  name: string;
   start_date: string;
   start_date_local: string;
   distance: number;
@@ -64,3 +65,11 @@ type HeartZoneCache = {
   seconds_z4: number;
   seconds_z5: number;
 };
+
+interface Stream<T> {
+  type: 'heartrate' | 'time' | 'distance' | 'altitude' | 'velocity_smooth' | 'grade_smooth';
+  data: T extends 'latlng' ? [number, number][] : number[];
+  series_type: string;
+  original_size: number;
+  resolution: string;
+}

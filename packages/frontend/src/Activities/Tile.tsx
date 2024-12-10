@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { selectStreamType } from '../reducers/activities';
@@ -12,12 +11,18 @@ import { selectHeartZones } from '../reducers/heartzones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
 import PRMedal from '../Common/Icons/PRMedal';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
-import { emptyArray, emptyObject } from '../constants';
+import { emptyArray } from '../constants';
+import { useAppSelector } from '../hooks/redux';
 
-const Tile = ({ activity, backgroundIndicator }) => {
+type Props = {
+  activity: Activity;
+  backgroundIndicator: string;
+}
+
+const Tile: React.FC<Props> = ({ activity, backgroundIndicator }) => {
   const [hovered, setHovered] = React.useState(false);
-  const heartRateStream = useSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
-  const zones = useSelector((state) => selectHeartZones(state, activity.start_date))
+  const heartRateStream = useAppSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
+  const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
   const bestEfforts = activity?.bestEfforts || emptyArray;
 
   const onMouseEnter = useCallback(() => {
@@ -26,7 +31,7 @@ const Tile = ({ activity, backgroundIndicator }) => {
 
   const duration = <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />;
   
-  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather || emptyObject)) || emptyObject;
+  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
   
   return (
     <div className="dls-white-bg border-radius-1 border-2">
@@ -38,8 +43,8 @@ const Tile = ({ activity, backgroundIndicator }) => {
           alt="summary route"
           imgWidth={400}
           imgHeight={200}
-          width="100"
-          height="75"
+          width={100}
+          height={75}
         />
         <div className="flex flex-justify-between flex-column flex-item-grow">
           <div className="flex flex-justify-between">

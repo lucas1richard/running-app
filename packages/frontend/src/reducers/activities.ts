@@ -26,7 +26,7 @@ type ActivitiesState = {
   activitiesOrder: number[];
   details: Record<number, ActivityDetails>;
   summary: any;
-  streams: Record<number, any>;
+  streams: Record<number, { stream: Stream[] }>;
   similarWorkouts: Record<number, any>;
   loading: boolean;
   error: any;

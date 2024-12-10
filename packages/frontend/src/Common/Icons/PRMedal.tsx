@@ -3,7 +3,7 @@ import { prColors } from '../colors';
 
 type PRMedalProps = {
   className?: string;
-  color: 'gold' | 'silver' | 'bronze';
+  color: 'gold' | 'silver' | 'bronze' | number;
   type: 'native' | 'svg';
 };
 export const rankMap = {
