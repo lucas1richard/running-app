@@ -1,14 +1,35 @@
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import { selectListPrerences } from '../reducers/preferences';
 import { triggerSetUserPrefs } from '../reducers/preferences-actions';
+import { useAppSelector } from '../hooks/redux';
 
-const setPrefAction = (payload) => ({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload });
+const setPrefAction = (payload: any) => ({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload });
 
-const ListSort = ({}) => {
+const ListSort: React.FC = () => {
   const dispatch = useDispatch();
-  const listPreferences = useSelector(selectListPrerences);
+  const listPreferences = useAppSelector(selectListPrerences);
   const savePreferences = () => dispatch(triggerSetUserPrefs(undefined));
+  const onGroupByZonesChange = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    () => dispatch(setPrefAction({ isGroupByZonesSet: !listPreferences.isGroupByZonesSet })),
+    [dispatch, listPreferences.isGroupByZonesSet]
+  );
+  const onSortByFieldChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>(
+    (ev) => dispatch(setPrefAction({ sortBy: ev.target.value })),
+    [dispatch]
+  );
+  const setSortOrderAsc = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    () => dispatch(setPrefAction({ sortOrder: 'asc' })),
+    [dispatch]
+  );
+  const setSortOrderDesc = useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    () => dispatch(setPrefAction({ sortOrder: 'desc' })),
+    [dispatch]
+  );
+  const onBackgroundChange = useCallback<React.ChangeEventHandler<HTMLSelectElement>>(
+    (ev) => dispatch(setPrefAction({ tileBackgroundIndicator: ev.target.value })),
+    [dispatch]
+  );
 
   return (
     <div>
@@ -20,7 +41,7 @@ const ListSort = ({}) => {
               id="group-by-zones"
               name="group-by-zones"
               checked={listPreferences.isGroupByZonesSet}
-              onChange={() => dispatch(setPrefAction({ isGroupByZonesSet: !listPreferences.isGroupByZonesSet }))}
+              onChange={onGroupByZonesChange}
             />
             Group by Heart Rate Zones
           </label>
@@ -30,7 +51,7 @@ const ListSort = ({}) => {
             Sort by:
             <select
               value={listPreferences.sortBy}
-              onChange={(ev) => dispatch(setPrefAction({ sortBy: ev.target.value }))}
+              onChange={onSortByFieldChange}
               className="quiet-input"
             >
               <option value="start_date">Date</option>
@@ -50,7 +71,7 @@ const ListSort = ({}) => {
               name="sort-order"
               value="asc"
               checked={listPreferences.sortOrder === 'asc'}
-              onChange={() => dispatch(setPrefAction({ sortOrder: 'asc' }))}
+              onChange={setSortOrderAsc}
             />
             Ascending
           </label>
@@ -60,7 +81,7 @@ const ListSort = ({}) => {
               name="sort-order"
               value="desc"
               checked={listPreferences.sortOrder === 'desc'}
-              onChange={() => dispatch(setPrefAction({ sortOrder: 'desc' }))}
+              onChange={setSortOrderDesc}
             />
             Descending
           </label>
@@ -74,7 +95,7 @@ const ListSort = ({}) => {
           id="tile-background-select"
           className="quiet-input"
           value={listPreferences.tileBackgroundIndicator}
-          onChange={(ev) => dispatch(setPrefAction({ tileBackgroundIndicator: ev.target.value }))}
+          onChange={onBackgroundChange}
         >
           <option value="weather">Weather</option>
           <option value="elevation">Elevation</option>
