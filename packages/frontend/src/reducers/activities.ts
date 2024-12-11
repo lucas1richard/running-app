@@ -26,7 +26,7 @@ type ActivitiesState = {
   activitiesOrder: number[];
   details: Record<number, ActivityDetails>;
   summary: any;
-  streams: Record<number, { stream: Stream[] }>;
+  streams: Record<number, { stream: (Stream | LatLngStream)[] }>;
   similarWorkouts: Record<number, any>;
   loading: boolean;
   error: any;
@@ -180,15 +180,25 @@ const getActivityDetailsMulti = (state: RootState, ids: number[]) => {
 };
 export const selectActivityDetailsMulti = createDeepEqualSelector(getActivityDetailsMulti, (res) => res);
 
-const getStreamType = (state: RootState, id: number, findType: string) => getActivitiesState(state)
+interface SelectStreamType<Multi = false> {
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream[] : Stream;
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'heartrate'): Multi extends true ? Stream[] : Stream;
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'distance'): Multi extends true ? Stream[] : Stream;
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'altitude'): Multi extends true ? Stream[] : Stream;
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'velocity_smooth'): Multi extends true ? Stream[] : Stream;
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'grade_smooth'): Multi extends true ? Stream[] : Stream;
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'latlng'): Multi extends true ? LatLngStream[] : LatLngStream;
+}
+
+const getStreamType = (state: RootState, id: number, findType: SimpleStreamTypes) => getActivitiesState(state)
   .streams?.[id]?.stream?.find?.(({ type }) => type === findType);
-export const selectStreamType = createDeepEqualSelector(getStreamType, (res) => res);
+export const selectStreamType = createDeepEqualSelector(getStreamType, (res) => res) as SelectStreamType;
 
 const getStreamTypeMulti = (state: RootState, ids: number[], findType: string) => {
   const activities = getActivitiesState(state);
   return ids?.map((id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType));
 }
-export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res);
+export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res) as SelectStreamType<true>;
 
 const getSimilarWorkouts = (state: RootState, id: number) => getActivitiesState(state).similarWorkouts[id] || emptyArray;
 export const selectSimilarWorkouts = createDeepEqualSelector(getSimilarWorkouts, (res) => res);

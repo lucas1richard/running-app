@@ -9,7 +9,9 @@ import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../r
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import { useAppSelector } from '../hooks/redux';
 
-export const streamTypes = ['heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time'];
+export const streamTypes: SimpleStreamTypes[] = [
+  'heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time', 'grade_smooth', 'distance'
+];
 
 type Props = {
   id: number;
@@ -23,7 +25,7 @@ const DetailDataFetcher: FC<Props> = ({ id }) => {
   const zonesId = configZonesId === -1 ? nativeZones?.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
-  const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
+  const heartRateStream = useAppSelector<Stream>((state) => selectStreamType(state, id, 'heartrate'));
 
   useTriggerActionIfStatus(triggerFetchActivityDetail(id));
   useTriggerActionIfStatus(triggerFetchActivityPrefs(id));

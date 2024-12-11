@@ -66,10 +66,25 @@ type HeartZoneCache = {
   seconds_z5: number;
 };
 
-interface Stream<T> {
-  type: 'heartrate' | 'time' | 'distance' | 'altitude' | 'velocity_smooth' | 'grade_smooth';
-  data: T extends 'latlng' ? [number, number][] : number[];
+type SimpleStreamTypes = 
+  | 'heartrate'
+  | 'time'
+  | 'distance'
+  | 'altitude'
+  | 'velocity_smooth'
+  | 'latlng'
+  | 'grade_smooth';
+
+type LatLng = [lat: number, lon: number];
+
+interface Stream {
+  type: SimpleStreamTypes;
+  data: number[];
   series_type: string;
   original_size: number;
   resolution: string;
 }
+
+interface LatLngStream extends Stream {
+  data: LatLng[];
+ }

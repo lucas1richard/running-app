@@ -20,7 +20,7 @@ type Props = {
     lineColor?: string;
     lineWidth?: number
   }>;
-  segments: Array<[number, number, number]>;
+  segments: Array<[start: number, height: number, end: number]>;
   velocity: number[];
   smoothAverageWindow: number;
   highlightedSegment?: { start: number; end: number; color: string };
@@ -35,7 +35,6 @@ const RouteMap: React.FC<Props> = ({
   smoothAverageWindow,
   highlightedSegment = { start: 0, end: 0, color: 'white' },
 }) => {
-
   const latlngStream = useAppSelector((state) => selectStreamType(state, id, 'latlng'));
 
   const [animating, setAnimating] = React.useState(false);
