@@ -16,6 +16,7 @@ import {
   convertMetricSpeedToMPH,
   getDurationString,
 } from '../../utils';
+import getGradeColorAbs from './getGradeColorAbs';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -51,6 +52,7 @@ type Props = {
   bestEfforts: { start_index: number; elapsed_time: number; pr_rank: number; name: string }[];
   data: number[];
   velocity: number[];
+  grade: number[];
   time: number[];
   zones: HeartZone;
   laps: { average_speed: number; elapsed_time: number }[];
@@ -65,6 +67,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   data,
   velocity,
   time,
+  grade,
   zones,
   laps,
   splitsMi,
@@ -313,10 +316,22 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         data: altitudeData,
         yAxis: 3,
         fillOpacity: 0.9,
-        color: 'rgba(165, 42, 42, 0.5)',
+        color: {
+          linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 },
+          stops: getGradeColorAbs(grade, 0),
+        },
         tooltip: {
-          valueSuffix: ' m',
-          pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
+          pointFormatter: function() {
+            const point = this;
+            const series = this.series;
+            return `
+              <span style="color:${point.color}">\u25CF</span>
+              ${series.name}: <b>${point.y} m</b>
+              <br/>
+              <span style="color:${point.color}">\u25CF</span>
+              Grade: <b>${grade[point.index]}</b>
+            `;
+          },
         },
         point: {
           events: {
@@ -488,7 +503,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     altitudeData,
     bestEffortsData,
     efficiencyFactorData,
-    hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, addPin, bestEfforts
+    hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, addPin, bestEfforts, grade
   ]);
 
   return (
