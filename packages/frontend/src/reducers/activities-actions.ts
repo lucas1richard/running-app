@@ -66,4 +66,4 @@ export const SET_SIMILAR_WORKOUTS = 'activitiesReducer/SET_SIMILAR_WORKOUTS';
 export const setSimilarWorkoutsAct = (id, combo) => ({ type: SET_SIMILAR_WORKOUTS, payload: { id, combo } });
 
 export const SET_WEATHER_DATA = 'activitiesReducer/SET_WEATHER_DATA';
-export const setWeatherDataAct = (data) => ({ type: SET_WEATHER_DATA, payload: data });
+export const setWeatherDataAct = (data: Weather) => ({ type: SET_WEATHER_DATA, payload: data });

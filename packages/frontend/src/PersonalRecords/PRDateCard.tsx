@@ -2,11 +2,11 @@ import classNames from 'classnames';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import DurationDisplay from '../Common/DurationDisplay';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../hooks/redux';
 import { selectActivity } from '../reducers/activities';
 
 const PRDateCard = ({ pr }) => {
-  const activity = useSelector(state => selectActivity(state, pr.activityId));
+  const activity = useAppSelector(state => selectActivity(state, pr.activityId));
   return (
     <div key={pr.id} className={classNames('card text-center', {
       'gold-bg': pr.pr_rank === 1,
