@@ -27,7 +27,7 @@ type ActivitiesState = {
   details: Record<number, ActivityDetails>;
   summary: any;
   streams: Record<number, { stream: (Stream | LatLngStream)[] }>;
-  similarWorkouts: Record<number, any>;
+  similarWorkouts: Record<number, number[]>;
   loading: boolean;
   error: any;
 };
@@ -200,7 +200,11 @@ const getStreamTypeMulti = (state: RootState, ids: number[], findType: string) =
 }
 export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res) as SelectStreamType<true>;
 
-const getSimilarWorkouts = (state: RootState, id: number) => getActivitiesState(state).similarWorkouts[id] || emptyArray;
+const getSimilarWorkouts = (state: RootState, id: number) => {
+  const activitiesState = getActivitiesState(state);
+  const similarsIds = activitiesState.similarWorkouts[id] || emptyArray;
+  return similarsIds.map((id) => activitiesState.activities[id]);
+};
 export const selectSimilarWorkouts = createDeepEqualSelector(getSimilarWorkouts, (res) => res);
 
 export const selectZoneGroupedRuns = createDeepEqualSelector(

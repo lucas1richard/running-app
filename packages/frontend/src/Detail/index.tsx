@@ -28,7 +28,7 @@ import {
 } from '../PreferenceControl/keyPaths';
 import BestEfforts from './BestEfforts';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
-import { emptyArray, emptyObject } from '../constants';
+import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
 
