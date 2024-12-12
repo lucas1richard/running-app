@@ -320,7 +320,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         fillOpacity: 0.9,
         color: {
           linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 },
-          stops: getGradeColorAbs(grade, 0),
+          stops: getGradeColorAbs(grade, 0, 0, { lowestValueRgb: [0, 132, 255], midValueRgb: [0, 0, 0], highestValueRgb: [255, 0, 0] }),
         },
         tooltip: {
           pointFormatter: function() {
@@ -381,7 +381,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           events: {
             click() {
               setHighlightedSegment((prev) => {
-                const color = this.color === 'white' ? 'black' : this.color;
+                const color = this.color === 'white' ? 'rgba(0,132,255,0.6)' : this.color;
                 const next = { start: this.start, end: this.end, color, borderColor: this.borderColor };
                 if (prev && prev.start === next.start && prev.end === next.end) return;
                 return next;

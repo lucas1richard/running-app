@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import Highcharts from 'highcharts';
+import Highcharts, { color } from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
 import { selectStreamType } from '../../reducers/activities';
@@ -7,6 +7,7 @@ import { convertMetricSpeedToMPH } from '../../utils';
 import { useAppSelector } from '../../hooks/redux';
 import useHRZoneIndicators from './useHRZoneIndicators';
 import classNames from 'classnames';
+import getGradeColorAbs from '../HeartZonesChart/getGradeColorAbs';
 
 HighchartsMap(Highcharts);
 
@@ -65,25 +66,10 @@ const RouteMap: React.FC<Props> = ({
     });
   }, [coordsPure.length]);
 
-  // const series = useMemo(() => {
-  //   return [({
-  //     type: 'mapline',
-  //     name: `Segment`,
-  //     data: segments.map((segment) => ({
-  //       geometry: {
-  //         type: 'LineString',
-  //         coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
-  //         // coordinates: [
-  //         //   coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat])[0],
-  //         //   coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat])[100]
-  //         // ],
-  //       },
-  //       className: 'animated-line',
-  //     })),
-  //     lineWidth: 6,
-  //     enableMouseTracking: false,
-  //   })];
-  // }, [coordsPure, segments]);
+  const seriesColors = useMemo(
+    () => getGradeColorAbs(segments.map((s) => s[1]), 0, averageSpeed),
+    [averageSpeed, segments]
+  );
 
   const series = useMemo(() => {
     return segments.map((segment, ix) => ({
@@ -102,11 +88,13 @@ const RouteMap: React.FC<Props> = ({
           display: 'none'
         },
       }],
+      color: seriesColors[ix][1],
       animation: false,
       lineWidth: 6,
+      showInLegend: segments.length <= 8,
       enableMouseTracking: false,
     }));
-  }, [coordsPure, segments]);
+  }, [averageSpeed, coordsPure, segments, seriesColors]);
 
   const memoHighlightedSegment = useMemo(() => {
     return {
@@ -120,7 +108,7 @@ const RouteMap: React.FC<Props> = ({
             .map(({ lon, lat }) => [lon, lat]),
         },
         color: highlightedSegment.color,
-        borderColor: 'black',
+        borderColor: 'blue',
       }],
       animation: false,
       lineWidth: 12,
@@ -170,8 +158,8 @@ const RouteMap: React.FC<Props> = ({
       text: 'Route',
     },
     series: [
-      ...series,
       memoHighlightedSegment,
+      ...series,
       memoPins,
       {
         type: 'mappoint',
