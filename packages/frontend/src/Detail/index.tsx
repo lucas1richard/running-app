@@ -20,7 +20,7 @@ import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import { idle, loading, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
-import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
+import { setActivityPrefsAct, triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import {
   activityShouldShowLaps,
   activityShouldShowSegments,
@@ -31,8 +31,10 @@ import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
+import { useDispatch } from 'react-redux';
 
 const ActivityDetailPage = () => {
+  const dispatch = useDispatch();
   const { id: idString } = useParams();
   const id = Number(idString);
   const streamApiStatus = useTriggerActionIfStatus(triggerFetchActivityStreamData(id, streamTypes));
@@ -53,6 +55,9 @@ const ActivityDetailPage = () => {
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
   const [tileBgColor, setTileBgColor, savePreferences] = usePreferenceControl(['activities', idString, 'tileBackgroundIndicator']);
+  const [shouldShowSimilar] = usePreferenceControl(activityShouldShowSimilarWorkouts(idString));
+  const [shouldShowLaps] = usePreferenceControl(activityShouldShowLaps(idString));
+  const [shouldShowSegments] = usePreferenceControl(activityShouldShowSegments(idString));
 
   const details = useAppSelector((state) => selectActivityDetails(state, id));
 
@@ -73,6 +78,16 @@ const ActivityDetailPage = () => {
       </div>
     );
   }
+
+  const {
+    start_date_local,
+    distance_miles,
+    elapsed_time,
+    average_seconds_per_mile,
+    average_speed,
+    average_heartrate,
+    max_heartrate,
+  } = activity;
 
   return (
     <div className={`pad`}>
@@ -95,30 +110,30 @@ const ActivityDetailPage = () => {
               details={details}
             />
             <h2 className="text-center margin-2-t">
-              <span>{activity.start_date_local ? dayjs(activity.start_date_local).format('MMMM DD, YYYY') : ''}</span>
+              <span>{start_date_local ? dayjs(start_date_local).format('MMMM DD, YYYY') : ''}</span>
             </h2>
             <h3 className="text-center">
-              {activity.start_date_local ? dayjs.utc(activity.start_date_local).format('h:mm A') : ''}
+              {start_date_local ? dayjs.utc(start_date_local).format('h:mm A') : ''}
             </h3>
             <div className="text-center margin-tb">
               <h3>
-                <strong>{activity.distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={activity.elapsed_time} /></strong>
+                <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
               <div className="flex flex-justify-between">
                 <div className="margin-t">
                   <div className="heading-2">
-                    <DurationDisplay numSeconds={activity.average_seconds_per_mile} /><small>/mi</small>
+                    <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>
                   </div>
                   <div className="heading-4">
-                    {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+                    {convertMetricSpeedToMPH(average_speed).toFixed(2)} mph
                   </div>
                 </div>
                 <div className="margin-t">
                   <div className="heading-2">
-                    {Math.round(activity.average_heartrate)} bpm
+                    {Math.round(average_heartrate)} bpm
                   </div>
                   <div className="heading-4">
-                    Max {activity.max_heartrate} bpm
+                    Max {max_heartrate} bpm
                   </div>
                 </div>
               </div>
@@ -128,7 +143,7 @@ const ActivityDetailPage = () => {
                 Efficiency Factor
               </div>
               <div className="heading-2">
-                {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)}
+                {calcEfficiencyFactor(average_speed, average_heartrate).toFixed(2)}
               </div>
               <div>
                 yards per beat
@@ -193,7 +208,13 @@ const ActivityDetailPage = () => {
         />
       </PreferenceControl>
       <div>
-        <button onClick={savePreferences}>
+        <button onClick={() => {
+          dispatch(setActivityPrefsAct(
+            'default',
+            { shouldShowSimilar, shouldShowSegments, shouldShowLaps }
+          ));
+          savePreferences();
+        }}>
           Save Preferences as a General Rule
         </button>
         <button onClick={() => savePreferences({ activityId: id })}>

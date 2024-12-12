@@ -7,7 +7,6 @@ import {
   FETCH_USER_PREFS,
   SET_ACTIVITY_PREFS,
   SET_USER_PREFS,
-  setActivityPrefDefaultsAct,
   setActivityPrefsAct,
   setGlobalPrefsAct,
   setListPrefsAct,
@@ -20,7 +19,7 @@ function* fetchUserPreferencesSaga({ payload }) {
 
   if (data?.list) yield put(setListPrefsAct(data.list));
   if (data?.global) yield put(setGlobalPrefsAct(data.global));
-  if (data?.activities) yield put(setActivityPrefDefaultsAct(data.activities.default));
+  if (data?.activities) yield put(setActivityPrefsAct('default', data.activities.default));
 }
 
 function* fetchActivityPreferencesSaga({ payload, key }) {

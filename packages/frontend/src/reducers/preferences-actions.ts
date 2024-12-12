@@ -1,5 +1,5 @@
 import type { AsyncAction } from '../types';
-import { PreferencesKeyPath } from './preferences';
+import { ActivityPreferences, PreferencesKeyPath } from './preferences';
 
 // SAGA TRIGGERS
 export const FETCH_USER_PREFS = 'preferences/FETCH_USER_PREFERENCES';
@@ -36,13 +36,8 @@ export const setListPrefsAct = (preferences) => ({
   payload: preferences,
 });
 
-export const REDUCER_SET_ACTIVITY_PREFS_DEFAULTS = 'preferencesReducer/SET_ACTIVITY_DEFAULTS';
-export const setActivityPrefDefaultsAct = (defaults) => ({
- type: REDUCER_SET_ACTIVITY_PREFS_DEFAULTS, payload: defaults
-});
-
 export const REDUCER_SET_ACTIVITY_PREFS = 'preferencesReducer/SET_ACTIVITY_PREFERENCES';
-export const setActivityPrefsAct = (activityId: number, preferences) => ({
+export const setActivityPrefsAct = (activityId: number | 'default', preferences: ActivityPreferences) => ({
   type: REDUCER_SET_ACTIVITY_PREFS,
   payload: { activityId, preferences },
 });

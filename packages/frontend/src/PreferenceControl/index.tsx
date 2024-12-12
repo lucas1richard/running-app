@@ -1,9 +1,11 @@
 import React, { KeyboardEventHandler, MouseEventHandler, useCallback } from 'react';
 import usePreferenceControl from '../hooks/usePreferenceControl';
+import type { PreferencesKeyPath } from '../reducers/preferences';
 
 type PreferenceControlProps = {
   subject: string,
-  keyPath: [string, string, ...string[]],
+  /** keyPath should be length >= 2 */
+  keyPath: PreferencesKeyPath,
   showSaveButton?: boolean,
   defaultValue?: boolean,
   saveConfig?: any & { activityId: string },
@@ -12,7 +14,6 @@ type PreferenceControlProps = {
 
 const PreferenceControl: React.FC<PreferenceControlProps> = ({
   subject = '',
-  /** @type {[string, string, ...string[]]} keyPath should be length >= 2 */
   keyPath,
   showSaveButton = false,
   defaultValue = true,

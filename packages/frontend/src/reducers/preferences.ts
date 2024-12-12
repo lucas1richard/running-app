@@ -3,27 +3,25 @@ import { createDeepEqualSelector } from '../utils';
 import deepmerge from 'deepmerge';
 import {
   REDUCER_SET_LIST_PREFS,
-  REDUCER_SET_ACTIVITY_PREFS_DEFAULTS,
   REDUCER_SET_ACTIVITY_PREFS,
   SET_GLOBAL_PREFS,
   SET_PREFS_FREE,
 } from './preferences-actions';
-import { emptyObject } from '../constants';
 import type { RootState } from '.';
 
 export type PreferencesKeyPath = [string, string, ...string[]];
 
-type ActivitiesPreferences = {
-  shouldShowLaps: boolean;
-  shouldShowSegments: boolean;
-  shouldShowSimilar: boolean;
+export type ActivityPreferences = {
+  shouldShowLaps?: boolean;
+  shouldShowSegments?: boolean;
+  shouldShowSimilar?: boolean;
 };
 
 type InitialState = {
   isModified: boolean;
   activities: {
-    default: ActivitiesPreferences & Record<string, any>;
-  } & Record<string, Record<string, any>>;
+    default: ActivityPreferences;
+  } & Record<number, ActivityPreferences>;
   list: {
     default: Record<string, any>;
     defined: Record<string, any>;
@@ -38,22 +36,6 @@ const initialState: InitialState = {
   isModified: false,
   activities: {
     default: {
-      chart0: {
-        title: 'Heart Rate',
-        dataset0: 'average_heartrate',
-        dataset1: 'velocity_smooth',
-        plotbands: {
-          zones: 'horizontal',
-        }
-      },
-      chart1: {
-        title: 'Segments',
-        dataset0: 'average_heartrate',
-        dataset1: 'velocity_smooth',
-        plotbands: {
-          zones: 'horizontal',
-        }
-      },
       shouldShowLaps: true,
       shouldShowSegments: true,
       shouldShowSimilar: true,
@@ -86,16 +68,6 @@ const preferencesReducer = (state = initialState, action) => {
           Object.entries({ ...state.list.defined, ...action.payload })
             .filter(([key, value]) => value !== undefined)
         );
-      });
-
-    case REDUCER_SET_ACTIVITY_PREFS_DEFAULTS:
-      return produce(state, (draft) => {
-        draft.isModified = true;
-        // change default to activityId when backend supports it
-        draft.activities.default = Object.fromEntries(
-          Object.entries({ ...state.activities.default, ...action.payload })
-            .filter(([key, value]) => value !== undefined)
-        ) as typeof state.activities.default;
       });
 
     case REDUCER_SET_ACTIVITY_PREFS:
@@ -164,7 +136,7 @@ export const selectPreferencesZonesId = createDeepEqualSelector(
 );
 
 const getActivityPreferences = (state: RootState, id: number) => {
-  const { default: defaultPreferences, [String(id)]: idPrefs } = getPreferencesState(state).activities;
+  const { default: defaultPreferences, [id]: idPrefs } = getPreferencesState(state).activities;
   return { ...defaultPreferences, ...idPrefs };
 };
 
@@ -181,7 +153,7 @@ export const getPreferenceFree = (state: RootState, keyPath: PreferencesKeyPath)
     ...state.preferences[firstMainArea][localArea],
   };
   const lastKey = copyPath.pop();
-  const lastObj = copyPath.reduce((acc, key) => acc[key] || emptyObject, combined);
+  const lastObj = copyPath.reduce((acc, key) => acc[key] || {}, combined);
   if (lastKey) return lastObj[lastKey];
   return lastObj;
 }
