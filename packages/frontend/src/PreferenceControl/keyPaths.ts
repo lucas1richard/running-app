@@ -1,4 +1,4 @@
-import { PreferencesKeyPath } from '../reducers/preferences';
+import { PreferencesKeyPath, ActivityPreferences } from '../reducers/preferences';
 
 const listState = ['list', 'defined'];
 
@@ -7,6 +7,9 @@ export const listDisplayHideFunction = () => [...listState, 'displayHideFunction
 
 type KeypathGenerator = (id: string) => PreferencesKeyPath;
 
-export const activityShouldShowLaps: KeypathGenerator = (id: string) => ['activities', id, 'shouldShowLaps'];
-export const activityShouldShowSegments: KeypathGenerator = (id: string) => ['activities', id, 'shouldShowSegments'];
-export const activityShouldShowSimilarWorkouts: KeypathGenerator = (id: string) => ['activities', id, 'shouldShowSimilar'];
+const makeActivityKeyPathCreator = <T extends keyof ActivityPreferences>
+  (value: T): KeypathGenerator => (id: string) => ['activities', id, value];
+
+export const activityShouldShowLaps = makeActivityKeyPathCreator('shouldShowLaps');
+export const activityShouldShowSegments = makeActivityKeyPathCreator('shouldShowSegments');
+export const activityShouldShowSimilarWorkouts = makeActivityKeyPathCreator('shouldShowSimilar');

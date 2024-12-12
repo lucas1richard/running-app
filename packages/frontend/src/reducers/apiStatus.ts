@@ -11,10 +11,12 @@ import type { RootState } from '.';
 import { useAppSelector } from '../hooks/redux';
 import { AsyncAction } from '../types';
 
-export const loading = 'loading';
-export const success = 'success';
-export const error = 'error';
-export const idle = 'idle';
+type APIStatusType = 'loading' | 'success' | 'error' | 'idle';
+
+export const loading: APIStatusType = 'loading';
+export const success: APIStatusType = 'success';
+export const error: APIStatusType = 'error';
+export const idle: APIStatusType = 'idle';
 
 type ApiStatusInitialState = {
 };
@@ -53,6 +55,8 @@ const apiStatusReducer = (state = initialState, action) => {
   return state;
 };
 
+export const getDataNotReady = (apiStatus: APIStatusType) => apiStatus === idle || apiStatus === loading;
+
 const getApiStatusState = (state: RootState) => state.apiStatus;
 
 const getApiStatus = (state: RootState, key: string) => getApiStatusState(state)[key]?.status || idle;
@@ -63,12 +67,12 @@ export const selectLoadingKeys = createDeepEqualSelector(
   (state) => Object.keys(state).filter((key) => state[key].status === loading)
 );
 
-export const useGetApiStatus = (key: AsyncAction | string) => useAppSelector(
-  (state) => selectApiStatus(state, typeof key === 'string' ? key : key?.key)
+export const useGetApiStatus = (action: AsyncAction | string) => useAppSelector(
+  (state) => selectApiStatus(state, typeof action === 'string' ? action : action?.key)
 );
 export const useGetLoadingKeys = () => useAppSelector(selectLoadingKeys, shallowEqual);
 
-export const useTriggerActionIfStatus = (action: AsyncAction, status = idle, { defer = false } = {}) => {
+export const useTriggerActionIfStatus = (action: AsyncAction, status: APIStatusType = idle, { defer = false } = {}) => {
   const dispatch = useDispatch();
   const apiStatus = useGetApiStatus(action);
   useEffect(() => {

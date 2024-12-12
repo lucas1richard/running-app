@@ -18,7 +18,6 @@ export type ActivityPreferences = {
 };
 
 type InitialState = {
-  isModified: boolean;
   activities: {
     default: ActivityPreferences;
   } & Record<number, ActivityPreferences>;
@@ -33,7 +32,6 @@ type InitialState = {
 };
 
 const initialState: InitialState = {
-  isModified: false,
   activities: {
     default: {
       shouldShowLaps: true,
@@ -63,7 +61,6 @@ const preferencesReducer = (state = initialState, action) => {
   switch (action.type) {
     case REDUCER_SET_LIST_PREFS:
       return produce(state, (draft) => {
-        draft.isModified = true;
         draft.list.defined = Object.fromEntries(
           Object.entries({ ...state.list.defined, ...action.payload })
             .filter(([key, value]) => value !== undefined)
@@ -72,14 +69,12 @@ const preferencesReducer = (state = initialState, action) => {
 
     case REDUCER_SET_ACTIVITY_PREFS:
       return produce(state, (draft) => {
-        draft.isModified = true;
         const { activityId, preferences } = action.payload;
         draft.activities[activityId] = deepmerge(state.activities.default, preferences);
       });
 
     case SET_GLOBAL_PREFS: 
       return produce(state, (draft) => {
-        draft.isModified = true;
         draft.global.defined = Object.fromEntries(
           Object.entries({ ...state.global.defined, ...action.payload })
             .filter(([key, value]) => value !== undefined)
@@ -89,7 +84,6 @@ const preferencesReducer = (state = initialState, action) => {
   case SET_PREFS_FREE: {
     const { keyPath, value } = action.payload;
     return produce(state, (draft) => {
-      draft.isModified = true;
       let pointer = draft;
       keyPath.forEach((key, index) => {
         if (index === keyPath.length - 1) {

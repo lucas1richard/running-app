@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
 import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
@@ -18,7 +19,7 @@ import WeatherReporter from './WeatherReporter';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 import PreferenceControl from '../PreferenceControl';
 import usePreferenceControl from '../hooks/usePreferenceControl';
-import { idle, loading, useTriggerActionIfStatus } from '../reducers/apiStatus';
+import { getDataNotReady, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { setActivityPrefsAct, triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import {
@@ -31,33 +32,36 @@ import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
-import { useDispatch } from 'react-redux';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
   const { id: idString } = useParams();
   const id = Number(idString);
-  const streamApiStatus = useTriggerActionIfStatus(triggerFetchActivityStreamData(id, streamTypes));
   const isLoading = [
-    streamApiStatus,
+    useTriggerActionIfStatus(triggerFetchActivityStreamData(id, streamTypes)),
     useTriggerActionIfStatus(triggerFetchActivityDetail(id)),
     useTriggerActionIfStatus(triggerFetchActivityPrefs(id)),
-  ].some((apiStatus) => (apiStatus === idle || apiStatus === loading));
+  ].some(getDataNotReady);
 
   const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
   const activity = useAppSelector((state) => selectActivity(state, id));
   const [showMap, setShowMap] = useState(false);
 
+  const [
+    tileBgColor, setTileBgColor, savePreferences
+  ] = usePreferenceControl(['activities', idString, 'tileBackgroundIndicator']);
+  const [shouldShowLaps] = usePreferenceControl(activityShouldShowLaps(idString));
+  const [shouldShowSegments] = usePreferenceControl(activityShouldShowSegments(idString));
+  const [shouldShowSimilar] = usePreferenceControl(activityShouldShowSimilarWorkouts(idString));
+  const saveConfig = useMemo(() => ({ activityId: id }), [id]);
+  
+
   const configZonesId = useAppSelector(selectPreferencesZonesId);
   const allZones = useAppSelector(selectAllHeartZones);
   const nativeZones = useAppSelector((state) => selectApplicableHeartZone(state, activity?.start_date));
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
-  const [tileBgColor, setTileBgColor, savePreferences] = usePreferenceControl(['activities', idString, 'tileBackgroundIndicator']);
-  const [shouldShowSimilar] = usePreferenceControl(activityShouldShowSimilarWorkouts(idString));
-  const [shouldShowLaps] = usePreferenceControl(activityShouldShowLaps(idString));
-  const [shouldShowSegments] = usePreferenceControl(activityShouldShowSegments(idString));
 
   const details = useAppSelector((state) => selectActivityDetails(state, id));
 
@@ -177,7 +181,7 @@ const ActivityDetailPage = () => {
       <PreferenceControl
         subject="Laps & Best Efforts"
         keyPath={activityShouldShowLaps(idString)}
-        saveConfig={{ activityId: id }}
+        saveConfig={saveConfig}
       >
         <div className="flex gap">
           <Laps id={id} />
@@ -188,7 +192,7 @@ const ActivityDetailPage = () => {
       <PreferenceControl
         subject="Segments"
         keyPath={activityShouldShowSegments(idString)}
-        saveConfig={{ activityId: id }}
+        saveConfig={saveConfig}
       >
         <SegmentsDetailDisplay
           heartData={heartRateStream?.data}
@@ -200,7 +204,7 @@ const ActivityDetailPage = () => {
       <PreferenceControl
         subject="Similar Workouts"
         keyPath={activityShouldShowSimilarWorkouts(idString)}
-        saveConfig={{ activityId: id }}
+        saveConfig={saveConfig}
       >
         <SimilarWorkouts
           activity={activity}
@@ -217,7 +221,7 @@ const ActivityDetailPage = () => {
         }}>
           Save Preferences as a General Rule
         </button>
-        <button onClick={() => savePreferences({ activityId: id })}>
+        <button onClick={() => savePreferences(saveConfig)}>
           Save Preferences For This Activity Only
         </button>
       </div>
