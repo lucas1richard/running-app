@@ -17,8 +17,9 @@ function* updateActivitySaga({ payload }) {
 }
 
 function* fetchSimilarWorkoutsSaga({ payload: id }) {
-  const queryParams = new URLSearchParams({ activityId: id });
-  const res = yield call(requestor.get, `/routes/network?${queryParams}`);
+  // const queryParams = new URLSearchParams({ activityId: id });
+  const res = yield call(requestor.get, `/activities/${id}/quick-similar`);
+  // const res = yield call(requestor.get, `/routes/network?${queryParams}`);
   const sim = yield res.json();
 
   yield put(setSimilarWorkoutsAct(id, sim));

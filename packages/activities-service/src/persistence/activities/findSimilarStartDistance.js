@@ -15,24 +15,35 @@ Decimal Places	Degrees	Distance
 7      	0.0000001      11.1 mm
 8      	0.00000001     1.11 mm
  */
-const startDistConstraint = 0.0003; // about 22 meters or 72 feet (22 * 3.28084)
-const activityDistanceContstrint = 500; // 300 meters or 984 feet
+const startDistConstraint = 0.0008; // about 88.8 meters or 289 feet (88 * 3.28084)
+const activityDistanceContstrint = 200; // 200 meters or 656 feet
 
 const findSimilarStartDistance = async (activity) => {
   return Activity.findAll(
     {
       where: {
         [Sequelize.Op.and]: {
-          sport_type: 'Run',
+          sport_type: activity.sport_type,
           ax: sequelizeCoordsDistance( // `ax` doesn't mean anything, just a placeholder
             activity.start_latlng,
             startDistConstraint,
             'start_latlng'
-          ), 
+          ),
+          dx: sequelizeCoordsDistance( // `dx` doesn't mean anything, just a placeholder
+            activity.start_latlng,
+            startDistConstraint,
+            'end_latlng'
+          ),
           distance: {
             [Sequelize.Op.between]: [ // distance between 300 meters
               activity.distance - activityDistanceContstrint,
               activity.distance + activityDistanceContstrint
+            ]
+          },
+          elapsed_time: {
+            [Sequelize.Op.between]: [ // distance between 300 meters
+              activity.elapsed_time - 300,
+              activity.elapsed_time + 300
             ]
           },
         },
@@ -40,6 +51,9 @@ const findSimilarStartDistance = async (activity) => {
           id: activity.id // not the same activity
         },
       },
+      order: [
+        ['start_date_local', 'DESC']
+      ]
     },
   )
 };

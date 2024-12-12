@@ -13,6 +13,7 @@ const { preferencesRouter } = require('./byId/preferences');
 const { segmentsRouter } = require('./byId/segments');
 const { stravaRouter } = require('./byId/strava');
 const { routeRouter } = require('./byId/route');
+const { similarActivitiesRouter } = require('./byId/similar-activities');
 const { findAllActivities } = require('../../persistence/activities');
 const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
 const getPRsByDate = require('../../controllers/getPRsByDate');
@@ -30,6 +31,7 @@ router.use([
   streamsRouter,
   stravaRouter,
   weatherRouter,
+  similarActivitiesRouter
 ]);
 
 router.get('/list', async (req, res) => {

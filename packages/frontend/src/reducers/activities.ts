@@ -112,7 +112,7 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
     case SET_SIMILAR_WORKOUTS: {
       return produce(state, (nextState) => {
         nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(
-          ({ relatedActivity }) => relatedActivity
+          ({ id }) => id
         );
       });
     }
