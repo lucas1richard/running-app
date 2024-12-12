@@ -31,6 +31,7 @@ const HeartZonesChartContainer = ({ id }) => {
     <div>
       <HeartZonesChartDisplay
         id={id}
+        averageSpeed={activity.average_speed}
         data={heartRateStream?.data || emptyArray}
         velocity={velocityStream?.data || emptyArray}
         altitude={altitudeStream?.data || emptyArray}

@@ -505,3 +505,32 @@ div.content {
   color: rgba(155, 77, 0, 1);
 }
 /* END PERSONAL RECORD CLASSES */
+
+
+.animated-line {
+  stroke-dasharray: 0.0004;
+  stroke-dashoffset: 0.01;
+  animation-name: dash;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.animate-fast {
+  animation-duration: 2s;
+}
+
+.animate-slow {
+  stroke-dasharray: 0.00025;
+  animation-duration: 4.8s;
+}
+
+@keyframes dash {
+  from {
+      stroke-dashoffset: 0.004;
+  }
+
+  to {
+      stroke-dashoffset: 0;
+  }
+}

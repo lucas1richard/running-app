@@ -6,11 +6,13 @@ import { selectStreamType } from '../../reducers/activities';
 import { convertMetricSpeedToMPH } from '../../utils';
 import { useAppSelector } from '../../hooks/redux';
 import useHRZoneIndicators from './useHRZoneIndicators';
+import classNames from 'classnames';
 
 HighchartsMap(Highcharts);
 
 type Props = {
   id: number;
+  averageSpeed: number;
   pointer: number;
   pins: Array<{
     index: number;
@@ -20,7 +22,7 @@ type Props = {
     lineColor?: string;
     lineWidth?: number
   }>;
-  segments: Array<[start: number, height: number, end: number]>;
+  segments: Array<[start: number, mphSpeed: number, end: number]>;
   velocity: number[];
   smoothAverageWindow: number;
   highlightedSegment?: { start: number; end: number; color: string };
@@ -28,6 +30,7 @@ type Props = {
 
 const RouteMap: React.FC<Props> = ({
   id,
+  averageSpeed,
   pointer,
   pins,
   segments,
@@ -62,6 +65,26 @@ const RouteMap: React.FC<Props> = ({
     });
   }, [coordsPure.length]);
 
+  // const series = useMemo(() => {
+  //   return [({
+  //     type: 'mapline',
+  //     name: `Segment`,
+  //     data: segments.map((segment) => ({
+  //       geometry: {
+  //         type: 'LineString',
+  //         coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
+  //         // coordinates: [
+  //         //   coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat])[0],
+  //         //   coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat])[100]
+  //         // ],
+  //       },
+  //       className: 'animated-line',
+  //     })),
+  //     lineWidth: 6,
+  //     enableMouseTracking: false,
+  //   })];
+  // }, [coordsPure, segments]);
+
   const series = useMemo(() => {
     return segments.map((segment, ix) => ({
       type: 'mapline',
@@ -70,6 +93,13 @@ const RouteMap: React.FC<Props> = ({
         geometry: {
           type: 'LineString',
           coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
+        },
+        className: classNames('animated-line', {
+          'animate-fast': segment[1] / averageSpeed > 1.1,
+          'animate-slow': segment[1] / averageSpeed < 0.9,
+        }),
+        styleProp: {
+          display: 'none'
         },
       }],
       animation: false,
@@ -154,6 +184,7 @@ const RouteMap: React.FC<Props> = ({
           lineWidth: 4,
         },
         animation: false,
+        enableMouseTracking: false,
         color: indicatorColor.fill,
       },
     ],

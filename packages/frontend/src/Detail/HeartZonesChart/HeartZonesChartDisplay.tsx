@@ -48,6 +48,7 @@ const chartHeight = 900;
 
 type Props = {
   id: number;
+  averageSpeed: number;
   altitude: number[];
   bestEfforts: { start_index: number; elapsed_time: number; pr_rank: number; name: string }[];
   data: number[];
@@ -62,6 +63,7 @@ type Props = {
 
 const HeartZonesChartDisplay: React.FC<Props> = ({
   id,
+  averageSpeed,
   altitude,
   bestEfforts,
   data,
@@ -593,6 +595,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           pins={pins}
           highlightedSegment={highlightedSegment}
           smoothAverageWindow={smoothAverageWindow}
+          averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
         />
       </div>
     </div>
