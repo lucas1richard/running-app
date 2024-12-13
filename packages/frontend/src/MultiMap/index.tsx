@@ -19,7 +19,7 @@ const MultiMapPage = () => {
   return (
     <div>
       <MultiMap activityConfigs={compared} showSegments={false} />
-      <Grid className="margin-t" gap="1rem" templateColumns="repeat(auto-fill, minmax(600px, 1fr))">
+      <Grid className="margin-t" gap="1rem" templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
         {activities.map((activity, index) => {
           const isToggled = compared.some(({ id }) => id === activity.id );
 
@@ -30,7 +30,7 @@ const MultiMapPage = () => {
                 'dls-black-bg': isToggled
               })}
             >
-              <Tile activity={activity} />
+              <Tile activity={activity} isCompact={true} />
               <button onClick={() => toggleCompare(activity)}>{isToggled ? 'Remove' : 'Compare'}</button>
             </div>
           )

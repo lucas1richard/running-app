@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../utils';
 import { hrZonesText } from '../colors/hrZones';
+import styles from './Tile.module.css';
 
 const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
   const percents = useMemo(() => {
@@ -11,7 +12,7 @@ const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
   if (!zones && !heartData) return null;
 
   return (
-    <div className="flex">
+    <div className={`flex ${styles.zonesWidth}`}>
       {percents.filter((n) => Boolean(Number(n))).map((percent, ix) => (
         <div
           key={`${percent}-${ix}-${id}`}

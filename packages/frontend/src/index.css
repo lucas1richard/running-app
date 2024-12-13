@@ -537,3 +537,171 @@ div.content {
       stroke-dashoffset: 0;
   }
 }
+
+.grid {
+  display: grid;
+}
+
+.grid-2-cols {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-3-cols {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.grid-4-cols {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.grid-2-rows {
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.grid-3-rows {
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.grid-4-rows {
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.grid-gap-1 {
+  gap: 1rem;
+}
+
+.grid-gap-2 {
+  gap: 2rem;
+}
+
+.grid-gap-3 {
+  gap: 3rem;
+}
+
+.grid-area-header {
+  grid-area: header;
+}
+
+.grid-area-main {
+  grid-area: main;
+}
+
+.grid-area-sidebar {
+  grid-area: sidebar;
+}
+
+.grid-area-footer {
+  grid-area: footer;
+}
+
+.grid-area-image {
+  grid-area: image;
+}
+
+.grid-area-title {
+  grid-area: title;
+}
+
+.grid-area-a1 {
+  grid-area: a1;
+}
+
+.grid-area-a2 {
+  grid-area: a2;
+}
+
+.grid-area-a3 {
+  grid-area: a3;
+}
+
+.grid-area-a4 {
+  grid-area: a4;
+}
+
+.grid-area-a5 {
+  grid-area: a5;
+}
+
+.grid-area-a6 {
+  grid-area: a6;
+}
+
+.grid-area-a7 {
+  grid-area: a7;
+}
+
+.grid-area-a8 {
+  grid-area: a8;
+}
+
+.grid-area-a9 {
+  grid-area: a9;
+}
+
+.grid-area-a10 {
+  grid-area: a10;
+}
+
+.bg-primary {
+  background-color: #007bff;
+}
+
+.bg-secondary {
+  background-color: #6c757d;
+}
+
+.bg-success {
+  background-color: #28a745;
+}
+
+.bg-danger {
+  background-color: #dc3545;
+}
+
+.bg-warning {
+  background-color: #ffc107;
+}
+
+.bg-info {
+  background-color: #17a2b8;
+}
+
+.bg-light {
+  background-color: #f8f9fa;
+}
+
+.bg-dark {
+  background-color: #343a40;
+}
+
+.text-primary {
+  color: #007bff;
+}
+
+.text-secondary {
+  color: #6c757d;
+}
+
+.text-success {
+  color: #28a745;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.text-warning {
+  color: #ffc107;
+}
+
+.text-info {
+  color: #17a2b8;
+}
+
+.text-light {
+  color: #f8f9fa;
+}
+
+.text-dark {
+  color: #343a40;
+}

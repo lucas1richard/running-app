@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import styles from './grid.module.css';
 
-type Props = {
+type GridProps = {
   templateColumns?: React.CSSProperties['gridTemplateColumns'];
   templateAreas?: React.CSSProperties['gridTemplateAreas'];
   gap?: React.CSSProperties['gap'];
@@ -11,10 +11,10 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Grid: React.FC<Props> = ({
-  templateColumns = 'inherit',
-  templateAreas = 'inherit',
-  gap = 'inherit',
+const Grid: React.FC<GridProps> = ({
+  templateColumns = 'initial',
+  templateAreas = 'initial',
+  gap = 'initial',
   columnGap = gap,
   rowGap = gap,
   className = '',

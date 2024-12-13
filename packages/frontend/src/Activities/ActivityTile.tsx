@@ -1,4 +1,3 @@
-import React from 'react';
 import Tile from './Tile';
 import Spinner from '../Loading/Spinner';
 import { useDispatch } from 'react-redux';
