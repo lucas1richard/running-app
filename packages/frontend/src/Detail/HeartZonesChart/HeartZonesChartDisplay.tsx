@@ -17,6 +17,7 @@ import {
   getDurationString,
 } from '../../utils';
 import getGradeColorAbs from './getGradeColorAbs';
+import useSegments from './useSegments';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -139,34 +140,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     ]),
     [fullTime, smoothVelocity, smoothHeartRate]
   );
-  const lapsData = useMemo(
-    () => {
-      let offset = 0;
-      return laps.map((val, ix) => {
-        const datum: [number, number, number] = [
-          offset,
-          roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
-          val.elapsed_time
-        ];
-        offset += val.elapsed_time;
-        return datum;
-      })},
-    [laps]
-  );
-  const splitsMiData = useMemo(
-    () => {
-      let offset = 0;
-      return splitsMi.map((val, ix) => {
-        const datum: [number, number, number]= [
-          offset,
-          roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
-          val.elapsed_time
-        ];
-        offset += val.elapsed_time;
-        return datum;
-      })},
-    [splitsMi]
-  );
+  const ids = useMemo(() => [id], [id]);
+  const [segments] = useSegments(ids);
 
   const bestEffortsData = useMemo(
     () => bestEfforts.map((val, ix) => ({
@@ -229,8 +204,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   const [hrMin, hrMax] = useMinMax(heartRateData);
   const [velMin, velMax] = useMinMax(velocityData);
   const [altMin, altMax] = useMinMax(altitudeData);
-  const [splitsMin] = useMinMax(splitsMiData);
-  const [lapsMin] = useMinMax(lapsData);
+  // const [splitsMin] = useMinMax(splitsMiData);
+  // const [lapsMin] = useMinMax(lapsData);
 
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
@@ -295,9 +270,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       },
       {
         ...seriesDefaultConfig,
-        name: lapsData.length < 2 ? 'Mile Split' : 'Laps',
+        name: segments.name,
+        data: segments.data,
         type: 'variwide',
-        data: lapsData.length < 2 ? splitsMiData : lapsData,
         yAxis: 2,
         fillOpacity: 0.1,
         borderColor: 'rgba(0,0,0, 1)',
@@ -457,8 +432,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         height: '15%',
         top: '10%',
         id: 'laps',
-        min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin * 0.97,
-        title: { text: lapsData.length < 2 ? 'Miles' : 'Laps', style: { color: 'black', fontSize: '1.25rem' } },
+        // min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin * 0.97,
+        title: { text: segments.name, style: { color: 'black', fontSize: '1.25rem' } },
         labels: { format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
@@ -496,15 +471,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       },
     ]
   }), [
-    magnificationFactor,
-    heartRateData,
-    velocityData,
-    lapsData,
-    splitsMiData,
-    altitudeData,
-    bestEffortsData,
-    efficiencyFactorData,
-    hrMin, hrMax, velMin, velMax, splitsMin, lapsMin, altMin, altMax, addPin, bestEfforts, grade
+    magnificationFactor, heartRateData, velocityData, segments, altitudeData, grade,
+    bestEffortsData, efficiencyFactorData, hrMin, hrMax, velMin, velMax, altMin, altMax, addPin,
+    bestEfforts,
   ]);
 
   return (
@@ -589,7 +558,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         <RouteMap
           id={id}
           pointer={latlngPointer}
-          segments={lapsData.length > 1 ? lapsData : splitsMiData}
+          segments={segments.data}
           velocity={smoothVelocity}
           pins={pins}
           highlightedSegment={highlightedSegment}

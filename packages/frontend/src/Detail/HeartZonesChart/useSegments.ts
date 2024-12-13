@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import { selectActivityDetailsMulti } from '../../reducers/activities';
 import roundToNearest from '../../utils/roundToNearest';
 import { convertMetricSpeedToMPH } from '../../utils';
 import { emptyArray } from '../../constants';
+import { useAppSelector } from '../../hooks/redux';
 
 /**
  * Returns the segments for the given activity ids.
  * If laps are present, returns laps, otherwise returns mile splits
  */
-const useSegments = (ids = []) => {
-  const multiDetails = useSelector((state) => selectActivityDetailsMulti(state, ids));
+const useSegments = (ids: number[] = emptyArray) => {
+  const multiDetails = useAppSelector((state) => selectActivityDetailsMulti(state, ids));
   const lapsMulti = useMemo(() => multiDetails.map((val) => val?.laps || emptyArray), [multiDetails]);
   const splitsMiMulti = useMemo(() => multiDetails.map((val) => val?.splits_standard || emptyArray), [multiDetails]);
 
@@ -18,7 +18,7 @@ const useSegments = (ids = []) => {
     () => {
       let offset = 0;
       return lapsMulti.map((laps) => laps.map((val, ix) => {
-        const datum = [
+        const datum: [number, number, number] = [
           offset,
           roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
           val.elapsed_time
@@ -33,7 +33,7 @@ const useSegments = (ids = []) => {
       return splitsMiMulti.map((splitsMi) => {
         let offset = 0;
         return splitsMi.map((val, ix) => {
-          const datum = [
+          const datum: [number, number, number] = [
             offset,
             roundToNearest(convertMetricSpeedToMPH(val.average_speed), 100),
             val.elapsed_time
