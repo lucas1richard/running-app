@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { selectStreamType } from '../reducers/activities';
+import { selectStreamTypeData } from '../reducers/activities';
 import styles from './Tile.module.css';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
@@ -21,7 +21,7 @@ type Props = {
 
 const Tile: React.FC<Props> = ({ activity, backgroundIndicator }) => {
   const [hovered, setHovered] = React.useState(false);
-  const heartRateStream = useAppSelector((state) => selectStreamType(state, activity.id, 'heartrate'));
+  const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, activity.id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
   const bestEfforts = activity?.bestEfforts || emptyArray;
 
@@ -33,77 +33,76 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator }) => {
   
   const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
   
+  // <div className="dls-white-bg border-radius-1 border-2">
   return (
-    <div className="dls-white-bg border-radius-1 border-2">
-      {hovered && <DetailDataFetcher id={activity.id} />}
-      <div className={`${backgroundColor} ${styles.container} gap`}>
-        <GoogleMapImage
-          activityId={activity.id}
-          polyline={getSummaryPolyline(activity)}
-          alt="summary route"
-          imgWidth={400}
-          imgHeight={200}
-          width={100}
-          height={75}
-        />
-        <div className="flex flex-justify-between flex-column flex-item-grow">
-          <div className="flex flex-justify-between">
+    <div className={`${backgroundColor} ${styles.container} gap`}>
+    {hovered && <DetailDataFetcher id={activity.id} />}
+      <GoogleMapImage
+        activityId={activity.id}
+        polyline={getSummaryPolyline(activity)}
+        alt="summary route"
+        imgWidth={400}
+        imgHeight={200}
+        width={100}
+        height={75}
+      />
+      <div className="flex flex-justify-between flex-column flex-item-grow">
+        <div className="flex flex-justify-between">
+          <div>
             <div>
-              <div>
-                {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
-              </div>
-              <Link onMouseEnter={onMouseEnter} onFocus={onMouseEnter} className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
+              {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
             </div>
-            <div className="flex-item-grow text-right">
-              <div>
-                {duration}
-                <span className="margin-l heading-4 dls-dark-gold">
-                  {convertMetersToMiles(activity.distance).toFixed(2)} <abbr>mi</abbr>
-                </span>
-              </div>
-              <div>
-                <small>Average Speed</small>
-                <span className="margin-l heading-4">
-                  {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-                </span>
-              </div>
-              <div>
-                <small>Average HR</small>
-                <span className="margin-l heading-4">
-                  {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
-                </span>
-              </div>
-              <div className="dls-blue">
-                <small>Efficiency Factor</small>
-                <span className="margin-l heading-4">
-                  {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
-                </span>
-              </div>
+            <Link onMouseEnter={onMouseEnter} onFocus={onMouseEnter} className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
+          </div>
+          <div className="flex-item-grow text-right">
+            <div>
+              {duration}
+              <span className="margin-l heading-4 dls-dark-gold">
+                {convertMetersToMiles(activity.distance).toFixed(2)} <abbr>mi</abbr>
+              </span>
+            </div>
+            <div>
+              <small>Average Speed</small>
+              <span className="margin-l heading-4">
+                {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+              </span>
+            </div>
+            <div>
+              <small>Average HR</small>
+              <span className="margin-l heading-4">
+                {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
+              </span>
+            </div>
+            <div className="dls-blue">
+              <small>Efficiency Factor</small>
+              <span className="margin-l heading-4">
+                {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
+              </span>
             </div>
           </div>
-          <div className="full-width">
-            {(heartRateStream || activity.zonesCaches[zones.id]) && (
-              <ZonesWidth
-                id={activity.id}
-                zonesCaches={activity.zonesCaches}
-                zones={zones}
-                heartData={heartRateStream?.data}
-              />
-            )}
-          </div>
-          {bestEfforts.length > 0 && (
-            <div className="flex gap flex-wrap margin-t">
-              {bestEfforts.map((effort) => (
-                <div key={effort.effort_id} className="valign-middle">
-                  <span><PRMedal color={effort.pr_rank} type="native" /></span>
-                  <small>
-                    {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
-                  </small>
-                </div>
-              ))}
-            </div>
+        </div>
+        <div className="full-width">
+          {(heartRateStream || activity.zonesCaches[zones.id]) && (
+            <ZonesWidth
+              id={activity.id}
+              zonesCaches={activity.zonesCaches}
+              zones={zones}
+              heartData={heartRateStream}
+            />
           )}
         </div>
+        {bestEfforts.length > 0 && (
+          <div className="flex gap flex-wrap margin-t">
+            {bestEfforts.map((effort) => (
+              <div key={effort.effort_id} className="valign-middle">
+                <span><PRMedal color={effort.pr_rank} type="native" /></span>
+                <small>
+                  {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
+                </small>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

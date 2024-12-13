@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { selectActivity, selectActivityDetails, selectStreamType } from '../reducers/activities';
+import { selectActivity, selectActivityDetails, selectStreamTypeData } from '../reducers/activities';
 import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
@@ -43,8 +43,8 @@ const ActivityDetailPage = () => {
     useTriggerActionIfStatus(triggerFetchActivityPrefs(id)),
   ].some(getDataNotReady);
 
-  const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
-  const velocityStream = useAppSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
+  const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
+  const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
   const activity = useAppSelector((state) => selectActivity(state, id));
   const [showMap, setShowMap] = useState(false);
 
@@ -163,8 +163,8 @@ const ActivityDetailPage = () => {
       <HeartZonesDisplay
         zones={zones}
         nativeZones={nativeZones}
-        heartData={heartRateStream?.data}
-        velocityData={velocityStream?.data}
+        heartData={heartRateStream}
+        velocityData={velocityStream}
       />
 
       <HeartZonesChartContainer id={id} />
@@ -185,7 +185,7 @@ const ActivityDetailPage = () => {
       >
         <div className="flex gap">
           <Laps id={id} />
-          <BestEfforts bestEfforts={details.best_efforts} />
+          <BestEfforts bestEfforts={activity.bestEfforts} />
         </div>
       </PreferenceControl>
 
@@ -195,8 +195,8 @@ const ActivityDetailPage = () => {
         saveConfig={saveConfig}
       >
         <SegmentsDetailDisplay
-          heartData={heartRateStream?.data}
-          velocityData={velocityStream?.data}
+          heartData={heartRateStream}
+          velocityData={velocityStream}
           segments={details?.segment_efforts || emptyArray}
         />
       </PreferenceControl>

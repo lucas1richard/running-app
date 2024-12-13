@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
-import Highcharts, { color } from 'highcharts';
+import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
-import { selectStreamType } from '../../reducers/activities';
+import { selectStreamTypeData } from '../../reducers/activities';
 import { convertMetricSpeedToMPH } from '../../utils';
 import { useAppSelector } from '../../hooks/redux';
 import useHRZoneIndicators from './useHRZoneIndicators';
 import classNames from 'classnames';
 import getGradeColorAbs from '../HeartZonesChart/getGradeColorAbs';
+import { emptyArray } from '../../constants';
 
 HighchartsMap(Highcharts);
 
@@ -39,7 +40,7 @@ const RouteMap: React.FC<Props> = ({
   smoothAverageWindow,
   highlightedSegment = { start: 0, end: 0, color: 'white' },
 }) => {
-  const latlngStream = useAppSelector((state) => selectStreamType(state, id, 'latlng'));
+  const latlngStream = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng'));
 
   const [animating, setAnimating] = React.useState(false);
   const [animationPointer, setAnimationPointer] = React.useState(0);
@@ -48,8 +49,8 @@ const RouteMap: React.FC<Props> = ({
   const usedPointer = animating ? animationPointer : pointer;
 
   const coordsPure = useMemo(() => {
-    if (!latlngStream?.data) return [];
-    return latlngStream.data.map(([lat, lon]) => ({ lon, lat }));
+    if (!latlngStream) return emptyArray;
+    return latlngStream.map(([lat, lon]) => ({ lon, lat }));
   }, [latlngStream]);
 
   const [indicatorColor] = useHRZoneIndicators([id], usedPointer, smoothAverageWindow);

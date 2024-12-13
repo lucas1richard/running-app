@@ -2,26 +2,27 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../hooks/redux';
 import { selectActivity, selectStreamTypeMulti } from '../reducers/activities';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
 import useSegments from '../Detail/HeartZonesChart/useSegments';
 import useHRZoneIndicators from '../Detail/RouteMap/useHRZoneIndicators';
 import dayjs from 'dayjs';
+import { emptyArray } from '../constants';
 
 HighchartsMap(Highcharts);
 
-const emptyArray = [];
 const defHighlightedSegment = { start: 0, end: 0, color: 'white' };
+
 const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
   const ids = useMemo(() => activityConfigs.map(({ id }) => id), [activityConfigs]);
-  const activities = useSelector((state) => ids.map((id) => selectActivity(state, id)));
+  const activities = useAppSelector((state) => ids.map((id) => selectActivity(state, id)));
 
   const [progress, setProgress] = useState(0);
 
   const segmentsArray = useSegments(ids);
-  const latlngStreamArray = useSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
-  const longestStream = latlngStreamArray.reduce((acc, val) => Math.max(acc, val?.data?.length || 0), 0);
+  const latlngStreamArray = useAppSelector((state) => selectStreamTypeMulti(state, ids, 'latlng')) || emptyArray;
+  const longestStream = latlngStreamArray.reduce((acc, val) => Math.max(acc, val?.length || 0), 0);
   const highlightedSegmentArray = useMemo(
     () => activityConfigs.map(({ highlightedSegment }) => highlightedSegment || defHighlightedSegment),
     [activityConfigs]
@@ -37,7 +38,7 @@ const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
 
   const coordsPure = useMemo(
     () => latlngStreamArray.map(
-      (latlngStream) => latlngStream?.data?.map(([lat, lon]) => ({ lon, lat })) || emptyArray
+      (latlngStream) => latlngStream?.map(([lat, lon]) => ({ lon, lat })) || emptyArray
     ),
     [latlngStreamArray]
   );

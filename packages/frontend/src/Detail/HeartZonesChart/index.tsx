@@ -1,5 +1,5 @@
 import HeartZonesChartDisplay from './HeartZonesChartDisplay';
-import { selectActivity, selectActivityDetails, selectStreamType } from '../../reducers/activities';
+import { selectActivity, selectActivityDetails, selectStreamTypeData } from '../../reducers/activities';
 import { selectHeartZones } from '../../reducers/heartzones';
 import usePreferenceControl from '../../hooks/usePreferenceControl';
 import { emptyArray } from '../../constants';
@@ -7,11 +7,11 @@ import { useAppSelector } from '../../hooks/redux';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
-  const heartRateStream = useAppSelector((state) => selectStreamType(state, id, 'heartrate'));
-  const velocityStream = useAppSelector((state) => selectStreamType(state, id, 'velocity_smooth'));
-  const altitudeStream = useAppSelector((state) => selectStreamType(state, id, 'altitude'));
-  const timeStream = useAppSelector((state) => selectStreamType(state, id, 'time'));
-  const gradeStream = useAppSelector((state) => selectStreamType(state, id, 'grade_smooth'));
+  const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
+  const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
+  const altitudeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'altitude'));
+  const timeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'time'));
+  const gradeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'grade_smooth'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity?.start_date));
   const details = useAppSelector((state) => selectActivityDetails(state, id));
   const bestEfforts = details?.best_efforts || emptyArray;
@@ -32,11 +32,11 @@ const HeartZonesChartContainer = ({ id }) => {
       <HeartZonesChartDisplay
         id={id}
         averageSpeed={activity.average_speed}
-        data={heartRateStream?.data || emptyArray}
-        velocity={velocityStream?.data || emptyArray}
-        altitude={altitudeStream?.data || emptyArray}
-        grade={gradeStream?.data || emptyArray}
-        time={timeStream?.data || emptyArray}
+        data={heartRateStream}
+        velocity={velocityStream}
+        altitude={altitudeStream}
+        grade={gradeStream}
+        time={timeStream}
         zones={zones}
         zonesBandsDirection={zonesBandsDirection}
         laps={laps}

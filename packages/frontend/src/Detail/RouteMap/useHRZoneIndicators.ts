@@ -10,10 +10,10 @@ import { useAppSelector } from '../../hooks/redux';
 const useHRZoneIndicators = (ids: number[], pointer: number, smoothAverageWindow: number) => {
   const activity = useAppSelector((state) => selectActivity(state, ids[0]));
   const heartRateStreamMulti = useAppSelector((state) => selectStreamTypeMulti(state, ids, 'heartrate')) || emptyArray;
-  const heartRateArray = heartRateStreamMulti.map((stream) => stream?.data || emptyArray);
+  const heartRateArray = heartRateStreamMulti.map((stream) => stream || emptyArray);
 
   const timeStreamMulti = useAppSelector((state) => selectStreamTypeMulti(state, ids, 'time'));
-  const timeArray = timeStreamMulti.map((stream) => stream?.data || emptyArray);
+  const timeArray = timeStreamMulti.map((stream) => stream || emptyArray);
 
   const fullTimeArray = useMemo(() => {
     return timeArray.map((time) => {

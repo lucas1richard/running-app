@@ -1,7 +1,7 @@
 import { FC, useEffect } from 'react';
 import requestor from '../utils/requestor/index';
 import { convertHeartDataToZoneTimes } from '../utils';
-import { selectActivity, selectStreamType } from '../reducers/activities';
+import { selectActivity, selectStreamTypeData } from '../reducers/activities';
 import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import { selectPreferencesZonesId } from '../reducers/preferences';
 import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
@@ -25,7 +25,7 @@ const DetailDataFetcher: FC<Props> = ({ id }) => {
   const zonesId = configZonesId === -1 ? nativeZones?.id : configZonesId;
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
-  const heartRateStream = useAppSelector<Stream>((state) => selectStreamType(state, id, 'heartrate'));
+  const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
 
   useTriggerActionIfStatus(triggerFetchActivityDetail(id));
   useTriggerActionIfStatus(triggerFetchActivityPrefs(id));
@@ -36,11 +36,11 @@ const DetailDataFetcher: FC<Props> = ({ id }) => {
     if (activity?.zonesCaches?.[zones?.id]) return;
 
     requestor.post('/heartzones/set-cache', {
-      times: convertHeartDataToZoneTimes(heartRateStream.data, zones),
+      times: convertHeartDataToZoneTimes(heartRateStream, zones),
       id: activity?.id,
       zonesId: zones?.id,
     });
-  }, [activity?.id, activity?.zonesCaches, heartRateStream?.data, streamStatus, zones]);
+  }, [activity?.id, activity?.zonesCaches, heartRateStream, streamStatus, zones]);
 
   return null;
 };

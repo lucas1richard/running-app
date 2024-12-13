@@ -91,7 +91,7 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
 
         if (action.payload.description) {
           const detail = state.details[activity.id];
-          nextState.details[activity.id] = { ...detail, desciption: action.payload.desciption };
+          nextState.details[activity.id] = { ...detail, description: action.payload.description };
         }
       });
     }
@@ -180,25 +180,29 @@ const getActivityDetailsMulti = (state: RootState, ids: number[]) => {
 };
 export const selectActivityDetailsMulti = createDeepEqualSelector(getActivityDetailsMulti, (res) => res);
 
-interface SelectStreamType<Multi = false> {
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream[] : Stream;
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'heartrate'): Multi extends true ? Stream[] : Stream;
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'distance'): Multi extends true ? Stream[] : Stream;
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'altitude'): Multi extends true ? Stream[] : Stream;
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'velocity_smooth'): Multi extends true ? Stream[] : Stream;
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'grade_smooth'): Multi extends true ? Stream[] : Stream;
-  (state: RootState, id: Multi extends true ? number[] : number, findType: 'latlng'): Multi extends true ? LatLngStream[] : LatLngStream;
+interface SelectStreamTypeData<Multi = false> {
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'heartrate'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'distance'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'altitude'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'velocity_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'grade_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (state: RootState, id: Multi extends true ? number[] : number, findType: 'latlng'): Multi extends true ? LatLngStream['data'][] : LatLngStream['data'];
 }
 
 const getStreamType = (state: RootState, id: number, findType: SimpleStreamTypes) => getActivitiesState(state)
   .streams?.[id]?.stream?.find?.(({ type }) => type === findType);
-export const selectStreamType = createDeepEqualSelector(getStreamType, (res) => res) as SelectStreamType;
+const getStreamTypeData = (state: RootState, id: number, findType: SimpleStreamTypes) => {
+  const stream = getStreamType(state, id, findType);
+  return stream?.data || emptyArray;
+};
+export const selectStreamTypeData = createDeepEqualSelector(getStreamTypeData, (res) => res) as SelectStreamTypeData;
 
 const getStreamTypeMulti = (state: RootState, ids: number[], findType: string) => {
   const activities = getActivitiesState(state);
-  return ids?.map((id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType));
+  return ids?.map((id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)?.data);
 }
-export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res) as SelectStreamType<true>;
+export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res) as SelectStreamTypeData<true>;
 
 const getSimilarWorkouts = (state: RootState, id: number) => {
   const activitiesState = getActivitiesState(state);

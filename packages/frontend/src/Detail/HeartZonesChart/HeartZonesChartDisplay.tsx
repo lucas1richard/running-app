@@ -83,7 +83,6 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
 
   const addPin = useCallback(function() {
     setPins((prev) => {
-      console.log(this);
       const name = this.series.name;
       const next = [...prev];
       const existing = next.find((pin) => pin.index === this.index && pin.name === name);

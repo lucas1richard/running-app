@@ -4,7 +4,7 @@ declare module '*.css' {
 }
 
 type BestEffort = {
-  pr_rank: number;
+  pr_rank: null | number;
   name: string;
   elapsed_time: number;
   effort_id: number;
@@ -42,10 +42,6 @@ interface Activity {
   map: {
     summary_polyline: string;
   };
-}
-
-interface ActivityDetails {
-  
 }
 
 type HeartZone = {

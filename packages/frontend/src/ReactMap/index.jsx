@@ -4,18 +4,18 @@ import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
 import { DeckGlOverlay } from './deckgl-overlay';
 import { emptyObject, GOOGLE_API_KEY } from '../constants';
-import { selectActivity, selectStreamType } from '../reducers/activities';
+import { selectActivity, selectStreamTypeData } from '../reducers/activities';
 import { selectHeartZones } from '../reducers/heartzones';
 import { condenseZonesFromHeartRate } from '../utils';
 import { hrZonesGraph } from '../colors/hrZones';
 
 const ReactMap = ({ id }) => {
-  const { data: latlngStreamData = [] } = useSelector((state) => selectStreamType(state, id, 'latlng')) || emptyObject;
+  const latlngStreamData = useSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;
   const activity = useSelector((state) => selectActivity(state, id)) || emptyObject;
-  const heartRateStream = useSelector((state) => selectStreamType(state, id, 'heartrate'));
+  const heartRateStream = useSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const zones = useSelector((state) => selectHeartZones(state, activity.start_date));
   const lnglatStream = useMemo(() => latlngStreamData.map(([lat, lng]) => [lng, lat]), [latlngStreamData]);
-  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, heartRateStream.data), [zones, heartRateStream.data]);
+  const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, heartRateStream), [zones, heartRateStream]);
 
   const defaultCenter = useMemo(() => {
     if (!lnglatStream.length) return { lat: 37.74, lng: -122.4 };
