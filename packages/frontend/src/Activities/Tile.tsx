@@ -16,7 +16,7 @@ import { useAppSelector } from '../hooks/redux';
 
 type Props = {
   activity: Activity;
-  backgroundIndicator: string;
+  backgroundIndicator?: string;
 }
 
 const Tile: React.FC<Props> = ({ activity, backgroundIndicator }) => {

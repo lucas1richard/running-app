@@ -14,7 +14,11 @@ HighchartsMap(Highcharts);
 
 const defHighlightedSegment = { start: 0, end: 0, color: 'white' };
 
-const MultiMap = ({ indexPointer, activityConfigs, showSegments = true }) => {
+const MultiMap = ({
+  indexPointer = undefined,
+  activityConfigs,
+  showSegments = true,
+}) => {
   const ids = useMemo(() => activityConfigs.map(({ id }) => id), [activityConfigs]);
   const activities = useAppSelector((state) => ids.map((id) => selectActivity(state, id)));
 

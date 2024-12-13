@@ -297,6 +297,9 @@ input[type="range"]::-webkit-slider-thumb {
 .dls-white-bg {
   background-color: white;
 }
+.dls-black-bg {
+  background-color: black;
+}
 .dls-yellow-bg-faint {
   background-color: #FFFFE0;
 }

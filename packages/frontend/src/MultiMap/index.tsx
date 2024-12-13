@@ -1,12 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import dayjs from 'dayjs';
 import { selectActivities } from '../reducers/activities';
 import MultiMap from './MultiMap';
-import GoogleMapImage from '../Common/GoogleMapImage';
-import { getSummaryPolyline } from '../utils';
 import classNames from 'classnames';
 import { toggleComparedActivityAct } from '../reducers/multimap-actions';
 import { selectComparedActivities } from '../reducers/multimap';
+import { Grid } from '../DLS';
+import Tile from '../Activities/Tile';
 
 const MultiMapPage = () => {
   const activities = useSelector(selectActivities);
@@ -20,33 +19,23 @@ const MultiMapPage = () => {
   return (
     <div>
       <MultiMap activityConfigs={compared} showSegments={false} />
-      <div className="flex flex-wrap gap">
+      <Grid className="margin-t" gap="1rem" templateColumns="repeat(auto-fill, minmax(600px, 1fr))">
         {activities.map((activity, index) => {
           const isToggled = compared.some(({ id }) => id === activity.id );
 
           return (
             <div
               key={activity.id}
-              className={classNames('card flex-item-grow flex-item-shrink',{
-                'dls-highlighted-bg': isToggled
+              className={classNames('card flex flex-column flex-justify-between',{
+                'dls-black-bg': isToggled
               })}
             >
-              <GoogleMapImage
-                activityId={activity.id}
-                polyline={getSummaryPolyline(activity)}
-                alt="summary route"
-                imgWidth={600}
-                imgHeight={300}
-                width="400"
-                height="200"
-              />
-              <h2>{activity.name}</h2>
-              <p>{dayjs(activity.start_date).format('YYYY-MM-DD')}</p>
+              <Tile activity={activity} />
               <button onClick={() => toggleCompare(activity)}>{isToggled ? 'Remove' : 'Compare'}</button>
             </div>
           )
         })}
-      </div>
+      </Grid>
     </div>
   );
 }
