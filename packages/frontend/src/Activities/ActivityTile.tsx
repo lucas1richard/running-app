@@ -4,12 +4,12 @@ import { useDispatch } from 'react-redux';
 import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
 import { useGetApiStatus } from '../reducers/apiStatus';
 
-const ActivityTile = ({ activity, backgroundIndicator, showHideFunction }) => {
+const ActivityTile = ({ className, activity, backgroundIndicator, showHideFunction }) => {
   const dispatch = useDispatch();
   const isLoading = useGetApiStatus(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`) === 'loading';
 
   return (
-    <div key={activity.id}>
+    <div key={activity.id} className={className}>
       <Tile
         activity={activity}
         backgroundIndicator={backgroundIndicator}

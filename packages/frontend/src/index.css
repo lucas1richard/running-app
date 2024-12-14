@@ -117,10 +117,10 @@ button:active {
   border: 3px solid #ddd;
 }
 .text-center {
-  text-align: center;
+  text-align: center !important;
 }
 .text-right {
-  text-align: right;
+  text-align: right !important;
 }
 .margin-t {
   margin-top: 1rem;

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { selectStreamTypeData } from '../reducers/activities';
@@ -15,12 +15,21 @@ import { useAppSelector } from '../hooks/redux';
 import { Grid } from '../DLS';
 import styles from './Tile.module.css';
 import classNames from 'classnames';
+import styled from 'styled-components';
 
 type Props = {
   activity: Activity;
   isCompact?: boolean;
   backgroundIndicator?: string;
 }
+
+const Title = styled.div`
+  grid-area: title;
+  text-align: left;
+  ${props => props.theme.breakpoints.down('sm')} {
+    text-align: center;
+  }
+`;
 
 const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => {
   const [hovered, setHovered] = React.useState(false);
@@ -32,7 +41,10 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
     setHovered(true);
   }, []);
 
-  const duration = <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />;
+  const duration = useMemo(
+    () => <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />,
+    [activity.elapsed_time]
+  );
   
   const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
   
@@ -54,6 +66,14 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           "zonesWidth zonesWidth zonesWidth"
           "bestEfforts bestEfforts bestEfforts"
         `}
+        templateColumnsSm={'auto'}
+        templateAreasSm={`
+          "image"
+          "title"
+          "stats"
+          "zonesWidth"
+          "bestEfforts"
+        `}
       >
         <div className={classNames(styles.gridImage, { 'text-center': isCompact })}>
           <GoogleMapImage
@@ -66,12 +86,12 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             height={75}
           />
         </div>
-        <div className={classNames(styles.gridTitle, { 'text-center': isCompact })}>
+        <Title className={classNames({ 'text-center': isCompact })}>
           <div>
             {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
           </div>
           <Link onMouseEnter={onMouseEnter} onFocus={onMouseEnter} className="heading-4" to={`/${activity.id}/detail`}>{activity.name}</Link>
-        </div>
+        </Title>
         <div className={classNames(`${styles.stats}`, { 'text-right': !isCompact })}>
           <div>
             {duration}

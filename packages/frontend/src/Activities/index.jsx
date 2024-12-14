@@ -84,6 +84,7 @@ const Activities = () => {
                       <ActivityTile
                         key={activity.id}
                         activity={activity}
+                        className="card"
                         backgroundIndicator={tileBackgroundIndicator}
                         showHideFunction={showHideFunction}
                       />
