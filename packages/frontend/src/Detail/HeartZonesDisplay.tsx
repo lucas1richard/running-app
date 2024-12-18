@@ -1,7 +1,9 @@
 import React, { useMemo } from 'react';
 import DurationDisplay from '../Common/DurationDisplay';
-import { hrZonesBg, hrZonesBgStrong, hrZonesText } from '../colors/hrZones';
+import { hrZonesBg, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
+import styled from 'styled-components';
+import { Grid } from '../DLS';
 
 type HeartZonesDisplayProps = {
   zones: HeartZone;
@@ -10,50 +12,77 @@ type HeartZonesDisplayProps = {
   velocityData: number[];
 };
 
-const Cell = ({ ix, title, range, percents, totalTimes, avg }) => {
+type CellProps = {
+  ix: number;
+  title: string;
+  range: string | JSX.Element;
+  percents: string[];
+  totalTimes: number[];
+  avg: { avg: number; max: number }[];
+};
+
+const CellWrapper = styled.div<{ ix: number, isMaxPercentage?: boolean }>`
+  padding: 1rem;
+  background: ${(props) => hrZonesBg[props.ix + 1]};
+  border: 1px solid ${(props) => hrZonesBg[props.ix + 1]};
+  ${(props) => props.isMaxPercentage
+    ?`box-shadow: inset 0 0 1rem ${hrZonesText[props.ix + 1]};`
+    : ''
+  }
+`;
+
+const DataWrapper = styled.div`
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+  display: flex;
+  ${(props) => props.theme.breakpoints.down('xl')} {
+    flex-direction: column;
+    justify-items: flex-start;
+  }
+`;
+
+const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg }) => {
   const isMaxPercentage = Number(percents[ix]) === Math.max.apply(null, percents.map(Number));
   return (
-    <div
+    <CellWrapper
+      ix={ix}
       className="flex-item-grow"
-      style={{
-        padding: '1rem',
-        background: hrZonesBg[ix + 1],
-        border: `1px solid ${isMaxPercentage ? hrZonesBgStrong[ix+1] : hrZonesBg[ix + 1]}`,
-        ...isMaxPercentage ? { boxShadow: `inset 0 0 1rem ${hrZonesText[ix+1]}` } : {},
-      }}
+      isMaxPercentage={isMaxPercentage}
     >
-      <div className="text-center margin-b">
-        <b>{title}</b> ({range})
-      </div>
-        <div className="flex flex-justify-between">
-          <div>
-            Time in Zone:
-          </div>
-          <div>
-            <DurationDisplay numSeconds={totalTimes[ix]} /> <span>({percents[ix]}%)</span>
-          </div>
+      <DataWrapper className="text-center margin-b">
+        <b>{title}</b>
+        <span>({range})</span>
+      </DataWrapper>
+      <DataWrapper className="flex flex-justify-between">
+        <b>
+          Time in Zone:
+        </b>
+        <div>
+          <DurationDisplay numSeconds={totalTimes[ix]} /> <span>({percents[ix]}%)</span>
         </div>
-        {avg[ix] && (
-          <>
-            <div className="flex flex-justify-between">
-              <div>
-                Avg Pace in Zone:
-              </div>
-              <div>
-                <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
-              </div>
+      </DataWrapper>
+      {avg[ix] && (
+        <>
+          <DataWrapper className="flex flex-justify-between">
+            <b>
+              Avg Pace in Zone:
+            </b>
+            <div>
+              <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
             </div>
-            <div className="flex flex-justify-between">
-              <div>
-                Fastest Pace in Zone:
-              </div>
-              <div>
-                <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)))} />/mi
-              </div>
+          </DataWrapper>
+          <DataWrapper className="flex flex-justify-between">
+            <b>
+              Fastest Pace in Zone:
+            </b>
+            <div>
+              <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)))} />/mi
             </div>
-          </>
-        )}
-    </div>
+          </DataWrapper>
+        </>
+      )}
+    </CellWrapper>
   );
 };
 
@@ -73,20 +102,24 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
   const isUsingNonNativeZones = nativeZones.id !== zones.id;
 
   return (
-    <div>
+    <div className='dls-white-bg'>
       {isUsingNonNativeZones && (
         <div>
           <small>Note: Using Non-native Heart Rate Zones</small>
         </div>
       )}
       <div className="border-1">
-        <div className="flex">
+        <Grid
+          className="flex flex-column"
+          templateColumns='repeat(5, 1fr)'
+          templateColumnsSm='repeat(1, 1fr)'
+          templateColumnsMd='repeat(1, 1fr)'
+          templateColumnsLg='repeat(5, 1fr)'
+        >
           <Cell
             ix={0}
-            title="Zone
-            1"
+            title="Zone 1"
             range={`${zones.z1} - ${zones.z2 - 1}`}
-
             percents={percents}
             totalTimes={totalTimes}
             avg={avg}
@@ -123,7 +156,7 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
             totalTimes={totalTimes}
             avg={avg}
           />
-        </div>
+        </Grid>
       </div>
     </div>
   );

@@ -3,6 +3,11 @@ import { useSelector } from '../../../node_modules/react-redux/dist/react-redux'
 import { selectActivityDetails } from '../../reducers/activities';
 import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '../../utils';
 import DurationDisplay from '../../Common/DurationDisplay';
+import styled from 'styled-components';
+
+const TableWrapper = styled.div`
+  overflow-x: auto;
+`;
 
 const processLaps = (laps) => {
   let timeStart = 0;
@@ -47,7 +52,7 @@ const Laps = ({ id }) => {
   if (!laps) return null;
 
   return (
-    <div>
+    <TableWrapper>
       <table className="dls-white-bg">
         <thead>
           <tr>
@@ -79,7 +84,7 @@ const Laps = ({ id }) => {
           )}
         </tbody>
       </table>
-    </div>
+    </TableWrapper>
   );
 };
 

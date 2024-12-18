@@ -14,7 +14,7 @@ const GoogleMapImage = ({
   imgWidth,
   imgHeight,
   height = 100,
-  width = 100,
+  width,
   ...rest
 }) => {
   const src = `http://localhost:3002/routes/${activityId}.png?size=${imgWidth || 900}x${imgHeight || 450}&maptype=roadmap&path=enc:${polyline}`;
@@ -46,7 +46,7 @@ const GoogleMapImage = ({
     <>
       <div
         className={classNames('img', { 'display-none': !isLoading && !isError })}
-        style={{ width: Number(width), height: Number(height), background: '#333' }}
+        style={{ maxWidth: width, height: Number(height), background: '#333' }}
       />
       {polyline && <img
         src={src}
@@ -55,7 +55,7 @@ const GoogleMapImage = ({
         onError={onError}
         onLoad={onLoad}
         height={height}
-        width={width}
+        style={{ maxWidth: width }}
         {...rest}
       />}
     </>

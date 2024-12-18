@@ -1,6 +1,8 @@
 import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
+import classNames from 'classnames';
+import styled from 'styled-components';
 import { selectStreamTypeData } from '../reducers/activities';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
@@ -12,10 +14,8 @@ import PRMedal from '../Common/Icons/PRMedal';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
-import { Grid } from '../DLS';
+import { Grid, GridArea } from '../DLS';
 import styles from './Tile.module.css';
-import classNames from 'classnames';
-import styled from 'styled-components';
 
 type Props = {
   activity: Activity;
@@ -26,7 +26,7 @@ type Props = {
 const Title = styled.div`
   grid-area: title;
   text-align: left;
-  ${props => props.theme.breakpoints.down('sm')} {
+  ${props => props.theme.breakpoints.down('md')} {
     text-align: center;
   }
 `;
@@ -75,7 +75,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           "bestEfforts"
         `}
       >
-        <div className={classNames(styles.gridImage, { 'text-center': isCompact })}>
+        <GridArea area="image">
           <GoogleMapImage
             activityId={activity.id}
             polyline={getSummaryPolyline(activity)}
@@ -85,7 +85,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             width={100}
             height={75}
           />
-        </div>
+        </GridArea>
         <Title className={classNames({ 'text-center': isCompact })}>
           <div>
             {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}

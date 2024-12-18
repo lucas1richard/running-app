@@ -18,6 +18,7 @@ import {
 } from '../../utils';
 import getGradeColorAbs from './getGradeColorAbs';
 import useSegments from './useSegments';
+import { Grid } from '../../DLS';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -477,7 +478,10 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   ]);
 
   return (
-    <div className="flex">
+    <Grid
+      templateColumns="1fr"
+      templateColumnsXl="3fr 1fr"
+    >
       <div className="flex-item-grow">
         <div>
           <label>
@@ -566,7 +570,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
         />
       </div>
-    </div>
+    </Grid>
   );
 };
 

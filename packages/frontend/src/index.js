@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit'
-import { ThemeProvider } from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 import createSagaMiddleware from 'redux-saga'
 import {
   createBrowserRouter,
@@ -24,15 +24,27 @@ import SideNav from './SideNav';
 import PersonalRecords from './PersonalRecords';
 import Volume from './Volume';
 import MultiMapPage from './MultiMap';
+import ViewSizeDisplay from './Common/ViewSizeDisplay';
 
 enableMapSet();
+
+const AppContent = styled.div`
+  margin-left: 200px;
+  padding: 1px 16px;
+  min-height: 100vh;
+  ${props => props.theme.breakpoints.down('md')} {
+    margin-left: 0;
+    padding:  0;
+  }
+`;
 
 const AppLayout = () => (
   <div>
     <SideNav />
-    <div className="flex-item-grow content">
+    <AppContent>
       <Outlet />
-    </div>
+    </AppContent>
+    <ViewSizeDisplay />
   </div>
 );
 

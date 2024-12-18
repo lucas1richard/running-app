@@ -32,6 +32,7 @@ import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
+import { Grid } from '../DLS';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -94,16 +95,16 @@ const ActivityDetailPage = () => {
   } = activity;
 
   return (
-    <div className={`pad`}>
+    <Grid className={`pad`} gap="1rem">
       <DetailDataFetcher id={id} />
-      <div className="flex flex-justify-center gap margin-b">
+      <Grid templateColumns='1fr' gap='1rem' templateColumnsLg='1fr 1fr' templateColumnsXl='1fr 1fr'>
         <GoogleMapImage
           activityId={id}
           polyline={details?.map?.polyline}
           imgHeight={600}
           imgWidth={1200}
           height={600}
-          width={600}
+          width={'100%'}
           alt="route"
         />
         <div className="card">
@@ -158,7 +159,7 @@ const ActivityDetailPage = () => {
             </div>
           </div>
         </div>
-      </div>
+      </Grid>
 
       <HeartZonesDisplay
         zones={zones}
@@ -183,10 +184,10 @@ const ActivityDetailPage = () => {
         keyPath={activityShouldShowLaps(idString)}
         saveConfig={saveConfig}
       >
-        <div className="flex gap">
+        <Grid templateColumns='1fr' gap='1rem' templateColumnsLg='auto 1fr' templateColumnsXl='auto 1fr'>
           <Laps id={id} />
           <BestEfforts bestEfforts={activity.bestEfforts} />
-        </div>
+        </Grid>
       </PreferenceControl>
 
       <PreferenceControl
@@ -225,7 +226,7 @@ const ActivityDetailPage = () => {
           Save Preferences For This Activity Only
         </button>
       </div>
-    </div>
+    </Grid>
   );
 };
 
