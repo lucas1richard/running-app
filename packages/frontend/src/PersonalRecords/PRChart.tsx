@@ -6,6 +6,7 @@ import { prColors } from '../Common/colors';
 import classNames from 'classnames';
 import { getDuration, getDurationString } from '../utils';
 import { rankMap } from '../Common/Icons/PRMedal';
+import useViewSize from '../hooks/useViewSize';
 
 const prColorsArr = [
   { value: 0, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
@@ -34,6 +35,7 @@ const yAxisDefaultConfig = {
 }
 
 const PRChart = ({ records: recordsProp, title }) => {
+  const isSmall = useViewSize().lte('sm');
   const records = useMemo(
     () => recordsProp.filter(({ start_date_local }) => dayjs(start_date_local).isAfter(dayjs().subtract(1, 'year'))).reverse(),
     [recordsProp]
@@ -74,7 +76,7 @@ const PRChart = ({ records: recordsProp, title }) => {
           },
         })),
         yAxis: 0,
-        pointWidth: 15,
+        pointWidth: isSmall ? 8 : 15,
         dataLabels: {
           enabled: true,
           useHTML: true,
@@ -161,7 +163,7 @@ const PRChart = ({ records: recordsProp, title }) => {
         fontSize: '18px'
       },
     },
-  }), [records, title]);
+  }), [isSmall, records, title]);
 
   return (
     <HighchartsReact

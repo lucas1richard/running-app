@@ -32,21 +32,6 @@ const prColorsArr = [
   { color: 'white', borderColor: 'black' },
 ]
 
-const seriesDefaultConfig = {
-  type: 'area',
-  states: {
-    inactive: {
-      opacity: 1
-    },
-    hover: {
-      lineWidthPlus: 0,
-    }
-  },
-  fillOpacity: 0.3,
-  lineWidth: 3,
-  animation: false,
-};
-
 const chartHeight = 900;
 
 type Props = {
@@ -207,6 +192,22 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   const [altMin, altMax] = useMinMax(altitudeData);
 
   const enableYAxisLabels = viewSize.gte('md');
+  const isSmall = viewSize.lte('sm');
+
+  const seriesDefaultConfig = useMemo(() => ({
+    type: 'area',
+    states: {
+      inactive: {
+        opacity: 1
+      },
+      hover: {
+        lineWidthPlus: 0,
+      }
+    },
+    fillOpacity: 0.3,
+    lineWidth: isSmall ? 2 : 3,
+    animation: false,
+  }), [isSmall]);
 
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
@@ -398,10 +399,10 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     xAxis: {
       gridLineWidth: 2,
       alignTicks: false,
-      tickInterval: 240,
+      tickInterval: isSmall ? 600 : 240,
       minorGridLineWidth: 1,
       minorTicks: true,
-      minorTickInterval: 60,
+      minorTickInterval: isSmall ? undefined : 60,
       minorTickLength: 4,
       type: 'linear',
       minorGridLineColor: 'rgba(0,0,0,0.3)',
@@ -477,7 +478,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         opposite: false,
       },
     ]
-  }), [magnificationFactor, heartRateData, velocityData, segments.name, segments.data, altitudeData, grade, bestEffortsData, efficiencyFactorData, hrMin, hrMax, enableYAxisLabels, velMin, velMax, altMin, altMax, addPin, bestEfforts]);
+  }), [isSmall, seriesDefaultConfig, magnificationFactor, heartRateData, velocityData, segments.name, segments.data, altitudeData, grade, bestEffortsData, efficiencyFactorData, hrMin, hrMax, enableYAxisLabels, velMin, velMax, altMin, altMax, addPin, bestEfforts]);
 
   return (
     <Grid

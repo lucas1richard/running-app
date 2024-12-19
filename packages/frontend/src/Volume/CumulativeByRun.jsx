@@ -3,9 +3,11 @@ import { useSelector } from 'react-redux';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { selectActivities } from '../reducers/activities';
+import useViewSize from '../hooks/useViewSize';
 
 const CumulativeByRun = () => {
   const activities = useSelector(selectActivities);
+  const isSmall = useViewSize().lte('sm');
 
   const data = useMemo(() => {
     let totalDistance = 0;
@@ -32,7 +34,7 @@ const CumulativeByRun = () => {
     ({
     chart: {
       type: 'line',
-      height: 600,
+      height: isSmall ? 800 : 600,
       animation: false,
     },
     title: {
@@ -65,14 +67,14 @@ const CumulativeByRun = () => {
             [1, 'rgba(0,0,0,0)'],
           ],
         },
-        pointWidth: 6,
         animation: false,
         marker: {
           enabled: true,
+          radius: isSmall ? 3 : 5,
         },
       },
     ],
-  }), [data]);
+  }), [data, isSmall]);
 
   return (
     <div>

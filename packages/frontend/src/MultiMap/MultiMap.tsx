@@ -144,7 +144,7 @@ const MultiMap = ({
   ({
     chart: {
       map: 'custom/world',
-      // height: 1200,
+      height: 1200,
       animation: false,
     },
     title: {

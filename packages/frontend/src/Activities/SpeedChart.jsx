@@ -21,8 +21,6 @@ const seriesDefaultConfig = {
 
 const yAxisDefaultConfig = {
   crosshair: true,
-  gridLineWidth: 1,
-  minorGridLineWidth: 1,
   minorTickInterval: 'auto',
   tickInterval: 1,
   gridLineColor: 'rgba(0,0,0,0.4)',

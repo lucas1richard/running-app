@@ -48,17 +48,21 @@ const makeSizeProps = (propArg: PropsArg) => {
   `;
 };
 
-export type SizeProp<Base extends string, T> = Partial<Record<`${Base}`
-| `${Base}Xs`
-| `${Base}Sm`
-| `${Base}SmDown`
-| `${Base}SmUp`
-| `${Base}Md`
-| `${Base}MdDown`
-| `${Base}MdUp`
-| `${Base}Lg`
-| `${Base}LgDown`
-| `${Base}LgUp`
-| `${Base}Xl`, T>>;
+export type SizeProp<Base extends string, T> = Partial<
+  Record<
+    `${Base}`
+    | `${Base}Xs`
+    | `${Base}Sm`
+    | `${Base}SmDown`
+    | `${Base}SmUp`
+    | `${Base}Md`
+    | `${Base}MdDown`
+    | `${Base}MdUp`
+    | `${Base}Lg`
+    | `${Base}LgDown`
+    | `${Base}LgUp`
+    | `${Base}Xl`, T
+  >
+>;
 
 export default makeSizeProps;

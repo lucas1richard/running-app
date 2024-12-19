@@ -5,6 +5,7 @@ interface FlexProps extends
   SizeProp<'direction', 'row' | 'column'>
   , SizeProp<'alignItems', 'flex-start' | 'center' | 'flex-end'>
   , SizeProp<'justify', 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around'>
+  , SizeProp<'wrap', 'wrap' | 'nowrap' | 'wrap-reverse'>
   , SizeProp<'gap', string> {}
 
 const Flex = styled.div<FlexProps>`
@@ -14,6 +15,7 @@ const Flex = styled.div<FlexProps>`
       ['direction', 'flex-direction'],
       ['alignItems', 'align-items'],
       ['justify', 'justify-content'],
+      ['wrap', 'flex-wrap'],
       ['gap', 'gap'],
     ]
   )}

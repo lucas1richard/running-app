@@ -9,6 +9,7 @@ import useHRZoneIndicators from './useHRZoneIndicators';
 import classNames from 'classnames';
 import getGradeColorAbs from '../HeartZonesChart/getGradeColorAbs';
 import { emptyArray } from '../../constants';
+import useViewSize from '../../hooks/useViewSize';
 
 HighchartsMap(Highcharts);
 
@@ -40,6 +41,7 @@ const RouteMap: React.FC<Props> = ({
   smoothAverageWindow,
   highlightedSegment = { start: 0, end: 0, color: 'white' },
 }) => {
+  const viewSize = useViewSize();
   const latlngStream = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng'));
 
   const [animating, setAnimating] = React.useState(false);
@@ -47,6 +49,7 @@ const RouteMap: React.FC<Props> = ({
   const intervalRef = useRef(null);
 
   const usedPointer = animating ? animationPointer : pointer;
+  const isSmall = viewSize.lte('sm');
 
   const coordsPure = useMemo(() => {
     if (!latlngStream) return emptyArray;
@@ -91,11 +94,11 @@ const RouteMap: React.FC<Props> = ({
       }],
       color: seriesColors[ix][1],
       animation: false,
-      lineWidth: 6,
+      lineWidth: isSmall ? 3 : 6,
       showInLegend: segments.length <= 8,
       enableMouseTracking: false,
     }));
-  }, [averageSpeed, coordsPure, segments, seriesColors]);
+  }, [averageSpeed, coordsPure, segments, seriesColors, isSmall]);
 
   const memoHighlightedSegment = useMemo(() => {
     return {
@@ -112,10 +115,10 @@ const RouteMap: React.FC<Props> = ({
         borderColor: 'blue',
       }],
       animation: false,
-      lineWidth: 12,
+      lineWidth: isSmall ? 8: 12,
       enableMouseTracking: false,
     };
-  }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start]);
+  }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start, isSmall]);
 
   const memoPins = useMemo(() => ({
       type: 'mappoint',
@@ -167,9 +170,9 @@ const RouteMap: React.FC<Props> = ({
         data: [coordsPure[usedPointer]],
         marker: {
           symbol: 'circle',
-          radius: 10,
+          radius: isSmall ? 5 : 10,
           lineColor: indicatorColor.stroke,
-          lineWidth: 4,
+          lineWidth: isSmall ? 2 : 4,
         },
         animation: false,
         enableMouseTracking: false,
@@ -177,6 +180,7 @@ const RouteMap: React.FC<Props> = ({
       },
     ],
   }), [
+    isSmall,
     series,
     memoHighlightedSegment,
     memoPins,
