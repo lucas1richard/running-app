@@ -1,128 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
-import makeStyledCssRule from './utils/makeStyledCssRule';
-
-const gridTemplateColumns = makeStyledCssRule('templateColumns', 'grid-template-columns');
-const gridTemplateColumnsXl = makeStyledCssRule('templateColumnsXl', 'grid-template-columns');
-const gridTemplateColumnsLg = makeStyledCssRule('templateColumnsLg', 'grid-template-columns');
-const gridTemplateColumnsMd = makeStyledCssRule('templateColumnsMd', 'grid-template-columns');
-const gridTemplateColumnsSm = makeStyledCssRule('templateColumnsSm', 'grid-template-columns');
-const gridTemplateColumnsXs = makeStyledCssRule('templateColumnsXs', 'grid-template-columns');
-
-const gridTemplateAreas = makeStyledCssRule('templateAreas', 'grid-template-Areas');
-const gridTemplateAreasXl = makeStyledCssRule('templateAreasXl', 'grid-template-Areas');
-const gridTemplateAreasLg = makeStyledCssRule('templateAreasLg', 'grid-template-Areas');
-const gridTemplateAreasMd = makeStyledCssRule('templateAreasMd', 'grid-template-Areas');
-const gridTemplateAreasSm = makeStyledCssRule('templateAreasSm', 'grid-template-Areas');
-const gridTemplateAreasXs = makeStyledCssRule('templateAreasXs', 'grid-template-Areas');
-
-const gridColGap = makeStyledCssRule('colGap', 'column-gap');
-const gridColGapXl = makeStyledCssRule('colGapXl', 'column-gap');
-const gridColGapLg = makeStyledCssRule('colGapLg', 'column-gap');
-const gridColGapMd = makeStyledCssRule('colGapMd', 'column-gap');
-const gridColGapSm = makeStyledCssRule('colGapSm', 'column-gap');
-const gridColGapXs = makeStyledCssRule('colGapXs', 'column-gap');
-
-const gridRowGap = makeStyledCssRule('rowGap', 'row-gap');
-const gridRowGapXl = makeStyledCssRule('rowGapXl', 'row-gap');
-const gridRowGapLg = makeStyledCssRule('rowGapLg', 'row-gap');
-const gridRowGapMd = makeStyledCssRule('rowGapMd', 'row-gap');
-const gridRowGapSm = makeStyledCssRule('rowGapSm', 'row-gap');
-const gridRowGapXs = makeStyledCssRule('rowGapXs', 'row-gap');
-
-const gridGap = makeStyledCssRule('gap', 'gap');
-const gridGapXl = makeStyledCssRule('gapXl', 'gap');
-const gridGapLg = makeStyledCssRule('gapLg', 'gap');
-const gridGapMd = makeStyledCssRule('gapMd', 'gap');
-const gridGapSm = makeStyledCssRule('gapSm', 'gap');
-const gridGapXs = makeStyledCssRule('gapXs', 'gap');
+import makeSizeProps, { SizeProp } from '../utils/makeSizeProps';
 
 const Grid = styled.div<GridProps>`
   display: grid;
-  ${gridTemplateColumns}
-  ${gridTemplateAreas}
-  ${gridColGap}
-  ${gridRowGap}
-  ${gridGap}
 
-  ${({ theme }) => theme.breakpoints.down('sm')} {
-    ${gridTemplateColumnsXs}
-    ${gridTemplateAreasXs}
-    ${gridRowGapXs}
-    ${gridColGapXs}
-    ${gridGapXs}
-  }
-
-  ${({ theme }) => theme.breakpoints.between('sm', 'md')} {
-    ${gridTemplateColumnsSm}
-    ${gridTemplateAreasSm}
-    ${gridRowGapSm}
-    ${gridColGapSm}
-    ${gridGapSm}
-  }
-
-  ${({ theme }) => theme.breakpoints.between('md', 'lg')} {
-    ${gridTemplateColumnsMd}
-    ${gridTemplateAreasMd}
-    ${gridRowGapMd}
-    ${gridColGapMd}
-    ${gridGapMd}
-  }
-
-  ${({ theme }) => theme.breakpoints.between('lg', 'xl')} {
-    ${gridTemplateColumnsLg}
-    ${gridTemplateAreasLg}
-    ${gridRowGapLg}
-    ${gridColGapLg}
-    ${gridGapLg}
-  }
-
-  ${({ theme }) => theme.breakpoints.up('xl')} {
-    ${gridTemplateColumnsXl}
-    ${gridTemplateAreasXl}
-    ${gridRowGapXl}
-    ${gridColGapXl}
-    ${gridGapXl}
-  }
+  ${makeSizeProps([
+    ['templateColumns', 'grid-template-columns'],
+    ['templateAreas', 'grid-template-areas'],
+    ['colGap', 'column-gap'],
+    ['rowGap', 'row-gap'],
+    ['gap', 'gap'],
+  ])}
 `;
 
-type GridProps = {
-  templateColumns?: string;
-  templateColumnsXl?: string;
-  templateColumnsLg?: string;
-  templateColumnsMd?: string;
-  templateColumnsSm?: string;
-  templateColumnsXs?: string;
-
-  templateAreas?: string;
-  templateAreasXl?: string;
-  templateAreasLg?: string;
-  templateAreasMd?: string;
-  templateAreasSm?: string;
-  templateAreasXs?: string;
-
-  colGap?: string;
-  colGapXl?: string;
-  colGapLg?: string;
-  colGapMd?: string;
-  colGapSm?: string;
-  colGapXs?: string;
-
-  rowGap?: string;
-  rowGapXl?: string;
-  rowGapLg?: string;
-  rowGapMd?: string;
-  rowGapSm?: string;
-  rowGapXs?: string;
-
-  gap?: string;
-  gapXl?: string;
-  gapLg?: string;
-  gapMd?: string;
-  gapSm?: string;
-  gapXs?: string;
-  className?: string;
-  children?: React.ReactNode;
-};
+interface GridProps extends SizeProp<'templateColumns', string>,
+  SizeProp<'templateAreas', string>,
+  SizeProp<'colGap', string>,
+  SizeProp<'rowGap', string>,
+  SizeProp<'gap', string>
+  {
+    className?: string;
+    children?: React.ReactNode;
+  };
 
 export default Grid;

@@ -10,12 +10,10 @@ const Volume = () => {
       <div>
         <CumulativeByRun />
       </div>
-      <Flex directionSm="column" directionXs="column">
+      <Flex directionSmDown="column">
         <VolumeTable timeGroup="week" />
         {viewSize.gte('md') && (
-          <div>
-            <VolumeTable timeGroup="month" />
-          </div>
+          <VolumeTable timeGroup="month" />
         )}
       </Flex>
     </div>

@@ -99,7 +99,7 @@ const ActivityDetailPage = () => {
   return (
     <Grid className={`pad`} gap="1rem">
       <DetailDataFetcher id={id} />
-      <Grid templateColumns='1fr' gap='1rem' templateColumnsLg='1fr 1fr' templateColumnsXl='1fr 1fr'>
+      <Grid templateColumns='1fr' gap='1rem' templateColumnsLgUp='1fr 1fr'>
         <GoogleMapImage
           activityId={id}
           polyline={details?.map?.polyline}
@@ -126,7 +126,7 @@ const ActivityDetailPage = () => {
               <h3>
                 <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
-              <Flex directionSm="column" directionXs="column">
+              <Flex directionSm="column" directionXs="column" gap="1rem">
                 <div className="margin-t">
                   <div className="heading-2">
                     <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>
@@ -186,7 +186,7 @@ const ActivityDetailPage = () => {
         keyPath={activityShouldShowLaps(idString)}
         saveConfig={saveConfig}
       >
-        <Grid templateColumns='1fr' gap='1rem' templateColumnsLg='auto 1fr' templateColumnsXl='auto 1fr'>
+        <Grid templateColumns='1fr' gap='1rem' templateColumnsLgUp='auto 1fr'>
           <Laps id={id} />
           <BestEfforts bestEfforts={activity.bestEfforts} />
         </Grid>

@@ -66,16 +66,8 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           "zonesWidth zonesWidth zonesWidth"
           "bestEfforts bestEfforts bestEfforts"
         `}
-        templateColumnsSm={'auto'}
-        templateAreasSm={`
-          "image"
-          "title"
-          "stats"
-          "zonesWidth"
-          "bestEfforts"
-        `}
-        templateColumnsXs={'auto'}
-        templateAreasXs={`
+        templateColumnsSmDown={'auto'}
+        templateAreasSmDown={`
           "image"
           "title"
           "stats"
