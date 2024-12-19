@@ -2,11 +2,13 @@ import React from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc'
 import classNames from 'classnames';
+import { Flex } from '../DLS';
 
 dayjs.extend(utc)
 
 const ZonesHeader = ({ zones, start, isCompact }) => {
   const establishedText = `Since ${dayjs(start).utc().format(isCompact ? 'MM/DD/YY' : 'MMMM DD, YYYY')}`;
+
   return (
     <div>
       {(start && !isCompact) && (
@@ -14,8 +16,8 @@ const ZonesHeader = ({ zones, start, isCompact }) => {
           {establishedText}
         </h2>
       )}
-      <div>
-        <div className="flex border-radius-1">
+      <div className="flex flex-column">
+        <Flex directionXs="column" className="border-radius-1">
           {(start && isCompact) && (
             <div
               className={classNames(
@@ -77,7 +79,7 @@ const ZonesHeader = ({ zones, start, isCompact }) => {
               <b>Zone 5</b> (>={zones.z5})
             </div>
           </div>
-        </div>
+        </Flex>
       </div>
     </div>
   );

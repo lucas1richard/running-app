@@ -74,6 +74,14 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           "zonesWidth"
           "bestEfforts"
         `}
+        templateColumnsXs={'auto'}
+        templateAreasXs={`
+          "image"
+          "title"
+          "stats"
+          "zonesWidth"
+          "bestEfforts"
+        `}
       >
         <GridArea area="image">
           <GoogleMapImage

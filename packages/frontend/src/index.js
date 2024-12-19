@@ -24,7 +24,7 @@ import SideNav from './SideNav';
 import PersonalRecords from './PersonalRecords';
 import Volume from './Volume';
 import MultiMapPage from './MultiMap';
-import ViewSizeDisplay from './Common/ViewSizeDisplay';
+import { Container } from './DLS';
 
 enableMapSet();
 
@@ -39,13 +39,14 @@ const AppContent = styled.div`
 `;
 
 const AppLayout = () => (
-  <div>
+  <Container providesViewSize={true}>
     <SideNav />
     <AppContent>
-      <Outlet />
+      <Container showViewSizeDisplay={true}>
+        <Outlet />
+      </Container>
     </AppContent>
-    <ViewSizeDisplay />
-  </div>
+  </Container>
 );
 
 // create the saga middleware

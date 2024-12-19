@@ -31,23 +31,23 @@ export default function createBreakpoints(breakpoints = defaultBreakpoints) {
   } = breakpoints;
 
   function up(key: BreakPoint) {
-    return `@media (min-width:${values[key]}${unit})`;
+    return `@container (min-width: ${values[key]}${unit})`;
   }
 
   function down(key: BreakPoint) {
-    return `@media (max-width:${values[key]}${unit})`;
+    return `@container (max-width: ${values[key]}${unit})`;
   }
 
   function between(start: BreakPoint, end: BreakPoint) {
     return (
-      `@media (min-width:${values[start]}${unit}) and ` +
-      `(max-width:${values[end]}${unit})`
+      `@container (min-width: ${values[start]}${unit}) and ` +
+      `(max-width: ${values[end]}${unit})`
     );
   }
 
   function only(key: BreakPoint) {
     return (
-      `@media (min-width:${values[key]}${unit}) and ` +
+      `@container (min-width:${values[key]}${unit}) and ` +
       `(max-width:${values[key]}${unit})`
     );
   }
