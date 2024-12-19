@@ -3,6 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { convertMetricSpeedToMPH } from '../utils';
 import { useMemo } from 'react';
+import useViewSize from '../hooks/useViewSize';
 
 const seriesDefaultConfig = {
   states: {
@@ -31,10 +32,13 @@ const yAxisDefaultConfig = {
 }
 
 const SpeedChart = ({ activities: actProp }) => {
+  const viewSize = useViewSize();
   const activities = useMemo(
     () => actProp.filter(({ start_date }) => dayjs(start_date).isAfter(dayjs().subtract(1, 'year'))).reverse(),
     [actProp]
   );
+
+  const enableYAxis = viewSize.gte('md');
 
   const options = useMemo(() =>
     /** @type {Highcharts.Options} */
@@ -103,12 +107,14 @@ const SpeedChart = ({ activities: actProp }) => {
       {
         ...yAxisDefaultConfig,
         title: {
+          enabled: enableYAxis,
           text: 'Avg Speed',
           style: {
             color: 'black'
           }
         },
         labels: {
+          enabled: enableYAxis,
           format: '{value} mph',
           style: {
             color: 'black',
@@ -119,12 +125,14 @@ const SpeedChart = ({ activities: actProp }) => {
         ...yAxisDefaultConfig,
         top: '33%',
         title: {
+          enabled: enableYAxis,
           text: 'Distance',
           style: {
             color: 'blue',
           },
         },
         labels: {
+          enabled: enableYAxis,
           format: '{value} mi',
           style: {
             color: 'blue',
@@ -136,6 +144,7 @@ const SpeedChart = ({ activities: actProp }) => {
         ...yAxisDefaultConfig,
         top: '66%',
         title: {
+          enabled: enableYAxis,
           text: 'Avg HR',
           style: {
             color: 'black'
@@ -144,6 +153,7 @@ const SpeedChart = ({ activities: actProp }) => {
         tickInterval: 10,
         offset: 0,
         labels: {
+          enabled: enableYAxis,
           format: '{value}',
           style: {
             color: 'black',
@@ -187,7 +197,7 @@ const SpeedChart = ({ activities: actProp }) => {
         fontSize: '18px'
       },
     },
-  }), [activities]);
+  }), [activities, enableYAxis]);
 
   return (
     <div style={{ height: 610 }}>

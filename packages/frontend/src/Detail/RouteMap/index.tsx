@@ -152,7 +152,6 @@ const RouteMap: React.FC<Props> = ({
     ({
     chart: {
       map: 'custom/world',
-      height: 900,
       animation: false,
     },
     title: {

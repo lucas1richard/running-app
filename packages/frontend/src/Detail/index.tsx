@@ -32,7 +32,8 @@ import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
-import { Grid } from '../DLS';
+import { Flex, Grid } from '../DLS';
+import useViewSize from '../hooks/useViewSize';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -65,6 +66,7 @@ const ActivityDetailPage = () => {
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
   const details = useAppSelector((state) => selectActivityDetails(state, id));
+  const viewSize = useViewSize();
 
   const { backgroundColor } = getWeatherStyles(activity?.weather);
 
@@ -103,7 +105,7 @@ const ActivityDetailPage = () => {
           polyline={details?.map?.polyline}
           imgHeight={600}
           imgWidth={1200}
-          height={600}
+          height={viewSize.gte('md') ? 600 : 400}
           width={'100%'}
           alt="route"
         />
@@ -124,7 +126,7 @@ const ActivityDetailPage = () => {
               <h3>
                 <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
-              <div className="flex flex-justify-between">
+              <Flex directionSm="column" directionXs="column">
                 <div className="margin-t">
                   <div className="heading-2">
                     <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>
@@ -141,7 +143,7 @@ const ActivityDetailPage = () => {
                     Max {max_heartrate} bpm
                   </div>
                 </div>
-              </div>
+              </Flex>
             </div>
             <div className="text-center dls-blue">
               <div className="heading-5">

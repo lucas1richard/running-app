@@ -19,6 +19,7 @@ import {
 import getGradeColorAbs from './getGradeColorAbs';
 import useSegments from './useSegments';
 import { Grid } from '../../DLS';
+import useViewSize from '../../hooks/useViewSize';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -73,10 +74,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   time,
   grade,
   zones,
-  laps,
-  splitsMi,
   zonesBandsDirection,
 }) => {
+  const viewSize = useViewSize();
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const [plotLines, setPlotLines] = useState([]);
   const [latlngPointer, setLatlngPointer] = useState(0);
@@ -205,8 +205,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   const [hrMin, hrMax] = useMinMax(heartRateData);
   const [velMin, velMax] = useMinMax(velocityData);
   const [altMin, altMax] = useMinMax(altitudeData);
-  // const [splitsMin] = useMinMax(splitsMiData);
-  // const [lapsMin] = useMinMax(lapsData);
+
+  const enableYAxisLabels = viewSize.gte('md');
 
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
@@ -414,8 +414,14 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         min: hrMin,
         max: hrMax,
         id: 'hr',
-        labels: { style: { color: 'red' } },
-        title: { text: 'Heart Rate', style: { color: 'red', fontSize: '1.25rem' } },
+        labels: {
+          style: { color: 'red' },
+          enabled: enableYAxisLabels,
+        },
+        title: {
+          text: 'Heart Rate', style: { color: 'red', fontSize: '1.25rem' },
+          enabled: enableYAxisLabels,
+        },
       },
       { // Secondary yAxis
         gridLineWidth: 1,
@@ -424,8 +430,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         min: velMin,
         max: velMax,
         id: 'vel',
-        title: { text: 'Velocity', style: { color: 'black', fontSize: '1.25rem' } },
-        labels: { format: '{value} mph', style: { color: 'black' } },
+        title: { enabled: enableYAxisLabels, text: 'Velocity', style: { color: 'black', fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
       { // Secondary yAxis
@@ -434,8 +440,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         top: '10%',
         id: 'laps',
         // min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin * 0.97,
-        title: { text: segments.name, style: { color: 'black', fontSize: '1.25rem' } },
-        labels: { format: '{value} mph', style: { color: 'black' } },
+        title: { enabled: enableYAxisLabels, text: segments.name, style: { color: 'black', fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: 'black' } },
         opposite: true,
       },
       { // Secondary yAxis
@@ -446,8 +452,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         min: altMin,
         max: altMax,
         id: 'alt',
-        title: { text: 'Elevation', style: { color: 'brown', fontSize: '1.25rem' } },
-        labels: { format: '{value}', style: { color: 'brown' } },
+        title: { enabled: enableYAxisLabels, text: 'Elevation', style: { color: 'brown', fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: 'brown' } },
         opposite: false,
       },
       { // Secondary yAxis
@@ -456,8 +462,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         top: '75%',
         offset: 0,
         id: 'bestEfforts',
-        title: { text: 'Best Efforts', style: { color: 'gold', fontSize: '1.25rem' } },
-        labels: { format: '{value}', style: { color: 'gold' } },
+        title: { enabled: enableYAxisLabels, text: 'Best Efforts', style: { color: 'gold', fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: 'gold' } },
         opposite: true,
       },
       { // Secondary yAxis
@@ -466,16 +472,12 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         top: '35%',
         offset: 0,
         id: 'EfficiencyFactor',
-        title: { text: 'Efficiency Factor', style: { color: 'blue', fontSize: '1.25rem' } },
-        labels: { format: '{value}', style: { color: 'blue' } },
+        title: { enabled: enableYAxisLabels, text: 'Efficiency Factor', style: { color: 'blue', fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: 'blue' } },
         opposite: false,
       },
     ]
-  }), [
-    magnificationFactor, heartRateData, velocityData, segments, altitudeData, grade,
-    bestEffortsData, efficiencyFactorData, hrMin, hrMax, velMin, velMax, altMin, altMax, addPin,
-    bestEfforts,
-  ]);
+  }), [magnificationFactor, heartRateData, velocityData, segments.name, segments.data, altitudeData, grade, bestEffortsData, efficiencyFactorData, hrMin, hrMax, enableYAxisLabels, velMin, velMax, altMin, altMax, addPin, bestEfforts]);
 
   return (
     <Grid
@@ -519,24 +521,39 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         <div className="flex valign-middle margin-t">
           <label htmlFor="magnificationFactor-range">Magnification: </label>
           <div className="flex-item-grow margin-l">
-            <input
-              type="range"
-              id="magnificationFactor-range"
-              min={initialMagnificationFactor}
-              max={initialMagnificationFactor * 10}
-              value={magnificationFactor}
-              onChange={(e) => setMagnificationFactor(parseInt(e.target.value, 10))}
-              className="flex-item-grow"
-              draggable={false}
-              about='Magnification factor for the chart'
-            />
-            <div className="flex flex-justify-between">
-              {[1,2,3,4,5,6,7,8,9,10].map((val) => (
-                <button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
-                  {val}x
-                </button>
-              ))}
-            </div>
+            {enableYAxisLabels && (
+              <>
+                <input
+                  type="range"
+                  id="magnificationFactor-range"
+                  min={initialMagnificationFactor}
+                  max={initialMagnificationFactor * 10}
+                  value={magnificationFactor}
+                  onChange={(e) => setMagnificationFactor(parseInt(e.target.value, 10))}
+                  className="flex-item-grow"
+                  draggable={false}
+                  about='Magnification factor for the chart'
+                />
+                <div className="flex flex-justify-between">
+                  {[1,2,3,4,5,6,7,8,9,10].map((val) => (
+                    <button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
+                      {val}x
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+            {!enableYAxisLabels && (
+              <div>
+                <select onChange={(ev) => setMagnificationFactor(initialMagnificationFactor * Number(ev.target.value))}>
+                  {[1,2,3,4,5,6,7,8,9,10].map((val) => (
+                    <option key={val} value={val}>
+                      {val}x
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
           </div>
         </div>
         <div>

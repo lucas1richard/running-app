@@ -30,7 +30,6 @@ enableMapSet();
 
 const AppContent = styled.div`
   margin-left: 200px;
-  padding: 1px 16px;
   min-height: 100vh;
   ${props => props.theme.breakpoints.down('md')} {
     margin-left: 0;
@@ -42,7 +41,7 @@ const AppLayout = () => (
   <Container providesViewSize={true}>
     <SideNav />
     <AppContent>
-      <Container showViewSizeDisplay={true}>
+      <Container showViewSizeDisplay={true} providesViewSize={true}>
         <Outlet />
       </Container>
     </AppContent>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
 
 const validateSrc = (src) => new Promise((resolve, reject) => {
@@ -8,12 +8,22 @@ const validateSrc = (src) => new Promise((resolve, reject) => {
   img.addEventListener('error', () => resolve(false));
 });
 
-const GoogleMapImage = ({
+type GoogleMapImageProps = {
+  polyline: string;
+  activityId: number;
+  imgWidth?: number;
+  imgHeight?: number;
+  height?: number | string;
+  width?: number | string;
+  alt?: string;
+};
+
+const GoogleMapImage: React.FC<GoogleMapImageProps> = ({
   polyline,
   activityId,
   imgWidth,
   imgHeight,
-  height = 100,
+  height = 'auto',
   width,
   ...rest
 }) => {
@@ -46,7 +56,7 @@ const GoogleMapImage = ({
     <>
       <div
         className={classNames('img', { 'display-none': !isLoading && !isError })}
-        style={{ maxWidth: width, height: Number(height), background: '#333' }}
+        style={{ maxWidth: width, height, background: '#333' }}
       />
       {polyline && <img
         src={src}

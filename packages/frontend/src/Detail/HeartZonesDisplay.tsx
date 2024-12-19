@@ -3,7 +3,7 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { hrZonesBg, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
 import styled from 'styled-components';
-import { Grid } from '../DLS';
+import { Flex } from '../DLS';
 
 type HeartZonesDisplayProps = {
   zones: HeartZone;
@@ -109,12 +109,11 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
         </div>
       )}
       <div className="border-1">
-        <Grid
-          className="flex flex-column"
-          templateColumns='repeat(5, 1fr)'
-          templateColumnsSm='repeat(1, 1fr)'
-          templateColumnsMd='repeat(1, 1fr)'
-          templateColumnsLg='repeat(5, 1fr)'
+        <Flex
+          direction="column"
+          directionMd="row"
+          directionLg="row"
+          directionXl="row"
         >
           <Cell
             ix={0}
@@ -156,7 +155,7 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
             totalTimes={totalTimes}
             avg={avg}
           />
-        </Grid>
+        </Flex>
       </div>
     </div>
   );

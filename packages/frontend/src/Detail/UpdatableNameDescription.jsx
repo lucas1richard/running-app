@@ -25,16 +25,18 @@ const UpdatableNameDescription = ({
   }, [name, id, description, dispatch]);
 
   return (
-    <div className="flex flex-column">
-      <input
-        type="string"
-        className={`heading-1 dls-dark-gold text-center ${styles.quietInput}`}
-        value={name}
-        onChange={(ev) => setName(ev.target.value)}
-      />
+    <div>
+      <div>
+        <input
+          type="string"
+          className={`heading-4 dls-dark-gold text-center ${styles.quietInput}`}
+          value={name}
+          onChange={(ev) => setName(ev.target.value)}
+        />
+      </div>
       <textarea
         type="text"
-        className={`heading-5 text-center ${styles.quietInput}`}
+        className={`heading-5 full-width text-center ${styles.quietInput}`}
         value={description}
         placeholder="Activity Description"
         onChange={(ev) => setDescription(ev.target.value)}

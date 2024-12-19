@@ -9,7 +9,16 @@ const flexColumnMd = makeStyledCssRule('directionMd', 'flex-direction');
 const flexColumnSm = makeStyledCssRule('directionSm', 'flex-direction');
 const flexColumnXs = makeStyledCssRule('directionXs', 'flex-direction');
 
-const Flex = styled.div`
+type FlexProps = {
+  direction?: 'row' | 'column';
+  directionXl?: 'row' | 'column';
+  directionLg?: 'row' | 'column';
+  directionMd?: 'row' | 'column';
+  directionSm?: 'row' | 'column';
+  directionXs?: 'row' | 'column';
+};
+
+const Flex = styled.div<FlexProps>`
   display: flex;
   ${flexColumn}
 
