@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addHeartZonesAct } from '../../reducers/heartzones-actions';
+import { Flex } from '../../DLS';
 
 const AddNewHRZones = ({ latestZone }) => {
   const dispatch = useDispatch();
@@ -9,7 +10,7 @@ const AddNewHRZones = ({ latestZone }) => {
   const [z3, setZ3] = useState(latestZone?.z3);
   const [z4, setZ4] = useState(latestZone?.z4);
   const [z5, setZ5] = useState(latestZone?.z5);
-  const [startDate, setStartDate] = useState();
+  const [startDate, setStartDate] = useState(new Date());
 
   const onFormSubmit = useCallback((ev) => {
     ev.preventDefault();
@@ -19,7 +20,7 @@ const AddNewHRZones = ({ latestZone }) => {
   return (
     <div className="card">
       <form onSubmit={onFormSubmit}>
-        <div className="flex gap">
+        <Flex gap="1rem" directionSmDown="column">
           <div className="flex flex-align-center">
             <label htmlFor="z1-input">Zone 1 Min HR:</label>&nbsp;
             <input
@@ -80,10 +81,14 @@ const AddNewHRZones = ({ latestZone }) => {
               onChange={(ev) => setZ5(ev.target.value)}
             />
           </div>
-        </div>
+        </Flex>
         <div className="flex flex-align-center">
           <label htmlFor="start-date-input">Start Date:</label>&nbsp;
-          <input id="start-date-input" type="date" value={startDate} onChange={(ev) => setStartDate(ev.target.value)} />
+          <input
+            id="start-date-input"
+            type="date"
+            onChange={(ev) => setStartDate(new Date(ev.target.value))}
+          />
         </div>
         <button>
           Add

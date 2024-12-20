@@ -5,7 +5,7 @@ import { getDateString } from '../../utils';
 import styles from './HeartZones.module.css';
 import AddNewHRZones from './AddNewZones';
 
-const HeartZones = ({}) => {
+const HeartZones = () => {
   const allzones = useSelector(selectAllHeartZones);
   return (
     <>
