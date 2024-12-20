@@ -3,11 +3,13 @@ import { createSelectorCreator, weakMapMemoize } from 'reselect';
 import fastDeepEqual from 'fast-deep-equal';
 import gradientScale from './colors/gradient-scale';
 
-/**
- * @param {number} numSeconds number of seconds
- * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
- */
-export const getDuration = (numSeconds: number, text = [' sec ', ' min ', ' hr ']) => {
+type DurationText = [secondsSuffix: string, minutesSuffix: string, hoursSuffix: string];
+
+export const getDuration = (
+  numSeconds: number,
+  /** the text to display for each unit */
+  text: DurationText = [' sec ', ' min ', ' hr ']
+) => {
   if (numSeconds === Infinity || !numSeconds) {
     return [];
   }
@@ -19,15 +21,31 @@ export const getDuration = (numSeconds: number, text = [' sec ', ' min ', ' hr '
 
   const real = display.map((val, ix) => [val, text[ix]]);
 
-  return real.reverse().slice(real.findIndex(([val]) => !!val));
+  // put hours first, then minutes, then seconds
+  // lop off the first values that are 0
+  real.reverse();
+  const firstNonZeroIx = real.findIndex(([val]) => val !== 0);
+  return real
+    .map(([val, text], ix) => {
+      const stringVal = val.toString();
+      if (ix > 0 && stringVal.length < 2) { // let hours be single digit, but not minutes or seconds
+        return [`0${val}`, text];
+      }
+      return [stringVal, text]
+    })
+    .slice(firstNonZeroIx);
 };
 
 /**
- * @param {number} numSeconds number of seconds
- * @param {[seconds: string, minutes: string, hours: string]} text the text to display for each unit
- * @param {string} joinOn the string to join the units on
+ * @param {[seconds: string, minutes: string, hours: string]} text 
  */
-export const getDurationString = (numSeconds: number, text = undefined, joinOn = ' ') => {
+export const getDurationString = (
+  numSeconds: number,
+  /** the text to display for each unit */
+  text: DurationText = undefined,
+  /** the string to join the units on */
+  joinOn = ' '
+) => {
   const durationArr = getDuration(numSeconds, text);
   return durationArr.map(([num, str]) => `${num}${str}`).join(joinOn);
 };

@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useMemo } from 'react';
 import { prColors } from '../Common/colors';
 import classNames from 'classnames';
-import { getDuration, getDurationString } from '../utils';
+import { getDurationString } from '../utils';
 import { rankMap } from '../Common/Icons/PRMedal';
 import useViewSize from '../hooks/useViewSize';
 
@@ -104,7 +104,6 @@ const PRChart = ({ records: recordsProp, title }) => {
     xAxis: {
       type: 'datetime',
       reversed: true,
-      // gridLineWidth: 1,
       gridLineColor: 'rgba(0,0,0,0.4)',
       labels: {
         style: {
@@ -142,7 +141,7 @@ const PRChart = ({ records: recordsProp, title }) => {
           'silver-bg': activity.pr_rank === 2,
           'bronze-bg': activity.pr_rank === 3,
         });
-        const duration = getDuration(activity.elapsed_time).map(([num, str]) => `${num}${str}`).join(' ');
+        const duration = getDurationString(activity.elapsed_time);
         return `
           <div class="text-center dls-white-bg pad border-1 ${bgClassName}">
             ${rankMap[activity.pr_rank]}<br />
