@@ -22,14 +22,21 @@ class RouteCoordinates extends Model {
 
 RouteCoordinates.init(
   {
+    activityId: {
+      type: DataTypes.BIGINT,
+      allowNull: false,
+      primaryKey: true,
+    },
     lat: {
       type: DataTypes.DECIMAL(10, 8),
       allowNull: false,
+      primaryKey: true,
       get() { return Number(this.getDataValue('lat')); },
     },
     lon: {
       type: DataTypes.DECIMAL(11, 8),
       allowNull: false,
+      primaryKey: true,
       get() { return Number(this.getDataValue('lon')); },
     },
     position_index: {

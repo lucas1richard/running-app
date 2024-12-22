@@ -1,4 +1,4 @@
-const { makeCompressedRoute } = require('./makeCompressedRoute');
+const { makeCompressedRoute, makeMultiCompressedRoutes } = require('./makeCompressedRoute');
 const longestCommonSubsequence = require('../utils/longestCommonSubsequence');
 const { findActivityById, bulkCreateRelatedRoutes } = require('../persistence/activities');
 const findSimilarStartDistance = require('../persistence/activities/findSimilarStartDistance');
@@ -13,17 +13,15 @@ const getComparedRoutes = async (activityId) => {
   }
   
   // get nearby activities
-  const nearbyActivities = await findSimilarStartDistance(activity, 10, true);
+  const nearbyActivities = await findSimilarStartDistance(activity, 50, true);
   const activityRoute = await makeCompressedRoute(activityId, 0.0005);
   
   // get route of each activity
-  const allRoutes = await Promise.allSettled(
-    nearbyActivities.map(({ id }) => makeCompressedRoute(id, 0.0005))
-  );
+  const allRoutes = await makeMultiCompressedRoutes(nearbyActivities.map(({ id }) => id), 0.0005);
 
   // compare routes
-  const data = allRoutes.map(
-    ({ value }) => {
+  const data = Object.values(allRoutes).map(
+    (value) => {
       const lcs = longestCommonSubsequence(activityRoute?.route, value?.route || [], coordsEqual);
       return {
         baseActivity: activityId,

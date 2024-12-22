@@ -13,7 +13,10 @@ const bulkCreateRouteCoordinates = async (activityId, compressedRoute, compressi
       seconds_at_coords,
       activityId,
       compression_level: compressionLevel,
-    }))
+    })),
+    {
+      updateOnDuplicate: ['seconds_at_coords', 'compression_level'],
+    }
   );
 };
 

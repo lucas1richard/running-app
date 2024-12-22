@@ -36,11 +36,6 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
             startDistConstraint,
             'start_latlng'
           ),
-          dx: sequelizeCoordsDistance( // `dx` doesn't mean anything, just a placeholder
-            activity.start_latlng,
-            startDistConstraint,
-            'end_latlng'
-          ),
           distance: {
             [Sequelize.Op.between]: [
               activity.distance - activityDistanceContstrint,
@@ -55,16 +50,16 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
           },
         },
         [Sequelize.Op.not]: {
-          id: activity.id // not the same activity
+          id: activity.id, // not the same activity
+          ...excludeAlreadyRelated ? {
+            alreadyRelated: Sequelize.literal(`
+            NOT EXISTS
+              (SELECT 1 FROM ${RelatedActivities.tableName} as RelatedActivities
+              WHERE RelatedActivities.baseActivity = ${activity.id}
+              AND RelatedActivities.relatedActivity = ${Activity.tableName}.id
+            )`)
+          } : {},
         },
-        ...excludeAlreadyRelated ? {
-          [Sequelize.Op.not]: Sequelize.literal(`
-          EXISTS
-            (SELECT 1 FROM ${RelatedActivities.tableName} as RelatedActivities
-            WHERE RelatedActivities.baseActivity = ${activity.id}
-            AND RelatedActivities.relatedActivity = ${Activity.tableName}.id
-          )`)
-        } : {},
       },
       order: [
         ['start_date_local', 'DESC']
