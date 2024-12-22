@@ -10,6 +10,8 @@ ZonesCache.init(
     seconds_z3: { type: DataTypes.INTEGER },
     seconds_z4: { type: DataTypes.INTEGER },
     seconds_z5: { type: DataTypes.INTEGER },
+    activityId: { type: DataTypes.BIGINT, primaryKey: true },
+    heartZoneId: { type: DataTypes.MEDIUMINT, primaryKey: true },
   },
   {
     sequelize: sequelizeMysql,
