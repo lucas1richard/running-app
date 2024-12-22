@@ -1,6 +1,7 @@
 const { makeCompressedRoute } = require('./makeCompressedRoute');
 const longestCommonSubsequence = require('../utils/longestCommonSubsequence');
-const { findActivityById, findNearbyStartingActivities, bulkCreateRelatedRoutes } = require('../persistence/activities');
+const { findActivityById, bulkCreateRelatedRoutes } = require('../persistence/activities');
+const findSimilarStartDistance = require('../persistence/activities/findSimilarStartDistance');
 
 const coordsEqual = (a, b) => a[0] === b[0] && a[1] === b[1];
 
@@ -12,7 +13,7 @@ const getComparedRoutes = async (activityId) => {
   }
   
   // get nearby activities
-  const nearbyActivities = await findNearbyStartingActivities(activity);
+  const nearbyActivities = await findSimilarStartDistance(activity, 10, true);
   const activityRoute = await makeCompressedRoute(activityId, 0.0005);
   
   // get route of each activity
@@ -27,11 +28,11 @@ const getComparedRoutes = async (activityId) => {
       return {
         baseActivity: activityId,
         relatedActivity: value?.activityId,
-        // lcs,
+        longestCommonSegmentSubsequence: lcs,
         routeScoreFromRelated: lcs / value?.route?.length,
         routeScoreFromBase: lcs / activityRoute?.route?.length,
-        // numberRelatedCoords: value?.route?.length,
-        // numberBaseCoords: activityRoute?.route?.length,
+        numberRelatedCoords: value?.route?.length,
+        numberBaseCoords: activityRoute?.route?.length,
       }
   });
 
