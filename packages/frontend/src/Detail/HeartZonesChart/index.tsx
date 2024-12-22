@@ -14,6 +14,7 @@ const HeartZonesChartContainer = ({ id }) => {
   const gradeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'grade_smooth'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity?.start_date));
   const details = useAppSelector((state) => selectActivityDetails(state, id));
+  const streamPins = activity?.stream_pins || emptyArray;
   const bestEfforts = details?.best_efforts || emptyArray;
   const laps = details?.laps || emptyArray;
   const splitsMi = details?.splits_standard || emptyArray;
@@ -38,6 +39,7 @@ const HeartZonesChartContainer = ({ id }) => {
         grade={gradeStream}
         time={timeStream}
         zones={zones}
+        streamPins={streamPins}
         zonesBandsDirection={zonesBandsDirection}
         laps={laps}
         bestEfforts={bestEfforts}

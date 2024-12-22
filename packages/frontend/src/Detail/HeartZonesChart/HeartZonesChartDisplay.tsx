@@ -5,7 +5,7 @@ import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
 import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
-import addXAxisPlotLine from './addXAxisPlotline';
+import addXAxisPlotLine, { removeXAxisPlotLine } from './addXAxisPlotline';
 import useMinMax from './useMinMax';
 import { prColors } from '../../Common/colors';
 import RouteMap from '../RouteMap';
@@ -20,6 +20,11 @@ import getGradeColorAbs from './getGradeColorAbs';
 import useSegments from './useSegments';
 import { Grid } from '../../DLS';
 import useViewSize from '../../hooks/useViewSize';
+import { useDispatch } from 'react-redux';
+import { deleteStreamPin, setStreamPin } from '../../reducers/activities-actions';
+import StreamPinForm from './StreamPinForm';
+import { useAppSelector } from '../../hooks/redux';
+import { selectStreamTypeData } from '../../reducers/activities';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -47,6 +52,7 @@ type Props = {
   laps: { average_speed: number; elapsed_time: number }[];
   splitsMi: { average_speed: number; elapsed_time: number }[];
   zonesBandsDirection: 'xAxis' | 'yAxis' | 'none';
+  streamPins: StreamPin[];
 }
 
 const HeartZonesChartDisplay: React.FC<Props> = ({
@@ -58,26 +64,20 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   velocity,
   time,
   grade,
+  streamPins,
   zones,
   zonesBandsDirection,
 }) => {
   const viewSize = useViewSize();
+  const dispatch = useDispatch();
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
-  const [plotLines, setPlotLines] = useState([]);
+  const latlngStream = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng'));
   const [latlngPointer, setLatlngPointer] = useState(0);
-  const [pins, setPins] = useState([]);
   const [highlightedSegment, setHighlightedSegment] = useState(undefined);
 
-  const addPin = useCallback(function() {
-    setPins((prev) => {
-      const name = this.series.name;
-      const next = [...prev];
-      const existing = next.find((pin) => pin.index === this.index && pin.name === name);
-      if (existing) return next.filter((pin) => pin !== existing);
-      next.push({ index: this.index, color: this.color, name, symbol: this.series.symbol });
-      return next;
-    });
-  }, []);
+  const addPin = useCallback(function(streamKey) {
+    dispatch(setStreamPin(id, streamKey, this.index, '', '', latlngStream[this.index]));
+  }, [id, dispatch, latlngStream]);
 
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
@@ -187,6 +187,15 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     }
   }, [xAxisBands, yAxisBands, zonesBandsDirection, smoothAverageWindow]);
 
+  useEffect(() => {
+    if (chartRef.current?.chart) {
+      streamPins.forEach(({ stream_key, index }) => {
+        addXAxisPlotLine(index, 'magenta', chartRef);
+      });
+    }
+    // setPins(streamPins);
+  }, [streamPins]);
+  
   const [hrMin, hrMax] = useMinMax(heartRateData);
   const [velMin, velMax] = useMinMax(velocityData);
   const [altMin, altMax] = useMinMax(altitudeData);
@@ -227,6 +236,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       {
         ...seriesDefaultConfig,
         name: 'HR',
+        streamKey: 'heartrate',
         data: heartRateData,
         yAxis: 0,
         color: 'red',
@@ -238,8 +248,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)', chartRef, setPlotLines);
-              addPin.apply(this);
+              addXAxisPlotLine(this.x, 'rgba(255, 0, 0, 0.5)', chartRef);
+              addPin.apply(this, ['heartrate']);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -261,8 +271,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef, setPlotLines);
-              addPin.apply(this);
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 0, 0.5)', chartRef);
+              addPin.apply(this, ['velocity_smooth']);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -314,8 +324,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef, setPlotLines);
-              addPin.apply(this);
+              addXAxisPlotLine(this.x, 'rgba(165, 42, 42, 0.5)', chartRef);
+              addPin.apply(this, ['altitude']);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -371,6 +381,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       {
         ...seriesDefaultConfig,
         name: 'EF', // Efficiency Factor 
+        streamKey: 'efficiency_factor',
         data: efficiencyFactorData,
         yAxis: 5,
         fillOpacity: 0.1,
@@ -386,8 +397,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         point: {
           events: {
             click() {
-              addXAxisPlotLine(this.x, 'rgba(0, 0, 255, 0.5)', chartRef, setPlotLines);
-              addPin.apply(this);
+              addXAxisPlotLine(this.x, 'rgba(0, 0, 255, 0.5)', chartRef);
+              addPin.apply(this, ['efficiency_factor']);
             },
             mouseOver() {
               setLatlngPointer(this.index);
@@ -558,19 +569,16 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           </div>
         </div>
         <div>
-          {plotLines.sort((a, b) => a - b).map((val) => (
-            <div>
+          {streamPins.map((pin) => (
+            <div key={pin.id}>
+              <StreamPinForm pin={pin} />
               <button
-                key={val}
                 onClick={() => {
-                  const chart = chartRef.current?.chart;
-                  if (!chart) return;
-                  chart.xAxis[0].removePlotLine(val);
-                  setPlotLines((lines) => lines.filter((v) => v !== val));
-                  setPins((pins) => pins.filter((pin) => pin.index !== val));
+                  dispatch(deleteStreamPin(pin.id, id));
+                  removeXAxisPlotLine(pin.index, chartRef);
                 }}
               >
-                Remove Plotline at {val} seconds
+                Remove Plotline at {pin.index} seconds
               </button>
             </div>
           ))}
@@ -582,7 +590,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           pointer={latlngPointer}
           segments={segments.data}
           velocity={smoothVelocity}
-          pins={pins}
+          pins={streamPins}
           highlightedSegment={highlightedSegment}
           smoothAverageWindow={smoothAverageWindow}
           averageSpeed={convertMetricSpeedToMPH(averageSpeed)}

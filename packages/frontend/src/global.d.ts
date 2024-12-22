@@ -23,6 +23,16 @@ type Weather = {
 
 type ZonesCaches = {};
 
+type StreamPin = {
+  id: number;
+  /** not necessarily a strava stream type, it can be anything */
+  stream_key: string;
+  index: number;
+  label: string;
+  description: string;
+  activityId: number;
+};
+
 interface Activity {
   id: number;
   name: string;
@@ -39,6 +49,7 @@ interface Activity {
   average_heartrate: number;
   max_heartrate: number;
   summary_polyline?: string;
+  stream_pins?: StreamPin[];
   map: {
     summary_polyline: string;
   };

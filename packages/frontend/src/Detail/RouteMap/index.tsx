@@ -17,14 +17,7 @@ type Props = {
   id: number;
   averageSpeed: number;
   pointer: number;
-  pins: Array<{
-    index: number;
-    symbol: string;
-    color: string;
-    radius?: number;
-    lineColor?: string;
-    lineWidth?: number
-  }>;
+  pins: Array<StreamPin>;
   segments: Array<[start: number, mphSpeed: number, end: number]>;
   velocity: number[];
   smoothAverageWindow: number;
@@ -100,6 +93,31 @@ const RouteMap: React.FC<Props> = ({
     }));
   }, [averageSpeed, coordsPure, segments, seriesColors, isSmall]);
 
+  const memoSeries = useMemo(() => {
+    return ({
+      type: 'mapline',
+      name: `Segments`,
+      data: segments.map((segment, ix) => ({
+        geometry: {
+          type: 'LineString',
+          coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
+        },
+        className: classNames('animated-line', {
+          'animate-fast': segment[1] / averageSpeed > 1.1,
+          'animate-slow': segment[1] / averageSpeed < 0.9,
+        }),
+        styleProp: {
+          display: 'none'
+        },
+        color: seriesColors[ix][1],
+      })),
+      animation: false,
+      lineWidth: isSmall ? 3 : 6,
+      showInLegend: false,
+      enableMouseTracking: false,
+    });
+  }, [averageSpeed, coordsPure, segments, seriesColors, isSmall]);
+
   const memoHighlightedSegment = useMemo(() => {
     return {
       type: 'mapline',
@@ -116,6 +134,7 @@ const RouteMap: React.FC<Props> = ({
       }],
       animation: false,
       lineWidth: isSmall ? 8: 12,
+      showInLegend: false,
       enableMouseTracking: false,
     };
   }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start, isSmall]);
@@ -124,15 +143,16 @@ const RouteMap: React.FC<Props> = ({
       type: 'mappoint',
       name: 'pins',
       data: pins.map((pin) => ({
-        ...pin,
         ...coordsPure[pin.index],
         marker: {
-          symbol: pin.symbol,
-          radius: pin.radius || 7,
-          lineColor: pin.lineColor || pin.color || 'black',
-          lineWidth: pin.lineWidth || 1,
+          symbol: 'diamond',
+          radius: 12,
+          lineColor: 'black',
+          lineWidth: 1,
         },
+        color: 'magenta',
       })),
+      showInLegend: false,
       animation: false,
     }), [pins, coordsPure]);
 
@@ -155,6 +175,7 @@ const RouteMap: React.FC<Props> = ({
     ({
     chart: {
       map: 'custom/world',
+      height: 900,
       animation: false,
     },
     title: {
@@ -162,7 +183,7 @@ const RouteMap: React.FC<Props> = ({
     },
     series: [
       memoHighlightedSegment,
-      ...series,
+      memoSeries,
       memoPins,
       {
         type: 'mappoint',
@@ -179,16 +200,7 @@ const RouteMap: React.FC<Props> = ({
         color: indicatorColor.fill,
       },
     ],
-  }), [
-    isSmall,
-    series,
-    memoHighlightedSegment,
-    memoPins,
-    coordsPure,
-    usedPointer,
-    indicatorColor.stroke,
-    indicatorColor.fill
-  ]);
+  }), [memoHighlightedSegment, memoSeries, memoPins, coordsPure, usedPointer, isSmall, indicatorColor.stroke, indicatorColor.fill]);
 
   return (
     <div>

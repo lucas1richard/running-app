@@ -1,3 +1,4 @@
+import { hash } from 'ohash';
 import { AsyncAction } from '../types';
 
 // SAGA TRIGGERS
@@ -43,6 +44,31 @@ export const triggerFetchWeather = (activityId: number, data): AsyncAction => ({
   key: `${FETCH_WEATHER}-${activityId}`,
 });
 
+
+export const SET_STREAM_PIN = 'activities/SET_STREAM_PIN';
+export const setStreamPin = (
+  activityId: number,
+  streamKey: SimpleStreamTypes | 'latlng',
+  index: number,
+  label?: string,
+  description?: string,
+  latlng?: LatLng,
+): AsyncAction => {
+  const payload = { activityId, streamKey, index, label, description, latlng };
+  return { type: SET_STREAM_PIN, payload, key: `${SET_STREAM_PIN}-${hash(payload)}` };
+};
+
+export const DELETE_STREAM_PIN = 'activities/DELETE_STREAM_PIN';
+export const deleteStreamPin = (id: number, activityId: number): AsyncAction => {
+  const payload = { activityId, id };
+  return { type: DELETE_STREAM_PIN, payload, key: `${DELETE_STREAM_PIN}-${hash(payload)}` };
+};
+
+export const UPDATE_STREAM_PIN = 'activities/UPDATE_STREAM_PIN';
+export const updateStreamPin = (data: StreamPin): AsyncAction => {
+  return { type: UPDATE_STREAM_PIN, payload: data, key: `${UPDATE_STREAM_PIN}-${hash(data)}` };
+};
+
 // REDUCER ACTIONS
 export const SET_ACTIVITIES = 'activitiesReducer/SET_ACTIVITIES';
 export const setActivitiesAct = (activities: Activity[]) => ({ type: SET_ACTIVITIES, payload: activities });
@@ -67,3 +93,6 @@ export const setSimilarWorkoutsAct = (id, combo) => ({ type: SET_SIMILAR_WORKOUT
 
 export const SET_WEATHER_DATA = 'activitiesReducer/SET_WEATHER_DATA';
 export const setWeatherDataAct = (data: Weather) => ({ type: SET_WEATHER_DATA, payload: data });
+
+export const SET_STREAM_PINS = 'activitiesReducer/SET_STREAM_PINS';
+export const setStreamPinsAct = (activityId: number, pins: StreamPin[]) => ({ type: SET_STREAM_PINS, payload: { activityId, pins } });

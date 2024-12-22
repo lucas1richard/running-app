@@ -1,7 +1,14 @@
 import { call, put } from 'redux-saga/effects';
 import requestor from '../utils/requestor';
 import { takeEveryContext } from './effects';
-import { setSimilarWorkoutsAct, updateActivityAct } from '../reducers/activities-actions';
+import {
+  SET_STREAM_PIN,
+  DELETE_STREAM_PIN,
+  UPDATE_STREAM_PIN,
+  setSimilarWorkoutsAct,
+  setStreamPinsAct,
+  updateActivityAct,
+} from '../reducers/activities-actions';
 import {
   FETCH_SIMILAR_WORKOUTS,
   TRIGGER_UPDATE_ACTIVITY,
@@ -25,7 +32,47 @@ function* fetchSimilarWorkoutsSaga({ payload: id }) {
   yield put(setSimilarWorkoutsAct(id, sim));
 }
 
+function* setStreamPinSaga({ payload }) {
+  const { streamKey, index, label, description, activityId, latlng } = payload;
+  const res = yield call(requestor.post, `/activities/${activityId}/streams/pin`, {
+    streamKey,
+    index,
+    label,
+    description,
+    latlng,
+  });
+  const json = yield res.json();
+  console.log(json);
+  yield put(setStreamPinsAct(activityId, json));
+}
+
+function* deleteStreamPinSaga({ payload }) {
+  const { id, activityId } = payload;
+  const res = yield call(requestor.delete, `/activities/${activityId}/streams/pin`, {
+    id,
+    activityId,
+  });
+  const json = yield res.json();
+  yield put(setStreamPinsAct(activityId, json));
+}
+
+function* updateStreamPinSaga({ payload }) {
+  const { id, streamKey, index, label, description, activityId } = payload
+  const res = yield call(requestor.put, `/activities/${activityId}/streams/pin`, {
+    id,
+    streamKey,
+    index,
+    label,
+    description,
+  });
+  const json = yield res.json();
+  yield put(setStreamPinsAct(activityId, json));
+}
+
 export function* activitydetailSaga() {
+  yield takeEveryContext(SET_STREAM_PIN, makeApiSaga(setStreamPinSaga));
+  yield takeEveryContext(DELETE_STREAM_PIN, makeApiSaga(deleteStreamPinSaga));
+  yield takeEveryContext(UPDATE_STREAM_PIN, makeApiSaga(updateStreamPinSaga));
   yield takeEveryContext(TRIGGER_UPDATE_ACTIVITY, makeApiSaga(updateActivitySaga));
   yield takeEveryContext(FETCH_SIMILAR_WORKOUTS, makeApiSaga(fetchSimilarWorkoutsSaga));
 }

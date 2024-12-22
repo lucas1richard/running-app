@@ -14,6 +14,7 @@ import {
   SET_STREAMS,
   SET_SIMILAR_WORKOUTS,
   SET_WEATHER_DATA,
+  SET_STREAM_PINS,
 } from './activities-actions';
 import { selectAllHeartZones } from './heartzones';
 import { emptyArray, emptyObject } from '../constants';
@@ -120,6 +121,14 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
     case SET_WEATHER_DATA: {
       return produce(state, (nextState) => {
         nextState.activities[action.payload.activityId].weather = action.payload;
+      });
+    }
+
+    case SET_STREAM_PINS: {
+      return produce(state, (nextState) => {
+        const { activityId, pins } = action.payload;
+        const activity = state.activities[activityId];
+        nextState.activities[activityId] = { ...activity, stream_pins: pins };
       });
     }
 
