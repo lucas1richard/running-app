@@ -68,34 +68,11 @@ const RouteMap: React.FC<Props> = ({
     [averageSpeed, segments]
   );
 
-  const series = useMemo(() => {
-    return segments.map((segment, ix) => ({
-      type: 'mapline',
-      name: `Segment ${ix + 1}`,
-      data: [{
-        geometry: {
-          type: 'LineString',
-          coordinates: coordsPure.slice(segment[0], segment[0] + segment[2]).map(({ lon, lat }) => [lon, lat]),
-        },
-        className: classNames('animated-line', {
-          'animate-fast': segment[1] / averageSpeed > 1.1,
-          'animate-slow': segment[1] / averageSpeed < 0.9,
-        }),
-        styleProp: {
-          display: 'none'
-        },
-      }],
-      color: seriesColors[ix][1],
-      animation: false,
-      lineWidth: isSmall ? 3 : 6,
-      showInLegend: segments.length <= 8,
-      enableMouseTracking: false,
-    }));
-  }, [averageSpeed, coordsPure, segments, seriesColors, isSmall]);
-
   const memoSeries = useMemo(() => {
     return ({
       type: 'mapline',
+      id: 'segments',
+      key: 'segments',
       name: `Segments`,
       data: segments.map((segment, ix) => ({
         geometry: {
@@ -121,6 +98,8 @@ const RouteMap: React.FC<Props> = ({
   const memoHighlightedSegment = useMemo(() => {
     return {
       type: 'mapline',
+      id: 'highlightedSegment',
+      key: 'highlightedSegment',
       name: `Segment Highlight`,
       data: [{
         geometry: {
@@ -142,8 +121,12 @@ const RouteMap: React.FC<Props> = ({
   const memoPins = useMemo(() => ({
       type: 'mappoint',
       name: 'pins',
+      id: 'pins',
+      key: 'pins',
       data: pins.map((pin) => ({
         ...coordsPure[pin.index],
+        id: pin.index,
+        key: pin.index,
         marker: {
           symbol: 'diamond',
           radius: 12,
@@ -155,6 +138,23 @@ const RouteMap: React.FC<Props> = ({
       showInLegend: false,
       animation: false,
     }), [pins, coordsPure]);
+  
+  const memoPointer = useMemo(() => ({
+    type: 'mappoint',
+    id: 'Location',
+    key: 'Location',
+    name: 'Location',
+    data: [coordsPure[usedPointer]],
+    marker: {
+      symbol: 'circle',
+      radius: isSmall ? 5 : 10,
+      lineColor: indicatorColor.stroke,
+      lineWidth: isSmall ? 2 : 4,
+    },
+    animation: false,
+    enableMouseTracking: false,
+    color: indicatorColor.fill,
+  }), [coordsPure, usedPointer, isSmall, indicatorColor.stroke, indicatorColor.fill]);
 
   useEffect(() => {
     if (animating && !intervalRef.current) {
@@ -182,25 +182,12 @@ const RouteMap: React.FC<Props> = ({
       text: 'Route',
     },
     series: [
+      memoPointer,
       memoHighlightedSegment,
-      memoSeries,
       memoPins,
-      {
-        type: 'mappoint',
-        name: 'Location',
-        data: [coordsPure[usedPointer]],
-        marker: {
-          symbol: 'circle',
-          radius: isSmall ? 5 : 10,
-          lineColor: indicatorColor.stroke,
-          lineWidth: isSmall ? 2 : 4,
-        },
-        animation: false,
-        enableMouseTracking: false,
-        color: indicatorColor.fill,
-      },
+      memoSeries,
     ],
-  }), [memoHighlightedSegment, memoSeries, memoPins, coordsPure, usedPointer, isSmall, indicatorColor.stroke, indicatorColor.fill]);
+  }), [memoPointer, memoHighlightedSegment, memoPins, memoSeries]);
 
   return (
     <div>
