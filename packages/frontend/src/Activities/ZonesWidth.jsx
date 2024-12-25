@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../utils';
 import { hrZonesText } from '../colors/hrZones';
-import styles from './Tile.module.css';
+import { Flex, GridArea } from '../DLS';
 
 const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
   const percents = useMemo(() => {
@@ -12,21 +12,23 @@ const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
   if (!zones && !heartData) return null;
 
   return (
-    <div className={`flex ${styles.zonesWidth}`}>
-      {percents.filter((n) => Boolean(Number(n))).map((percent, ix) => (
-        <div
-          key={`${percent}-${ix}-${id}`}
-          style={{
-            width: `${percent}%`,
-            background: hrZonesText[ix + 1],
-            border: `1px solid ${hrZonesText[ix + 1]}`,
-            height: '0.5rem',
-            overflow: 'hidden',
-          }}
-        />
-      ))}
-    </div>
+    <GridArea area="zonesWidth">
+      <Flex>
+        {percents.filter((n) => Boolean(Number(n))).map((percent, ix) => (
+          <div
+            key={`${percent}-${ix}-${id}`}
+            style={{
+              width: `${percent}%`,
+              background: hrZonesText[ix + 1],
+              border: `1px solid ${hrZonesText[ix + 1]}`,
+              height: '0.5rem',
+              overflow: 'hidden',
+            }}
+          />
+        ))}
+      </Flex>
+    </GridArea>
   );
 };
 
-export default ZonesWidth;
+export default memo(ZonesWidth);

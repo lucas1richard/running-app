@@ -122,6 +122,9 @@ button:active {
 .text-right {
   text-align: right !important;
 }
+.text-left {
+  text-align: left !important;
+}
 .margin-t {
   margin-top: 1rem;
 }
