@@ -1,15 +1,16 @@
+import { useEffect } from 'react';
 import { produce } from 'immer';
 import { shallowEqual, useDispatch } from 'react-redux';
+import { hash } from 'ohash';
+import { useAppSelector } from '../hooks/redux';
+import { createDeepEqualSelector } from '../utils';
+import type { AsyncAction } from '../types';
 import {
   SET_API_ERROR,
   SET_API_LOADING,
   SET_API_SUCCESS,
 } from './apiStatus-actions';
-import { createDeepEqualSelector } from '../utils';
-import { useEffect } from 'react';
 import type { RootState } from '.';
-import { useAppSelector } from '../hooks/redux';
-import { AsyncAction } from '../types';
 
 type APIStatusType = 'loading' | 'success' | 'error' | 'idle';
 
@@ -68,7 +69,7 @@ export const selectLoadingKeys = createDeepEqualSelector(
 );
 
 export const useGetApiStatus = (action: AsyncAction | string) => useAppSelector(
-  (state) => selectApiStatus(state, typeof action === 'string' ? action : action?.key)
+  (state) => selectApiStatus(state, typeof action === 'string' ? action : (action?.key ? action.key : hash(action)))
 );
 export const useGetLoadingKeys = () => useAppSelector(selectLoadingKeys, shallowEqual);
 

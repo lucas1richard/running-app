@@ -38,15 +38,15 @@ function* fetchActivityDetailSaga ({ payload }) {
 }
 
 function* fetchAllStreamsSaga() {
-  const res = yield call(requestor.get, `/activities/streams/list`);
+  const res = yield call(requestor.get, '/activities/streams/list');
   const allStreams = yield res.json();
   yield put(setStreamsAct(allStreams));
 }
 
 function* fetchStreamDataSaga({ payload: { id, types } }) {
   const typesQuery = new URLSearchParams({ keys: types });
-  const res = yield call(requestor.get, `/activities/${id}/streams?${typesQuery}`);
-  const stream = yield res.json();
+  const res: Response = yield call(requestor.get, `/activities/${id}/streams?${typesQuery}`);
+  const stream: Stream = yield res.json();
   yield put(setStreamAct(id, stream));
 }
 

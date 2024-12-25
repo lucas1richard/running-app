@@ -6,13 +6,13 @@ export const FETCH_ACTIVITIES = 'activities/FETCH_ACTIVITIES';
 export const triggerFetchActivities = (forceFetch = false): AsyncAction => ({
   type: FETCH_ACTIVITIES,
   forceFetch,
-  key: FETCH_ACTIVITIES,
+  // key: FETCH_ACTIVITIES,
 });
 
 export const FETCH_ACTIVITIES_SUMMARY = 'activities/FETCH_ACTIVITIES_SUMMARY';
 export const triggerFetchActivitiesSummary = (): AsyncAction => ({
   type: FETCH_ACTIVITIES_SUMMARY,
-  key:FETCH_ACTIVITIES_SUMMARY,
+  key: FETCH_ACTIVITIES_SUMMARY,
 });
 
 export const FETCH_ACTIVITY_DETAIL = 'activities/FETCH_ACTIVITY_DETAIL';
@@ -25,7 +25,7 @@ export const triggerFetchActivityDetail = (id: number): AsyncAction => ({
 export const FETCH_STREAMS = 'activities/FETCH_STREAMS';
 export const triggerFetchStreams = (): AsyncAction => ({
   type: FETCH_STREAMS,
-  key:FETCH_STREAMS,
+  key: FETCH_STREAMS,
 });
 
 export const FETCH_ALL_STREAMS = 'activities/FETCH_ALL_STREAMS';
@@ -83,7 +83,7 @@ export const UPDATE_ACTIVITY = 'activitiesReducer/UPDATE_ACTIVITY';
 export const updateActivityAct = (activity: Activity) => ({ type: UPDATE_ACTIVITY, payload: activity });
 
 export const SET_STREAM = 'activitiesReducer/SET_STREAM';
-export const setStreamAct = (id: number, data) => ({ type: SET_STREAM, payload: { id, data } });
+export const setStreamAct = (id: number, data: Stream) => ({ type: SET_STREAM, payload: { id, data } });
 
 export const SET_STREAMS = 'activitiesReducer/SET_STREAMS';
 export const setStreamsAct = (data) => ({ type: SET_STREAMS, payload: { data } });

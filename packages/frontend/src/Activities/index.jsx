@@ -10,12 +10,13 @@ import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
 import { idle, loading, success, useGetApiStatus } from '../reducers/apiStatus';
 import Shimmer from '../Loading/Shimmer';
-import { FETCH_ACTIVITIES, triggerFetchActivities } from '../reducers/activities-actions';
+import { triggerFetchActivities } from '../reducers/activities-actions';
 import PreferenceControl from '../PreferenceControl';
 import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
 import PRs from './PRs';
+import { Flex } from '../DLS';
 
 const style = { padding: '1rem', margin: 'auto', maxWidth: 1600 };
 const hideFunctionKeypath = listDisplayHideFunction();
@@ -25,7 +26,9 @@ const Activities = () => {
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities, fastDeepEqual);
   const listPreferences = useSelector(selectListPrerences);
-  const activitiesApiStatus = useGetApiStatus(FETCH_ACTIVITIES);
+  const activitiesApiStatus = useGetApiStatus(triggerFetchActivities());
+  const syncActivitiesApiStatus = useGetApiStatus(triggerFetchActivities(true));
+
   const [showHideFunction, setShowHideFunction] = usePreferenceControl(hideFunctionKeypath, false);
   const hideFn = useCallback(
     () => setShowHideFunction(!showHideFunction),
@@ -42,7 +45,13 @@ const Activities = () => {
 
   return (
     <div style={style}>
-      <Shimmer isVisible={(activitiesApiStatus === loading || activitiesApiStatus === idle)} />
+      <Shimmer
+        isVisible={(
+          activitiesApiStatus === loading
+          || activitiesApiStatus === idle
+          || syncActivitiesApiStatus === loading
+        )}
+      />
       <div>
         <button onClick={onClickSync}>Sync Strava</button>
       </div>
@@ -79,7 +88,7 @@ const Activities = () => {
                       <ZonesHeader zones={zones} start={start} />
                     </div>
                   )}
-                  <div className="flex flex-column gap">
+                  <Flex direction="column" gap="1rem">
                     {runs.map((activity) => (
                       <ActivityTile
                         key={activity.id}
@@ -89,7 +98,7 @@ const Activities = () => {
                         showHideFunction={showHideFunction}
                       />
                     ))}
-                  </div>
+                  </Flex>
                 </div>
               ))
             )
