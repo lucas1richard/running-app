@@ -3,10 +3,26 @@ import Spinner from '../Loading/Spinner';
 import { useDispatch } from 'react-redux';
 import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
 import { useGetApiStatus } from '../reducers/apiStatus';
+import { useCallback } from 'react';
 
-const ActivityTile = ({ className, activity, backgroundIndicator, showHideFunction }) => {
+type ActivityTileProps = {
+  className: string;
+  activity: Activity;
+  backgroundIndicator: string;
+  showHideFunction: boolean;
+};
+
+const ActivityTile: React.FC<ActivityTileProps> = ({
+  className,
+  activity,
+  backgroundIndicator,
+  showHideFunction,
+}) => {
   const dispatch = useDispatch();
   const isLoading = useGetApiStatus(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`) === 'loading';
+  const hideActivity = useCallback(() => {
+    dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }));
+  }, [activity.hidden, activity.id, dispatch]);
 
   return (
     <div key={activity.id} className={className}>
@@ -21,12 +37,12 @@ const ActivityTile = ({ className, activity, backgroundIndicator, showHideFuncti
             ? <Spinner />
             : (
             <label htmlFor={`${activity.id}-hider`}>
-              Hide Activity
+              Hide Activity&nbsp;
               <input
                 id={`${activity.id}-hider`}
                 type="checkbox"
                 checked={activity.hidden}
-                onChange={() => dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }))}
+                onChange={hideActivity}
               />
             </label>
             )}

@@ -3,6 +3,8 @@ declare module '*.css' {
   export default content;
 }
 
+type TODO = any;
+
 type BestEffort = {
   pr_rank: null | number;
   name: string;
@@ -50,6 +52,7 @@ interface Activity {
   max_heartrate: number;
   summary_polyline?: string;
   stream_pins?: StreamPin[];
+  hidden: boolean;
   map: {
     summary_polyline: string;
   };
