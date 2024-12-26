@@ -16,7 +16,7 @@ import { listDisplayConfigControls, listDisplayHideFunction } from '../Preferenc
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
 import PRs from './PRs';
-import { Flex } from '../DLS';
+import { Button, Flex } from '../DLS';
 
 const style = { padding: '1rem', margin: 'auto', maxWidth: 1600 };
 const hideFunctionKeypath = listDisplayHideFunction();
@@ -53,7 +53,7 @@ const Activities = () => {
         )}
       />
       <div>
-        <button onClick={onClickSync}>Sync Strava</button>
+        <Button onClick={onClickSync}>Sync Strava</Button>
       </div>
       <div className="margin-t">
         <PRs />
@@ -72,9 +72,9 @@ const Activities = () => {
       >
         <ConfigWidget />
         <ListSort />
-        <button onClick={hideFn}>
+        <Button onClick={hideFn}>
           Toggle Display of Hide Functionality
-        </button>
+        </Button>
       </PreferenceControl>
 
       <div className="flex">

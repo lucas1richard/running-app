@@ -10,6 +10,7 @@ import classNames from 'classnames';
 import getGradeColorAbs from '../HeartZonesChart/getGradeColorAbs';
 import { emptyArray } from '../../constants';
 import useViewSize from '../../hooks/useViewSize';
+import { Button } from '../../DLS';
 
 HighchartsMap(Highcharts);
 
@@ -206,7 +207,7 @@ const RouteMap: React.FC<Props> = ({
         options={options}
       />
       <div>
-        <button onClick={() => setAnimating((prev) => !prev)}>Animate</button>
+        <Button onClick={() => setAnimating((prev) => !prev)}>Animate</Button>
       </div>
     </div>
   );

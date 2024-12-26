@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addHeartZonesAct } from '../../reducers/heartzones-actions';
-import { Flex } from '../../DLS';
+import { Button, Flex } from '../../DLS';
 
 const AddNewHRZones = ({ latestZone }) => {
   const dispatch = useDispatch();
@@ -90,9 +90,9 @@ const AddNewHRZones = ({ latestZone }) => {
             onChange={(ev) => setStartDate(new Date(ev.target.value))}
           />
         </div>
-        <button>
+        <Button>
           Add
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -18,7 +18,7 @@ import {
 } from '../../utils';
 import getGradeColorAbs from './getGradeColorAbs';
 import useSegments from './useSegments';
-import { Grid } from '../../DLS';
+import { Button, Flex, Grid } from '../../DLS';
 import useViewSize from '../../hooks/useViewSize';
 import { useDispatch } from 'react-redux';
 import { deleteStreamPin, setStreamPin } from '../../reducers/activities-actions';
@@ -530,7 +530,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             </div>
           ))}
         </div>
-        <div className="flex valign-middle margin-t">
+        <Flex alignItems='center' marginT={1}>
           <label htmlFor="magnificationFactor-range">Magnification: </label>
           <div className="flex-item-grow margin-l">
             {enableYAxisLabels && (
@@ -548,9 +548,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
                 />
                 <div className="flex flex-justify-between">
                   {[1,2,3,4,5,6,7,8,9,10].map((val) => (
-                    <button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
+                    <Button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
                       {val}x
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </>
@@ -567,19 +567,19 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
               </div>
             )}
           </div>
-        </div>
+        </Flex>
         <div>
           {streamPins.map((pin) => (
             <div key={pin.id}>
               <StreamPinForm pin={pin} />
-              <button
+              <Button
                 onClick={() => {
                   dispatch(deleteStreamPin(pin.id, id));
                   removeXAxisPlotLine(pin.index, chartRef);
                 }}
               >
                 Remove Plotline at {pin.index} seconds
-              </button>
+              </Button>
             </div>
           ))}
         </div>

@@ -13,6 +13,7 @@ import { useGetApiStatus } from '../../reducers/apiStatus';
 import { triggerFetchWeather } from '../../reducers/activities-actions';
 import { useAppSelector } from '../../hooks/redux';
 import Shimmer from '../../Loading/Shimmer';
+import { Button } from '../../DLS';
 
 type Props = {
   id: number;
@@ -153,7 +154,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             </select>
           </div>
 
-          <button type="submit" className="full-width">Submit</button>
+          <Button type="submit" className="full-width">Submit</Button>
         </form>
       </div>
     </div>

@@ -9,6 +9,7 @@ import useSegments from '../Detail/HeartZonesChart/useSegments';
 import useHRZoneIndicators from '../Detail/RouteMap/useHRZoneIndicators';
 import dayjs from 'dayjs';
 import { emptyArray } from '../constants';
+import { Button } from '../DLS';
 
 HighchartsMap(Highcharts);
 
@@ -182,9 +183,9 @@ const MultiMap = ({
         options={options}
       />
       <div>
-        <button onClick={() => setAnimating((prev) => !prev)}>
+        <Button onClick={() => setAnimating((prev) => !prev)}>
           {animating ? 'Stop Animation' : 'Animate'}
-        </button>
+        </Button>
       </div>
 
       {isNaN(indexPointer) && (

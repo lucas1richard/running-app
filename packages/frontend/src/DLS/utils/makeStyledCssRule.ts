@@ -1,5 +1,11 @@
-const makeStyledCssRule = (propName: string, cssProp: string) => (props: any) => props[propName]
-  ? `${cssProp}: ${props[propName]};`
+import makeStandardUnit from './makeStandardUnit';
+
+const makeStyledCssRule = (propName: string, cssProp: number | string) => (props: any) => typeof props[propName] !== 'undefined'
+  ? `${cssProp}: ${typeof props[propName] === 'number' ? makeStandardUnit(props[propName]) : props[propName]};`
+  : '';
+
+export const makeStyledThemeRule = (propName: string, cssProp: number | string, fallback: string) => (props: any) => typeof props[propName] !== 'undefined'
+  ? `${cssProp}: ${props.theme[propName][props[propName] || fallback]};`
   : '';
 
 export default makeStyledCssRule;

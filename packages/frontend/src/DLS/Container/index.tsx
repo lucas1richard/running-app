@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import styled from 'styled-components';
 import ViewSizeDisplay from '../../Common/ViewSizeDisplay';
 import useResizeObserver from '../../hooks/useResizeObserver';
-import { styledComponentsTheme } from '../theme';
 import { ViewSizeContext } from '../../hooks/useViewSize';
-import { BreakPoint } from '../createBreakpoints';
+import { styledComponentsTheme } from '../theme';
+import type { BreakPoint } from '../createBreakpoints';
 
 const ContainerDiv = styled.div`
   container-type: inline-size;
@@ -19,7 +19,11 @@ type ContainerProps = {
 
 const breakpoints = Object.entries<number>(styledComponentsTheme.breakpoints.values) as [BreakPoint, number][];
 
-const Container: React.FC<ContainerProps> = ({ children, showViewSizeDisplay, providesViewSize }) => {
+const Container: React.FC<ContainerProps> = ({
+  children,
+  showViewSizeDisplay,
+  providesViewSize,
+}) => {
   const [viewSize, setViewSize] = useState<BreakPoint>('xs');
   const ref = React.useRef<HTMLDivElement>(null);
   const trackSize = useCallback((dims: DOMRectReadOnly) => {

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import styles from './Detail.module.css';
 import { triggerUpdateActivity } from '../reducers/activitydetail-actions';
+import { Button } from '../DLS';
 
 const UpdatableNameDescription = ({
   activity,
@@ -41,7 +42,7 @@ const UpdatableNameDescription = ({
         placeholder="Activity Description"
         onChange={(ev) => setDescription(ev.target.value)}
       /> 
-      <button
+      <Button
         onClick={updateActivity}
         className={classNames(
           'full-width',
@@ -51,7 +52,7 @@ const UpdatableNameDescription = ({
         )}
       >
         Update
-      </button>
+      </Button>
     </div>
   );
 };

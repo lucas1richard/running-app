@@ -4,6 +4,7 @@ import { selectHeartZones } from '../../reducers/heartzones';
 import usePreferenceControl from '../../hooks/usePreferenceControl';
 import { emptyArray } from '../../constants';
 import { useAppSelector } from '../../hooks/redux';
+import { Button } from '../../DLS';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
@@ -73,7 +74,7 @@ const HeartZonesChartContainer = ({ id }) => {
           />
           None
         </label>
-        <button type="button" onClick={() => savePreferences({ activityId: id })}>Save</button>
+        <Button type="button" onClick={() => savePreferences({ activityId: id })}>Save</Button>
       </form>
     </div>
   );

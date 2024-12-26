@@ -14,7 +14,7 @@ import PRMedal from '../Common/Icons/PRMedal';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
-import { Grid, GridArea } from '../DLS';
+import { Basic, Flex, Grid, GridArea } from '../DLS';
 
 type Props = {
   activity: Activity;
@@ -104,27 +104,27 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           <StatsWrapper className={classNames({ 'text-left': isCompact })}>
             <div>
               {duration}
-              <span className="margin-l heading-4 dls-dark-gold">
+              <Basic.Span marginL={1} fontSize="h4" className="dls-dark-gold">
                 {activity.distance_miles} <abbr>mi</abbr>
-              </span>
+              </Basic.Span>
             </div>
             <div>
-              <small>Average Speed</small>
-              <span className="margin-l heading-4">
+              <Basic.Span fontSize="sm">Average Speed</Basic.Span>
+              <Basic.Span marginL={1} fontSize="h4">
                 {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-              </span>
+              </Basic.Span>
             </div>
             <div>
-              <small>Average HR</small>
-              <span className="margin-l heading-4">
+              <Basic.Span fontSize="sm">Average HR</Basic.Span>
+              <Basic.Span marginL={1} fontSize="h4">
                 {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
-              </span>
+              </Basic.Span>
             </div>
             <div className="dls-blue">
-              <small>Efficiency Factor</small>
-              <span className="margin-l heading-4">
+              <Basic.Span fontSize="sm">Efficiency Factor</Basic.Span>
+              <Basic.Span marginL={1} fontSize="h4">
                 {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
-              </span>
+              </Basic.Span>
             </div>
           </StatsWrapper>
         </GridArea>
@@ -139,12 +139,12 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
         <GridArea area="bestEfforts" className="flex flex-wrap gap">
           {bestEfforts.length > 0 && (
             bestEfforts.map((effort) => (
-              <div key={effort.effort_id} className="valign-middle">
+              <Flex alignItems='center' key={effort.effort_id}>
                 <span><PRMedal color={effort.pr_rank} type="native" /></span>
                 <small>
                   {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
                 </small>
-              </div>
+              </Flex>
             ))
           )}
         </GridArea>

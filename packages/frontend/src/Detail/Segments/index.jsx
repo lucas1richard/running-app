@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import SegmentsChart from './SegmentsChart';
+import { Button } from '../../DLS';
 
 const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
   const [visible, setVisible] = useState(Array.from(segments).fill(true));
@@ -34,9 +35,9 @@ const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
     <div>
       <div>
         <div>
-          <button onClick={setAllVisible}>Show All</button>
-          <button onClick={setAllHidden}>Hide All</button>
-          <button onClick={setToggleVisibility}>Show Toggles</button>
+          <Button onClick={setAllVisible}>Show All</Button>
+          <Button onClick={setAllHidden}>Hide All</Button>
+          <Button onClick={setToggleVisibility}>Show Toggles</Button>
         </div>
       </div>
       {showToggles && segments.map((seg, ix) => (

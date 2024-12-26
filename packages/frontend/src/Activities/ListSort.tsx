@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { selectListPrerences } from '../reducers/preferences';
 import { triggerSetUserPrefs } from '../reducers/preferences-actions';
 import { useAppSelector } from '../hooks/redux';
+import { Button } from '../DLS';
 
 const setPrefAction = (payload: any) => ({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload });
 
@@ -103,7 +104,7 @@ const ListSort: React.FC = () => {
         </select>
       </div>
       <div>
-        <button onClick={savePreferences}>Save Preferences</button>
+        <Button onClick={savePreferences}>Save Preferences</Button>
       </div>
     </div>
   );

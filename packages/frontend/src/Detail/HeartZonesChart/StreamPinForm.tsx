@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateStreamPin } from '../../reducers/activities-actions';
+import { Button } from '../../DLS';
 
 type StreamPinFormProps = {
   pin: StreamPin;
@@ -30,7 +31,7 @@ const StreamPinForm: React.FC<StreamPinFormProps> = ({ pin }) => {
           Description:
           <input type="text" value={description} onChange={changeDescription} />
         </label>
-        <button type="submit">Save</button>
+        <Button type="submit">Save</Button>
       </form>
     </div>
   );

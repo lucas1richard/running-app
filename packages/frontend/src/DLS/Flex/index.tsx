@@ -1,15 +1,19 @@
 import styled from 'styled-components';
 import makeSizeProps, { type SizeProp } from '../utils/makeSizeProps';
+import type { CSS } from 'styled-components/dist/types';
+import standardProps, { StandardProps } from '../utils/standardProps';
 
-interface FlexProps extends
-  SizeProp<'direction', 'row' | 'column'>
-  , SizeProp<'alignItems', 'flex-start' | 'center' | 'flex-end'>
-  , SizeProp<'justify', 'flex-start' | 'center' | 'flex-end' | 'space-between' | 'space-around'>
-  , SizeProp<'wrap', 'wrap' | 'nowrap' | 'wrap-reverse'>
-  , SizeProp<'gap', string> {}
+interface FlexProps extends StandardProps
+  , SizeProp<'direction', CSS.Property.FlexDirection>
+  , SizeProp<'alignItems', CSS.Property.AlignItems>
+  , SizeProp<'justify', CSS.Property.JustifyContent>
+  , SizeProp<'wrap', CSS.Property.FlexWrap>
+  , SizeProp<'gap', CSS.Property.Gap>
+  {}
 
 const Flex = styled.div<FlexProps>`
   display: flex;
+  ${standardProps}
   ${makeSizeProps(
     [
       ['direction', 'flex-direction'],

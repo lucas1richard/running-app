@@ -4,6 +4,7 @@ import { selectAllHeartZones } from '../../reducers/heartzones';
 import ZonesHeader from '../../Activities/ZonesHeader';
 import { selectGlobalPrerences } from '../../reducers/preferences';
 import { setGlobalPrefsAct } from '../../reducers/preferences-actions';
+import { Button } from '../../DLS';
 
 const SetGlobalHeartZones = () => {
   const allZones = useSelector(selectAllHeartZones);
@@ -17,14 +18,14 @@ const SetGlobalHeartZones = () => {
 
   return (
     <div>
-      <button onClick={() => selectZone(-1)} disabled={-1 === preferences.zonesId}>
+      <Button onClick={() => selectZone(-1)} disabled={-1 === preferences.zonesId}>
         Set Relative
-      </button>
+      </Button>
       {allZones.map((zone) => (
         <div key={zone.id} className="flex full-width" style={{ border: zone.id === preferences.zonesId ? '1px solid black' : 'none' }}>
-          <button onClick={() => selectZone(zone.id)} disabled={zone.id === preferences.zonesId}>
+          <Button onClick={() => selectZone(zone.id)} disabled={zone.id === preferences.zonesId}>
             Select
-          </button>
+          </Button>
           <div className="flex-item-grow">
             <ZonesHeader zones={zone} start={zone.start_date} isCompact={true} />
           </div>

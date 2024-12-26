@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import makeSizeProps, { SizeProp } from '../utils/makeSizeProps';
+import type { CSS } from 'styled-components/dist/types';
+import makeSizeProps, { type SizeProp } from '../utils/makeSizeProps';
 
 const Grid = styled.div<GridProps>`
   display: grid;
@@ -14,11 +15,11 @@ const Grid = styled.div<GridProps>`
   ])}
 `;
 
-interface GridProps extends SizeProp<'templateColumns', string>,
-  SizeProp<'templateAreas', string>,
-  SizeProp<'colGap', string>,
-  SizeProp<'rowGap', string>,
-  SizeProp<'gap', string>
+interface GridProps extends SizeProp<'templateColumns', CSS.Property.GridTemplateColumns>,
+  SizeProp<'templateAreas', CSS.Property.GridTemplateAreas>,
+  SizeProp<'colGap', CSS.Property.ColumnGap>,
+  SizeProp<'rowGap', CSS.Property.RowGap>,
+  SizeProp<'gap', CSS.Property.Gap>
   {
     className?: string;
     children?: React.ReactNode;

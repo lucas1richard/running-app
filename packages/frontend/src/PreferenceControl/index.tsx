@@ -1,6 +1,7 @@
 import React, { KeyboardEventHandler, MouseEventHandler, useCallback } from 'react';
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import type { PreferencesKeyPath } from '../reducers/preferences';
+import { Button } from '../DLS';
 
 type PreferenceControlProps = {
   subject: string,
@@ -46,12 +47,12 @@ const PreferenceControl: React.FC<PreferenceControlProps> = ({
           <span>{subject}</span> {preference ? <small>&#9660;</small> : <small>&#9658;</small>}
         </div>
         {showSaveButton && (
-          <button
+          <Button
             onClick={() => savePreferences(saveConfig)}
             className="pad quiet-input"
           >
             Save Preferences
-          </button>
+          </Button>
         )}
       </div>
         <div className={preference ? 'display-block' : 'display-none'}>

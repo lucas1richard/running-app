@@ -32,7 +32,7 @@ import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
-import { Flex, Grid } from '../DLS';
+import { Basic as B, Button, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
 
 const ActivityDetailPage = () => {
@@ -72,17 +72,17 @@ const ActivityDetailPage = () => {
 
   if (isLoading) {
     return (
-      <div className="pad">
+      <B.Div pad={1}>
         <Shimmer />
-      </div>
+      </B.Div>
     );
   }
 
   if (!activity) {
     return (
-      <div className="pad">
+      <B.Div pad={1}>
         <h1>Activity Not Found</h1>
-      </div>
+      </B.Div>
     );
   }
 
@@ -111,51 +111,51 @@ const ActivityDetailPage = () => {
         />
         <div className="card">
           <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
-            <button onClick={() => setTileBgColor('weather')}>Show Weather Background</button>
+            <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
             <UpdatableNameDescription
               activity={activity}
               details={details}
             />
-            <h2 className="text-center margin-2-t">
-              <span>{start_date_local ? dayjs(start_date_local).format('MMMM DD, YYYY') : ''}</span>
-            </h2>
-            <h3 className="text-center">
+            <B.Div fontSize="h2" textAlign="center" marginT={2}>
+              {start_date_local ? dayjs(start_date_local).format('MMMM DD, YYYY') : ''}
+            </B.Div>
+            <B.Div fontSize="h4" textAlign="center">
               {start_date_local ? dayjs.utc(start_date_local).format('h:mm A') : ''}
-            </h3>
-            <div className="text-center margin-tb">
+            </B.Div>
+            <B.Div textAlign="center" marginT={1} marginB={1}>
               <h3>
                 <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
-              <Flex directionSmDown="column" gap="1rem">
-                <div className="margin-t">
-                  <div className="heading-2">
+              <Flex directionSmDown="column" gap="1rem" justifyMdUp="space-between">
+                <B.Div marginT={1}>
+                  <B.Div fontSize="h2">
                     <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>
-                  </div>
-                  <div className="heading-4">
+                  </B.Div>
+                  <B.Div fontSize="h4">
                     {convertMetricSpeedToMPH(average_speed).toFixed(2)} mph
-                  </div>
-                </div>
-                <div className="margin-t">
-                  <div className="heading-2">
+                  </B.Div>
+                </B.Div>
+                <B.Div marginT={1}>
+                  <B.Div fontSize="h2">
                     {Math.round(average_heartrate)} bpm
-                  </div>
-                  <div className="heading-4">
+                  </B.Div>
+                  <B.Div fontSize="h4">
                     Max {max_heartrate} bpm
-                  </div>
-                </div>
+                  </B.Div>
+                </B.Div>
               </Flex>
-            </div>
-            <div className="text-center dls-blue">
-              <div className="heading-5">
+            </B.Div>
+            <B.Div textAlign="center" className="dls-blue">
+              <B.Div fontSize="h5">
                 Efficiency Factor
-              </div>
-              <div className="heading-2">
+              </B.Div>
+              <B.Div fontSize="h2">
                 {calcEfficiencyFactor(average_speed, average_heartrate).toFixed(2)}
-              </div>
+              </B.Div>
               <div>
                 yards per beat
               </div>
-            </div>
+            </B.Div>
             <div>
               <WeatherReporter id={id} />
             </div>
@@ -172,14 +172,14 @@ const ActivityDetailPage = () => {
 
       <HeartZonesChartContainer id={id} />
 
-      <div className="flex flex-column flex-align-center">
-        {!showMap && <button onClick={() => setShowMap(true)}>Show Map</button>}
+      <Flex direction="column" alignItems="center">
+        {!showMap && <Button onClick={() => setShowMap(true)}>Show Map</Button>}
         {showMap && (
           <div style={{ height: 600, width: 600 }}>
             <ReactMap id={id} />
           </div>
         )}
-      </div>
+      </Flex>
 
       <PreferenceControl
         subject="Laps & Best Efforts"
@@ -214,8 +214,9 @@ const ActivityDetailPage = () => {
           zones={zones}
         />
       </PreferenceControl>
+
       <div>
-        <button onClick={() => {
+        <Button onClick={() => {
           dispatch(setActivityPrefsAct(
             'default',
             { shouldShowSimilar, shouldShowSegments, shouldShowLaps }
@@ -223,10 +224,10 @@ const ActivityDetailPage = () => {
           savePreferences();
         }}>
           Save Preferences as a General Rule
-        </button>
-        <button onClick={() => savePreferences(saveConfig)}>
+        </Button>
+        <Button onClick={() => savePreferences(saveConfig)}>
           Save Preferences For This Activity Only
-        </button>
+        </Button>
       </div>
     </Grid>
   );

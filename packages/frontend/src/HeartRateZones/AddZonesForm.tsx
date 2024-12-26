@@ -7,6 +7,7 @@ import {
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { addHeartZonesAct } from '../reducers/heartzones-actions';
+import { Button } from '../DLS';
 
 const AddZonesForm: FC = () => {
   const [z1, setZ1] = useState('');
@@ -79,7 +80,7 @@ const AddZonesForm: FC = () => {
           <input id="starting" type="date" value={starting} onChange={startingChange} />
         </div>
       </div>
-      <button type="submit">Submit</button>
+      <Button type="submit">Submit</Button>
     </form>
   );
 };

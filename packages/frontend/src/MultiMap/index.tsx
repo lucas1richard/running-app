@@ -4,7 +4,7 @@ import MultiMap from './MultiMap';
 import classNames from 'classnames';
 import { toggleComparedActivityAct } from '../reducers/multimap-actions';
 import { selectComparedActivities } from '../reducers/multimap';
-import { Grid } from '../DLS';
+import { Button, Grid } from '../DLS';
 import Tile from '../Activities/Tile';
 
 const MultiMapPage = () => {
@@ -31,7 +31,7 @@ const MultiMapPage = () => {
               })}
             >
               <Tile activity={activity} isCompact={true} />
-              <button onClick={() => toggleCompare(activity)}>{isToggled ? 'Remove' : 'Compare'}</button>
+              <Button onClick={() => toggleCompare(activity)}>{isToggled ? 'Remove' : 'Compare'}</Button>
             </div>
           )
         })}
