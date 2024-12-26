@@ -1,3 +1,4 @@
+import React from 'react';
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -6,6 +7,7 @@ import { useMemo } from 'react';
 import useViewSize from '../hooks/useViewSize';
 
 const seriesDefaultConfig = {
+  type: 'line',
   states: {
     inactive: {
       opacity: 1
@@ -14,10 +16,9 @@ const seriesDefaultConfig = {
       lineWidthPlus: 0,
     },
   },
-  fillOpacity: 0.3,
   lineWidth: 4,
   animation: false,
-};
+} satisfies Highcharts.SeriesLineOptions;
 
 const yAxisDefaultConfig = {
   crosshair: true,
@@ -27,19 +28,24 @@ const yAxisDefaultConfig = {
   minorGridLineColor: 'rgba(0,0,0,0.1)',
   height: '33%',
   opposite: false,
+} satisfies Highcharts.YAxisOptions;
+
+type SpeedChartProps = {
+  activities: Activity[];
 }
 
-const SpeedChart = ({ activities: actProp }) => {
+const SpeedChart: React.FC<SpeedChartProps> = ({ activities: actProp }) => {
   const viewSize = useViewSize();
-  const activities = useMemo(
-    () => actProp.filter(({ start_date }) => dayjs(start_date).isAfter(dayjs().subtract(1, 'year'))).reverse(),
+  const activities = useMemo(() => {
+    const oneYearAgo = dayjs().subtract(1, 'year');
+    return actProp.filter(({ start_date }) => dayjs(start_date).isAfter(oneYearAgo)).reverse();
+  },
     [actProp]
   );
 
   const enableYAxis = viewSize.gte('md');
 
-  const options = useMemo(() =>
-    /** @type {Highcharts.Options} */
+  const options = useMemo<Highcharts.Options>(() =>
     ({
     chart: {
       type: 'line',
@@ -164,8 +170,8 @@ const SpeedChart = ({ activities: actProp }) => {
       animation: false,
       positioner: function () {
         return {
-          // right aligned
-          x: this.chart.chartWidth - this.label.width,
+          // @ts-ignore -- label is indeed there
+          x: this.chart.chartWidth - this.label.width, // right aligned
           y: 0 // align to title
         };
       },
@@ -198,15 +204,11 @@ const SpeedChart = ({ activities: actProp }) => {
   }), [activities, enableYAxis]);
 
   return (
-    <div style={{ height: 610 }}>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-        allowChartUpdate={true}
-      />
-      <div className="flex full-width">
-      </div>
-    </div>
+    <HighchartsReact
+      highcharts={Highcharts}
+      options={options}
+      allowChartUpdate={true}
+    />
   );
 };
 
