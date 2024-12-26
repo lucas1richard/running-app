@@ -1,14 +1,7 @@
 const { Sequelize, HasOne } = require('sequelize');
 const RelatedActivities = require('./model-related-activities');
 const Activity = require('./model-activities');
-
-/**
- * This is somewhat arbitrary, but it's a threshold for how similar two routes need to be to be considered related.
- * The route score is a sum of the route scores from the base activity to the related activity and vice versa.
- * The route score is calculated by comparing the route coordinates of the two activities.
- * The route score is a number between 0 and 1, where 0 means the routes are completely different and 1 means the routes are identical.
- */
-const SIMILARITY_THRESHOLD = 1;
+const { findRelationsBySimilarRoute: { SIMILARITY_THRESHOLD } } = require('../../constants');
 
 const summedRouteScores = Sequelize.where(
   Sequelize.col('routeScoreFromBase'), '+', Sequelize.col('routeScoreFromRelated')

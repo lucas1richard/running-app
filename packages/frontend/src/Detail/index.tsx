@@ -126,7 +126,7 @@ const ActivityDetailPage = () => {
               <h3>
                 <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
-              <Flex directionSm="column" directionXs="column" gap="1rem">
+              <Flex directionSmDown="column" gap="1rem">
                 <div className="margin-t">
                   <div className="heading-2">
                     <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>

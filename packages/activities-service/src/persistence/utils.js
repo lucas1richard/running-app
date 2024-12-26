@@ -1,5 +1,5 @@
 const { Sequelize } = require('sequelize');
-const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../constants');
+const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../secret-constants');
 const { getItem, upsertItem } = require('./setupdb-mysql');
 
 const getAccessToken = async () => {

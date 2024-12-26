@@ -22,6 +22,9 @@ type Props = {
   velocity: number[];
   smoothAverageWindow: number;
   highlightedSegment?: { start: number; end: number; color: string };
+  width?: number | string;
+  height?: number;
+  series?: Highcharts.SeriesOptionsType[];
 };
 
 const RouteMap: React.FC<Props> = ({
@@ -32,6 +35,9 @@ const RouteMap: React.FC<Props> = ({
   segments,
   velocity,
   smoothAverageWindow,
+  series = emptyArray,
+  width,
+  height = 900,
   highlightedSegment = { start: 0, end: 0, color: 'white' },
 }) => {
   const viewSize = useViewSize();
@@ -175,7 +181,8 @@ const RouteMap: React.FC<Props> = ({
     ({
     chart: {
       map: 'custom/world',
-      height: 900,
+      height,
+      width,
       animation: false,
     },
     title: {
@@ -186,8 +193,9 @@ const RouteMap: React.FC<Props> = ({
       memoHighlightedSegment,
       memoPins,
       memoSeries,
+      ...series,
     ],
-  }), [memoPointer, memoHighlightedSegment, memoPins, memoSeries]);
+  }), [height, width, memoPointer, memoHighlightedSegment, memoPins, memoSeries, series]);
 
   return (
     <div>
