@@ -104,7 +104,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           <StatsWrapper className={classNames({ 'text-left': isCompact })}>
             <div>
               {duration}
-              <Basic.Span marginL={1} fontSize="h4" className="dls-dark-gold">
+              <Basic.Span marginL={1} fontSize="h4" color="darkGold">
                 {activity.distance_miles} <abbr>mi</abbr>
               </Basic.Span>
             </div>

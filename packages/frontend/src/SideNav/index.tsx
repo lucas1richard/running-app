@@ -1,10 +1,11 @@
 import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { Card } from '../DLS';
 
 type SideNavProps = {};
 
-const SideBar = styled.div`
+const SideBar = styled(Card)`
   margin: 0;
   padding: 0;
   width: 200px;
@@ -50,7 +51,7 @@ const SideBar = styled.div`
 
 const SideNav: FC<SideNavProps> = () => {
   return (
-    <SideBar className="card">
+    <SideBar>
       <Link to="/">Home</Link>
       <hr />
       <Link to="/personal-records">Personal Records</Link>

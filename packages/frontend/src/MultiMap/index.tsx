@@ -4,7 +4,7 @@ import MultiMap from './MultiMap';
 import classNames from 'classnames';
 import { toggleComparedActivityAct } from '../reducers/multimap-actions';
 import { selectComparedActivities } from '../reducers/multimap';
-import { Button, Grid } from '../DLS';
+import { Basic, Button, Card, Grid } from '../DLS';
 import Tile from '../Activities/Tile';
 
 const MultiMapPage = () => {
@@ -12,31 +12,31 @@ const MultiMapPage = () => {
   const compared = useSelector(selectComparedActivities);
   const dispatch = useDispatch();
 
-  const toggleCompare = (activity) => {
+  const toggleCompare = (activity: Activity) => {
     dispatch(toggleComparedActivityAct(activity.id));
   };
   
   return (
-    <div>
+    <Basic.Div pad={2}>
       <MultiMap activityConfigs={compared} showSegments={false} />
       <Grid className="margin-t" gap="1rem" templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
-        {activities.map((activity, index) => {
+        {activities.map((activity) => {
           const isToggled = compared.some(({ id }) => id === activity.id );
 
           return (
-            <div
+            <Card
               key={activity.id}
-              className={classNames('card flex flex-column flex-justify-between',{
+              className={classNames('flex flex-column flex-justify-between',{
                 'dls-black-bg': isToggled
               })}
             >
               <Tile activity={activity} isCompact={true} />
               <Button onClick={() => toggleCompare(activity)}>{isToggled ? 'Remove' : 'Compare'}</Button>
-            </div>
+            </Card>
           )
         })}
       </Grid>
-    </div>
+    </Basic.Div>
   );
 }
 

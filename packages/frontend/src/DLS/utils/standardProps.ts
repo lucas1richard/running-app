@@ -1,6 +1,7 @@
+import type { Theme } from './../theme';
 import { css } from 'styled-components';
 import { type CSS } from 'styled-components/dist/types';
-import makeStyledCssRule from './makeStyledCssRule';
+import makeStyledCssRule, { makeStyledThemeRule } from './makeStyledCssRule';
 import makeFontRule, { FontProps } from './makeFontRule';
 
 export interface StandardProps extends FontProps {
@@ -15,6 +16,10 @@ export interface StandardProps extends FontProps {
   padR?: number | CSS.Property.PaddingRight;
   padB?: number | CSS.Property.PaddingBottom;
   width?: number | CSS.Property.Width;
+  // don't include CSS.Property.Color because name clashes with color prop. Also we want to allow
+  // theme colors only
+  color?: keyof Theme['color']
+  colorBg?: keyof Theme['colorBg'];
   textAlign?: CSS.Property.TextAlign;
 }
 
@@ -29,6 +34,8 @@ const standardProps = css<StandardProps>`
   ${makeStyledCssRule('padL', 'padding-left')}
   ${makeStyledCssRule('padR', 'padding-right')}
   ${makeStyledCssRule('padB', 'padding-bottom')}
+  ${makeStyledThemeRule('color', 'color', 'black')}
+  ${makeStyledThemeRule('colorBg', 'background-color', 'transparent')}
   ${makeStyledCssRule('textAlign', 'text-align')}
   ${makeStyledCssRule('width', 'width')}
 

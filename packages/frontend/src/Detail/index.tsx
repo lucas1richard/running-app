@@ -32,7 +32,7 @@ import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
-import { Basic as B, Button, Flex, Grid } from '../DLS';
+import { Basic as B, Button, Card, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
 
 const ActivityDetailPage = () => {
@@ -109,7 +109,7 @@ const ActivityDetailPage = () => {
           width={'100%'}
           alt="route"
         />
-        <div className="card">
+        <Card>
           <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
             <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
             <UpdatableNameDescription
@@ -160,7 +160,7 @@ const ActivityDetailPage = () => {
               <WeatherReporter id={id} />
             </div>
           </div>
-        </div>
+        </Card>
       </Grid>
 
       <HeartZonesDisplay

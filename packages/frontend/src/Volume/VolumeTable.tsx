@@ -3,6 +3,7 @@ import dayjs, { type ManipulateType } from 'dayjs';
 import { selectTimeGroupedRuns } from '../reducers/activities';
 import { Fragment } from 'react/jsx-runtime';
 import { useAppSelector } from '../hooks/redux';
+import { Card } from '../DLS';
 
 const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'month' }) => {
   const [tg, setTimeGroup] = useState<ManipulateType>(timeGroup);
@@ -13,7 +14,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
   const activities = useAppSelector((state) => selectTimeGroupedRuns(state, tg));
 
   return (
-    <div className="card">
+    <Card>
       <label htmlFor="timeGroupSelect">Time Group:</label>
       &nbsp;
       <select id="timeGroupSelect" value={tg} onChange={handleChange}>
@@ -48,7 +49,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
         }
         </table>
       </div>
-    </div>
+    </Card>
   );
 };
 

@@ -109,12 +109,7 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
         </div>
       )}
       <div className="border-1">
-        <Flex
-          direction="column"
-          directionMd="row"
-          directionLg="row"
-          directionXl="row"
-        >
+        <Flex direction="column" directionMdUp="row">
           <Cell
             ix={0}
             title="Zone 1"

@@ -27,6 +27,27 @@ export const styledComponentsTheme = {
     body: 1.5,
     heading: 1.25,
   },
+  colorBg: {
+    hrZone1: 'rgba(0, 132, 255, 0.2)',
+    hrZone2: 'rgba(0,255,0,0.2)',
+    hrZone3: 'rgba(255, 251, 0, 0.1)',
+    hrZone4: 'rgba(255, 115, 0, 0.1)',
+    hrZone5: 'rgba(255,0,0,0.2)',
+    hrZone1Strong: 'rgba(0, 132, 255, 0.5)',
+    hrZone2Strong: 'rgba(0,255,0,0.5)',
+    hrZone3Strong: 'rgba(255, 251, 0, 0.5)',
+    hrZone4Strong: 'rgba(255, 115, 0, 0.5)',
+    hrZone5Strong: 'rgba(255,0,0,0.5)',
+  },
+  color: {
+    hrZone1: 'rgba(0, 132, 255, 1)',
+    hrZone2: 'rgba(0,255,0,1)',
+    hrZone3: 'rgba(255, 251, 0, 1)',
+    hrZone4: 'rgba(255, 115, 0, 1)',
+    hrZone5: 'rgba(255,0,0,1)',
+    gold: 'rgb(255, 215, 0)',
+    darkGold: 'rgb(184, 134, 11)',
+  }
 };
 
 export type Theme = typeof styledComponentsTheme;

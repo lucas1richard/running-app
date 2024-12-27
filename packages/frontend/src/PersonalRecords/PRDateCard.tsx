@@ -4,11 +4,12 @@ import dayjs from 'dayjs';
 import DurationDisplay from '../Common/DurationDisplay';
 import { useAppSelector } from '../hooks/redux';
 import { selectActivity } from '../reducers/activities';
+import { Card } from '../DLS';
 
 const PRDateCard = ({ pr }) => {
   const activity = useAppSelector(state => selectActivity(state, pr.activityId));
   return (
-    <div key={pr.id} className={classNames('card text-center', {
+    <Card key={pr.id} textAlign="center" className={classNames({
       'gold-bg': pr.pr_rank === 1,
       'silver-bg': pr.pr_rank === 2,
       'bronze-bg': pr.pr_rank === 3,
@@ -27,7 +28,7 @@ const PRDateCard = ({ pr }) => {
           View Activity
         </Link>
       </div>
-    </div>
+    </Card>
   );
 };
 

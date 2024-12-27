@@ -6,6 +6,7 @@ import PRMedal from '../Common/Icons/PRMedal';
 import PRDateCard from './PRDateCard';
 import PRChart from './PRChart';
 import { useAppSelector } from '../hooks/redux';
+import { Card } from '../DLS';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);
@@ -17,7 +18,7 @@ const PRs = () => {
       <h2>All Time PRs</h2>
       <div className="flex flex-wrap gap">
         {allTimePrs.map((pr) => (
-          <div key={pr.effort_id} className="card text-center flex-item-grow">
+          <Card key={pr.effort_id} textAlign="center" className="flex-item-grow">
             <div className="heading-1">
               <PRMedal type="native" color="gold" />
             </div>
@@ -30,7 +31,7 @@ const PRs = () => {
             <div className="heading-3">
               <DurationDisplay numSeconds={pr.elapsed_time} />
             </div>
-          </div>
+          </Card>
         ))}
       </div>
       <div className="margin-t">

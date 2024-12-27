@@ -4,12 +4,13 @@ import { selectAllHeartZones } from '../../reducers/heartzones';
 import { getDateString } from '../../utils';
 import styles from './HeartZones.module.css';
 import AddNewHRZones from './AddNewZones';
+import { Card } from '../../DLS';
 
 const HeartZones = () => {
   const allzones = useSelector(selectAllHeartZones);
   return (
     <>
-      <div className="card">
+      <Card>
         <h2>Heart Zones</h2>
         <table className={styles.heartTable}>
           <thead className="text-center">
@@ -35,7 +36,7 @@ const HeartZones = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </Card>
       <div className="margin-t">
         <AddNewHRZones latestZone={allzones[0]} />
       </div>
