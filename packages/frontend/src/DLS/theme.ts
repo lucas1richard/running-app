@@ -38,6 +38,10 @@ export const styledComponentsTheme = {
     hrZone3Strong: 'rgba(255, 251, 0, 0.5)',
     hrZone4Strong: 'rgba(255, 115, 0, 0.5)',
     hrZone5Strong: 'rgba(255,0,0,0.5)',
+    gold: 'rgb(255, 215, 0)',
+    silver: 'rgb(192, 192, 192)',
+    bronze: 'rgb(205, 127, 50)',
+    white: 'rgb(255, 255, 255)',
   },
   color: {
     hrZone1: 'rgba(0, 132, 255, 1)',
@@ -47,6 +51,8 @@ export const styledComponentsTheme = {
     hrZone5: 'rgba(255,0,0,1)',
     gold: 'rgb(255, 215, 0)',
     darkGold: 'rgb(184, 134, 11)',
+    silver: 'rgb(142, 142, 142)',
+    bronze: 'rgb(155, 77, 0)',
   }
 };
 

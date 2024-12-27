@@ -4,14 +4,14 @@ import { selectAllHeartZones } from '../../reducers/heartzones';
 import { getDateString } from '../../utils';
 import styles from './HeartZones.module.css';
 import AddNewHRZones from './AddNewZones';
-import { Card } from '../../DLS';
+import { Basic, Card } from '../../DLS';
 
-const HeartZones = () => {
+const HeartZones: React.FC = () => {
   const allzones = useSelector(selectAllHeartZones);
   return (
     <>
       <Card>
-        <h2>Heart Zones</h2>
+        <Basic.Div fontSize="h2" marginB={1}>Heart Zones</Basic.Div>
         <table className={styles.heartTable}>
           <thead className="text-center">
             <tr>
@@ -37,9 +37,9 @@ const HeartZones = () => {
           </tbody>
         </table>
       </Card>
-      <div className="margin-t">
+      <Basic.Div marginT={1}>
         <AddNewHRZones latestZone={allzones[0]} />
-      </div>
+      </Basic.Div>
     </>
   );
 };

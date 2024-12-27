@@ -6,7 +6,7 @@ import PRMedal from '../Common/Icons/PRMedal';
 import PRDateCard from './PRDateCard';
 import PRChart from './PRChart';
 import { useAppSelector } from '../hooks/redux';
-import { Card } from '../DLS';
+import { Basic, Card, Flex } from '../DLS';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);
@@ -14,11 +14,11 @@ const PRs = () => {
   const names = Object.keys(prsByDate);
 
   return (
-    <div className="margin-t">
+    <Basic.Div margin={2}>
       <h2>All Time PRs</h2>
-      <div className="flex flex-wrap gap">
+      <Flex wrap="wrap" gap={1}>
         {allTimePrs.map((pr) => (
-          <Card key={pr.effort_id} textAlign="center" className="flex-item-grow">
+          <Card key={pr.effort_id} textAlign="center" flexGrow="1">
             <div className="heading-1">
               <PRMedal type="native" color="gold" />
             </div>
@@ -33,29 +33,29 @@ const PRs = () => {
             </div>
           </Card>
         ))}
-      </div>
-      <div className="margin-t">
+      </Flex>
+      <Basic.Div marginT={1}>
         <h2>PRs By Date</h2>
         <span>Most recent &rarr; least recent</span>
-        <div className="margin-t">
+        <Basic.Div marginT={1}>
           {names.map((name) => (
-            <div key={name}>
-              <div className="flex gap overflow-x-scroll">
-                <h1 className="valign-middle flex-align-center">{name}</h1>
-                <div className="heading-1 valign-middle">
+            <Basic.Div key={name} flexShrink={0}>
+              <Flex overflowX="scroll" gap={1}>
+                <Flex fontSize="h1" alignItems="center" flexShrink={0}>{name}</Flex>
+                <Flex fontSize="h1" alignItems="center" flexShrink={0}>
                   &rarr;
-                </div>
+                </Flex>
                 {prsByDate[name].map((pr) => (
                   <PRDateCard pr={pr} key={pr.effort_id} />
                 ))}
-              </div>
+              </Flex>
               <PRChart records={prsByDate[name]} title={name} />
-            </div>
+            </Basic.Div>
             ))
           }
-        </div>
-      </div>
-    </div>
+        </Basic.Div>
+      </Basic.Div>
+    </Basic.Div>
   );
 };
 

@@ -97,7 +97,7 @@ const ActivityDetailPage = () => {
   } = activity;
 
   return (
-    <Grid className={`pad`} gap="1rem">
+    <Grid pad={1} gap={1}>
       <DetailDataFetcher id={id} />
       <Grid templateColumns='1fr' gap='1rem' templateColumnsLgUp='1fr 1fr'>
         <GoogleMapImage
@@ -186,7 +186,7 @@ const ActivityDetailPage = () => {
         keyPath={activityShouldShowLaps(idString)}
         saveConfig={saveConfig}
       >
-        <Grid templateColumns='1fr' gap='1rem' templateColumnsLgUp='auto 1fr'>
+        <Grid templateColumns='1fr' gap={1} templateColumnsLgUp='auto 1fr'>
           <Laps id={id} />
           <BestEfforts bestEfforts={activity.bestEfforts} />
         </Grid>

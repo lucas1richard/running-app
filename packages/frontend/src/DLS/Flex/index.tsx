@@ -8,7 +8,7 @@ interface FlexProps extends StandardProps
   , SizeProp<'alignItems', CSS.Property.AlignItems>
   , SizeProp<'justify', CSS.Property.JustifyContent>
   , SizeProp<'wrap', CSS.Property.FlexWrap>
-  , SizeProp<'gap', CSS.Property.Gap>
+  , SizeProp<'gap', number | CSS.Property.Gap>
   {}
 
 const Flex = styled.div<FlexProps>`

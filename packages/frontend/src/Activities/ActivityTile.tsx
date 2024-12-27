@@ -1,9 +1,10 @@
-import Tile from './Tile';
-import Spinner from '../Loading/Spinner';
-import { useDispatch } from 'react-redux';
-import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
-import { useGetApiStatus } from '../reducers/apiStatus';
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { useGetApiStatus } from '../reducers/apiStatus';
+import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
+import Spinner from '../Loading/Spinner';
+import { Basic } from '../DLS';
+import Tile from './Tile';
 
 type ActivityTileProps = {
   className: string;
@@ -32,7 +33,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
       />
 
       {showHideFunction && (
-        <div className="text-right">
+        <Basic.Div textAlign="right">
           {isLoading
             ? <Spinner />
             : (
@@ -46,7 +47,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
               />
             </label>
             )}
-        </div>
+        </Basic.Div>
       )}
     </div>
   );

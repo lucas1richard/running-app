@@ -4,7 +4,7 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
 import { useAppSelector } from '../hooks/redux';
-import { Card } from '../DLS';
+import { Basic, Card, Flex } from '../DLS';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);
@@ -12,24 +12,24 @@ const PRs = () => {
   return (
     <div>
       <h2>All Time PRs</h2>
-      <div className="flex flex-wrap gap">
+      <Flex wrap="wrap" gap={1}>
         {allTimePrs.map((pr) => (
-          <Card key={pr.effort_id} textAlign="center" className="flex-item-grow">
-            <div className="heading-1">
+          <Card key={pr.effort_id} textAlign="center" flexGrow="1">
+            <Basic.Div fontSize="h1">
               <PRMedal type="native" color="gold" />
-            </div>
-            <div className="heading-4">
-              <Link className="heading-4" to={`/${pr.activityId}/detail`}>{pr.name}</Link>
-            </div>
-            <div>
+            </Basic.Div>
+            <Basic.Div fontSize="h4">
+              <Link to={`/${pr.activityId}/detail`}>{pr.name}</Link>
+            </Basic.Div>
+            <Basic.Div>
               {dayjs(pr.start_date_local).format('MMMM DD, YYYY')}
-            </div>
-            <div className="heading-3">
+            </Basic.Div>
+            <Basic.Div fontSize="h3">
               <DurationDisplay numSeconds={pr.elapsed_time} />
-            </div>
+            </Basic.Div>
           </Card>
         ))}
-      </div>
+      </Flex>
     </div>
   );
 };

@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { convertMetersToMiles } from '../utils';
+import { Basic, Flex } from '../DLS';
 
 const NUMBER_OF_DAYS = 7;
 
@@ -29,22 +30,22 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
   const sameYearRuns = useMemo(() => findSameYear(activities), [activities]);
 
   return (
-    <div className="dls-white-bg pad flex flex-even">
-      <div className="flex-item-grow text-center">
-        <h2 className="heading-5">Miles in the last {NUMBER_OF_DAYS} days</h2>
-        <div className="heading-2">{sumDistance(recentRuns).toFixed(2)}</div>
-      </div>
+    <Flex colorBg="white" pad={1} directionSmDown="column" gapSmDown={2}>
+      <Basic.Div flexGrow="1" textAlign="center">
+        <Basic.Div fontSize="h5">Miles in the last {NUMBER_OF_DAYS} days</Basic.Div>
+        <Basic.Div fontSize="h2">{sumDistance(recentRuns).toFixed(2)}</Basic.Div>
+      </Basic.Div>
 
-      <div className="flex-item-grow text-center">
-        <h2 className="heading-5">Miles this year</h2>
-        <div className="heading-2">{sumDistance(sameYearRuns).toFixed(2)}</div>
-      </div>
+      <Basic.Div flexGrow="1" textAlign="center">
+        <Basic.Div fontSize="h5">Miles this year</Basic.Div>
+        <Basic.Div fontSize="h2">{sumDistance(sameYearRuns).toFixed(2)}</Basic.Div>
+      </Basic.Div>
 
-      <div className="flex-item-grow text-center">
-        <h2 className="heading-5">All time</h2>
-        <div className="heading-2">{sumDistance(activities).toFixed(2)}</div>
-      </div>
-    </div>
+      <Basic.Div flexGrow="1" textAlign="center">
+        <Basic.Div fontSize="h5">All time</Basic.Div>
+        <Basic.Div fontSize="h2">{sumDistance(activities).toFixed(2)}</Basic.Div>
+      </Basic.Div>
+    </Flex>
   );
 };
 

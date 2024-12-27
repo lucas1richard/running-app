@@ -14,3 +14,7 @@ export const Span = styled.span<StandardBase<HTMLSpanElement>>`
 export const Input = styled.input<StandardBase<HTMLInputElement>>`
   ${standardProps}
 `;
+
+export const Select = styled.select<StandardBase<HTMLSelectElement>>`
+  ${standardProps}
+`;

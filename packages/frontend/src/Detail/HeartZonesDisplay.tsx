@@ -3,7 +3,7 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { hrZonesBg, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
 import styled from 'styled-components';
-import { Flex } from '../DLS';
+import { Basic, Flex } from '../DLS';
 
 type HeartZonesDisplayProps = {
   zones: HeartZone;
@@ -102,13 +102,13 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
   const isUsingNonNativeZones = nativeZones.id !== zones.id;
 
   return (
-    <div className='dls-white-bg'>
+    <Basic.Div colorBg="white">
       {isUsingNonNativeZones && (
         <div>
           <small>Note: Using Non-native Heart Rate Zones</small>
         </div>
       )}
-      <div className="border-1">
+      <Basic.Div border="1px solid #dedede">
         <Flex direction="column" directionMdUp="row">
           <Cell
             ix={0}
@@ -151,8 +151,8 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
             avg={avg}
           />
         </Flex>
-      </div>
-    </div>
+      </Basic.Div>
+    </Basic.Div>
   );
 };
 

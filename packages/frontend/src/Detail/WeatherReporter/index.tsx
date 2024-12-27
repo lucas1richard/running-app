@@ -13,11 +13,14 @@ import { useGetApiStatus } from '../../reducers/apiStatus';
 import { triggerFetchWeather } from '../../reducers/activities-actions';
 import { useAppSelector } from '../../hooks/redux';
 import Shimmer from '../../Loading/Shimmer';
-import { Button } from '../../DLS';
+import { Basic, Button, Flex } from '../../DLS';
 
 type Props = {
   id: number;
 };
+
+type SelectChangeHandler = ChangeEventHandler<HTMLSelectElement>;
+type InputChangeHandler = ChangeEventHandler<HTMLInputElement>;
 
 const WeatherReporter: FC<Props> = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
@@ -38,23 +41,23 @@ const WeatherReporter: FC<Props> = ({ id }) => {
 
   const dispatch = useDispatch();
 
-  const handlePrecipChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
+  const handlePrecipChange = useCallback<SelectChangeHandler>((event) => {
     setPrecipitation(Number(event.target.value));
   }, []);
 
-  const handleSkyChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
+  const handleSkyChange = useCallback<SelectChangeHandler>((event) => {
     setSky(event.target.value);
   }, []);
 
-  const handleTemperatureChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
+  const handleTemperatureChange = useCallback<InputChangeHandler>((event) => {
     setTemperature(Number(event.target.value));
   }, []);
 
-  const handleHumidityChange = useCallback<ChangeEventHandler<HTMLInputElement>>((event) => {
+  const handleHumidityChange = useCallback<InputChangeHandler>((event) => {
     setHumidity(Number(event.target.value));
   }, []);
 
-  const handleWindChange = useCallback<ChangeEventHandler<HTMLSelectElement>>((event) => {
+  const handleWindChange = useCallback<SelectChangeHandler>((event) => {
     setWind(event.target.value);
   }, []);
 
@@ -64,15 +67,15 @@ const WeatherReporter: FC<Props> = ({ id }) => {
   }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
 
   return (
-    <div className="border-radius-1 pad">
+    <Basic.Div pad={1} marginT={1} border="1px solid gray">
       <Shimmer
         isVisible={weatherDataStatus === 'loading'}
       />
       <div>
-        <form onSubmit={handleSubmit} className="border">
-          <div className="flex flex-wrap gap">
-            <div className="flex gap flex-align-center">
-              <select
+        <form onSubmit={handleSubmit}>
+          <Flex wrap="wrap" gap={1}>
+            <Flex gap={1} alignItems="center">
+              <Basic.Select
                 id="sky"
                 name="sky"
                 value={sky}
@@ -84,11 +87,11 @@ const WeatherReporter: FC<Props> = ({ id }) => {
                 <option value="partly cloudy">Partly Cloudy</option>
                 <option value="mostly cloudy">Mostly Cloudy</option>
                 <option value="overcast">Overcast</option>
-              </select>
-            </div>
+              </Basic.Select>
+            </Flex>
 
-            <div className="flex gap flex-align-center">
-              <select
+            <Flex gap={1} alignItems="center">
+              <Basic.Select
                 id="rain"
                 name="rain"
                 value={precipitation}
@@ -100,46 +103,46 @@ const WeatherReporter: FC<Props> = ({ id }) => {
                 <option value="moderate">Moderate Rain</option>
                 <option value="heavy">Heavy Rain</option>
                 <option value="torrential">Torrential Rain</option>
-              </select>
-            </div>
-          </div>
+              </Basic.Select>
+            </Flex>
+          </Flex>
 
-          <div className="flex gap flex-wrap">
-            <div className="flex gap flex-align-center">
-              <input 
+          <Flex gap={1} wrap="wrap">
+            <Flex gap={1} alignItems="center">
+              <Basic.Input
                 type="number"
                 id="temperature" 
                 name="temperature" 
                 value={temperature} 
                 onChange={handleTemperatureChange}
-                className={`text-right`}
-                style={{ paddingRight: 30 }}
+                textAlign="right"
+                padR="30px"
                 min={-100}
                 max={150}
                 placeholder="Temp"
               />
-              <span style={{ marginLeft: -40 }}>&deg;F</span>
-            </div>
+              <Basic.Span marginL="-40px">&deg;F</Basic.Span>
+            </Flex>
 
-            <div className="flex gap flex-align-center">
-              <input 
+            <Flex gap={1} alignItems="center">
+              <Basic.Input 
                 type="number" 
                 id="humidity" 
                 name="humidity" 
                 value={humidity} 
                 onChange={handleHumidityChange}
-                style={{ paddingRight: 30 }}
+                padR="30px"
                 min={0}
                 max={100}
-                className={`text-right`}
+                textAlign="right"
                 placeholder="Humidity"
               />
-              <span style={{ marginLeft: -40 }}>%</span>
-            </div>
-          </div>
+              <Basic.Span marginL="-40px">%</Basic.Span>
+            </Flex>
+          </Flex>
 
-          <div className="flex gap flex-align-center">
-            <select
+          <Flex gap={1} alignItems="center">
+            <Basic.Select
               id="wind"
               name="wind"
               value={wind}
@@ -151,13 +154,13 @@ const WeatherReporter: FC<Props> = ({ id }) => {
               <option value="moderate">Moderate Breeze</option>
               <option value="strong">Strong Breeze</option>
               <option value="gale">Gale</option>
-            </select>
-          </div>
+            </Basic.Select>
+          </Flex>
 
           <Button type="submit" className="full-width">Submit</Button>
         </form>
       </div>
-    </div>
+    </Basic.Div>
   );
 }
 

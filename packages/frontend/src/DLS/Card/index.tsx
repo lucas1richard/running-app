@@ -11,8 +11,8 @@ export const cardCss = css`
 `;
 
 const Card = styled.div<StandardBase<HTMLDivElement>>`
-  ${standardProps}
   ${cardCss}
+  ${standardProps}
 `;
 
 export default Card;

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { selectListPrerences } from '../reducers/preferences';
 import { triggerSetUserPrefs } from '../reducers/preferences-actions';
 import { useAppSelector } from '../hooks/redux';
-import { Button } from '../DLS';
+import { Button, Flex } from '../DLS';
 
 const setPrefAction = (payload: any) => ({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload });
 
@@ -34,19 +34,18 @@ const ListSort: React.FC = () => {
 
   return (
     <div>
-      <div className="flex flex-justify-between">
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              id="group-by-zones"
-              name="group-by-zones"
-              checked={listPreferences.isGroupByZonesSet}
-              onChange={onGroupByZonesChange}
-            />
-            Group by Heart Rate Zones
-          </label>
-        </div>
+      <Flex justify="space-between">
+        <label>
+          <input
+            type="checkbox"
+            id="group-by-zones"
+            name="group-by-zones"
+            checked={listPreferences.isGroupByZonesSet}
+            onChange={onGroupByZonesChange}
+          />
+          Group by Heart Rate Zones
+        </label>
+
         <div>
           <label>
             Sort by:
@@ -87,7 +86,7 @@ const ListSort: React.FC = () => {
             Descending
           </label>
         </div>
-      </div>
+      </Flex>
       <div>
         <label htmlFor="tile-background-select">
           Tile Background:

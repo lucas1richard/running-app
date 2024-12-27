@@ -16,9 +16,8 @@ import { listDisplayConfigControls, listDisplayHideFunction } from '../Preferenc
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
 import PRs from './PRs';
-import { Button, Flex } from '../DLS';
+import { Basic, Button, Flex } from '../DLS';
 
-const style = { padding: '1rem', margin: 'auto', maxWidth: 1600 };
 const hideFunctionKeypath = listDisplayHideFunction();
 const listDisplayControlsKeypath = listDisplayConfigControls();
 
@@ -44,7 +43,7 @@ const Activities = () => {
   }, [dispatch]);
 
   return (
-    <div style={style}>
+    <Basic.Div pad={1} margin="auto" maxWidth="1600px">
       <Shimmer
         isVisible={(
           activitiesApiStatus === loading
@@ -55,12 +54,12 @@ const Activities = () => {
       <div>
         <Button onClick={onClickSync}>Sync Strava</Button>
       </div>
-      <div className="margin-t">
+      <Basic.Div marginT={1}>
         <PRs />
-      </div>
-      <div className="margin-t">
+      </Basic.Div>
+      <Basic.Div marginT={1}>
         <SpeedChart activities={activities} />
-      </div>
+      </Basic.Div>
       <div>
         <CurrentSummary activities={activities} />
       </div>
@@ -77,18 +76,18 @@ const Activities = () => {
         </Button>
       </PreferenceControl>
 
-      <div className="flex">
+      <Flex>
         <div className="flex-item-grow">
           {
             activitiesApiStatus === success && (
               categorizeRunsByZones.map(({ runs, zones, start }) => (
-                <div className="flex flex-column gap" key={start}>
+                <Flex direction="column" gap={1} key={start}>
                   {isGroupByZonesSet && (
-                    <div className="margin-tb" style={{ marginTop: '3rem' }}>
+                    <Basic.Div marginT={3} marginB={1}>
                       <ZonesHeader zones={zones} start={start} />
-                    </div>
+                    </Basic.Div>
                   )}
-                  <Flex direction="column" gap="1rem">
+                  <Flex direction="column" gap={1}>
                     {runs.map((activity) => (
                       <ActivityTile
                         key={activity.id}
@@ -99,13 +98,13 @@ const Activities = () => {
                       />
                     ))}
                   </Flex>
-                </div>
+                </Flex>
               ))
             )
           }
         </div>
-      </div>
-    </div>
+      </Flex>
+    </Basic.Div>
   );
 };
 

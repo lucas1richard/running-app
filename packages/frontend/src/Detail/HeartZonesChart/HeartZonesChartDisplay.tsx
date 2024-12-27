@@ -18,7 +18,7 @@ import {
 } from '../../utils';
 import getGradeColorAbs from './getGradeColorAbs';
 import useSegments from './useSegments';
-import { Button, Flex, Grid } from '../../DLS';
+import { Basic, Button, Flex, Grid } from '../../DLS';
 import useViewSize from '../../hooks/useViewSize';
 import { useDispatch } from 'react-redux';
 import { deleteStreamPin, setStreamPin } from '../../reducers/activities-actions';
@@ -532,7 +532,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         </div>
         <Flex alignItems='center' marginT={1}>
           <label htmlFor="magnificationFactor-range">Magnification: </label>
-          <div className="flex-item-grow margin-l">
+          <Basic.Div flexGrow="1" marginL={1}>
             {enableYAxisLabels && (
               <>
                 <input
@@ -566,7 +566,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
                 </select>
               </div>
             )}
-          </div>
+          </Basic.Div>
         </Flex>
         <div>
           {streamPins.map((pin) => (
