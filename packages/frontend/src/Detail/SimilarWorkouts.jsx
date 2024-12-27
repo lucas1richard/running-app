@@ -22,11 +22,11 @@ const SimilarWorkouts = ({ activity, zones }) => {
       >
         {similarDist.map((activity) => (
           <Tile
-          key={activity.relatedActivity}
-          isCompact={true}
-          activity={activity}
-          zones={zones}
-        />
+            key={activity.relatedActivity}
+            isCompact={true}
+            activity={activity}
+            zones={zones}
+          />
         ))}
       </Grid>
     </div>

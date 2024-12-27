@@ -6,6 +6,11 @@ import makeFontRule, { FontProps } from './makeFontRule';
 
 export interface StandardProps extends FontProps {
   border?: CSS.Property.Border;
+  borderT?: CSS.Property.BorderTop;
+  borderB?: CSS.Property.BorderBottom;
+  borderL?: CSS.Property.BorderLeft;
+  borderR?: CSS.Property.BorderRight;
+  display?: CSS.Property.Display;
   borderRadius?: number | CSS.Property.BorderRadius;
   margin?: number | CSS.Property.Margin;
   marginT?: number | CSS.Property.MarginTop;
@@ -54,6 +59,11 @@ const standardProps = css<StandardProps>`
   ${makeStyledCssRule('flexShrink', 'flex-shrink')}
   ${makeStyledCssRule('borderRadius', 'border-radius')}
   ${makeStyledCssRule('border', 'border')}
+  ${makeStyledCssRule('borderB', 'border-bottom')}
+  ${makeStyledCssRule('borderT', 'border-top')}
+  ${makeStyledCssRule('borderL', 'border-left')}
+  ${makeStyledCssRule('borderR', 'border-right')}
+  ${makeStyledCssRule('display', 'display')}
 
   ${makeFontRule}
 `;
