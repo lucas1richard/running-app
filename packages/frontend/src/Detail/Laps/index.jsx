@@ -4,6 +4,7 @@ import { selectActivityDetails } from '../../reducers/activities';
 import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '../../utils';
 import DurationDisplay from '../../Common/DurationDisplay';
 import styled from 'styled-components';
+import { Basic } from '../../DLS';
 
 const TableWrapper = styled.div`
   overflow-x: auto;
@@ -53,10 +54,10 @@ const Laps = ({ id }) => {
 
   return (
     <TableWrapper>
-      <table className="dls-white-bg">
+      <Basic.Table colorBg="white">
         <thead>
           <tr>
-            <th colSpan="7" className="text-center">Laps</th>
+            <Basic.Th colSpan="7" textAlign="center">Laps</Basic.Th>
           </tr>
           <tr>
             <th>Name</th>
@@ -71,19 +72,23 @@ const Laps = ({ id }) => {
         <tbody>
           {processLaps(laps).map((lap) => {
             return (
-              <tr key={lap.name} className="text-right">
+              <Basic.Tr key={lap.name} textAlign="right">
                 <td>{lap.name}</td>
                 <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
                 <td>{lap.dist} <small>{lap.distUnit}</small></td>
-                <td><DurationDisplay numSeconds={Math.floor((1 / convertMetersToMiles(lap.distance)) * lap.elapsed_time)} units={['', ':']} /></td>
-                <td className="text-center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></td>
-                <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
+                <td>
+                  <DurationDisplay
+                    numSeconds={Math.floor((1 / convertMetersToMiles(lap.distance)) * lap.elapsed_time)} units={['', ':']}
+                  />
+                </td>
+                <Basic.Td textAlign="center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></Basic.Td>
+                <Basic.Td textAlign="center">{lap.max_heartrate} <abbr>bpm</abbr></Basic.Td>
                 <td>{lap.totalElevationGainFt} <small>ft</small></td>
-              </tr>
+              </Basic.Tr>
             )}
           )}
         </tbody>
-      </table>
+      </Basic.Table>
     </TableWrapper>
   );
 };

@@ -11,18 +11,19 @@ type RequireAtLeastOne<T, Keys extends keyof T = keyof T> =
 // don't allow Basics to be used without at least one standard prop
 type RequiredStandardBase<GenElement> = RequireAtLeastOne<StandardBase<GenElement>, keyof StandardProps>
 
-export const Div = styled.div<RequiredStandardBase<HTMLDivElement>>`
-  ${standardProps}
-`;
+export const Div = styled.div<RequiredStandardBase<HTMLDivElement>>`${standardProps}`;
+export const Span = styled.span<RequiredStandardBase<HTMLSpanElement>>`${standardProps}`;
 
-export const Span = styled.span<RequiredStandardBase<HTMLSpanElement>>`
-  ${standardProps}
-`;
+export const Input = styled.input<RequiredStandardBase<HTMLInputElement>>`${standardProps}`;
+export const Select = styled.select<RequiredStandardBase<HTMLSelectElement>>`${standardProps}`;
 
-export const Input = styled.input<RequiredStandardBase<HTMLInputElement>>`
-  ${standardProps}
-`;
+export const Table = styled.table<RequiredStandardBase<HTMLTableElement>>`${standardProps}`;
+export const Td = styled.td<RequiredStandardBase<HTMLTableCellElement>>`${standardProps}`;
+export const Thead = styled.thead<RequiredStandardBase<HTMLTableSectionElement>>`${standardProps}`;
+export const Tbody = styled.tbody<RequiredStandardBase<HTMLTableSectionElement>>`${standardProps}`;
+export const Th = styled.th<RequiredStandardBase<HTMLTableCellElement>>`${standardProps}`;
+export const Tr = styled.tr<RequiredStandardBase<HTMLTableRowElement>>`${standardProps}`;
 
-export const Select = styled.select<RequiredStandardBase<HTMLSelectElement>>`
-  ${standardProps}
-`;
+
+
+

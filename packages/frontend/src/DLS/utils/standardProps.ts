@@ -23,7 +23,9 @@ export interface StandardProps extends FontProps {
   padR?: number | CSS.Property.PaddingRight;
   padB?: number | CSS.Property.PaddingBottom;
   width?: number | CSS.Property.Width;
-  maxWidth?: number | CSS.Property.Width;
+  maxWidth?: number | CSS.Property.MaxWidth;
+  height?: number | CSS.Property.Height;
+  maxHeight?: number | CSS.Property.MaxHeight;
   // don't include CSS.Property.Color because name clashes with color prop. Also we want to allow
   // theme colors only
   color?: keyof Theme['color']
@@ -51,6 +53,8 @@ const standardProps = css<StandardProps>`
   ${makeStyledThemeRule('colorBg', 'background-color', 'transparent')}
   ${makeStyledCssRule('textAlign', 'text-align')}
   ${makeStyledCssRule('width', 'width')}
+  ${makeStyledCssRule('height', 'height')}
+  ${makeStyledCssRule('maxHeight', 'max-height')}
   ${makeStyledCssRule('maxWidth', 'max-width')}
   ${makeStyledCssRule('overflow', 'overflow')}
   ${makeStyledCssRule('overflowX', 'overflow-x')}

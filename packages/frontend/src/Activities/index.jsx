@@ -2,15 +2,15 @@ import React, { useCallback } from 'react';
 import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActivities, selectZoneGroupedRuns } from '../reducers/activities';
+import { selectListPrerences } from '../reducers/preferences';
+import { idle, loading, success, useGetApiStatus } from '../reducers/apiStatus';
+import { triggerFetchActivities } from '../reducers/activities-actions';
 import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
 import ConfigWidget from '../Config';
 import SpeedChart from './SpeedChart';
-import { selectListPrerences } from '../reducers/preferences';
 import ListSort from './ListSort';
-import { idle, loading, success, useGetApiStatus } from '../reducers/apiStatus';
 import Shimmer from '../Loading/Shimmer';
-import { triggerFetchActivities } from '../reducers/activities-actions';
 import PreferenceControl from '../PreferenceControl';
 import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
 import usePreferenceControl from '../hooks/usePreferenceControl';
@@ -77,7 +77,7 @@ const Activities = () => {
       </PreferenceControl>
 
       <Flex>
-        <div className="flex-item-grow">
+        <Basic.Div flexGrow="1">
           {
             activitiesApiStatus === success && (
               categorizeRunsByZones.map(({ runs, zones, start }) => (
@@ -102,7 +102,7 @@ const Activities = () => {
               ))
             )
           }
-        </div>
+        </Basic.Div>
       </Flex>
     </Basic.Div>
   );

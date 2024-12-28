@@ -157,7 +157,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             </Basic.Select>
           </Flex>
 
-          <Button type="submit" className="full-width">Submit</Button>
+          <Button type="submit" width="100%">Submit</Button>
         </form>
       </div>
     </Basic.Div>

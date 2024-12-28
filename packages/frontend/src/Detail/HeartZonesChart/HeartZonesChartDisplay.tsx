@@ -496,7 +496,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       templateColumns="1fr"
       templateColumnsXl="3fr 1fr"
     >
-      <div className="flex-item-grow">
+      <Basic.Div flexGrow="1">
         <div>
           <label>
             Smooth Average Window (seconds):{' '}
@@ -517,7 +517,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             ref={chartRef}
           />
         </div>
-        <div className="flex full-width">
+        <Flex width="100%">
           {hrzones.map(({ zone, from, to }) => (
             <div
               key={`${zone}-${from}-${to}`}
@@ -529,30 +529,30 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             >
             </div>
           ))}
-        </div>
+        </Flex>
         <Flex alignItems='center' marginT={1}>
           <label htmlFor="magnificationFactor-range">Magnification: </label>
           <Basic.Div flexGrow="1" marginL={1}>
             {enableYAxisLabels && (
               <>
-                <input
+                <Basic.Input
                   type="range"
                   id="magnificationFactor-range"
                   min={initialMagnificationFactor}
                   max={initialMagnificationFactor * 10}
                   value={magnificationFactor}
-                  onChange={(e) => setMagnificationFactor(parseInt(e.target.value, 10))}
-                  className="flex-item-grow"
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMagnificationFactor(parseInt(e.target.value, 10))}
+                  flexGrow="1"
                   draggable={false}
                   about='Magnification factor for the chart'
                 />
-                <div className="flex flex-justify-between">
+                <Flex justify="space-between">
                   {[1,2,3,4,5,6,7,8,9,10].map((val) => (
                     <Button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
                       {val}x
                     </Button>
                   ))}
-                </div>
+                </Flex>
               </>
             )}
             {!enableYAxisLabels && (
@@ -583,8 +583,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             </div>
           ))}
         </div>
-      </div>
-      <div className="flex-item-grow">
+      </Basic.Div>
+      <Basic.Div flexGrow="1">
         <RouteMap
           id={id}
           pointer={latlngPointer}
@@ -595,7 +595,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           smoothAverageWindow={smoothAverageWindow}
           averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
         />
-      </div>
+      </Basic.Div>
     </Grid>
   );
 };

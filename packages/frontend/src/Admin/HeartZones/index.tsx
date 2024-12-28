@@ -13,7 +13,7 @@ const HeartZones: React.FC = () => {
       <Card>
         <Basic.Div fontSize="h2" marginB={1}>Heart Zones</Basic.Div>
         <table className={styles.heartTable}>
-          <thead className="text-center">
+          <Basic.Thead textAlign="center">
             <tr>
               <th>Zone 1</th>
               <th>Zone 2</th>
@@ -22,17 +22,17 @@ const HeartZones: React.FC = () => {
               <th>Zone 5</th>
               <th>Start Date</th>
             </tr>
-          </thead>
+          </Basic.Thead>
           <tbody>
             {allzones.map((zone) => (
-              <tr key={zone.id}>
-                <td className="text-center">{zone.z1}</td>
-                <td className="text-center">{zone.z2}</td>
-                <td className="text-center">{zone.z3}</td>
-                <td className="text-center">{zone.z4}</td>
-                <td className="text-center">{zone.z5}</td>
-                <td className="text-right">{getDateString(zone.start_date)}</td>
-              </tr>
+              <Basic.Tr textAlign="center" key={zone.id}>
+                <td>{zone.z1}</td>
+                <td>{zone.z2}</td>
+                <td>{zone.z3}</td>
+                <td>{zone.z4}</td>
+                <td>{zone.z5}</td>
+                <Basic.Td textAlign="right">{getDateString(zone.start_date)}</Basic.Td>
+              </Basic.Tr>
             ))}
           </tbody>
         </table>
