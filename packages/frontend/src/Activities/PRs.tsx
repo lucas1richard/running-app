@@ -21,9 +21,9 @@ const PRs = () => {
             <Basic.Div fontSize="h4">
               <Link to={`/${pr.activityId}/detail`}>{pr.name}</Link>
             </Basic.Div>
-            <Basic.Div>
+            <div>
               {dayjs(pr.start_date_local).format('MMMM DD, YYYY')}
-            </Basic.Div>
+            </div>
             <Basic.Div fontSize="h3">
               <DurationDisplay numSeconds={pr.elapsed_time} />
             </Basic.Div>

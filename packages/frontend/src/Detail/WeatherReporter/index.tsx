@@ -76,11 +76,11 @@ const WeatherReporter: FC<Props> = ({ id }) => {
           <Flex wrap="wrap" gap={1}>
             <Flex gap={1} alignItems="center">
               <Basic.Select
+                flexGrow="1"
                 id="sky"
                 name="sky"
                 value={sky}
                 onChange={handleSkyChange}
-                className="flex-item-grow"
               >
                 <option value={undefined}>Weather</option>
                 <option value="sunny">Sunny</option>
@@ -91,7 +91,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             </Flex>
 
             <Flex gap={1} alignItems="center">
-              <Basic.Select
+              <select
                 id="rain"
                 name="rain"
                 value={precipitation}
@@ -103,7 +103,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
                 <option value="moderate">Moderate Rain</option>
                 <option value="heavy">Heavy Rain</option>
                 <option value="torrential">Torrential Rain</option>
-              </Basic.Select>
+              </select>
             </Flex>
           </Flex>
 
@@ -143,11 +143,11 @@ const WeatherReporter: FC<Props> = ({ id }) => {
 
           <Flex gap={1} alignItems="center">
             <Basic.Select
+              width="100%"
               id="wind"
               name="wind"
               value={wind}
               onChange={handleWindChange}
-              className="full-width"
             >
               <option value={undefined}>Select a wind condition</option>
               <option value="calm">Calm</option>
