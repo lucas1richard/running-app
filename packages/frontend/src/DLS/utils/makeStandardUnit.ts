@@ -1,7 +1,4 @@
-const unitSize = 1;
-const unitText = 'rem';
-
-const makeStandardUnit = (value: number) => {
+const makeStandardUnit = (value: number, unitSize = 1, unitText = 'rem') => {
   return `${value * unitSize}${unitText}`;
 }
 

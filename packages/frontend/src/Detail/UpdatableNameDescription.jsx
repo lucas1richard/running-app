@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import styles from './Detail.module.css';
 import { triggerUpdateActivity } from '../reducers/activitydetail-actions';
-import { Button } from '../DLS';
+import { Basic, Button } from '../DLS';
 
 const UpdatableNameDescription = ({
   activity,
@@ -28,9 +28,13 @@ const UpdatableNameDescription = ({
   return (
     <div>
       <div>
-        <input
+        <Basic.Input
           type="string"
-          className={`heading-4 dls-dark-gold text-center ${styles.quietInput}`}
+          fontSize="h4"
+          width="100%"
+          textAlign="center"
+          color="darkGold"
+          className={`${styles.quietInput}`}
           value={name}
           onChange={(ev) => setName(ev.target.value)}
         />

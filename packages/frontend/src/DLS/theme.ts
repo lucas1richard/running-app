@@ -2,6 +2,8 @@ import createBreakpoints from './createBreakpoints';
 
 export const styledComponentsTheme = {
   breakpoints: createBreakpoints(),
+  standardUnit: [1, 'rem'] as const,
+  getStandardUnit: (value: number) => `${value * styledComponentsTheme.standardUnit[0]}${styledComponentsTheme.standardUnit[1]}`,
   fontSize: {
     body: '1rem',
     h1: '2rem',

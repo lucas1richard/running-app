@@ -7,12 +7,17 @@ export const cardCss = css`
   background-color: white;
   border-radius: 0.5rem;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
-  padding: 1rem;
 `;
 
-const Card = styled.div<StandardBase<HTMLDivElement>>`
+const CardWrapper = styled.div<StandardBase<HTMLDivElement>>`
   ${cardCss}
   ${standardProps}
 `;
+
+const Card: React.FC<StandardBase<HTMLDivElement>> = ({ children, ...rest }) => (
+  <CardWrapper pad={1} borderRadius={0.5} {...rest}>
+    {children}
+  </CardWrapper>
+)
 
 export default Card;

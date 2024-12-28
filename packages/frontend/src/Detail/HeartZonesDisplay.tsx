@@ -22,18 +22,18 @@ type CellProps = {
 };
 
 const CellWrapper = styled.div<{ ix: number, isMaxPercentage?: boolean }>`
-  padding: 1rem;
+  padding: ${(props) => props.theme.getStandardUnit(1)};
   background: ${(props) => hrZonesBg[props.ix + 1]};
   border: 1px solid ${(props) => hrZonesBg[props.ix + 1]};
   ${(props) => props.isMaxPercentage
-    ?`box-shadow: inset 0 0 1rem ${hrZonesText[props.ix + 1]};`
+    ?`box-shadow: inset 0 0 ${(props) => props.theme.getStandardUnit(1)}; ${hrZonesText[props.ix + 1]};`
     : ''
   }
 `;
 
 const DataWrapper = styled.div`
   &:not(:last-child) {
-    margin-bottom: 1rem;
+    margin-bottom: ${(props) => props.theme.getStandardUnit(1)};
   }
   display: flex;
   ${(props) => props.theme.breakpoints.down('xl')} {

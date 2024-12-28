@@ -67,7 +67,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
   }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
 
   return (
-    <Basic.Div pad={1} marginT={1} border="1px solid gray">
+    <Basic.Div pad={1} marginT={1} border="1px solid #ddd">
       <Shimmer
         isVisible={weatherDataStatus === 'loading'}
       />

@@ -15,7 +15,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
     <div>
       {similarDist.length === 0 && <p>None found</p>}
       <Grid
-        gap='1rem'
+        gap={1}
         templateColumns="1fr 1fr 1fr"
         templateColumnsMd="1fr 1fr"
         templateColumnsSmDown="1fr"

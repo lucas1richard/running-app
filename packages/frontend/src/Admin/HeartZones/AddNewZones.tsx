@@ -20,7 +20,7 @@ const AddNewHRZones = ({ latestZone }) => {
   return (
     <Card>
       <form onSubmit={onFormSubmit}>
-        <Flex gap="1rem" directionSmDown="column">
+        <Flex gap={1} directionSmDown="column">
           <Flex alignItems="center">
             <label htmlFor="z1-input">Zone 1 Min HR:</label>&nbsp;
             <input

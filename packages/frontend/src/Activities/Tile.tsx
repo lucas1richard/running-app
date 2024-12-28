@@ -64,7 +64,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
     <div className={`${backgroundColor} pad full-height`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
       <Grid 
-        gap="1rem"
+        gap={1}
         templateColumns={isCompact ? '1fr auto auto' : 'auto 1fr auto'}
         templateAreas={isCompact
           ? compactAreas

@@ -99,7 +99,7 @@ const ActivityDetailPage = () => {
   return (
     <Grid pad={1} gap={1}>
       <DetailDataFetcher id={id} />
-      <Grid templateColumns='1fr' gap='1rem' templateColumnsLgUp='1fr 1fr'>
+      <Grid templateColumns='1fr' gap={1} templateColumnsLgUp='1fr 1fr'>
         <GoogleMapImage
           activityId={id}
           polyline={details?.map?.polyline}
@@ -126,7 +126,7 @@ const ActivityDetailPage = () => {
               <h3>
                 <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
-              <Flex directionSmDown="column" gap="1rem" justifyMdUp="space-between">
+              <Flex directionSmDown="column" gap={1} justifyMdUp="space-between">
                 <B.Div marginT={1}>
                   <B.Div fontSize="h2">
                     <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>

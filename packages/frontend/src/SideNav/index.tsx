@@ -21,7 +21,7 @@ const SideBar = styled(Card)`
     color: blue;
     font-weight: bold;
     text-decoration: none;
-    font-size: 25px;
+    font-size: 15px;
     display: block;
     transition: 0.3s;
   }
