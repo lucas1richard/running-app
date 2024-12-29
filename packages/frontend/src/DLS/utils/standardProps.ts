@@ -3,8 +3,13 @@ import { css } from 'styled-components';
 import { type CSS } from 'styled-components/dist/types';
 import makeStyledCssRule, { makeStyledThemeRule } from './makeStyledCssRule';
 import makeFontRule, { FontProps } from './makeFontRule';
+import makeSizeProps, { SizeProp } from './makeSizeProps';
 
-export interface StandardProps extends FontProps {
+export interface StandardProps extends FontProps
+  , SizeProp<'textAlign', CSS.Property.TextAlign> {
+  gridArea?: CSS.Property.GridArea;
+  gap?: number | CSS.Property.Gap;
+  wrap?: CSS.Property.FlexWrap;
   border?: CSS.Property.Border;
   borderT?: CSS.Property.BorderTop;
   borderB?: CSS.Property.BorderBottom;
@@ -30,7 +35,6 @@ export interface StandardProps extends FontProps {
   // theme colors only
   color?: keyof Theme['color']
   colorBg?: keyof Theme['colorBg'];
-  textAlign?: CSS.Property.TextAlign;
   overflowX?: CSS.Property.OverflowX;
   overflowY?: CSS.Property.OverflowY;
   overflow?: CSS.Property.Overflow;
@@ -51,7 +55,6 @@ const standardProps = css<StandardProps>`
   ${makeStyledCssRule('padB', 'padding-bottom')}
   ${makeStyledThemeRule('color', 'color', 'black')}
   ${makeStyledThemeRule('colorBg', 'background-color', 'transparent')}
-  ${makeStyledCssRule('textAlign', 'text-align')}
   ${makeStyledCssRule('width', 'width')}
   ${makeStyledCssRule('height', 'height')}
   ${makeStyledCssRule('maxHeight', 'max-height')}
@@ -68,6 +71,13 @@ const standardProps = css<StandardProps>`
   ${makeStyledCssRule('borderL', 'border-left')}
   ${makeStyledCssRule('borderR', 'border-right')}
   ${makeStyledCssRule('display', 'display')}
+  ${makeStyledCssRule('gridArea', 'grid-area')}
+  ${makeStyledCssRule('gap', 'gap')}
+  ${makeStyledCssRule('wrap', 'flex-wrap')}
+
+  ${makeSizeProps([
+    ['textAlign', 'text-align'],
+  ])}
 
   ${makeFontRule}
 `;

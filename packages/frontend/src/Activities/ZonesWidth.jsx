@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../utils';
 import { hrZonesText } from '../colors/hrZones';
-import { Flex, GridArea } from '../DLS';
+import { Flex } from '../DLS';
 
 const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
   const percents = useMemo(() => {
@@ -12,7 +12,7 @@ const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
   if (!zones && !heartData) return null;
 
   return (
-    <GridArea area="zonesWidth">
+    <div>
       <Flex>
         {percents.filter((n) => Boolean(Number(n))).map((percent, ix) => (
           <div
@@ -27,7 +27,7 @@ const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
           />
         ))}
       </Flex>
-    </GridArea>
+    </div>
   );
 };
 

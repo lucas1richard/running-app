@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import classNames from 'classnames';
-import styled from 'styled-components';
 import { selectStreamTypeData } from '../reducers/activities';
 import ZonesWidth from './ZonesWidth';
 import DurationDisplay from '../Common/DurationDisplay';
@@ -14,28 +12,13 @@ import PRMedal from '../Common/Icons/PRMedal';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
-import { Basic, Flex, Grid, GridArea } from '../DLS';
+import { Basic, Flex, Grid } from '../DLS';
 
 type Props = {
   activity: Activity;
   isCompact?: boolean;
   backgroundIndicator?: string;
 }
-
-const Title = styled.div`
-  grid-area: title;
-  text-align: left;
-  ${props => props.theme.breakpoints.down('md')} {
-    text-align: right;
-  }
-`;
-
-const StatsWrapper = styled.div`
-  text-align: right;
-  ${props => props.theme.breakpoints.down('md')} {
-    text-align: left;
-  }
-`;
 
 const compactAreas = `
   "image title title"
@@ -61,7 +44,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
   const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
   
   return (
-    <div className={`${backgroundColor} pad full-height`}>
+    <Basic.Div pad={1} className={`${backgroundColor}`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
       <Grid 
         gap={1}
@@ -76,7 +59,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
         templateColumnsSmDown={'auto'}
         templateAreasSmDown={compactAreas}
       >
-        <GridArea area="image">
+        <Basic.Div gridArea="image">
           <GoogleMapImage
             activityId={activity.id}
             polyline={getSummaryPolyline(activity)}
@@ -86,8 +69,8 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             width={100}
             height={75}
           />
-        </GridArea>
-        <Title className={classNames({ 'text-right': isCompact })}>
+        </Basic.Div>
+        <Basic.Div gridArea="title" textAlign={isCompact ? 'right' : 'left'} textAlignSmDown="right">
           <div>
             {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
           </div>
@@ -99,9 +82,9 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           >
             {activity.name}
           </Link>
-        </Title>
-        <GridArea area="stats">
-          <StatsWrapper className={classNames({ 'text-left': isCompact })}>
+        </Basic.Div>
+        <Basic.Div gridArea="stats">
+          <Basic.Div textAlign={isCompact ? 'left' : 'right'} textAlignSmDown='left'>
             <div>
               {duration}
               <Basic.Span marginL={1} fontSize="h4" color="darkGold">
@@ -126,8 +109,9 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
                 {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
               </Basic.Span>
             </div>
-          </StatsWrapper>
-        </GridArea>
+          </Basic.Div>
+        </Basic.Div>
+        <Basic.Div gridArea="zonesWidth">
           {(heartRateStream || activity.zonesCaches[zones.id]) && (
             <ZonesWidth
               id={activity.id}
@@ -136,7 +120,8 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
               heartData={heartRateStream}
             />
           )}
-        <GridArea area="bestEfforts" className="flex flex-wrap gap">
+        </Basic.Div>
+        <Basic.Div gridArea="bestEfforts" display="flex" gap={1} wrap="wrap">
           {bestEfforts.length > 0 && (
             bestEfforts.map((effort) => (
               <Flex alignItems='center' key={effort.effort_id}>
@@ -147,9 +132,9 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
               </Flex>
             ))
           )}
-        </GridArea>
+        </Basic.Div>
       </Grid>
-    </div>
+    </Basic.Div>
   )
 };
 
