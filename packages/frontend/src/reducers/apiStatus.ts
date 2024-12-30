@@ -4,11 +4,11 @@ import { shallowEqual, useDispatch } from 'react-redux';
 import { hash } from 'ohash';
 import { useAppSelector } from '../hooks/redux';
 import { createDeepEqualSelector } from '../utils';
-import type { AsyncAction } from '../types';
+import type { ApiStatusAction, AsyncAction } from '../types';
 import {
-  SET_API_ERROR,
-  SET_API_LOADING,
-  SET_API_SUCCESS,
+  loadingSymbol,
+  successSymbol,
+  errorSymbol,
 } from './apiStatus-actions';
 import type { RootState } from '.';
 
@@ -26,9 +26,9 @@ const initialState: ApiStatusInitialState = {
   // give a custom key to every API request, use uuid if you have to
 };
 
-const apiStatusReducer = (state = initialState, action) => {
-  if (typeof action.type === 'string') {
-    if (action.type.startsWith(SET_API_LOADING)) {
+const apiStatusReducer = (state = initialState, action: ApiStatusAction) => {
+  switch (action.symbol) {
+    case loadingSymbol: {
       return produce(state, (draft) => {
         draft[action.key] = {
           status: loading,
@@ -36,7 +36,7 @@ const apiStatusReducer = (state = initialState, action) => {
       });
     }
 
-    if (action.type.startsWith(SET_API_SUCCESS)) {
+    case successSymbol: {
       return produce(state, (draft) => {
         draft[action.key] = {
           status: success,
@@ -44,16 +44,18 @@ const apiStatusReducer = (state = initialState, action) => {
       });
     }
 
-    if (action.type.startsWith(SET_API_ERROR)) {
+    case errorSymbol: {
       return produce(state, (draft) => {
         draft[action.key] = {
           status: error,
         };
       });
     }
-  }
 
-  return state;
+    default: {
+      return state;
+    }
+  }
 };
 
 export const getDataNotReady = (apiStatus: APIStatusType) => apiStatus === idle || apiStatus === loading;
@@ -78,7 +80,7 @@ export const useTriggerActionIfStatus = (action: AsyncAction, status: APIStatusT
   const apiStatus = useGetApiStatus(action);
   useEffect(() => {
     if (apiStatus === status && !defer) dispatch(action);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- don't depend on action
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- don't depend on action
   }, [apiStatus, dispatch, status, defer]);
   return apiStatus;
 };
