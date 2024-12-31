@@ -1,12 +1,19 @@
-import type { Theme } from './../theme';
 import { css } from 'styled-components';
 import { type CSS } from 'styled-components/dist/types';
+import type { Theme } from './../theme';
 import makeStyledCssRule, { makeStyledThemeRule } from './makeStyledCssRule';
 import makeFontRule, { FontProps } from './makeFontRule';
 import makeSizeProps, { SizeProp } from './makeSizeProps';
 
 export interface StandardProps extends FontProps
-  , SizeProp<'textAlign', CSS.Property.TextAlign> {
+  , SizeProp<'textAlign', CSS.Property.TextAlign>
+  , SizeProp<'direction', CSS.Property.FlexDirection>
+  , SizeProp<'alignItems', CSS.Property.AlignItems>
+  , SizeProp<'flexJustify', CSS.Property.JustifyContent>
+  , SizeProp<'wrap', CSS.Property.FlexWrap>
+  , SizeProp<'gap', number | CSS.Property.Gap>
+  , SizeProp<'margin', number | CSS.Property.Margin>
+  , SizeProp<'width', number | CSS.Property.Width> {
   gridArea?: CSS.Property.GridArea;
   gap?: number | CSS.Property.Gap;
   wrap?: CSS.Property.FlexWrap;
@@ -17,7 +24,6 @@ export interface StandardProps extends FontProps
   borderR?: CSS.Property.BorderRight;
   display?: CSS.Property.Display;
   borderRadius?: number | CSS.Property.BorderRadius;
-  margin?: number | CSS.Property.Margin;
   marginT?: number | CSS.Property.MarginTop;
   marginL?: number | CSS.Property.MarginLeft;
   marginR?: number | CSS.Property.MarginRight;
@@ -27,7 +33,6 @@ export interface StandardProps extends FontProps
   padL?: number | CSS.Property.PaddingLeft;
   padR?: number | CSS.Property.PaddingRight;
   padB?: number | CSS.Property.PaddingBottom;
-  width?: number | CSS.Property.Width;
   maxWidth?: number | CSS.Property.MaxWidth;
   height?: number | CSS.Property.Height;
   maxHeight?: number | CSS.Property.MaxHeight;
@@ -76,8 +81,15 @@ const standardProps = css<StandardProps>`
   ${makeStyledCssRule('wrap', 'flex-wrap')}
 
   ${makeSizeProps([
-    ['textAlign', 'text-align'],
-  ])}
+  ['margin', 'margin'],
+  ['width', 'width'],
+  ['textAlign', 'text-align'],
+  ['flexDirection', 'flex-direction'],
+  ['alignItems', 'align-items'],
+  ['flexJustify', 'justify-content'],
+  ['wrap', 'flex-wrap'],
+  ['gap', 'gap'],
+])}
 
   ${makeFontRule}
 `;

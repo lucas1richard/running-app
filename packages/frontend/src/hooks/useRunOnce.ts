@@ -5,7 +5,9 @@ const useRunOnce = <C, D>(cb: C, dep: D) => {
   
   if (dep && !didRun.current) {
     if (typeof cb === 'function') cb();
+
     didRun.current = true;
+
     return true;
   }
 

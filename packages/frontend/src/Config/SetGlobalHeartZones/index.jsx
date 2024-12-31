@@ -4,7 +4,7 @@ import { selectAllHeartZones } from '../../reducers/heartzones';
 import ZonesHeader from '../../Activities/ZonesHeader';
 import { selectGlobalPrerences } from '../../reducers/preferences';
 import { setGlobalPrefsAct } from '../../reducers/preferences-actions';
-import { Button, Flex } from '../../DLS';
+import { Basic, Button, Flex } from '../../DLS';
 import propSelector from '../../utils/propSelector';
 
 const SetGlobalHeartZones = () => {
@@ -27,9 +27,9 @@ const SetGlobalHeartZones = () => {
           <Button onClick={() => selectZone(zone.id)} disabled={zone.id === preferences.zonesId}>
             Select
           </Button>
-          <div className="flex-item-grow">
+          <Basic.Div flexGrow="1">
             <ZonesHeader zones={zone} start={zone.start_date} isCompact={true} />
-          </div>
+          </Basic.Div>
         </Flex>
       ))}
     </div>

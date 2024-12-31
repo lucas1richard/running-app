@@ -12,24 +12,29 @@ const PRs = () => {
   return (
     <div>
       <h2>All Time PRs</h2>
+
       <Flex wrap="wrap" gap={1}>
         {allTimePrs.map((pr) => (
           <Card key={pr.effort_id} textAlign="center" flexGrow="1">
             <Basic.Div fontSize="h1">
               <PRMedal type="native" color="gold" />
             </Basic.Div>
+
             <Basic.Div fontSize="h4">
               <Link to={`/${pr.activityId}/detail`}>{pr.name}</Link>
             </Basic.Div>
+
             <div>
               {dayjs(pr.start_date_local).format('MMMM DD, YYYY')}
             </div>
+
             <Basic.Div fontSize="h3">
               <DurationDisplay numSeconds={pr.elapsed_time} />
             </Basic.Div>
           </Card>
         ))}
       </Flex>
+
     </div>
   );
 };

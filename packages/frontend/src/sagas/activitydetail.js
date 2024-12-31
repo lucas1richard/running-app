@@ -19,16 +19,12 @@ function* updateActivitySaga({ payload }) {
   const { id, ...rest } = payload;
   const res = yield call(requestor.put, `/activities/${id}`, rest);
   yield res.json();
-
   yield put(updateActivityAct(payload));
 }
 
 function* fetchSimilarWorkoutsSaga({ payload: id }) {
-  // const queryParams = new URLSearchParams({ activityId: id });
   const res = yield call(requestor.get, `/activities/${id}/quick-similar`);
-  // const res = yield call(requestor.get, `/routes/network?${queryParams}`);
   const sim = yield res.json();
-
   yield put(setSimilarWorkoutsAct(id, sim));
 }
 
@@ -42,7 +38,6 @@ function* setStreamPinSaga({ payload }) {
     latlng,
   });
   const json = yield res.json();
-  console.log(json);
   yield put(setStreamPinsAct(activityId, json));
 }
 

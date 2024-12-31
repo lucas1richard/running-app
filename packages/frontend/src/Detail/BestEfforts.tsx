@@ -1,5 +1,6 @@
 import { type FC, useMemo } from 'react';
 import DurationDisplay from '../Common/DurationDisplay';
+import { Basic } from '../DLS';
 
 const rankMap = {
   1: '🥇',
@@ -16,7 +17,7 @@ const BestEfforts: FC<Props> = ({ bestEfforts }) => {
 
   return (
     <div>
-      <table className="dls-white-bg">
+      <Basic.Table colorBg="white">
         <thead>
           <tr>
             <th colSpan={3}>Best Efforts</th>
@@ -37,11 +38,11 @@ const BestEfforts: FC<Props> = ({ bestEfforts }) => {
             <tr key={name}>
               <td>{pr_rank} {rankMap[pr_rank]}</td>
               <td>{name}</td>
-              <td><DurationDisplay numSeconds={elapsed_time}/></td>
+              <td><DurationDisplay numSeconds={elapsed_time} /></td>
             </tr>
           ))}
         </tbody>
-      </table>
+      </Basic.Table>
     </div>
   );
 };

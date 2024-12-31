@@ -40,6 +40,7 @@ interface Activity {
   name: string;
   start_date: string;
   start_date_local: string;
+  description?: string;
   distance: number;
   distance_miles: number;
   bestEfforts: BestEffort[];

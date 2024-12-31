@@ -31,7 +31,7 @@ const CellWrapper = styled.div<{ ix: number, isMaxPercentage?: boolean }>`
   }
 `;
 
-const DataWrapper = styled.div`
+const DataWrapper = styled(Basic.Div)`
   &:not(:last-child) {
     margin-bottom: ${(props) => props.theme.getStandardUnit(1)};
   }
@@ -50,11 +50,11 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
       className="flex-item-grow"
       isMaxPercentage={isMaxPercentage}
     >
-      <DataWrapper className="text-center margin-b">
+      <DataWrapper textAlign="center" marginB={1}>
         <b>{title}</b>
         <span>({range})</span>
       </DataWrapper>
-      <DataWrapper className="flex flex-justify-between">
+      <DataWrapper flexJustify="space-between">
         <b>
           Time in Zone:
         </b>
@@ -64,7 +64,7 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
       </DataWrapper>
       {avg[ix] && (
         <>
-          <DataWrapper className="flex flex-justify-between">
+          <DataWrapper flexJustify="space-between">
             <b>
               Avg Pace in Zone:
             </b>
@@ -72,7 +72,7 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
               <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
             </div>
           </DataWrapper>
-          <DataWrapper className="flex flex-justify-between">
+          <DataWrapper flexJustify="space-between">
             <b>
               Fastest Pace in Zone:
             </b>

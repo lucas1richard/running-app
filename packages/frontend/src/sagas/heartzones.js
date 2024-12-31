@@ -20,7 +20,7 @@ function* fetchHeartZonesSaga() {
     const zones = yield res.json();
     yield put(setHeartZonesAct(zones));
     yield put(setApiSuccessAct(key));
-  } catch (e) {
+  } catch (err) {
     yield put(setApiErrorAct(key));
   }
 }
@@ -33,7 +33,7 @@ function* addHeartZonesSaga({ payload }) {
     const zones = yield res.json();
     yield put(setHeartZonesAct(zones));
     yield put(setApiSuccessAct(key));
-  } catch (e) {
+  } catch (err) {
     yield put(setApiErrorAct(key));
   }
 }

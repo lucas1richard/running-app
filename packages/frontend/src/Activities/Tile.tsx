@@ -2,17 +2,17 @@ import React, { useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { selectStreamTypeData } from '../reducers/activities';
-import ZonesWidth from './ZonesWidth';
-import DurationDisplay from '../Common/DurationDisplay';
 import { convertMetricSpeedToMPH, getSummaryPolyline, getWeatherStyles } from '../utils';
 import GoogleMapImage from '../Common/GoogleMapImage';
+import DurationDisplay from '../Common/DurationDisplay';
+import PRMedal from '../Common/Icons/PRMedal';
 import { selectHeartZones } from '../reducers/heartzones';
 import DetailDataFetcher from '../Detail/DetailDataFetcher';
-import PRMedal from '../Common/Icons/PRMedal';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
 import { Basic, Flex, Grid } from '../DLS';
+import ZonesWidth from './ZonesWidth';
 
 type Props = {
   activity: Activity;
@@ -40,13 +40,13 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
     () => <DurationDisplay numSeconds={activity.elapsed_time} units={['s ', 'm ', 'h ']} />,
     [activity.elapsed_time]
   );
-  
+
   const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
-  
+
   return (
     <Basic.Div pad={1} className={`${backgroundColor}`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
-      <Grid 
+      <Grid
         gap={1}
         templateColumns={isCompact ? '1fr auto auto' : 'auto 1fr auto'}
         templateAreas={isCompact
@@ -70,10 +70,12 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             height={75}
           />
         </Basic.Div>
+
         <Basic.Div gridArea="title" textAlign={isCompact ? 'right' : 'left'} textAlignSmDown="right">
           <div>
             {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
           </div>
+
           <Link
             to={`/${activity.id}/detail`}
             className="heading-4"
@@ -83,6 +85,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             {activity.name}
           </Link>
         </Basic.Div>
+
         <Basic.Div gridArea="stats">
           <Basic.Div textAlign={isCompact ? 'left' : 'right'} textAlignSmDown='left'>
             <div>
@@ -91,18 +94,21 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
                 {activity.distance_miles} <abbr>mi</abbr>
               </Basic.Span>
             </div>
+
             <div>
               <Basic.Span fontSize="sm">Average Speed</Basic.Span>
               <Basic.Span marginL={1} fontSize="h4">
                 {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
               </Basic.Span>
             </div>
+
             <div>
               <Basic.Span fontSize="sm">Average HR</Basic.Span>
               <Basic.Span marginL={1} fontSize="h4">
                 {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
               </Basic.Span>
             </div>
+
             <div className="dls-blue">
               <Basic.Span fontSize="sm">Efficiency Factor</Basic.Span>
               <Basic.Span marginL={1} fontSize="h4">
@@ -111,6 +117,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             </div>
           </Basic.Div>
         </Basic.Div>
+
         <Basic.Div gridArea="zonesWidth">
           {(heartRateStream || activity.zonesCaches[zones.id]) && (
             <ZonesWidth
@@ -121,6 +128,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
             />
           )}
         </Basic.Div>
+
         <Basic.Div gridArea="bestEfforts" display="flex" gap={1} wrap="wrap">
           {bestEfforts.length > 0 && (
             bestEfforts.map((effort) => (

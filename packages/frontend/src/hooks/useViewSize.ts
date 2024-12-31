@@ -3,9 +3,11 @@ import { keys, type BreakPoint } from './../DLS/createBreakpoints';
 
 class ViewSize {
   viewSizeStr: BreakPoint | undefined;
+
   constructor(viewSizeStr?: BreakPoint) {
     this.viewSizeStr = viewSizeStr;
   }
+
   toString() {
     return this.viewSizeStr;
   }
@@ -32,7 +34,7 @@ export const undefinedViewSize = new ViewSize();
 export const ViewSizeContext = createContext<BreakPoint | undefined>(undefined);
 
 /**
- * @returns The view size of the most direct that provides it.
+ * @returns The view size of the most direct (usually) Container that provides it.
  */
 const useViewSize = () => {
   const viewSizeStr = useContext(ViewSizeContext);

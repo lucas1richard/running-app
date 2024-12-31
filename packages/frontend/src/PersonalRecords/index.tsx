@@ -14,11 +14,11 @@ const PRs = () => {
   const names = Object.keys(prsByDate);
 
   return (
-    <Basic.Div margin={2}>
+    <Basic.Div marginMdUp={2} marginSm={1}>
       <h2>All Time PRs</h2>
       <Flex wrap="wrap" gap={1}>
         {allTimePrs.map((pr) => (
-          <Card key={pr.effort_id} textAlign="center" flexGrow="1">
+          <Card key={pr.effort_id} widthXs="100%" textAlign="center" flexGrow="1">
             <Basic.Div fontSize="h1">
               <PRMedal type="native" color="gold" />
             </Basic.Div>
@@ -39,10 +39,10 @@ const PRs = () => {
         <span>Most recent &rarr; least recent</span>
         <Basic.Div marginT={1}>
           {names.map((name) => (
-            <Basic.Div key={name} flexShrink={0}>
+            <Basic.Div key={name} flexShrink="0" marginT={3}>
               <Flex overflowX="scroll" gap={1}>
-                <Flex fontSize="h1" alignItems="center" flexShrink={0}>{name}</Flex>
-                <Flex fontSize="h1" alignItems="center" flexShrink={0}>
+                <Flex fontSize="h1" alignItems="center" flexShrink="1">{name}</Flex>
+                <Flex fontSize="h1" alignItems="center" flexShrink="1">
                   &rarr;
                 </Flex>
                 {prsByDate[name].map((pr) => (
@@ -51,7 +51,7 @@ const PRs = () => {
               </Flex>
               <PRChart records={prsByDate[name]} title={name} />
             </Basic.Div>
-            ))
+          ))
           }
         </Basic.Div>
       </Basic.Div>

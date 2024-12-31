@@ -1,8 +1,8 @@
 import { produce } from 'immer';
 import { createDeepEqualSelector } from '../utils';
+import { emptyObject } from '../constants';
 import { selectPreferencesZonesId } from './preferences';
 import { SET_HEART_ZONES } from './heartzones-actions';
-import { emptyObject } from '../constants';
 import type { RootState } from '.';
 
 const heartzonesInitialState = {
@@ -21,7 +21,7 @@ const heartzonesReducer = (state = heartzonesInitialState, action: Action = { ty
         nextState.record = action.payload;
       });
     }
-    
+
     default:
       return state;
   }
