@@ -1,3 +1,4 @@
+const { findRelationsBySimilarRoute } = require('../constants');
 const {
   getRouteCoordinates,
   bulkCreateRouteCoordinates
@@ -22,7 +23,10 @@ const compress = (route, compressionLevel) => {
     } else {
       const lastEl = compressedRoute[compressedRoute.length - 1];
       if (lastEl[0] !== roundedRoute[i][0] || lastEl[1] !== roundedRoute[i][1]) {
-        compressedRoute.push(count > 1 ? [...roundedRoute[i], count] : roundedRoute[i]);
+        // only include a coordinate box if the athlete spent at least 10 seconds in it.
+        // this will help avoid the GPS glitches and instances where the athlete barely
+        // crossed into the corner of a coordinate box
+        if (count >= 10) compressedRoute.push([...roundedRoute[i], count]);
         count = 0;
       } else {
         count++;
@@ -32,7 +36,7 @@ const compress = (route, compressionLevel) => {
   return compressedRoute;
 };
 
-const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = 0.0001) => {
+const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL) => {
   const existingRoutes = await getRouteCoordinates(activityIdsArray, compressionLevel);
   const compressions = {};
   const toCompress = [];
@@ -57,7 +61,7 @@ const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = 0.
   return compressions;
 };
 
-const makeCompressedRoute = async (activityId, compressionLevel = 0.0001, skipCheck = false) => {
+const makeCompressedRoute = async (activityId, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL, skipCheck = false) => {
   if (!skipCheck) {
     const existingRoute = await getRouteCoordinates(activityId, compressionLevel);
     if (existingRoute?.length) {

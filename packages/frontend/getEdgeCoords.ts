@@ -1,0 +1,2 @@
+const getEdgeCoords = (coords: LatLngCoords[]) => { };
+

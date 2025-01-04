@@ -1,5 +1,6 @@
 const { DataTypes, Model } = require('sequelize');
 const { sequelizeMysql } = require('../sequelize-mysql');
+const { findRelationsBySimilarRoute } = require('../../constants');
 
 // get the same shape as we would get from couchdb
 const formatResponse = (route) => {
@@ -7,7 +8,7 @@ const formatResponse = (route) => {
 };
 
 class RouteCoordinates extends Model {
-  static async getRouteCoordinates(activityId, compressionLevel = 0.0001) {
+  static async getRouteCoordinates(activityId, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL) {
     const route = await RouteCoordinates.findAll({
       where: {
         activityId,

@@ -8,6 +8,9 @@ const AdminDashboard = () => {
     findSimilarStartDistance: {
       START_DISTANCE_CONSTRAINT: 0.0001,
     },
+    findRelationsBySimilarRoute: {
+      COMPRESSION_LEVEL: 0.0001,
+    }
   });
   useEffect(() => {
     requestor.get('/admin/get-constants').then((res) => res.json()).then((json) => {
@@ -20,6 +23,7 @@ const AdminDashboard = () => {
       <HeartZones />
       <Map
         startDistanceConstraint={constants?.findSimilarStartDistance?.START_DISTANCE_CONSTRAINT}
+        compressionLevel={constants?.findRelationsBySimilarRoute?.COMPRESSION_LEVEL}
       />
     </div>
   );

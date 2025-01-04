@@ -7,6 +7,7 @@ const constants = {
      * The route score is a number between 0 and 1, where 0 means the routes are completely different and 1 means the routes are identical.
      */
     SIMILARITY_THRESHOLD: 1,
+    COMPRESSION_LEVEL: 0.00025,
   },
   findSimilarStartDistance: {
     /**
