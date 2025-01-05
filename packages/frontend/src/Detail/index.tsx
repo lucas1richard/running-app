@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { selectActivity, selectActivityDetails, selectStreamTypeData } from '../reducers/activities';
+import { getStartDistancedActivities, selectActivity, selectActivityDetails, selectStreamTypeData } from '../reducers/activities';
 import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
@@ -34,6 +34,8 @@ import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
 import { Basic as B, Button, Card, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
+import Tabs, { Tab, TabContainer, TabHeader, TabPanel } from '../Common/Tabs';
+import Tile from '../Activities/Tile';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -48,6 +50,8 @@ const ActivityDetailPage = () => {
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
   const activity = useAppSelector((state) => selectActivity(state, id));
+  const similarStartDistActivities = useAppSelector((state) => getStartDistancedActivities(state, id));
+
   const [showMap, setShowMap] = useState(false);
 
   const [
@@ -57,7 +61,6 @@ const ActivityDetailPage = () => {
   const [shouldShowSegments] = usePreferenceControl(activityShouldShowSegments(idString));
   const [shouldShowSimilar] = usePreferenceControl(activityShouldShowSimilarWorkouts(idString));
   const saveConfig = useMemo(() => ({ activityId: id }), [id]);
-  
 
   const configZonesId = useAppSelector(selectPreferencesZonesId);
   const allZones = useAppSelector(selectAllHeartZones);
@@ -162,6 +165,31 @@ const ActivityDetailPage = () => {
           </div>
         </Card>
       </Grid>
+
+      <Tabs>
+        <TabHeader>
+          <Tab>Hey</Tab>
+          <Tab>Yo</Tab>
+        </TabHeader>
+        <TabContainer>
+          <TabPanel>Hey hey</TabPanel>
+          <TabPanel>
+
+            <Grid
+              gap={1}
+              templateColumns="repeat(auto-fill, minmax(500px, 1fr))"
+              templateColumnsMd="1fr 1fr"
+              templateColumnsSmDown="1fr"
+            >
+              {similarStartDistActivities.map(({ start_distance, activity }) => (
+                <Tile activity={activity} isCompact={true}>
+                  Start Distance: {start_distance}
+                </Tile>
+              ))}
+            </Grid>
+          </TabPanel>
+        </TabContainer>
+      </Tabs>
 
       <HeartZonesDisplay
         zones={zones}

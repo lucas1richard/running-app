@@ -8,6 +8,7 @@ import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
 import { useAppSelector } from '../hooks/redux';
+import { triggerFetchSimilarStart } from '../reducers/activitydetail-actions';
 
 export const streamTypes: SimpleStreamTypes[] = [
   'heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time', 'grade_smooth', 'distance'
@@ -29,6 +30,7 @@ const DetailDataFetcher: FC<Props> = ({ id }) => {
 
   useTriggerActionIfStatus(triggerFetchActivityDetail(id));
   useTriggerActionIfStatus(triggerFetchActivityPrefs(id));
+  useTriggerActionIfStatus(triggerFetchSimilarStart(id, 0.001));
   const streamStatus = useTriggerActionIfStatus(triggerFetchActivityStreamData(id, streamTypes));
 
   useEffect(() => {

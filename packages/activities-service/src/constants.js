@@ -11,8 +11,6 @@ const constants = {
   },
   findSimilarStartDistance: {
     /**
-     * ## about 55.5 meters or 182 feet (55.5 * 3.28084)
-     * 
      *  Decimal | Places	       | Degrees	Distance
      *  :-------|:---------------|:----------------:
      *  0      	| 1.0        	   | 111 km
@@ -25,7 +23,7 @@ const constants = {
      *  7      	| 0.0000001      | 11.1 mm
      *  8      	| 0.00000001     | 1.11 mm
      */
-    START_DISTANCE_CONSTRAINT: 0.0005,
+    START_DISTANCE_CONSTRAINT: 0.0010,
     /** ## 200 meters or 656 feet */
     ACTIVITY_DISTANCE_CONSTRAINT: 200,
   }

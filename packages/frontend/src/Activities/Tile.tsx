@@ -18,15 +18,18 @@ type Props = {
   activity: Activity;
   isCompact?: boolean;
   backgroundIndicator?: string;
+  children?: React.ReactNode;
 }
 
 const compactAreas = `
   "image title title"
   "stats stats stats"
   "zonesWidth zonesWidth zonesWidth"
-  "bestEfforts bestEfforts bestEfforts"`;
+  "bestEfforts bestEfforts bestEfforts"
+  "children children children"
+`;
 
-const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => {
+const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, children }) => {
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, activity.id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
@@ -55,6 +58,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
           "image title stats"
           "zonesWidth zonesWidth zonesWidth"
           "bestEfforts bestEfforts bestEfforts"
+          "children children children"
         `}
         templateColumnsSmDown={'auto'}
         templateAreasSmDown={compactAreas}
@@ -140,6 +144,10 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact }) => 
               </Flex>
             ))
           )}
+        </Basic.Div>
+
+        <Basic.Div gridArea="children">
+          {children}
         </Basic.Div>
       </Grid>
     </Basic.Div>
