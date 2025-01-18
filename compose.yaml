@@ -21,6 +21,18 @@ services:
       - running-app-kafka
     env_file: "./activities-service.env" # gitignored file
 
+  activities-go-server:
+    build:
+      dockerfile: ./packages/activities-go-server/Dockerfile
+      context: ./packages/activities-go-server
+      target: dev # This is the same dev that is in our Dockerfile stages.
+    working_dir: /app
+    volumes:
+      - ./packages/activities-go-server:/app
+    env_file: "./activities-service.env" # gitignored file
+    ports:
+      - "3003:3003"
+
   tcp-service:
     image: node:18-alpine
     command: sh -c "npm install && npm run start"
