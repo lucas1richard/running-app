@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { getStartDistancedActivities, selectActivity, selectActivityDetails, selectStreamTypeData } from '../reducers/activities';
 import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
+import { convertMetersToMiles, convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
@@ -181,9 +181,18 @@ const ActivityDetailPage = () => {
               templateColumnsMd="1fr 1fr"
               templateColumnsSmDown="1fr"
             >
-              {similarStartDistActivities.map(({ start_distance, activity }) => (
+              {similarStartDistActivities
+                .map(({ start_distance, activity, total_distance_diff, total_time_diff }) => (
                 <Tile activity={activity} isCompact={true}>
-                  Start Distance: {start_distance}
+                  <div>
+                    Start Distance: {Math.round(start_distance * 111.1 * 3280.84)} ft
+                  </div>
+                  <div>
+                    Total distance difference: {convertMetersToMiles(Number(total_distance_diff))} mi
+                  </div>
+                  <div>
+                    Total time difference: <DurationDisplay numSeconds={total_time_diff} />
+                  </div>
                 </Tile>
               ))}
             </Grid>

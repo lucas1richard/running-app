@@ -10,7 +10,8 @@ import { getDuration } from '../utils';
  */
 const DurationDisplay = ({ numSeconds, units }) => (
   <>
-    {getDuration(numSeconds, units).map(([num, str]) => (
+    {numSeconds < 0 && <span>-</span>}
+    {getDuration(Math.abs(numSeconds), units).map(([num, str]) => (
       <span key={str}>
         <span>{num}</span>
         <small>{str}</small>

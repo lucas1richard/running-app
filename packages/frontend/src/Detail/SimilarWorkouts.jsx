@@ -20,7 +20,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
         templateColumnsMd="1fr 1fr"
         templateColumnsSmDown="1fr"
       >
-        {similarDist.map((activity) => (
+        {similarDist.filter(Boolean).map((activity) => (
           <Tile
             key={activity.relatedActivity}
             isCompact={true}

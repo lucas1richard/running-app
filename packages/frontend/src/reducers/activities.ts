@@ -31,7 +31,16 @@ type ActivitiesState = {
   streams: Record<number, { stream: (Stream | LatLngStream)[] }>;
   similarWorkouts: Record<number, number[]>;
   loading: boolean;
-  similarStart: Record<number, Record<number, { name: string; start_date_local: string; id: number; start_distance: number; }>>;
+  similarStart: Record<number,
+    Record<number, {
+      name: string;
+      start_date_local: string;
+      id: number;
+      start_distance: number;
+      total_distance_diff: string;
+      total_time_diff: number;
+    }>
+  >;
   error: any;
 };
 
@@ -290,10 +299,14 @@ export const getStartDistancedActivities = (state: RootState, activityId: number
   const startDistanced = activitiesState.similarStart[activityId];
   const activities = activitiesState.activities;
 
+  if (!startDistanced) return [];
+
   return Object.entries(startDistanced).map(([id, info]) => ({
     ...info,
     activity: activities[id],
-  }));
+  }))
+  // filter hidden activities that may have been matched before they were hidden
+  .filter(({ activity }) => !!activity);
 };
 
 export default activitiesReducer;

@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const Activity = require('./model-activities');
 const { sequelizeCoordsDistance } = require('../utils');
 const RelatedActivities = require('./model-related-activities');
@@ -10,7 +10,7 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
   return Activity.findAll(
     {
       where: {
-        [Sequelize.Op.and]: {
+        [Op.and]: {
           sport_type: activity.sport_type,
           ax: sequelizeCoordsDistance( // `ax` doesn't mean anything, just a placeholder
             activity.start_latlng,
@@ -18,19 +18,19 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
             'start_latlng'
           ),
           distance: {
-            [Sequelize.Op.between]: [
+            [Op.between]: [
               activity.distance - ACTIVITY_DISTANCE_CONSTRAINT,
               activity.distance + ACTIVITY_DISTANCE_CONSTRAINT
             ]
           },
           elapsed_time: {
-            [Sequelize.Op.between]: [
+            [Op.between]: [
               activity.elapsed_time - 300,
               activity.elapsed_time + 300
             ]
           },
         },
-        [Sequelize.Op.not]: {
+        [Op.not]: {
           id: activity.id, // not the same activity
           ...excludeAlreadyRelated ? {
             alreadyRelated: Sequelize.literal(`
