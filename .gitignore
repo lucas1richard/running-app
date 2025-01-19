@@ -27,3 +27,5 @@ packages/image-service/src/static
 # local env
 *.env
 !*.example.env
+
+packages/activities-go-server/tmp/*

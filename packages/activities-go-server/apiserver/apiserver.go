@@ -51,7 +51,7 @@ func (s *APIServer) Start(stop <-chan struct{}) error {
 	}
 
 	go func() {
-		logrus.WithField("addr", srv.Addr).Info("startingg server")
+		logrus.WithField("addr", srv.Addr).Info("starting server")
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			logrus.Fatalf("listen: %s\n", err)
 		}
