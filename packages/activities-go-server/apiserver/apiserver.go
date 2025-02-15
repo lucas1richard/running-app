@@ -7,15 +7,15 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"github.com/lucas1richard/activities-go-server/storage"
 	"github.com/sirupsen/logrus"
+	"gorm.io/gorm"
 )
 
 var defaultStopTimeout = time.Second * 30
 
 type APIServer struct {
 	addr    string
-	storage *storage.Storage
+	storage *gorm.DB
 }
 
 type Endpoint struct {
@@ -32,7 +32,7 @@ func (e Endpoint) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func NewAPIServer(addr string, storage *storage.Storage) (*APIServer, error) {
+func NewAPIServer(addr string, storage *gorm.DB) (*APIServer, error) {
 	if addr == "" {
 		return nil, errors.New("addr cannot be blank")
 	}

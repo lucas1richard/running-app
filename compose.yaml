@@ -87,3 +87,4 @@ services:
 volumes:
   couch-db-data:
   strava-user-data:
+  kafka-data:

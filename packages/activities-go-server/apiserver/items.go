@@ -1,7 +1,6 @@
 package apiserver
 
 import (
-	"encoding/json"
 	"net/http"
 	// "github.com/lucas1richard/activities-go-server/storage"
 )
@@ -21,11 +20,11 @@ import (
 // }
 
 func (s *APIServer) listItems(w http.ResponseWriter, req *http.Request) error {
-	items, err := s.storage.ListActivities(req.Context(), 1000, 0)
-	if err != nil {
-		return err
-	}
+	// items, err := s.storage.ListActivities(req.Context(), 1000, 0)
+	// if err != nil {
+	// 	return err
+	// }
 
-	json.NewEncoder(w).Encode(items)
+	// json.NewEncoder(w).Encode(items)
 	return nil
 }
