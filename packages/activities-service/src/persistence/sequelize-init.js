@@ -25,9 +25,9 @@ const initSequelize = async () => {
     Weather.belongsTo(Activity);
     Activity.hasMany(RouteCoordinates);
     RouteCoordinates.belongsTo(Activity, { foreignKey: 'activityId' });
-  
+
     Activity.hasMany(AthleteSegment);
-  
+
     AthleteSegment.belongsTo(ActivitySegment, { foreignKey: 'activitySegmentId' });
     AthleteSegment.belongsTo(Activity, { foreignKey: 'activityId' });
 
@@ -48,7 +48,7 @@ const initSequelize = async () => {
     await HeartZones.sync();
     await Weather.sync({ force: false });
     await RouteCoordinates.sync({ force: false });
-  
+
     await Activity.addScope('defaultScope', {
       where: {
         sport_type: 'Run',

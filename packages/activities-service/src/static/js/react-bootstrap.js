@@ -7741,7 +7741,7 @@ Overlay.propTypes = _extends({}, _Portal.default.propTypes, {
 });
 
 var _default = (0, _forwardRef.default)(function (props, ref) {
-  return (// eslint-disable-next-line react/prop-types
+  return (
     _react.default.createElement(_WaitForContainer.default, {
       container: props.container
     }, function (container) {
@@ -9220,7 +9220,7 @@ function createBootstrapComponent(Component, opts) {
     props[forwardRefAs] = ref;
     var prefixes = Object(external_root_React_commonjs2_react_commonjs_react_amd_react_["useContext"])(ThemeContext);
     return external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(Component, _extends({}, props, {
-      // eslint-disable-next-line react/prop-types
+      
       bsPrefix: props.bsPrefix || prefixes.get(prefix) || prefix,
       __source: {
         fileName: _jsxFileName,
@@ -9720,7 +9720,7 @@ function createWithBsPrefix(prefix, _temp) {
       Component = _ref$Component === void 0 ? 'div' : _ref$Component,
       defaultProps = _ref.defaultProps;
 
-  var BsComponent = external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.forwardRef( // eslint-disable-next-line react/prop-types
+  var BsComponent = external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.forwardRef( 
   function (_ref2, ref) {
     var className = _ref2.className,
         bsPrefix = _ref2.bsPrefix,
@@ -11137,7 +11137,7 @@ function (_React$Component) {
     }
 
     this._isSliding = true;
-    this.pause(); // eslint-disable-next-line react/no-did-update-set-state
+    this.pause();
 
     this.safeSetState({
       prevClasses: 'active',
@@ -11332,7 +11332,7 @@ function (_React$Component) {
         previousActiveIndex = _this$state2.previousActiveIndex,
         prevClasses = _this$state2.prevClasses,
         currentClasses = _this$state2.currentClasses;
-    return (// eslint-disable-next-line jsx-a11y/no-static-element-interactions
+    return (
       external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(Component, _extends({}, props, {
         className: classnames_default()(className, bsPrefix, slide && 'slide', fade && bsPrefix + "-fade"),
         onKeyDown: keyboard ? this.handleKeyDown : undefined,
@@ -12713,7 +12713,7 @@ var FormLabel = external_root_React_commonjs2_react_commonjs_react_amd_react_def
     __self: this
   }));
    false ? undefined : void 0;
-  return (// eslint-disable-next-line jsx-a11y/label-has-for, jsx-a11y/label-has-associated-control
+  return (
     external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement("label", _extends({}, props, {
       htmlFor: htmlFor || controlId,
       ref: ref,
@@ -14179,7 +14179,6 @@ var Modal_defaultProps = {
   dialogAs: src_ModalDialog,
   manager: new BootstrapModalManager_BootstrapModalManager()
 };
-/* eslint-disable no-use-before-define, react/no-multi-comp */
 
 function DialogTransition(props) {
   return external_root_React_commonjs2_react_commonjs_react_amd_react_default.a.createElement(src_Fade, _extends({}, props, {
@@ -15474,7 +15473,7 @@ var OverlayTrigger_propTypes = {
 var OverlayTrigger_defaultProps = {
   defaultOverlayShown: false,
   trigger: ['hover', 'focus']
-}; // eslint-disable-next-line react/no-multi-comp
+};
 
 var OverlayTrigger_OverlayTrigger =
 /*#__PURE__*/
@@ -15683,11 +15682,6 @@ OverlayTrigger_OverlayTrigger.defaultProps = OverlayTrigger_defaultProps;
 
 
 var PageItem_jsxFileName = "/Users/jason/src/react-bootstrap/src/PageItem.js";
-
-/* eslint-disable react/no-multi-comp */
-
-
-
 
 var PageItem_propTypes = {
   /** Disables the PageItem */
@@ -16981,8 +16975,6 @@ TabPane.propTypes = TabPane_propTypes;
 
 
 
-
-/* eslint-disable react/require-render-return, react/no-unused-prop-types */
 
 var Tab_Tab =
 /*#__PURE__*/

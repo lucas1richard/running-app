@@ -1,5 +1,6 @@
 const { bulkCreateActivitySegments, bulkCreateAthleteSegments } = require('../../persistence/segments');
 const { getActivityDetail } = require('../../persistence/setupdb-couchbase');
+const { consumeFromFanout } = require('../consumer');
 const { ACTIVITY_PULL } = require('../topics');
 
 const syncActivityDetails = async (activityId) => {
@@ -18,22 +19,11 @@ const syncActivityDetails = async (activityId) => {
   // add to the join table for activity and segment
 };
 
-const activityDetailsSync = async (kafkaClient) => {
-  const consumer = kafkaClient.consumer({ groupId: 'activities-service' });
-  await consumer.connect();
-  await consumer.subscribe({ topic: ACTIVITY_PULL, fromBeginning: true });
-
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
-      const value = JSON.parse(message.value);
-      console.log({
-        topic,
-        partition,
-        offset: message.offset,
-        value,
-      });
-      await syncActivityDetails(value.id);
-    },
+const activityDetailsSync = async () => {
+  await consumeFromFanout(ACTIVITY_PULL, '', async (message) => {
+    const value = JSON.parse(message);
+    console.log(value);
+    await syncActivityDetails(value.id);
   });
 
   // add segments to database

@@ -3,7 +3,7 @@
 // - start location
 // - max/min values
 //  - altitude
-//  - 
+//  -
 //  - lat,long
 
 const Router = require('express').Router;

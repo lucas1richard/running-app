@@ -19,9 +19,11 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
         logging: false,
       });
 
-      console.log(`Bulk Add Activities Complete - ${stravaActivities.length} records`)
+      const newRecords = records.filter((record) => record.isNewRecord);
 
-      return records;
+      console.log(`Bulk Add Activities Complete - ${newRecords.length} new records`);
+
+      return newRecords;
     } catch (err) {
       console.log(err);
       return [];

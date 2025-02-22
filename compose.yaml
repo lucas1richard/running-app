@@ -18,7 +18,7 @@ services:
     volumes:
       - ./packages/activities-service:/activities-service
     depends_on:
-      - running-app-kafka
+      - rabbitmq
     env_file: "./activities-service.env" # gitignored file
 
   activities-go-server:
@@ -41,8 +41,6 @@ services:
     working_dir: /tcp-server
     volumes:
       - ./packages/tcp-server:/tcp-server
-    depends_on:
-      - running-app-kafka
 
   image-service:
     image: node:18-alpine
@@ -61,30 +59,22 @@ services:
     ports:
       - "5984:5984"
     env_file: "./strava-couch-db.env"
-  
+
   strava-mysql:
     image: mysql:8.0
     volumes:
       - strava-user-data:/var/lib/mysql
     env_file: "./strava-couch-db.env" # gitignored file
-  
-  running-app-kafka:
-    image: wurstmeister/kafka:2.11-1.1.1
-    ports:
-      - "9092:9092"
-    volumes:
-      - ./packages/kafka-data:/var/lib/kafka/data
-    env_file: "./running-app-kafka.env" # gitignored file
-    depends_on:
-      - zookeeper
 
-  zookeeper: # dont change this name
-    image: wurstmeister/zookeeper:latest
+  rabbitmq:
+    image: rabbitmq:3-management
     ports:
-      - "2181:2181"
-    env_file: "./zookeeper.env" # gitignored file
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
 
 volumes:
   couch-db-data:
   strava-user-data:
-  kafka-data:

@@ -85,7 +85,7 @@ const getComparedSegments = async (activityId) => {
 router.get('/:id/segments/compare', async (req, res) => {
   try {
     const activityId = req.params?.id;
-    
+
     const comparedSegments = await getComparedSegments(activityId);
 
     res.json(comparedSegments);

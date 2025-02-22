@@ -35,4 +35,3 @@ sequelize
 module.exports = {
   sequelizeMysql: sequelize,
 };
-  

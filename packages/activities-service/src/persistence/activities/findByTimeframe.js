@@ -2,7 +2,7 @@ const { Sequelize } = require('sequelize');
 const Activity = require('./model-activities');
 
 /**
- * 
+ *
  * @param {number} msOffset the number of milliseconds to offset from the current time
  * @param {number} rowLimit max number of rows to return
  */

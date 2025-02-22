@@ -18,6 +18,8 @@ const { findAllActivities } = require('../../persistence/activities');
 const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
 const getPRsByDate = require('../../controllers/getPRsByDate');
 const getPRs = require('../../controllers/getPRs');
+const { dispatchFanout } = require('../../messageQueue/client');
+const topics = require('../../messageQueue/topics');
 
 const router = Router();
 
@@ -49,10 +51,12 @@ router.get('/list', async (req, res) => {
 
     const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
     await bulkAddActivities(activitiesList); // couchdb
-    await bulkAddActivitiesFromStrava(activitiesList); // mysql
+    const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
+
+    addedRecords.forEach((record) => dispatchFanout(topics.ACTIVITY_PULL, JSON.stringify({ id: record.id })))
 
     const records = await findAllActivities();
-    
+
     res.json(records);
   } catch (err) {
     res.status(500).send(err.message);

@@ -1,4 +1,3 @@
-
 const { Router } = require('express');
 const { findRelationsBySimilarRoute, findActivityById } = require('../../../persistence/activities');
 // const findSimilarStartDistance = require('../../../persistence/activities/findSimilarStartDistance');

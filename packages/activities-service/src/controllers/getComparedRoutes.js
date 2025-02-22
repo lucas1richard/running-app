@@ -11,11 +11,11 @@ const getComparedRoutes = async (activityId) => {
   if (!activity) {
     throw Error('Activity not found');
   }
-  
+
   // get nearby activities
   const nearbyActivities = await findSimilarStartDistance(activity, 50, true);
   const activityRoute = await makeCompressedRoute(activityId, 0.0005);
-  
+
   // get route of each activity
   const allRoutes = await makeMultiCompressedRoutes(nearbyActivities.map(({ id }) => id), 0.0005);
 

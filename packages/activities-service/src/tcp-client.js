@@ -17,8 +17,8 @@ client.on('close', function() {
   console.log('Connection closed');
 });
 
-// waitPort({ 
-//   host: 'tcp-service', 
+// waitPort({
+//   host: 'tcp-service',
 //   port: 7070,
 //   timeout: 10000,
 //   waitForDns: true,

@@ -11,7 +11,7 @@ router.get('/network', async (req, res) => {
   try {
     const allActivities = await findAllActivities();
     const allActivityIds = allActivities.map((activity) => activity.id);
-    
+
     await Promise.allSettled(allActivityIds.map(getComparedSegments));
 
     const network = await findRelationsBySimilarSegments();
