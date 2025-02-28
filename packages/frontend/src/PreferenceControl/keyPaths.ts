@@ -1,9 +1,9 @@
-import { PreferencesKeyPath, ActivityPreferences } from '../reducers/preferences';
+import type { PreferencesKeyPath, ActivityPreferences } from '../reducers/preferences';
 
-const listState = ['list', 'defined'];
+const listState = ['list', 'defined'] as const;
 
-export const listDisplayConfigControls = () => [...listState, 'displayConfigControls'];
-export const listDisplayHideFunction = () => [...listState, 'displayHideFunction'];
+export const listDisplayConfigControls = (): PreferencesKeyPath => [...listState, 'displayConfigControls'];
+export const listDisplayHideFunction = (): PreferencesKeyPath => [...listState, 'displayHideFunction'];
 
 type KeypathGenerator = (id: string) => PreferencesKeyPath;
 

@@ -6,7 +6,13 @@ import { Basic, Flex } from '../DLS';
 
 dayjs.extend(utc)
 
-const ZonesHeader = ({ zones, start, isCompact }) => {
+type ZonesHeaderProps = {
+  zones: HeartZone;
+  start: string;
+  isCompact?: boolean;
+};
+
+const ZonesHeader: React.FC<ZonesHeaderProps> = ({ zones, start, isCompact }) => {
   const establishedText = `Since ${dayjs(start).utc().format(isCompact ? 'MM/DD/YY' : 'MMMM DD, YYYY')}`;
   const padLevel = propSelector({ 1: !isCompact, 0.5: isCompact });
 
@@ -42,7 +48,7 @@ const ZonesHeader = ({ zones, start, isCompact }) => {
           </Basic.Div>
 
           <Basic.Div textAlign="center" flexGrow="1" colorBg="hrZone5" pad={padLevel}>
-            <b>Zone 5</b> (>={zones.z5})
+            <b>Zone 5</b> (&gte;{zones.z5})
           </Basic.Div>
         </Flex>
       </Flex>

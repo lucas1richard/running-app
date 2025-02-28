@@ -3,7 +3,14 @@ import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../
 import { hrZonesText } from '../colors/hrZones';
 import { Flex } from '../DLS';
 
-const ZonesWidth = ({ zones, heartData, id, zonesCaches }) => {
+type ZonesWidthProps = {
+  zones: HeartZone;
+  heartData: number[];
+  id: number | string;
+  zonesCaches: Record<string, HeartZoneCache>;
+};
+
+const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCaches }) => {
   const percents = useMemo(() => {
     if (zonesCaches?.[zones.id]) return convertZonesCacheToPercents(zonesCaches[zones.id]);
     return convertHeartDataToZonePercents(heartData, zones)
