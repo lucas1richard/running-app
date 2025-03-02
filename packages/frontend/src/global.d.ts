@@ -43,7 +43,7 @@ interface Activity {
   description?: string;
   distance: number;
   distance_miles: number;
-  bestEfforts: BestEffort[];
+  calculatedBestEfforts: BestEffort[];
   weather: Weather;
   zonesCaches: Record<string, HeartZoneCache>;
   elapsed_time: number;

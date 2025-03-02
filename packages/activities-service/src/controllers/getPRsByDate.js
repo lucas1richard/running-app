@@ -1,9 +1,9 @@
 const { Op } = require('sequelize');
-const BestEfforts = require('../persistence/activities/model-best-efforts');
 const Activity = require('../persistence/activities/model-activities');
+const CalculatedBestEfforts = require('../persistence/activities/model-calculated-efforts');
 
 const getPRsByDate = async () => {
-  const prsByDateArr = await BestEfforts.findAll({
+  const prsByDateArr = await CalculatedBestEfforts.findAll({
     where: {
       pr_rank: {
         [Op.not]: null,

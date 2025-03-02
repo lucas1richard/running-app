@@ -1,9 +1,13 @@
 const deepmerge = require('deepmerge');
 const create_nano = require('nano');
-// setup the database if there is one
+
+const {
+  COUCHDB_USER: couchDbUser,
+  COUCHDB_PASSWORD: couchDbPassword,
+} = process.env;
 
 // couchbase
-const nano = create_nano('http://admin:password@strava-couch-db:5984');
+const nano = create_nano(`http://${couchDbUser}:${couchDbPassword}@strava-couch-db:5984`);
 
 const ACTIVITIES_DB = 'activities';
 const ACTIVITIES_DETAIL_DB = 'activities-detail';
@@ -11,10 +15,17 @@ const STREAMS_DB = 'streams';
 const USER_PREFERENCES_DB = 'user-preferences';
 const ACTIVITY_PREFERENCES_DB = 'activity-preferences';
 
+const activitiesDb = nano.db.use(ACTIVITIES_DB);
+const activitiesDetailDb = nano.db.use(ACTIVITIES_DETAIL_DB);
+const streamsDb = nano.db.use(STREAMS_DB);
+const userPreferencesDb = nano.db.use(USER_PREFERENCES_DB);
+const activityPreferencesDb = nano.db.use(ACTIVITY_PREFERENCES_DB);
+
 const createIfNotExists = async (dbName) => {
   try {
     await nano.db.get(dbName);
   } catch (err) {
+    console.log(err)
     await nano.db.create(dbName);
   }
 };
@@ -30,12 +41,23 @@ const setupdb = async () => {
   ]);
 };
 
-const bulkAddActivities = async (activities) => {
-  const activitiesDb = await nano.db.use(ACTIVITIES_DB);
-  await activitiesDb.bulk({ docs: activities.map((activity) => ({
-    _id: `${activity.id}`,
-    ...activity,
-  }))});
+const bulkAddActivities = async (activities, batchSize = 100) => {
+  const batches = [];
+
+  // Split activities into batches
+  for (let i = 0; i < activities.length; i += batchSize) {
+    batches.push(activities.slice(i, i + batchSize));
+  }
+
+  // Process each batch sequentially
+  for (const batch of batches) {
+    await activitiesDb.bulk({ 
+      docs: batch.map((activity) => ({
+        _id: `${activity.id}`,
+        ...activity,
+      }))
+    });
+  }
 };
 
 const getAllActivities = async () => {
@@ -54,8 +76,7 @@ const getAllActivities = async () => {
 
 const getActivity = async (id) => {
   try {
-    const activities = await nano.db.use(ACTIVITIES_DB);
-    const activity = await activities.get(`${id}`);
+    const activity = await activitiesDb.get(`${id}`);
     return activity;
   } catch (err) {
     return undefined;
@@ -64,8 +85,7 @@ const getActivity = async (id) => {
 
 const getActivityDetail = async (id) => {
   try {
-    const activities = await nano.db.use(ACTIVITIES_DETAIL_DB);
-    const activity = await activities.get(`${id}`);
+    const activity = await activitiesDetailDb.get(`${id}`);
     return activity;
   } catch (err) {
     return undefined;
@@ -73,22 +93,19 @@ const getActivityDetail = async (id) => {
 };
 
 const addActivityDetail = async (activity) => {
-  const details = await nano.db.use(ACTIVITIES_DETAIL_DB);
-  const res = await details.insert(activity, `${activity.id}`);
+  const res = await activitiesDetailDb.insert(activity, `${activity.id}`);
   return res;
 };
 
 const updateActivityDetail = async (activityId, detail) => {
-  const details = await nano.db.use(ACTIVITIES_DETAIL_DB);
-  const existing = await details.get(`${activityId}`) || {};
-  const res = await details.insert({ ...existing, ...detail }, `${activityId}`);
+  const existing = await activitiesDetailDb.get(`${activityId}`) || {};
+  const res = await activitiesDetailDb.insert({ ...existing, ...detail }, `${activityId}`);
   return res;
 };
 
 const getUserPreferences = async (userId) => {
   try {
-    const db = await nano.db.use(USER_PREFERENCES_DB);
-    const preferences = await db.get(`${userId}`);
+    const preferences = await userPreferencesDb.get(`${userId}`);
     return preferences;
   } catch (err) {
     return undefined;
@@ -97,8 +114,7 @@ const getUserPreferences = async (userId) => {
 
 const getActivityPreferences = async (activityId) => {
   try {
-    const db = await nano.db.use(ACTIVITY_PREFERENCES_DB);
-    const preferences = await db.get(`${activityId}`);
+    const preferences = await activityPreferencesDb.get(`${activityId}`);
     return preferences;
   } catch (err) {
     return undefined;
@@ -106,9 +122,8 @@ const getActivityPreferences = async (activityId) => {
 };
 
 const updateUserPreferences = async (userId, preferences = {}) => {
-  const db = await nano.db.use(USER_PREFERENCES_DB);
   const existing = await getUserPreferences(userId) || {};
-  const res = await db.insert(deepmerge(existing, preferences), `${userId}`);
+  const res = await userPreferencesDb.insert(deepmerge(existing, preferences), `${userId}`);
   return res;
 };
 
@@ -120,16 +135,13 @@ const updateActivityPreferences = async (activityId, preferences = {}) => {
 }
 
 const addStream = async (stream, documentId) => {
-  const db = await nano.db.use(STREAMS_DB);
-
-  const res = await db.insert(stream, `${documentId}`)
+  const res = await streamsDb.insert(stream, `${documentId}`)
   return res;
 };
 
 const getStream = async (id) => {
   try {
-    const db = await nano.db.use(STREAMS_DB);
-    const stream = await db.get(`${id}`);
+    const stream = await streamsDb.get(`${id}`);
     return stream;
   } catch (err) {
     return undefined;
@@ -137,10 +149,8 @@ const getStream = async (id) => {
 };
 
 const getAllStreams = async () => {
-  const db = await nano.db.use(STREAMS_DB);
-  const params   = { include_docs: true, limit: 10000, descending: true };
-
-  const body = await db.list(params);
+  const params = { include_docs: true, limit: 10000, descending: true };
+  const body = await streamsDb.list(params);
   return body?.rows?.map(({ doc } = {}) => doc) || [];
 };
 

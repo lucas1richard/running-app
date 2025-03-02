@@ -225,7 +225,7 @@ const ActivityDetailPage = () => {
       >
         <Grid templateColumns='1fr' gap={1} templateColumnsLgUp='auto 1fr'>
           <Laps id={id} />
-          <BestEfforts bestEfforts={activity.bestEfforts} />
+          <BestEfforts bestEfforts={activity.calculatedBestEfforts} />
         </Grid>
       </PreferenceControl>
 

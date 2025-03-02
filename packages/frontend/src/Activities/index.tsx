@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import Lottie from 'react-lottie';
 import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActivities, selectZoneGroupedRuns } from '../reducers/activities';

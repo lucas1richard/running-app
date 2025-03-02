@@ -11,14 +11,17 @@ const ZonesCache = require('./heartzones/model-zones-cache');
 const RouteCoordinates = require('./routeCoordinates/model-route-coordinates');
 const { Sequelize } = require('sequelize');
 const StreamPin = require('./streams/model-stream-pins');
+const CalculatedBestEfforts = require('./activities/model-calculated-efforts');
 
 const initSequelize = async () => {
   try {
+    Activity.hasMany(CalculatedBestEfforts);
     Activity.hasMany(BestEfforts);
     Activity.hasMany(ZonesCache);
     Activity.hasMany(StreamPin);
     StreamPin.belongsTo(Activity);
     BestEfforts.belongsTo(Activity);
+    CalculatedBestEfforts.belongsTo(Activity);
     ZonesCache.belongsTo(Activity);
     ZonesCache.belongsTo(HeartZones);
     Activity.hasOne(Weather);
@@ -44,6 +47,7 @@ const initSequelize = async () => {
     await Activity.sync();
     await StreamPin.sync();
     await BestEfforts.sync();
+    await CalculatedBestEfforts.sync();
     await ZonesCache.sync();
     await HeartZones.sync();
     await Weather.sync({ force: false });
@@ -78,13 +82,14 @@ const initSequelize = async () => {
           'wind'
         ],
       }, {
-        model: BestEfforts,
+        model: CalculatedBestEfforts,
       }, {
         model: StreamPin,
       }]
     }, {
       override: true,
     });
+    // await CalculatedBestEfforts.seedDatabase();
   } catch (err) {
     console.error(err);
   }

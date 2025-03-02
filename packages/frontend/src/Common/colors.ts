@@ -11,4 +11,12 @@ export const prColors = {
     fill: 'rgba(205, 127, 50, 0.9)',
     stroke: 'rgba(155, 77, 0, 1)',
   },
+  black: {
+    fill: 'rgba(0,0,0,0.9)',
+    stroke: 'rgba(0,0,0,1)'
+  },
+  undefined: {
+    fill: 'rgba(0,0,0,0.9)',
+    stroke: 'rgba(0,0,0,1)'
+  }
 };

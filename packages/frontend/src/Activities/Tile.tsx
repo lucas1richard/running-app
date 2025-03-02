@@ -33,7 +33,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, activity.id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
-  const bestEfforts = activity?.bestEfforts || emptyArray;
+  const bestEfforts = activity?.calculatedBestEfforts || emptyArray;
 
   const onMouseEnter = useCallback(() => {
     setHovered(true);
@@ -135,9 +135,9 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
 
         <Basic.Div gridArea="bestEfforts" display="flex" gap={1} wrap="wrap">
           {bestEfforts.length > 0 && (
-            bestEfforts.map((effort) => (
+            bestEfforts.filter(({ pr_rank }) => pr_rank).map((effort) => (
               <Flex alignItems='center' key={effort.effort_id}>
-                <span><PRMedal color={effort.pr_rank} type="native" /></span>
+                <span><PRMedal color={effort.pr_rank || 'black'} type="native" /></span>
                 <small>
                   {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
                 </small>
