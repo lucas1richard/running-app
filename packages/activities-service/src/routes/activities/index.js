@@ -5,9 +5,10 @@ const {
 } = require('../../persistence/setupdb-couchbase');
 const summary = require('../../persistence/mysql-activities');
 const fetchStrava = require('../../utils/fetchStrava');
+const { deleteRouter } = require('./byId/delete');
+const { detailsRouter } = require('./byId/detail');
 const { weatherRouter } = require('./byId/weather');
 const { streamsRouter } = require('./byId/streams');
-const { detailsRouter } = require('./byId/detail');
 const { lapsRouter } = require('./byId/laps');
 const { preferencesRouter } = require('./byId/preferences');
 const { segmentsRouter } = require('./byId/segments');
@@ -25,6 +26,7 @@ const router = Router();
 
 // byId routes
 router.use([
+  deleteRouter,
   detailsRouter,
   lapsRouter,
   preferencesRouter,

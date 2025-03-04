@@ -1,29 +1,42 @@
+const { Op } = require('sequelize');
 const Activity = require('./model-activities');
 
 const bulkAddActivitiesFromStrava = async (stravaActivities) => {
   if (stravaActivities.length > 0) {
     try {
-      const records = await Activity.bulkCreate(stravaActivities.map((av) => ({
-        ...av,
-        start_latlng: {
-          type: 'Point',
-          coordinates: av.start_latlng?.length ? av.start_latlng : [0, 0],
-        },
-        end_latlng: {
-          type: 'Point',
-          coordinates: av.end_latlng?.length ? av.end_latlng : [0, 0],
-        },
-        summary_polyline: av.map?.summary_polyline,
-      })), {
+      const existingRecords = await Activity.scope('').findAll({
+        where: {
+          [Op.or]: stravaActivities.map(({ id }) => ({ id })),
+        }
+      });
+      const existingMap = existingRecords.reduce((a, r) => {
+        a[r.id] = true;
+        return a;
+      }, {});
+
+      console.log(existingMap)
+
+      const records = await Activity.bulkCreate(stravaActivities
+        .filter(a => !existingMap[a.id])
+        .map((av) => ({
+          ...av,
+          start_latlng: {
+            type: 'Point',
+            coordinates: av.start_latlng?.length ? av.start_latlng : [0, 0],
+          },
+          end_latlng: {
+            type: 'Point',
+            coordinates: av.end_latlng?.length ? av.end_latlng : [0, 0],
+          },
+          summary_polyline: av.map?.summary_polyline,
+        })), {
         ignoreDuplicates: true,
         logging: false,
       });
 
-      const newRecords = records.filter((record) => record.isNewRecord);
+      console.log(`Bulk Add Activities Complete - ${records.length} new records`);
 
-      console.log(`Bulk Add Activities Complete - ${newRecords.length} new records`);
-
-      return newRecords;
+      return records;
     } catch (err) {
       console.log(err);
       return [];

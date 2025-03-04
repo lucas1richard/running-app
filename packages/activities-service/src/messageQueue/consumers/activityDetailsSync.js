@@ -1,3 +1,5 @@
+const { calculateBestEffortsForNewActivities } = require('../../controllers/calculateBestEffortsForNewActivities');
+const { getActivityStreams } = require('../../controllers/getActivityStreams');
 const { bulkCreateActivitySegments, bulkCreateAthleteSegments } = require('../../persistence/segments');
 const { getActivityDetail } = require('../../persistence/setupdb-couchbase');
 const { consumeFromFanout } = require('../consumer');
@@ -15,8 +17,8 @@ const syncActivityDetails = async (activityId) => {
   } catch (err) {
     console.error(err);
   }
-  // add to the database
-  // add to the join table for activity and segment
+  await getActivityStreams(activityId);
+  await calculateBestEffortsForNewActivities([activityId]);
 };
 
 const activityDetailsSync = async () => {

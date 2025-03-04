@@ -15,7 +15,6 @@ const { analysisRouter } = require('./routes/analysis');
 const { userRouter } = require('./routes/user');
 const { segmentsRouter } = require('./routes/segments');
 const { activityRoutesRouter } = require('./routes/activity-routes');
-const { dispatchFanout } = require('./messageQueue/client');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -44,7 +43,6 @@ app.use('/routes', activityRoutesRouter);
     });
 
     await setupConsumers();
-    await dispatchFanout('activity_pull', JSON.stringify({ id: 1 })); // start the activity pull process
   } catch (err) {
     console.log('Error starting strava-client', err);
   }

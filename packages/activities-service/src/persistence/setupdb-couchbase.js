@@ -83,12 +83,28 @@ const getActivity = async (id) => {
   }
 };
 
+const destroyActivity = async (id) => {
+  try {
+    await activitiesDb.destroy(`${id}`);
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 const getActivityDetail = async (id) => {
   try {
     const activity = await activitiesDetailDb.get(`${id}`);
     return activity;
   } catch (err) {
     return undefined;
+  }
+};
+
+const destroyActivityDetail = async (id) => {
+  try {
+    await activitiesDetailDb.destroy(`${id}`);
+  } catch (err) {
+    console.log(err.message);
   }
 };
 
@@ -121,6 +137,14 @@ const getActivityPreferences = async (activityId) => {
   }
 };
 
+const destroyActivityPreferences = async (activityId) => {
+  try {
+    await activityPreferencesDb.destroy(`${activityId}`);
+  } catch (err) {
+    console.log(err.message);
+  }
+}
+
 const updateUserPreferences = async (userId, preferences = {}) => {
   const existing = await getUserPreferences(userId) || {};
   const res = await userPreferencesDb.insert(deepmerge(existing, preferences), `${userId}`);
@@ -148,6 +172,14 @@ const getStream = async (id) => {
   }
 };
 
+const destroyStream = async (id) => {
+  try {
+    await streamsDb.destroy(`${id}`);
+  } catch (err) {
+    console.log(err.message);
+  }
+};
+
 const getAllStreams = async () => {
   const params = { include_docs: true, limit: 10000, descending: true };
   const body = await streamsDb.list(params);
@@ -159,6 +191,10 @@ module.exports = {
   addStream,
   setupdb,
   bulkAddActivities,
+  destroyActivity,
+  destroyActivityDetail,
+  destroyActivityPreferences,
+  destroyStream,
   getActivity,
   getStream,
   getAllStreams,
