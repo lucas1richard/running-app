@@ -81,7 +81,7 @@ RelatedActivities.init(
   {
     sequelize: sequelizeMysql,
     modelName: 'relatedActivities',
-    tableName: 'related_activities',
+    tableName: 'related_activities_n',
   }
 );
 

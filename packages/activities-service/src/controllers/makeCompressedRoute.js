@@ -10,9 +10,11 @@ const {
 const { getActivityDetails } = require('./getActivityDetails');
 
 const compress = (route, compressionLevel) => {
-  const factor = 1 / compressionLevel;
   const roundedRoute = route.map(
-    ([lat, lng]) => [Math.round(lat * factor) / factor, Math.round(lng * factor) / factor]
+    ([lat, lng]) => [
+      (Math.round(lat / compressionLevel) * compressionLevel).toFixed(6),
+      (Math.round(lng / compressionLevel) * compressionLevel).toFixed(6)
+    ]
   );
   const compressedRoute = [];
   let count = 0;
@@ -22,17 +24,20 @@ const compress = (route, compressionLevel) => {
       compressedRoute.push(roundedRoute[i]);
     } else {
       const lastEl = compressedRoute[compressedRoute.length - 1];
-      if (lastEl[0] !== roundedRoute[i][0] || lastEl[1] !== roundedRoute[i][1]) {
-        // only include a coordinate box if the athlete spent at least 10 seconds in it.
+      const current = roundedRoute[i];
+      if (lastEl[0] !== current[0] || lastEl[1] !== current[1]) {
+        // only include a coordinate box if the athlete spent at least 3 seconds in it.
         // this will help avoid the GPS glitches and instances where the athlete barely
         // crossed into the corner of a coordinate box
-        if (count >= 10) compressedRoute.push([...roundedRoute[i], count]);
+        // if (count >= 1)
+          compressedRoute.push([...current, count]);
         count = 0;
       } else {
         count++;
       }
     }
   }
+  console.log({rrl: roundedRoute.length, compressedRoute})
   return compressedRoute;
 };
 
@@ -64,6 +69,7 @@ const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = fi
 const makeCompressedRoute = async (activityId, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL, skipCheck = false) => {
   if (!skipCheck) {
     const existingRoute = await getRouteCoordinates(activityId, compressionLevel);
+    console.log('EXISTING ROUTE FOUND');
     if (existingRoute?.length) {
       return { activityId, route: existingRoute, compressionLevel };
     }

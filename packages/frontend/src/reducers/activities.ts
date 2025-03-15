@@ -30,6 +30,7 @@ type ActivitiesState = {
   summary: any;
   streams: Record<number, { stream: (Stream | LatLngStream)[] }>;
   similarWorkouts: Record<number, number[]>;
+  similarWorkoutsMeta: Record<number, TODO>;
   loading: boolean;
   similarStart: Record<number,
     Record<number, {
@@ -51,6 +52,7 @@ const activitiesInitialState: ActivitiesState = {
   summary: {},
   streams: {},
   similarWorkouts: {},
+  similarWorkoutsMeta: {},
   loading: false,
   similarStart: {},
   error: undefined,
@@ -127,6 +129,9 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
         nextState.similarWorkouts[action.payload.id] = action.payload.combo.map(
           ({ relatedActivity }) => relatedActivity
         );
+        nextState.similarWorkoutsMeta[action.payload.id] = Object.fromEntries(action.payload.combo.map(
+          c => [c.relatedActivity, c]
+        ));
       });
     }
 
@@ -240,6 +245,12 @@ const getSimilarWorkouts = (state: RootState, id: number) => {
   return similarsIds.map((id) => activitiesState.activities[id]);
 };
 export const selectSimilarWorkouts = createDeepEqualSelector(getSimilarWorkouts, (res) => res);
+
+const getSimilarWorkoutsMeta = (state: RootState, id: number) => {
+  const activitiesState = getActivitiesState(state);
+  return activitiesState.similarWorkoutsMeta[id] || emptyArray;
+};
+export const selectSimilarWorkoutsMeta = createDeepEqualSelector(getSimilarWorkoutsMeta, (res) => res);;
 
 export const selectZoneGroupedRuns = createDeepEqualSelector(
   selectListActivities,

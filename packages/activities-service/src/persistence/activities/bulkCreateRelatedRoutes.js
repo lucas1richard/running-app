@@ -5,7 +5,9 @@ const bulkCreateRelatedRoutes = (data) => {
     data,
     {
       // ignoreDuplicates: true,
-      updateOnDuplicate: ['routeScoreFromRelated', 'routeScoreFromBase'],
+      updateOnDuplicate: [
+        'routeScoreFromRelated', 'routeScoreFromBase', 'longestCommonSegmentSubsequence'
+      ],
     }
   )
 };

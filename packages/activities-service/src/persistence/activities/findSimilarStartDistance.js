@@ -7,6 +7,8 @@ const {
 } = require('../../constants');
 
 const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlreadyRelated = false) => {
+  const distanceDelta = Math.max(activity.distance * 0.1, ACTIVITY_DISTANCE_CONSTRAINT);
+  const timeDelta = Math.max(activity.elapsed_time * 0.1, 300);
   return Activity.findAll(
     {
       where: {
@@ -19,14 +21,14 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
           ),
           distance: {
             [Op.between]: [
-              activity.distance - ACTIVITY_DISTANCE_CONSTRAINT,
-              activity.distance + ACTIVITY_DISTANCE_CONSTRAINT
+              activity.distance - distanceDelta,
+              activity.distance + distanceDelta
             ]
           },
           elapsed_time: {
             [Op.between]: [
-              activity.elapsed_time - 300,
-              activity.elapsed_time + 300
+              activity.elapsed_time - timeDelta,
+              activity.elapsed_time + timeDelta
             ]
           },
         },

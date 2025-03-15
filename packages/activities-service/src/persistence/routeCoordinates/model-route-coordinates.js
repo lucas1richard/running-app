@@ -59,7 +59,7 @@ RouteCoordinates.init(
   {
     sequelize: sequelizeMysql,
     modelName: 'routeCoordinates',
-    tableName: 'route_coordinates',
+    tableName: 'route_coordinates_n',
   }
 );
 
