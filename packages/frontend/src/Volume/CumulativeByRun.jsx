@@ -4,31 +4,13 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { selectActivities } from '../reducers/activities';
 import useViewSize from '../hooks/useViewSize';
+import dayjs from 'dayjs';
 
-const CumulativeByRun = () => {
-  const activities = useSelector(selectActivities);
-  const isSmall = useViewSize().lte('sm');
+const currentYear = new Date().getFullYear();
 
-  const data = useMemo(() => {
-    let totalDistance = 0;
-    const orderedActivities = [...activities].reverse().filter(
-      ({ start_date_local }) => new Date(start_date_local).getFullYear() === new Date().getFullYear()
-    );
-
-    const data = [];
-    
-    for (let i = 0; i < orderedActivities.length; i++) {
-      const activity = orderedActivities[i];
-      totalDistance += Math.round(activity.distance_miles * 100) / 100;
-      data.push([
-        new Date(activity.start_date_local).getTime(),
-        totalDistance,
-      ]);
-    }
-
-    return data;
-  }, [activities]);
-
+const CumulativeByRun = ({data, greatestTotal, groupedData }) => {
+  const viewSize = useViewSize();
+  const isSmall = viewSize.lte('sm');
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
     ({
@@ -50,30 +32,25 @@ const CumulativeByRun = () => {
       title: {
         text: 'Distance (miles)',
       },
+      max: greatestTotal,
     },
-    series: [
+    series: Object.keys(groupedData).map((year) => {
+      return (
       {
-        name: 'Runs',
-        type: 'area',
-        data,
+        name: 'Runs in ' + year,
+        type: 'line',
+        data: groupedData[year],
         tooltip: {
           pointFormat: 'Distance: <b>{point.y}</b> miles<br/>',
-        },
-        color: 'rgba(0,0,0,1)',
-        fillColor: {
-          linearGradient: [0, 0, 0, 500],
-          stops: [
-            [0, 'rgba(0,0,0,0.5)'],
-            [1, 'rgba(0,0,0,0)'],
-          ],
         },
         animation: false,
         marker: {
           enabled: true,
           radius: isSmall ? 3 : 5,
         },
-      },
-    ],
+      }
+    )
+    }),
   }), [data, isSmall]);
 
   return (
