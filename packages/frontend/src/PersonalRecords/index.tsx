@@ -18,7 +18,7 @@ const PRs = () => {
       <h2>All Time PRs</h2>
       <Flex wrap="wrap" gap={1}>
         {allTimePrs.map((pr) => (
-          <Card key={pr.effort_id} widthXs="100%" textAlign="center" flexGrow="1">
+          <Card key={pr.distance} widthXs="100%" textAlign="center" flexGrow="1">
             <Basic.Div fontSize="h1">
               <PRMedal type="native" color="gold" />
             </Basic.Div>
@@ -46,7 +46,7 @@ const PRs = () => {
                   &rarr;
                 </Flex>
                 {prsByDate[name].map((pr) => (
-                  <PRDateCard pr={pr} key={pr.effort_id} />
+                  <PRDateCard pr={pr} key={pr.start_date_local} />
                 ))}
               </Flex>
               <PRChart records={prsByDate[name]} title={name} />

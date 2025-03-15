@@ -1,8 +1,8 @@
 import type { ApiStatusAction } from "../types";
 
-export const loadingSymbol = Symbol('loading');
-export const successSymbol = Symbol('success');
-export const errorSymbol = Symbol('error');
+export const loadingSymbol = `Symbol('loading')`;
+export const successSymbol = `Symbol('success')`;
+export const errorSymbol = `Symbol('error')`;
 
 export const SET_API_LOADING = 'apiStatusReducer/SET_LOADING';
 export const setApiLoadingAct = (key: string): ApiStatusAction => ({ type: `${SET_API_LOADING}-${key}`, key, symbol: loadingSymbol });

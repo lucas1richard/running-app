@@ -8,5 +8,5 @@ export interface AsyncAction {
 export interface ApiStatusAction {
   type: string;
   key: string;
-  symbol: symbol;
+  symbol: string;
 }

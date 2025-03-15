@@ -1,16 +1,20 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectSimilarWorkouts, selectSimilarWorkoutsMeta } from '../reducers/activities';
 import { idle, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchSimilarWorkouts } from '../reducers/activitydetail-actions';
 import Tile from '../Activities/Tile';
-import { Basic, Grid } from '../DLS';
+import { Basic, Button, Grid } from '../DLS';
+import { selectComparedActivities } from '../reducers/multimap';
+import { toggleComparedActivityAct } from '../reducers/multimap-actions';
 
 const SimilarWorkouts = ({ activity, zones }) => {
   const id = activity.id;
   const similarDist = useSelector((state) => selectSimilarWorkouts(state, id));
   const similarMeta = useSelector((state) => selectSimilarWorkoutsMeta(state, id));
   useTriggerActionIfStatus(triggerFetchSimilarWorkouts(id), idle, { defer: !id });
+  const compared = useSelector(selectComparedActivities);
+  const dispatch = useDispatch();
 
   return (
     <div>
@@ -27,6 +31,10 @@ const SimilarWorkouts = ({ activity, zones }) => {
           return metaB.longestCommonSegmentSubsequence - metaA.longestCommonSegmentSubsequence;
         }).map((activity) => {
           const meta = similarMeta[activity.id];
+          const toggleCompare = () => {
+            dispatch(toggleComparedActivityAct(activity.id));
+          };
+          const isToggled = compared.some(({ id }) => id === activity.id );
           return (
             <Tile
               key={activity.relatedActivity}
@@ -46,6 +54,9 @@ const SimilarWorkouts = ({ activity, zones }) => {
               <div>
                 Longest common subsequence: {meta.longestCommonSegmentSubsequence}
               </div>
+              <Button onClick={toggleCompare}>
+                {isToggled ? 'Remove Compare' : 'Compare in Multimap'}
+              </Button>
             </Tile>
           )
         })}

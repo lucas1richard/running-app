@@ -136,7 +136,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
         <Basic.Div gridArea="bestEfforts" display="flex" gap={1} wrap="wrap">
           {bestEfforts.length > 0 && (
             bestEfforts.filter(({ pr_rank }) => pr_rank).map((effort) => (
-              <Flex alignItems='center' key={effort.effort_id}>
+              <Flex alignItems='center' key={effort.distance}>
                 <span><PRMedal color={effort.pr_rank || 'black'} type={effort.pr_rank <= 3 ? 'native' : 'svg'} /></span>
                 <small>
                   {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />

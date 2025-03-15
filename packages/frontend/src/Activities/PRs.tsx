@@ -15,7 +15,7 @@ const PRs = () => {
 
       <Flex wrap="wrap" gap={1}>
         {allTimePrs.map((pr) => (
-          <Card key={pr.effort_id} textAlign="center" flexGrow="1">
+          <Card key={pr.distance} textAlign="center" flexGrow="1">
             <Basic.Div fontSize="h1">
               <PRMedal type="native" color="gold" />
             </Basic.Div>

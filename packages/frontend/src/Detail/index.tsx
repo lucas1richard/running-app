@@ -166,7 +166,7 @@ const ActivityDetailPage = () => {
         </Card>
       </Grid>
 
-      <Tabs>
+      {/* <Tabs>
         <TabHeader>
           <Tab>Hey</Tab>
           <Tab>Yo</Tab>
@@ -198,7 +198,7 @@ const ActivityDetailPage = () => {
             </Grid>
           </TabPanel>
         </TabContainer>
-      </Tabs>
+      </Tabs> */}
 
       <HeartZonesDisplay
         zones={zones}
