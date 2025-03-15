@@ -43,7 +43,7 @@ const Activities = () => {
   }, [dispatch]);
 
   return (
-    <Basic.Div pad={1} margin="auto" maxWidth="1600px">
+    <Basic.Div $pad={1} $margin="auto" $maxWidth="1600px">
       <Shimmer
         isVisible={(
           activitiesApiStatus === loading
@@ -54,10 +54,10 @@ const Activities = () => {
       <div>
         <Button onClick={onClickSync}>Sync Strava</Button>
       </div>
-      <Basic.Div marginT={1}>
+      <Basic.Div $marginT={1}>
         <PRs />
       </Basic.Div>
-      <Basic.Div marginT={1}>
+      <Basic.Div $marginT={1}>
         <SpeedChart activities={activities} />
       </Basic.Div>
       <div>
@@ -77,17 +77,17 @@ const Activities = () => {
       </PreferenceControl>
 
       <Flex>
-        <Basic.Div flexGrow="1">
+        <Basic.Div $flexGrow="1">
           {
             activitiesApiStatus === success && (
               categorizeRunsByZones.map(({ runs, zones, start }) => (
-                <Flex direction="column" gap={1} key={start}>
+                <Flex $direction="column" $gap={1} key={start}>
                   {isGroupByZonesSet && (
-                    <Basic.Div marginT={3} marginB={1}>
+                    <Basic.Div $marginT={3} $marginB={1}>
                       <ZonesHeader zones={zones} start={start} />
                     </Basic.Div>
                   )}
-                  <Flex direction="column" gap={1}>
+                  <Flex $direction="column" $gap={1}>
                     {runs.map((activity) => (
                       <ActivityTile
                         key={activity.id}

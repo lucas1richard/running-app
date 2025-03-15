@@ -34,7 +34,7 @@ const ListSort: React.FC = () => {
 
   return (
     <div>
-      <Flex justify="space-between">
+      <Flex $justify="space-between">
         <label>
           <input
             type="checkbox"

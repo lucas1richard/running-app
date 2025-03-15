@@ -17,7 +17,7 @@ const BestEfforts: FC<Props> = ({ bestEfforts }) => {
 
   return (
     <div>
-      <Basic.Table colorBg="white">
+      <Basic.Table $colorBg="white">
         <thead>
           <tr>
             <th colSpan={3}>Best Efforts</th>

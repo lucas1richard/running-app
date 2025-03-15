@@ -30,20 +30,20 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
   const sameYearRuns = useMemo(() => findSameYear(activities), [activities]);
 
   return (
-    <Flex colorBg="white" pad={1} directionSmDown="column" gapSmDown={2}>
-      <Basic.Div flexGrow="1" textAlign="center">
-        <Basic.Div fontSize="h5">Miles in the last {NUMBER_OF_DAYS} days</Basic.Div>
-        <Basic.Div fontSize="h2">{sumDistance(recentRuns).toFixed(2)}</Basic.Div>
+    <Flex $colorBg="white" $pad={1} $directionSmDown="column" $gapSmDown={2}>
+      <Basic.Div $flexGrow="1" $textAlign="center">
+        <Basic.Div $fontSize="h5">Miles in the last {NUMBER_OF_DAYS} days</Basic.Div>
+        <Basic.Div $fontSize="h2">{sumDistance(recentRuns).toFixed(2)}</Basic.Div>
       </Basic.Div>
 
-      <Basic.Div flexGrow="1" textAlign="center">
-        <Basic.Div fontSize="h5">Miles this year</Basic.Div>
-        <Basic.Div fontSize="h2">{sumDistance(sameYearRuns).toFixed(2)}</Basic.Div>
+      <Basic.Div $flexGrow="1" $textAlign="center">
+        <Basic.Div $fontSize="h5">Miles this year</Basic.Div>
+        <Basic.Div $fontSize="h2">{sumDistance(sameYearRuns).toFixed(2)}</Basic.Div>
       </Basic.Div>
 
-      <Basic.Div flexGrow="1" textAlign="center">
-        <Basic.Div fontSize="h5">All time</Basic.Div>
-        <Basic.Div fontSize="h2">{sumDistance(activities).toFixed(2)}</Basic.Div>
+      <Basic.Div $flexGrow="1" $textAlign="center">
+        <Basic.Div $fontSize="h5">All time</Basic.Div>
+        <Basic.Div $fontSize="h2">{sumDistance(activities).toFixed(2)}</Basic.Div>
       </Basic.Div>
     </Flex>
   );

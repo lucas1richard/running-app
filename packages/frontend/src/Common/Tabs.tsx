@@ -10,16 +10,16 @@ export const Tab: React.FC<TabProps> = ({ children, onClick, isActive }) => (
   <Button
     role="button"
     tabIndex={0}
-    display="flex"
-    flexGrow="1"
-    flexShrink="1"
-    pad={1}
-    border="none"
-    colorBg={isActive ? 'silver' : 'white'}
-    flexJustify="center"
-    alignItems="center"
+    $display="flex"
+    $flexGrow="1"
+    $flexShrink="1"
+    $pad={1}
+    $border="none"
+    $colorBg={isActive ? 'silver' : 'white'}
+    $flexJustify="center"
+    $alignItems="center"
     onClick={onClick}
-    fontSize="h6"
+    $fontSize="h6"
   >
     {children}
   </Button>
@@ -58,7 +58,7 @@ type TabHeaderProps = {
   activeTab?: number;
 };
 export const TabHeader: React.FC<TabHeaderProps> = ({ children, onTabClick, activeTab }) => (
-  <Basic.Div direction="column" display="flex" borderB="1px solid #dedede">
+  <Basic.Div $direction="column" $display="flex" $borderB="1px solid #dedede">
     {React.Children.toArray(children).map((child: React.ReactElement, ix) => {
       return (
         React.cloneElement(child, { onClick: () => onTabClick(ix), isActive: activeTab === ix })

@@ -15,7 +15,7 @@ const CardWrapper = styled.div<StandardBase<HTMLDivElement>>`
 `;
 
 const Card: React.FC<StandardBase<HTMLDivElement>> = ({ children, ...rest }) => (
-  <CardWrapper pad={1} borderRadius={0.5} {...rest}>
+  <CardWrapper $pad={1} $borderRadius={0.5} {...rest}>
     {children}
   </CardWrapper>
 )

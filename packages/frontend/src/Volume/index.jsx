@@ -43,7 +43,7 @@ const Volume = () => {
         groupedData={groupedData}
         greatestTotal={greatestTotal}
       />
-      <Flex directionSmDown="column" marginTop={1} gap={1} justify="center">
+      <Flex $directionSmDown="column" $marginTop={1} $gap={1} $justify="center">
         <VolumeTable timeGroup="week" />
         {viewSize.gte('md') && (
           <VolumeTable timeGroup="month" />

@@ -75,7 +75,7 @@ const ActivityDetailPage = () => {
 
   if (isLoading) {
     return (
-      <B.Div pad={1}>
+      <B.Div $pad={1}>
         <Shimmer />
       </B.Div>
     );
@@ -83,7 +83,7 @@ const ActivityDetailPage = () => {
 
   if (!activity) {
     return (
-      <B.Div pad={1}>
+      <B.Div $pad={1}>
         <h1>Activity Not Found</h1>
       </B.Div>
     );
@@ -100,9 +100,9 @@ const ActivityDetailPage = () => {
   } = activity;
 
   return (
-    <Grid pad={1} gap={1}>
+    <Grid $pad={1} $gap={1}>
       <DetailDataFetcher id={id} />
-      <Grid templateColumns='1fr' gap={1} templateColumnsLgUp='1fr 1fr'>
+      <Grid $templateColumns='1fr' $gap={1} $templateColumnsLgUp='1fr 1fr'>
         <GoogleMapImage
           activityId={id}
           polyline={details?.map?.polyline}
@@ -113,46 +113,46 @@ const ActivityDetailPage = () => {
           alt="route"
         />
         <Card>
-          <div className={`pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
+          <div className={`$pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
             <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
             <UpdatableNameDescription
               activity={activity}
               details={details}
             />
-            <B.Div fontSize="h2" textAlign="center" marginT={2}>
+            <B.Div $fontSize="h2" $textAlign="center" $marginT={2}>
               {start_date_local ? dayjs(start_date_local).format('MMMM DD, YYYY') : ''}
             </B.Div>
-            <B.Div fontSize="h4" textAlign="center">
+            <B.Div $fontSize="h4" $textAlign="center">
               {start_date_local ? dayjs.utc(start_date_local).format('h:mm A') : ''}
             </B.Div>
-            <B.Div textAlign="center" marginT={1} marginB={1}>
+            <B.Div $textAlign="center" $marginT={1} $marginB={1}>
               <h3>
                 <strong>{distance_miles}</strong> miles in <strong><DurationDisplay numSeconds={elapsed_time} /></strong>
               </h3>
-              <Flex directionSmDown="column" gap={1} justifyMdUp="space-between">
-                <B.Div marginT={1}>
-                  <B.Div fontSize="h2">
+              <Flex $directionSmDown="column" $gap={1} $justifyMdUp="space-between">
+                <B.Div $marginT={1}>
+                  <B.Div $fontSize="h2">
                     <DurationDisplay numSeconds={average_seconds_per_mile} /><small>/mi</small>
                   </B.Div>
-                  <B.Div fontSize="h4">
+                  <B.Div $fontSize="h4">
                     {convertMetricSpeedToMPH(average_speed).toFixed(2)} mph
                   </B.Div>
                 </B.Div>
-                <B.Div marginT={1}>
-                  <B.Div fontSize="h2">
+                <B.Div $marginT={1}>
+                  <B.Div $fontSize="h2">
                     {Math.round(average_heartrate)} bpm
                   </B.Div>
-                  <B.Div fontSize="h4">
+                  <B.Div $fontSize="h4">
                     Max {max_heartrate} bpm
                   </B.Div>
                 </B.Div>
               </Flex>
             </B.Div>
-            <B.Div textAlign="center" className="dls-blue">
-              <B.Div fontSize="h5">
+            <B.Div $textAlign="center" className="dls-blue">
+              <B.Div $fontSize="h5">
                 Efficiency Factor
               </B.Div>
-              <B.Div fontSize="h2">
+              <B.Div $fontSize="h2">
                 {calcEfficiencyFactor(average_speed, average_heartrate).toFixed(2)}
               </B.Div>
               <div>
@@ -176,7 +176,7 @@ const ActivityDetailPage = () => {
           <TabPanel>
 
             <Grid
-              gap={1}
+              $gap={1}
               templateColumns="repeat(auto-fill, minmax(500px, 1fr))"
               templateColumnsMd="1fr 1fr"
               templateColumnsSmDown="1fr"
@@ -209,7 +209,7 @@ const ActivityDetailPage = () => {
 
       <HeartZonesChartContainer id={id} />
 
-      <Flex direction="column" alignItems="center">
+      <Flex $direction="column" $alignItems="center">
         {!showMap && <Button onClick={() => setShowMap(true)}>Show Map</Button>}
         {showMap && (
           <div style={{ height: 600, width: 600 }}>
@@ -223,7 +223,7 @@ const ActivityDetailPage = () => {
         keyPath={activityShouldShowLaps(idString)}
         saveConfig={saveConfig}
       >
-        <Grid templateColumns='1fr' gap={1} templateColumnsLgUp='auto 1fr'>
+        <Grid $templateColumns='1fr' $gap={1} $templateColumnsLgUp='auto 1fr'>
           <Laps id={id} />
           <BestEfforts bestEfforts={activity.calculatedBestEfforts} />
         </Grid>

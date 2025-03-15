@@ -21,11 +21,11 @@ type CellProps = {
   avg: { avg: number; max: number }[];
 };
 
-const CellWrapper = styled.div<{ ix: number, isMaxPercentage?: boolean }>`
+const CellWrapper = styled.div<{ ix: number, $isMaxPercentage?: boolean }>`
   padding: ${(props) => props.theme.getStandardUnit(1)};
   background: ${(props) => hrZonesBg[props.ix + 1]};
   border: 1px solid ${(props) => hrZonesBg[props.ix + 1]};
-  ${(props) => props.isMaxPercentage
+  ${(props) => props.$isMaxPercentage
     ?`box-shadow: inset 0 0 ${(props) => props.theme.getStandardUnit(1)}; ${hrZonesText[props.ix + 1]};`
     : ''
   }
@@ -48,13 +48,13 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
     <CellWrapper
       ix={ix}
       className="flex-item-grow"
-      isMaxPercentage={isMaxPercentage}
+      $isMaxPercentage={isMaxPercentage}
     >
-      <DataWrapper textAlign="center" marginB={1}>
+      <DataWrapper $textAlign="center" $marginB={1}>
         <b>{title}</b>
         <span>({range})</span>
       </DataWrapper>
-      <DataWrapper flexJustify="space-between">
+      <DataWrapper $flexJustify="space-between">
         <b>
           Time in Zone:
         </b>
@@ -64,7 +64,7 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
       </DataWrapper>
       {avg[ix] && (
         <>
-          <DataWrapper flexJustify="space-between">
+          <DataWrapper $flexJustify="space-between">
             <b>
               Avg Pace in Zone:
             </b>
@@ -72,7 +72,7 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
               <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
             </div>
           </DataWrapper>
-          <DataWrapper flexJustify="space-between">
+          <DataWrapper $flexJustify="space-between">
             <b>
               Fastest Pace in Zone:
             </b>
@@ -102,14 +102,14 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
   const isUsingNonNativeZones = nativeZones.id !== zones.id;
 
   return (
-    <Basic.Div colorBg="white">
+    <Basic.Div $colorBg="white">
       {isUsingNonNativeZones && (
         <div>
           <small>Note: Using Non-native Heart Rate Zones</small>
         </div>
       )}
-      <Basic.Div border="1px solid #dedede">
-        <Flex direction="column" directionMdUp="row">
+      <Basic.Div $border="1px solid #dedede">
+        <Flex $direction="column" $directionMdUp="row">
           <Cell
             ix={0}
             title="Zone 1"

@@ -33,7 +33,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
       />
 
       {showHideFunction && (
-        <Basic.Div textAlign="right">
+        <Basic.Div $textAlign="right">
           {isLoading
             ? <Spinner />
             : (

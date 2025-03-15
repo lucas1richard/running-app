@@ -493,10 +493,10 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
 
   return (
     <Grid
-      templateColumns="1fr"
-      templateColumnsXl="3fr 1fr"
+      $templateColumns="1fr"
+      $templateColumnsXl="3fr 1fr"
     >
-      <Basic.Div flexGrow="1">
+      <Basic.Div $flexGrow="1">
         <div>
           <label>
             Smooth Average Window (seconds):{' '}
@@ -517,7 +517,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             ref={chartRef}
           />
         </div>
-        <Flex width="100%">
+        <Flex $width="100%">
           {hrzones.map(({ zone, from, to }) => (
             <div
               key={`${zone}-${from}-${to}`}
@@ -530,9 +530,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             </div>
           ))}
         </Flex>
-        <Flex alignItems='center' marginT={1}>
+        <Flex $alignItems='center' $marginT={1}>
           <label htmlFor="magnificationFactor-range">Magnification: </label>
-          <Basic.Div flexGrow="1" marginL={1}>
+          <Basic.Div $flexGrow="1" $marginL={1}>
             {enableYAxisLabels && (
               <>
                 <Basic.Input
@@ -542,11 +542,11 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
                   max={initialMagnificationFactor * 10}
                   value={magnificationFactor}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setMagnificationFactor(parseInt(e.target.value, 10))}
-                  flexGrow="1"
+                  $flexGrow="1"
                   draggable={false}
                   about='Magnification factor for the chart'
                 />
-                <Flex justify="space-between">
+                <Flex $justify="space-between">
                   {[1,2,3,4,5,6,7,8,9,10].map((val) => (
                     <Button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
                       {val}x
@@ -584,7 +584,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           ))}
         </div>
       </Basic.Div>
-      <Basic.Div flexGrow="1">
+      <Basic.Div $flexGrow="1">
         <RouteMap
           id={id}
           pointer={latlngPointer}

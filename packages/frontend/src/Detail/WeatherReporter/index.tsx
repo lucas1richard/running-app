@@ -67,16 +67,16 @@ const WeatherReporter: FC<Props> = ({ id }) => {
   }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
 
   return (
-    <Basic.Div pad={1} marginT={1} border="1px solid #ddd">
+    <Basic.Div $pad={1} $marginT={1} $border="1px solid #ddd">
       <Shimmer
         isVisible={weatherDataStatus === 'loading'}
       />
       <div>
         <form onSubmit={handleSubmit}>
-          <Flex wrap="wrap" gap={1}>
-            <Flex gap={1} alignItems="center">
+          <Flex $wrap="wrap" $gap={1}>
+            <Flex $gap={1} $alignItems="center">
               <Basic.Select
-                flexGrow="1"
+                $flexGrow="1"
                 id="sky"
                 name="sky"
                 value={sky}
@@ -90,7 +90,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
               </Basic.Select>
             </Flex>
 
-            <Flex gap={1} alignItems="center">
+            <Flex $gap={1} $alignItems="center">
               <select
                 id="rain"
                 name="rain"
@@ -107,43 +107,43 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             </Flex>
           </Flex>
 
-          <Flex gap={1} wrap="wrap">
-            <Flex gap={1} alignItems="center">
+          <Flex $gap={1} $wrap="wrap">
+            <Flex $gap={1} $alignItems="center">
               <Basic.Input
                 type="number"
                 id="temperature" 
                 name="temperature" 
                 value={temperature} 
                 onChange={handleTemperatureChange}
-                textAlign="right"
-                padR="30px"
+                $textAlign="right"
+                $padR="30px"
                 min={-100}
                 max={150}
                 placeholder="Temp"
               />
-              <Basic.Span marginL="-40px">&deg;F</Basic.Span>
+              <Basic.Span $marginL="-40px">&deg;F</Basic.Span>
             </Flex>
 
-            <Flex gap={1} alignItems="center">
+            <Flex $gap={1} $alignItems="center">
               <Basic.Input 
                 type="number" 
                 id="humidity" 
                 name="humidity" 
                 value={humidity} 
                 onChange={handleHumidityChange}
-                padR="30px"
+                $padR="30px"
                 min={0}
                 max={100}
-                textAlign="right"
+                $textAlign="right"
                 placeholder="Humidity"
               />
-              <Basic.Span marginL="-40px">%</Basic.Span>
+              <Basic.Span $marginL="-40px">%</Basic.Span>
             </Flex>
           </Flex>
 
-          <Flex gap={1} alignItems="center">
+          <Flex $gap={1} $alignItems="center">
             <Basic.Select
-              width="100%"
+              $width="100%"
               id="wind"
               name="wind"
               value={wind}
@@ -157,7 +157,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             </Basic.Select>
           </Flex>
 
-          <Button type="submit" width="100%">Submit</Button>
+          <Button type="submit" $width="100%">Submit</Button>
         </form>
       </div>
     </Basic.Div>

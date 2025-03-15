@@ -23,31 +23,31 @@ const ZonesHeader: React.FC<ZonesHeaderProps> = ({ zones, start, isCompact }) =>
           {establishedText}
         </h2>
       )}
-      <Flex direction="column">
-        <Flex directionXs="column" borderRadius={1} overflow="hidden">
+      <Flex $direction="column">
+        <Flex $directionXs="column" $borderRadius={1} $overflow="hidden">
           {(start && isCompact) && (
-            <Basic.Div textAlign="center" flexGrow="1" colorBg="white" pad={padLevel}>
+            <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="white" $pad={padLevel}>
               <b>{establishedText}</b>
             </Basic.Div>
           )}
 
-          <Basic.Div textAlign="center" flexGrow="1" colorBg="hrZone1" pad={padLevel}>
+          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone1" $pad={padLevel}>
             <b>Zone 1</b> ({zones.z1} - {zones.z2 - 1})
           </Basic.Div>
 
-          <Basic.Div textAlign="center" flexGrow="1" colorBg="hrZone2" pad={padLevel}>
+          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone2" $pad={padLevel}>
             <b>Zone 2</b> ({zones.z2} - {zones.z3 - 1})
           </Basic.Div>
 
-          <Basic.Div textAlign="center" flexGrow="1" colorBg="hrZone3" pad={padLevel}>
+          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone3" $pad={padLevel}>
             <b>Zone 3</b> ({zones.z3} - {zones.z4 - 1})
           </Basic.Div>
 
-          <Basic.Div textAlign="center" flexGrow="1" colorBg="hrZone4" pad={padLevel}>
+          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone4" $pad={padLevel}>
             <b>Zone 4</b> ({zones.z4} - {zones.z5 - 1})
           </Basic.Div>
 
-          <Basic.Div textAlign="center" flexGrow="1" colorBg="hrZone5" pad={padLevel}>
+          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone5" $pad={padLevel}>
             <b>Zone 5</b> (&gte;{zones.z5})
           </Basic.Div>
         </Flex>

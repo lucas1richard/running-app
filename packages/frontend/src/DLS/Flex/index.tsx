@@ -4,11 +4,11 @@ import type { CSS } from 'styled-components/dist/types';
 import standardProps, { StandardProps } from '../utils/standardProps';
 
 interface FlexProps extends StandardProps
-  , SizeProp<'direction', CSS.Property.FlexDirection>
-  , SizeProp<'alignItems', CSS.Property.AlignItems>
-  , SizeProp<'justify', CSS.Property.JustifyContent>
-  , SizeProp<'wrap', CSS.Property.FlexWrap>
-  , SizeProp<'gap', number | CSS.Property.Gap>
+  , SizeProp<'$direction', CSS.Property.FlexDirection>
+  , SizeProp<'$alignItems', CSS.Property.AlignItems>
+  , SizeProp<'$justify', CSS.Property.JustifyContent>
+  , SizeProp<'$wrap', CSS.Property.FlexWrap>
+  , SizeProp<'$gap', number | CSS.Property.Gap>
   {}
 
 const Flex = styled.div<FlexProps>`
@@ -16,11 +16,11 @@ const Flex = styled.div<FlexProps>`
   ${standardProps}
   ${makeSizeProps(
     [
-      ['direction', 'flex-direction'],
-      ['alignItems', 'align-items'],
-      ['justify', 'justify-content'],
-      ['wrap', 'flex-wrap'],
-      ['gap', 'gap'],
+      ['$direction', 'flex-direction'],
+      ['$alignItems', 'align-items'],
+      ['$justify', 'justify-content'],
+      ['$wrap', 'flex-wrap'],
+      ['$gap', 'gap'],
     ]
   )}
 `;

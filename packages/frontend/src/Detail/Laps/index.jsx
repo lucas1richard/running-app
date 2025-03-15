@@ -54,10 +54,10 @@ const Laps = ({ id }) => {
 
   return (
     <TableWrapper>
-      <Basic.Table colorBg="white">
+      <Basic.Table $colorBg="white">
         <thead>
           <tr>
-            <Basic.Th colSpan="7" textAlign="center">Laps</Basic.Th>
+            <Basic.Th colSpan="7" $textAlign="center">Laps</Basic.Th>
           </tr>
           <tr>
             <th>Name</th>
@@ -72,7 +72,7 @@ const Laps = ({ id }) => {
         <tbody>
           {processLaps(laps).map((lap) => {
             return (
-              <Basic.Tr key={lap.name} textAlign="right">
+              <Basic.Tr key={lap.name} $textAlign="right">
                 <td>{lap.name}</td>
                 <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
                 <td>{lap.dist} <small>{lap.distUnit}</small></td>
@@ -81,8 +81,8 @@ const Laps = ({ id }) => {
                     numSeconds={Math.floor((1 / convertMetersToMiles(lap.distance)) * lap.elapsed_time)} units={['', ':']}
                   />
                 </td>
-                <Basic.Td textAlign="center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></Basic.Td>
-                <Basic.Td textAlign="center">{lap.max_heartrate} <abbr>bpm</abbr></Basic.Td>
+                <Basic.Td $textAlign="center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></Basic.Td>
+                <Basic.Td $textAlign="center">{lap.max_heartrate} <abbr>bpm</abbr></Basic.Td>
                 <td>{lap.totalElevationGainFt} <small>ft</small></td>
               </Basic.Tr>
             )}

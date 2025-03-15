@@ -4,7 +4,7 @@ export const styledComponentsTheme = {
   breakpoints: createBreakpoints(),
   standardUnit: [1, 'rem'] as const,
   getStandardUnit: (value: number) => `${value * styledComponentsTheme.standardUnit[0]}${styledComponentsTheme.standardUnit[1]}`,
-  fontSize: {
+  $fontSize: {
     body: '1rem',
     h1: '2rem',
     h2: '1.8rem',
@@ -16,7 +16,7 @@ export const styledComponentsTheme = {
     xs: '0.6rem',
     xxs: '0.4rem',
   },
-  fontFamily: {
+  $fontFamily: {
     body: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif`,
@@ -25,11 +25,11 @@ export const styledComponentsTheme = {
     sans-serif`,
     monospace: 'monospace',
   },
-  lineHeight: {
+  $lineHeight: {
     body: 1.5,
     heading: 1.25,
   },
-  colorBg: {
+  $colorBg: {
     hrZone1: 'rgba(0, 132, 255, 0.2)',
     hrZone2: 'rgba(0,255,0,0.2)',
     hrZone3: 'rgba(255, 251, 0, 0.1)',
@@ -45,7 +45,7 @@ export const styledComponentsTheme = {
     bronze: 'rgb(205, 127, 50)',
     white: 'rgb(255, 255, 255)',
   },
-  color: {
+  $color: {
     hrZone1: 'rgba(0, 132, 255, 1)',
     hrZone2: 'rgba(0,255,0,1)',
     hrZone3: 'rgba(255, 251, 0, 1)',

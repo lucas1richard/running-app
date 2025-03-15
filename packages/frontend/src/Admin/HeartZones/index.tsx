@@ -11,9 +11,9 @@ const HeartZones: React.FC = () => {
   return (
     <>
       <Card>
-        <Basic.Div fontSize="h2" marginB={1}>Heart Zones</Basic.Div>
+        <Basic.Div $fontSize="h2" $marginB={1}>Heart Zones</Basic.Div>
         <table className={styles.heartTable}>
-          <Basic.Thead textAlign="center">
+          <Basic.Thead $textAlign="center">
             <tr>
               <th>Zone 1</th>
               <th>Zone 2</th>
@@ -25,19 +25,19 @@ const HeartZones: React.FC = () => {
           </Basic.Thead>
           <tbody>
             {allzones.map((zone) => (
-              <Basic.Tr textAlign="center" key={zone.id}>
+              <Basic.Tr $textAlign="center" key={zone.id}>
                 <td>{zone.z1}</td>
                 <td>{zone.z2}</td>
                 <td>{zone.z3}</td>
                 <td>{zone.z4}</td>
                 <td>{zone.z5}</td>
-                <Basic.Td textAlign="right">{getDateString(zone.start_date)}</Basic.Td>
+                <Basic.Td $textAlign="right">{getDateString(zone.start_date)}</Basic.Td>
               </Basic.Tr>
             ))}
           </tbody>
         </table>
       </Card>
-      <Basic.Div marginT={1}>
+      <Basic.Div $marginT={1}>
         <AddNewHRZones latestZone={allzones[0]} />
       </Basic.Div>
     </>

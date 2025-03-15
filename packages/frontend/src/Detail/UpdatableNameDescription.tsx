@@ -43,19 +43,19 @@ const UpdatableNameDescription: React.FC<UpdatableNameDescriptionProps> = ({
     <div>
       <Basic.Input
         type="string"
-        fontSize="h4"
-        width="100%"
-        textAlign="center"
-        color="darkGold"
+        $fontSize="h4"
+        $width="100%"
+        $textAlign="center"
+        $color="darkGold"
         className={`${styles.quietInput}`}
         value={name}
         onChange={changeName}
       />
 
       <Basic.Textarea
-        fontSize="h5"
-        width="100%"
-        textAlign="center"
+        $fontSize="h5"
+        $width="100%"
+        $textAlign="center"
         className={`${styles.quietInput}`}
         value={description}
         placeholder="Activity Description"
@@ -64,8 +64,8 @@ const UpdatableNameDescription: React.FC<UpdatableNameDescriptionProps> = ({
 
       <Button
         onClick={updateActivity}
-        width="100%"
-        display={showButton ? 'initial' : 'none'}
+        $width="100%"
+        $display={showButton ? 'initial' : 'none'}
       >
         Update
       </Button>

@@ -20,8 +20,8 @@ const AddNewHRZones = ({ latestZone }) => {
   return (
     <Card>
       <form onSubmit={onFormSubmit}>
-        <Flex gap={1} directionSmDown="column">
-          <Flex alignItems="center">
+        <Flex $gap={1} $directionSmDown="column">
+          <Flex $alignItems="center">
             <label htmlFor="z1-input">Zone 1 Min HR:</label>&nbsp;
             <input
               id="z1-input"
@@ -33,7 +33,7 @@ const AddNewHRZones = ({ latestZone }) => {
               onChange={(ev) => setZ1(ev.target.value)}
             />
           </Flex>
-          <Flex alignItems="center">
+          <Flex $alignItems="center">
             <label htmlFor="z2-input">Zone 2 Min HR:</label>&nbsp;
             <input
               id="z2-input"
@@ -45,7 +45,7 @@ const AddNewHRZones = ({ latestZone }) => {
               onChange={(ev) => setZ2(ev.target.value)}
             />
           </Flex>
-          <Flex alignItems="center">
+          <Flex $alignItems="center">
             <label htmlFor="z3-input">Zone 3 Min HR:</label>&nbsp;
             <input
               id="z3-input"
@@ -57,7 +57,7 @@ const AddNewHRZones = ({ latestZone }) => {
               onChange={(ev) => setZ3(ev.target.value)}
             />
           </Flex>
-          <Flex alignItems="center">
+          <Flex $alignItems="center">
             <label htmlFor="z4-input">Zone 4 Min HR:</label>&nbsp;
             <input
               id="z4-input"
@@ -69,7 +69,7 @@ const AddNewHRZones = ({ latestZone }) => {
               onChange={(ev) => setZ4(ev.target.value)}
             />
           </Flex>
-          <Flex alignItems="center">
+          <Flex $alignItems="center">
             <label htmlFor="z5-input">Zone 5 Min HR:</label>&nbsp;
             <input
               id="z5-input"
@@ -82,7 +82,7 @@ const AddNewHRZones = ({ latestZone }) => {
             />
           </Flex>
         </Flex>
-        <Flex alignItems="center">
+        <Flex $alignItems="center">
           <label htmlFor="start-date-input">Start Date:</label>&nbsp;
           <input
             id="start-date-input"

@@ -20,10 +20,10 @@ const SimilarWorkouts = ({ activity, zones }) => {
     <div>
       {similarDist.length === 0 && <p>None found</p>}
       <Grid
-        gap={1}
-        templateColumns="1fr 1fr 1fr"
-        templateColumnsMd="1fr 1fr"
-        templateColumnsSmDown="1fr"
+        $gap={1}
+        $templateColumns="1fr 1fr 1fr"
+        $templateColumnsMd="1fr 1fr"
+        $templateColumnsSmDown="1fr"
       >
         {similarDist.filter(Boolean).sort((a, b) => {
           const metaA = similarMeta[a.id];
@@ -37,15 +37,15 @@ const SimilarWorkouts = ({ activity, zones }) => {
           const isToggled = compared.some(({ id }) => id === activity.id );
           return (
             <Tile
-              key={activity.relatedActivity}
+              key={activity.id}
               isCompact={true}
               activity={activity}
               zones={zones}
             >
-              <Basic.Div fontSize="sm">
+              <Basic.Div $fontSize="sm">
                 Route Score from Base: {meta.routeScoreFromBase}
               </Basic.Div>
-              <Basic.Div fontSize="sm">
+              <Basic.Div $fontSize="sm">
                 Route score from Related: {meta.routeScoreFromRelated}
               </Basic.Div>
               <div>

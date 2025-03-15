@@ -36,12 +36,12 @@ const PreferenceControl: React.FC<PreferenceControlProps> = ({
 
   return (
     <div>
-      <Flex justify="space-between">
+      <Flex $justify="space-between">
         <Basic.Div
-          fontSize="h3"
-          flexGrow="1"
-          pad={1}
-          borderB="1px solid #dedede"
+          $fontSize="h3"
+          $flexGrow="1"
+          $pad={1}
+          $borderB="1px solid #dedede"
           role="button"
           tabIndex={0}
           onClick={onClick}
@@ -59,7 +59,7 @@ const PreferenceControl: React.FC<PreferenceControlProps> = ({
           </Button>
         )}
       </Flex>
-      <Basic.Div display={propSelector({ none: !preference })}>
+      <Basic.Div $display={propSelector({ none: !preference })}>
         {children}
       </Basic.Div>
     </div>
