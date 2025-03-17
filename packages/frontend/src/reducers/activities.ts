@@ -180,11 +180,10 @@ export const selectActivities = createDeepEqualSelector(
   }
 );
 
-export const selectListActivities = createDeepEqualSelector(
-  [getActivitiesState,
-    selectListPrerences],
-  (activities, { sortBy, sortOrder }) => {
-    const order = [...activities.activitiesOrder];
+const getListActivities = (state: RootState, fromIx: number, toIx: number) => {
+  const activities = getActivitiesState(state);
+  const { sortBy, sortOrder } = selectListPrerences(state);
+  const order = [...activities.activitiesOrder].slice(fromIx, toIx);
 
     order.sort((a, b) => {
       const first = sortOrder === 'asc' ? a : b;
@@ -200,8 +199,8 @@ export const selectListActivities = createDeepEqualSelector(
     });
 
     return order.map((id) => activities.activities[id]);
-  }
-);
+};
+export const selectListActivities = createDeepEqualSelector(getListActivities, (res) => res);
 
 const getActivity = (state: RootState, id: number) => getActivitiesState(state).activities[id];
 export const selectActivity = createDeepEqualSelector(getActivity, (res) => res)
@@ -250,33 +249,32 @@ const getSimilarWorkoutsMeta = (state: RootState, id: number) => {
   const activitiesState = getActivitiesState(state);
   return activitiesState.similarWorkoutsMeta[id] || emptyArray;
 };
-export const selectSimilarWorkoutsMeta = createDeepEqualSelector(getSimilarWorkoutsMeta, (res) => res);;
+export const selectSimilarWorkoutsMeta = createDeepEqualSelector(getSimilarWorkoutsMeta, (res) => res);
 
-export const selectZoneGroupedRuns = createDeepEqualSelector(
-  selectListActivities,
-  selectListPrerences,
-  selectAllHeartZones,
-  (activities, { isGroupByZonesSet }, allzones) => {
-    if (!isGroupByZonesSet) {
-      return [{ runs: activities, zones: {}, start: '' }];
-    }
-    const dict = new Map();
-    activities.forEach((run) => {
-      const currDate = new Date(run.start_date_local);
-      const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || emptyObject;
-      const { start_date } = zones;
-      if (!dict.has(start_date)) {
-        dict.set(start_date, { start: start_date, runs: [], zones });
-      }
-      dict.get(start_date).runs.push(run);
-    });
-
-    const vals = Array.from(dict.values());
-    vals.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
-
-    return vals;
+const getZoneGroupedRuns = (state: RootState, fromIx = undefined, toIx = undefined) => {
+  const activities = selectListActivities(state, fromIx, toIx);
+  const { isGroupByZonesSet } = selectListPrerences(state);
+  const allzones = selectAllHeartZones(state);
+  if (!isGroupByZonesSet) {
+    return [{ runs: activities, zones: {}, start: '' }];
   }
-);
+  const dict = new Map();
+  activities.forEach((run) => {
+    const currDate = new Date(run.start_date_local);
+    const zones = allzones.find(({ start_date }) => new Date(start_date) < currDate) || emptyObject;
+    const { start_date } = zones;
+    if (!dict.has(start_date)) {
+      dict.set(start_date, { start: start_date, runs: [], zones });
+    }
+    dict.get(start_date).runs.push(run);
+  });
+
+  const vals = Array.from(dict.values());
+  vals.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
+
+  return vals;
+}
+export const selectZoneGroupedRuns = createDeepEqualSelector(getZoneGroupedRuns, (res) => res);
 
 const getTimeGroupedRuns = (state: RootState, timeGroup: ManipulateType = 'week') => {
   const activities = selectActivities(state);

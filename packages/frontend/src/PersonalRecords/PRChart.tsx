@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { prColors } from '../Common/colors';
 import classNames from 'classnames';
 import { getDurationString } from '../utils';
@@ -13,13 +13,13 @@ const prColorsArr = [
   { value: 1, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
   { value: 2, color: 'rgba(192, 192, 192, 0.9)', borderColor: prColors.silver.stroke },
   { value: 3, color: 'rgba(205, 127, 50, 0.9)', borderColor: prColors.bronze.stroke },
-  { value: 4, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.7)' },
-  { value: 5, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.6)' },
-  { value: 6, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.5)' },
-  { value: 7, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.4)' },
-  { value: 8, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.3)' },
-  { value: 9, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.2)' },
-  { value: 10, color: 'rgba(0,0,0,0)', borderColor: 'rgba(0, 0, 250, 0.1)' },
+  { value: 4, color: 'rgba(0, 0, 0, 0.7)', borderColor: 'rgba(0, 0, 250, 0.7)' },
+  { value: 5, color: 'rgba(0,0,0,0.6)', borderColor: 'rgba(0, 0, 250, 0.6)' },
+  { value: 6, color: 'rgba(0,0,0,0.5)', borderColor: 'rgba(0, 0, 250, 0.5)' },
+  { value: 7, color: 'rgba(0,0,0,0.4)', borderColor: 'rgba(0, 0, 250, 0.4)' },
+  { value: 8, color: 'rgba(0,0,0,0.3)', borderColor: 'rgba(0, 0, 250, 0.3)' },
+  { value: 9, color: 'rgba(0,0,0,0.2)', borderColor: 'rgba(0, 0, 250, 0.2)' },
+  { value: 10, color: 'rgba(0,0,0,0.1)', borderColor: 'rgba(0, 0, 250, 0.1)' },
   { color: 'white', borderColor: 'black' },
 ]
 
@@ -180,4 +180,4 @@ const PRChart = ({ records: recordsProp, title }) => {
   );
 };
 
-export default PRChart;
+export default memo(PRChart);

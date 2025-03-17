@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
@@ -212,4 +212,4 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: actProp }) => {
   );
 };
 
-export default SpeedChart;
+export default memo(SpeedChart);

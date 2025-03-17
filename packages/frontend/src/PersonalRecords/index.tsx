@@ -4,14 +4,21 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
 import PRDateCard from './PRDateCard';
-import PRChart from './PRChart';
 import { useAppSelector } from '../hooks/redux';
 import { Basic, Card, Flex } from '../DLS';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import useShowAfterMount from '../hooks/useShowAfterMount';
+
+const PRChart = lazy(() => import('./PRChart'))
+const ChartLoading = () => (
+  <Basic.Div $height="300px" />
+);
 
 const PRs = () => {
+  const showChart = useShowAfterMount();
   const allTimePrs = useAppSelector(getPRs);
   const prsByDate = useAppSelector(getPRsByDate);
-  const names = Object.keys(prsByDate);
+  const names = useMemo(() => Object.keys(prsByDate), [prsByDate]);
 
   return (
     <Basic.Div $marginMdUp={2} $marginSm={1}>
@@ -49,7 +56,12 @@ const PRs = () => {
                   <PRDateCard pr={pr} key={pr.start_date_local} />
                 ))}
               </Flex>
-              <PRChart records={prsByDate[name]} title={name} />
+              <Suspense fallback={<ChartLoading />}>
+                {showChart
+                  ? <PRChart records={prsByDate[name]} title={name} />
+                  : <ChartLoading />
+                }
+              </Suspense>
             </Basic.Div>
           ))
           }

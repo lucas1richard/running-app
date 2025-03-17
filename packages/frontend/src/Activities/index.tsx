@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActivities, selectZoneGroupedRuns } from '../reducers/activities';
@@ -17,11 +17,15 @@ import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
 import PRs from './PRs';
 import { Basic, Button, Flex } from '../DLS';
+import useShowAfterMount from '../hooks/useShowAfterMount';
+import { useAppSelector } from '../hooks/redux';
 
 const hideFunctionKeypath = listDisplayHideFunction();
 const listDisplayControlsKeypath = listDisplayConfigControls();
 
 const Activities = () => {
+  const showChart = useShowAfterMount();
+  const [showAllActivities, setShowAllActivities] = useState(false);
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities, fastDeepEqual);
   const listPreferences = useSelector(selectListPrerences);
@@ -36,7 +40,7 @@ const Activities = () => {
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
 
-  const categorizeRunsByZones = useSelector(selectZoneGroupedRuns);
+  const categorizeRunsByZones = useAppSelector((state) => selectZoneGroupedRuns(state, 0, showAllActivities ? undefined: 10));
 
   const onClickSync = useCallback(() => {
     dispatch(triggerFetchActivities(true));
@@ -58,7 +62,10 @@ const Activities = () => {
         <PRs />
       </Basic.Div>
       <Basic.Div $marginT={1}>
-        <SpeedChart activities={activities} />
+        {showChart
+          ? <SpeedChart activities={activities} />
+          : <Basic.Div $height="600px" />
+        }
       </Basic.Div>
       <div>
         <CurrentSummary activities={activities} />
@@ -104,6 +111,7 @@ const Activities = () => {
           }
         </Basic.Div>
       </Flex>
+      <Button $width="100%" onClick={() => setShowAllActivities(true)}>Show All</Button>
     </Basic.Div>
   );
 };
