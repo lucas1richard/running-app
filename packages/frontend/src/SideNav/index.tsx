@@ -23,7 +23,6 @@ const SideBar = styled(Card)`
     text-decoration: none;
     font-size: 15px;
     display: block;
-    transition: 0.3s;
   }
 
   /* Active/current link */

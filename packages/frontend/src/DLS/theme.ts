@@ -44,6 +44,10 @@ export const styledComponentsTheme = {
     silver: 'rgb(192, 192, 192)',
     bronze: 'rgb(205, 127, 50)',
     white: 'rgb(255, 255, 255)',
+    blue0: 'rgb(0, 132, 255)',
+    blue1: 'rgb(50, 182, 255)',
+    blue2: 'rgb(100, 232, 255)',
+    blue3: 'rgb(150, 255, 255)',
   },
   $color: {
     hrZone1: 'rgba(0, 132, 255, 1)',

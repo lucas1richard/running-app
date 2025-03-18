@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import deepmerge from 'deepmerge';
-import dayjs, { type ManipulateType } from 'dayjs';
+import dayjs, { type Dayjs, type ManipulateType } from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 
 import { createDeepEqualSelector } from '../utils';
@@ -279,7 +279,7 @@ export const selectZoneGroupedRuns = createDeepEqualSelector(getZoneGroupedRuns,
 const getTimeGroupedRuns = (state: RootState, timeGroup: ManipulateType = 'week') => {
   const activities = selectActivities(state);
   const nextSunday = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
-  const boxes = [];
+  const boxes: { start: Dayjs, sum: number, runs: Activity[] }[] = [];
   let curr = nextSunday;
   let next = curr.subtract(1, timeGroup);
   let runs = [];

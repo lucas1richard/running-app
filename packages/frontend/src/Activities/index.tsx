@@ -90,7 +90,14 @@ const Activities = () => {
               categorizeRunsByZones.map(({ runs, zones, start }) => (
                 <Flex $direction="column" $gap={1} key={start}>
                   {isGroupByZonesSet && (
-                    <Basic.Div $marginT={3} $marginB={1}>
+                    <Basic.Div
+                      $marginT={3}
+                      $marginB={1}
+                      $position='sticky'
+                      $top={0}
+                      $zIndex={1}
+                      $colorBg='white'
+                    >
                       <ZonesHeader zones={zones} start={start} />
                     </Basic.Div>
                   )}

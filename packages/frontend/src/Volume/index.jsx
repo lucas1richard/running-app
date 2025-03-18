@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { Flex } from '../DLS';
+import { Basic } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
 import CumulativeByRun from './CumulativeByRun';
 import VolumeTable from './VolumeTable';
@@ -38,18 +38,27 @@ const Volume = () => {
     return { groupedData, greatestTotal };
   }, [activities]);
   return (
-    <div>
+    <Basic.Div $margin={2}>
       <CumulativeByRun
         groupedData={groupedData}
         greatestTotal={greatestTotal}
       />
-      <Flex $directionSmDown="column" $marginTop={1} $gap={1} $justify="center">
+      <Basic.Div
+        $marginT={1}
+        $display="flex"
+        $directionSmDown="column"
+        $flexJustify="center"
+        $gap={1}
+      >
         <VolumeTable timeGroup="week" />
         {viewSize.gte('md') && (
-          <VolumeTable timeGroup="month" />
+          <>
+            <VolumeTable timeGroup="month" />
+            <VolumeTable timeGroup="year" />
+          </>
         )}
-      </Flex>
-    </div>
+      </Basic.Div>
+    </Basic.Div>
   );
 };
 

@@ -8,10 +8,11 @@ import { useAppSelector } from '../hooks/redux';
 import { Basic, Card, Flex } from '../DLS';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import useShowAfterMount from '../hooks/useShowAfterMount';
+import propSelector from '../utils/propSelector';
+import PRChart from './PRChart';
 
-const PRChart = lazy(() => import('./PRChart'))
 const ChartLoading = () => (
-  <Basic.Div $height="300px" />
+  <Basic.Div $height="2200px" />
 );
 
 const PRs = () => {
@@ -45,26 +46,58 @@ const PRs = () => {
         <h2>PRs By Date</h2>
         <span>Most recent &rarr; least recent</span>
         <Basic.Div $marginT={1}>
-          {names.map((name) => (
-            <Basic.Div key={name} $flexShrink="0" $marginT={3}>
-              <Flex $overflowX="scroll" $gap={1}>
-                <Flex $fontSize="h1" $alignItems="center" $flexShrink="1">{name}</Flex>
-                <Flex $fontSize="h1" $alignItems="center" $flexShrink="1">
-                  &rarr;
-                </Flex>
-                {prsByDate[name].map((pr) => (
-                  <PRDateCard pr={pr} key={pr.start_date_local} />
-                ))}
-              </Flex>
-              <Suspense fallback={<ChartLoading />}>
-                {showChart
-                  ? <PRChart records={prsByDate[name]} title={name} />
-                  : <ChartLoading />
-                }
-              </Suspense>
-            </Basic.Div>
-          ))
-          }
+          {showChart && Object.keys(prsByDate).length > 0
+          ? <PRChart records={prsByDate} title="All" />
+          : <ChartLoading />}
+          <Basic.Div $marginT={1} $display="flex" $directionSmDown="column" $directionMdUp="row" $gap={1}>
+            {names.map((name) => (
+              <Basic.Div key={name} $width="100%">
+                <Basic.Div
+                  $fontSize="h2"
+                  $textAlign="center"
+                  $position="sticky"
+                  $top="0"
+                  $colorBg="white"
+                  $border="1px solid"
+                  $padT={1}
+                  $padB={1}
+                >
+                  {name}
+                </Basic.Div>
+                <Basic.Table $borderT="none" $colorBg="white" $width="100%" key={name}>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Rank</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {prsByDate[name].map((pr) => (
+                      <Basic.Tr key={pr.start_date_local} $colorBg={propSelector({
+                        'gold': pr.pr_rank === 1,
+                        'silver': pr.pr_rank === 2,
+                        'bronze': pr.pr_rank === 3,
+                        'blue3': pr.pr_rank === 4,
+                      })}>
+                        <td>
+                          <Link to={`/${pr.activityId}/detail`}>
+                            {dayjs(pr.start_date_local).format('MMM DD, YYYY')}
+                          </Link>
+                        </td>
+                        <Basic.Td>
+                          {pr.pr_rank}
+                        </Basic.Td>
+                        <td>
+                          <DurationDisplay numSeconds={pr.elapsed_time} />
+                        </td>
+                      </Basic.Tr>
+                    ))}
+                  </tbody>
+                </Basic.Table>
+              </Basic.Div>
+            ))}
+          </Basic.Div>
         </Basic.Div>
       </Basic.Div>
     </Basic.Div>

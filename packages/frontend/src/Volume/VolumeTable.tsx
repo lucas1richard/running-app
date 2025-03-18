@@ -2,7 +2,7 @@ import { Fragment, useCallback, useState } from 'react';
 import dayjs, { type ManipulateType } from 'dayjs';
 import { selectTimeGroupedRuns } from '../reducers/activities';
 import { useAppSelector } from '../hooks/redux';
-import { Card } from '../DLS';
+import { Basic, Card } from '../DLS';
 
 const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'month' }) => {
   const [tg, setTimeGroup] = useState<ManipulateType>(timeGroup);
@@ -13,7 +13,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
   const activities = useAppSelector((state) => selectTimeGroupedRuns(state, tg));
 
   return (
-    <Card>
+    <Card $width="100%">
       <label htmlFor="timeGroupSelect">Time Group:</label>
       &nbsp;
       <select id="timeGroupSelect" value={tg} onChange={handleChange}>
@@ -22,13 +22,13 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
         <option value="year">Year</option>
       </select>
 
-      <table className="">
+      <Basic.Table $width="100%">
         {
           activities.map(({ start, sum, runs }) => (
             <Fragment key={start.toString()}>
-              <tr>
+              <Basic.Tr $position="sticky" $top="0" $zIndex="1" $colorBg="white">
                 <th colSpan={3}>The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;</th>
-              </tr>
+              </Basic.Tr>
               {
                 runs.map((run, ix) => (
                   <tr key={run.id}>
@@ -45,7 +45,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
             </Fragment>
           ))
         }
-      </table>
+      </Basic.Table>
     </Card>
   );
 };

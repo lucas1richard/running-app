@@ -19,15 +19,20 @@ const ZonesHeader: React.FC<ZonesHeaderProps> = ({ zones, start, isCompact }) =>
   return (
     <div>
       {(start && !isCompact) && (
-        <h2>
+        <Basic.Div $fontSize="h2" $pad={padLevel}>
           {establishedText}
-        </h2>
+        </Basic.Div>
       )}
       <Flex $direction="column">
-        <Flex $directionXs="column" $borderRadius={1} $overflow="hidden">
+        <Flex $directionXs="column" $overflow="hidden">
           {(start && isCompact) && (
-            <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="white" $pad={padLevel}>
-              <b>{establishedText}</b>
+            <Basic.Div
+              $textAlign="center"
+              $flexGrow="1"
+              $colorBg="white"
+              $pad={padLevel}
+            >
+              {establishedText}
             </Basic.Div>
           )}
 
@@ -48,7 +53,7 @@ const ZonesHeader: React.FC<ZonesHeaderProps> = ({ zones, start, isCompact }) =>
           </Basic.Div>
 
           <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone5" $pad={padLevel}>
-            <b>Zone 5</b> (&gte;{zones.z5})
+            <b>Zone 5</b> (&ge; {zones.z5})
           </Basic.Div>
         </Flex>
       </Flex>

@@ -13,6 +13,7 @@ export interface StandardProps extends FontProps
   , SizeProp<'$wrap', CSS.Property.FlexWrap>
   , SizeProp<'$gap', number | CSS.Property.Gap>
   , SizeProp<'$margin', number | CSS.Property.Margin>
+  , SizeProp<'$position', CSS.Property.Position>
   , SizeProp<'$width', number | CSS.Property.Width> {
   $gridArea?: CSS.Property.GridArea;
   $gap?: number | CSS.Property.Gap;
@@ -45,6 +46,11 @@ export interface StandardProps extends FontProps
   $overflow?: CSS.Property.Overflow;
   $flexGrow?: CSS.Property.FlexGrow;
   $flexShrink?: CSS.Property.FlexShrink;
+  $top?: CSS.Property.Top;
+  $left?: CSS.Property.Left;
+  $right?: CSS.Property.Right;
+  $bottom?: CSS.Property.Bottom;
+  $zIndex?: CSS.Property.ZIndex;
 }
 
 const standardProps = css<StandardProps>`
@@ -79,8 +85,14 @@ const standardProps = css<StandardProps>`
   ${makeStyledCssRule('$gridArea', 'grid-area')}
   ${makeStyledCssRule('$gap', 'gap')}
   ${makeStyledCssRule('$wrap', 'flex-wrap')}
+  ${makeStyledCssRule('$top', 'top')}
+  ${makeStyledCssRule('$left', 'left')}
+  ${makeStyledCssRule('$right', 'right')}
+  ${makeStyledCssRule('$bottom', 'bottom')}
+  ${makeStyledCssRule('$zIndex', 'z-index')}
 
   ${makeSizeProps([
+  ['$direction', 'flex-direction'],
   ['$margin', 'margin'],
   ['$width', 'width'],
   ['$textAlign', 'text-align'],
@@ -88,6 +100,7 @@ const standardProps = css<StandardProps>`
   ['$alignItems', 'align-items'],
   ['$flexJustify', 'justify-content'],
   ['$wrap', 'flex-wrap'],
+  ['$position', 'position'],
   ['$gap', 'gap'],
 ])}
 

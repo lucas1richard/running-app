@@ -1,5 +1,5 @@
 import React, { useState, useId } from 'react';
-import { Basic, Button } from '../DLS';
+import { Basic, Button, Flex } from '../DLS';
 
 type TabProps = {
   children: React.ReactNode;
@@ -20,6 +20,7 @@ export const Tab: React.FC<TabProps> = ({ children, onClick, isActive }) => (
     $alignItems="center"
     onClick={onClick}
     $fontSize="h6"
+    $width="100%"
   >
     {children}
   </Button>
@@ -58,13 +59,13 @@ type TabHeaderProps = {
   activeTab?: number;
 };
 export const TabHeader: React.FC<TabHeaderProps> = ({ children, onTabClick, activeTab }) => (
-  <Basic.Div $direction="column" $display="flex" $borderB="1px solid #dedede">
+  <Flex $directionMdUp="row" $directionSmDown="column" $borderB="1px solid #dedede">
     {React.Children.toArray(children).map((child: React.ReactElement, ix) => {
       return (
         React.cloneElement(child, { onClick: () => onTabClick(ix), isActive: activeTab === ix })
       )
     })}
-  </Basic.Div>
+  </Flex>
 );
 
 type TabsProps = {
@@ -80,6 +81,27 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
     </div>
   );
 }
+
+// Usage
+
+{/* <Tabs>
+  <TabHeader>
+      <Tab>
+        Title 1
+      </Tab>
+      <Tab>
+        Title 2
+      </Tab>
+  </TabHeader>
+  <TabContainer>
+    <TabPanel>
+      Content 1
+    </TabPanel>
+    <TabPanel>
+      Content 2
+    </TabPanel>
+  </TabContainer>
+</Tabs> */}
 
 export default Tabs;
 
