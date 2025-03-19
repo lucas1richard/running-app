@@ -21,6 +21,7 @@ const getPRsByDate = require('../../controllers/getPRsByDate');
 const getPRs = require('../../controllers/getPRs');
 const { dispatchFanout } = require('../../messageQueue/client');
 const topics = require('../../messageQueue/topics');
+const { listStreamRouter } = require('./listStream');
 
 const router = Router();
 
@@ -35,7 +36,8 @@ router.use([
   streamsRouter,
   stravaRouter,
   weatherRouter,
-  similarActivitiesRouter
+  similarActivitiesRouter,
+  listStreamRouter,
 ]);
 
 router.get('/list', async (req, res) => {

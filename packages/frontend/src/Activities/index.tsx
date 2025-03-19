@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectActivities, selectZoneGroupedRuns } from '../reducers/activities';
+import { selectActivities, selectListActivities, selectZoneGroupedRuns } from '../reducers/activities';
 import { selectListPrerences } from '../reducers/preferences';
 import { idle, loading, success, useGetApiStatus } from '../reducers/apiStatus';
 import { triggerFetchActivities } from '../reducers/activities-actions';
@@ -40,7 +40,7 @@ const Activities = () => {
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
 
-  const categorizeRunsByZones = useAppSelector((state) => selectZoneGroupedRuns(state, 0, showAllActivities ? undefined: 10));
+  const runs = useAppSelector((state) => selectListActivities(state, 0, showAllActivities ? undefined: 10));
 
   const onClickSync = useCallback(() => {
     dispatch(triggerFetchActivities(true));
@@ -48,13 +48,13 @@ const Activities = () => {
 
   return (
     <Basic.Div $pad={1} $margin="auto" $maxWidth="1600px">
-      <Shimmer
+      {/* <Shimmer
         isVisible={(
           activitiesApiStatus === loading
           || activitiesApiStatus === idle
           || syncActivitiesApiStatus === loading
         )}
-      />
+      /> */}
       <div>
         <Button onClick={onClickSync}>Sync Strava</Button>
       </div>
@@ -85,22 +85,22 @@ const Activities = () => {
 
       <Flex>
         <Basic.Div $flexGrow="1">
-          {
+          {/* {
             activitiesApiStatus === success && (
-              categorizeRunsByZones.map(({ runs, zones, start }) => (
-                <Flex $direction="column" $gap={1} key={start}>
-                  {isGroupByZonesSet && (
-                    <Basic.Div
-                      $marginT={3}
-                      $marginB={1}
-                      $position='sticky'
-                      $top={0}
-                      $zIndex={1}
-                      $colorBg='white'
-                    >
-                      <ZonesHeader zones={zones} start={start} />
-                    </Basic.Div>
-                  )}
+              // categorizeRunsByZones.map(({ runs, zones, start }) => (
+              //   <Flex $direction="column" $gap={1} key={start}>
+              //     {isGroupByZonesSet && (
+              //       <Basic.Div
+              //         $marginT={3}
+              //         $marginB={1}
+              //         $position='sticky'
+              //         $top={0}
+              //         $zIndex={1}
+              //         $colorBg='white'
+              //       >
+              //         <ZonesHeader zones={zones} start={start} />
+              //       </Basic.Div>
+              //     )} */}
                   <Flex $direction="column" $gap={1}>
                     {runs.map((activity) => (
                       <ActivityTile
@@ -112,10 +112,10 @@ const Activities = () => {
                       />
                     ))}
                   </Flex>
-                </Flex>
+                {/* // </Flex>
               ))
             )
-          }
+          } */}
         </Basic.Div>
       </Flex>
       <Button $width="100%" onClick={() => setShowAllActivities(true)}>Show All</Button>

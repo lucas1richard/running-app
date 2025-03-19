@@ -6,23 +6,25 @@ import {
   FETCH_ACTIVITY_DETAIL,
   FETCH_ACTIVITY_STREAM_DATA,
   FETCH_ALL_STREAMS,
-  setActivitiesAct,
+  setActivitiesStreamAct,
   setActivitiesSummaryAct,
   setActivityDetailAct,
   setStreamAct,
   setStreamsAct,
 } from '../reducers/activities-actions';
 import makeApiSaga from './apiSaga';
+import makeEventStreamSaga from './eventStreamSaga';
 
 function* fetchActivitiesSaga({ forceFetch }) {
   const queryParam = new URLSearchParams({
     ...forceFetch ? { force: String(true) } : {},
   });
-  const res = yield call(requestor.get, `/activities/list?${queryParam}`);
-  const acts = yield res.json();
-  const sortedActs = [...acts];
-  sortedActs.sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime());
-  yield put(setActivitiesAct(sortedActs));
+
+  const eventStreamSaga = makeEventStreamSaga(`/activities/listStream`, function* (data) {
+    yield put(setActivitiesStreamAct(data));
+  });
+
+  yield call(eventStreamSaga);
 }
 
 function* fetchAcivitySummarySaga() {

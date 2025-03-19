@@ -4,12 +4,14 @@ import useViewSize from '../hooks/useViewSize';
 import CumulativeByRun from './CumulativeByRun';
 import VolumeTable from './VolumeTable';
 import { useAppSelector } from '../hooks/redux';
-import { selectActivities } from '../reducers/activities';
+import { selectActivities, selectListActivities } from '../reducers/activities';
+import useShowAfterMount from '../hooks/useShowAfterMount';
 
 const Volume = () => {
+  const showChart = useShowAfterMount();
   const viewSize = useViewSize();
   const isSmall = viewSize.lte('sm');
-  const activities = useAppSelector(selectActivities);
+  const activities = useAppSelector(selectListActivities);
 
   const { groupedData, greatestTotal } = useMemo(() => {
     const groupedData = {};
@@ -39,10 +41,10 @@ const Volume = () => {
   }, [activities]);
   return (
     <Basic.Div $margin={2}>
-      <CumulativeByRun
+      {showChart && <CumulativeByRun
         groupedData={groupedData}
         greatestTotal={greatestTotal}
-      />
+      />}
       <Basic.Div
         $marginT={1}
         $display="flex"

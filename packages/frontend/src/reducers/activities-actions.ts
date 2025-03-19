@@ -73,6 +73,9 @@ export const updateStreamPin = (data: StreamPin): AsyncAction => {
 export const SET_ACTIVITIES = 'activitiesReducer/SET_ACTIVITIES';
 export const setActivitiesAct = (activities: Activity[]) => ({ type: SET_ACTIVITIES, payload: activities });
 
+export const SET_ACTIVITIES_STREAM = 'activitiesReducer/SET_ACTIVITIES_STREAM';
+export const setActivitiesStreamAct = (activities: Activity[]) => ({ type: SET_ACTIVITIES_STREAM, payload: activities });
+
 export const SET_ACTIVITIES_SUMMARY = 'activitiesReducer/SET_ACTIVITIES_SUMMARY';
 export const setActivitiesSummaryAct = (summary) => ({ type: SET_ACTIVITIES_SUMMARY, payload: summary });
 

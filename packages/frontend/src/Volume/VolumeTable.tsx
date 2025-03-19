@@ -23,28 +23,30 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
       </select>
 
       <Basic.Table $width="100%">
-        {
-          activities.map(({ start, sum, runs }) => (
-            <Fragment key={start.toString()}>
-              <Basic.Tr $position="sticky" $top="0" $zIndex="1" $colorBg="white">
-                <th colSpan={3}>The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;</th>
-              </Basic.Tr>
-              {
-                runs.map((run, ix) => (
-                  <tr key={run.id}>
-                    <td>
-                      {dayjs(run.start_date_local).format('dddd MM/DD')}
-                    </td>
-                    <td>
-                      {run.distance_miles.toFixed(2)} miles
-                    </td>
-                    {ix === 0 && <td rowSpan={runs.length}>{sum.toFixed(2)} miles</td>}
-                  </tr>
-                ))
-              }
-            </Fragment>
-          ))
-        }
+        <tbody>
+          {
+            activities.map(({ start, sum, runs }) => (
+              <Fragment key={start.toString()}>
+                <Basic.Tr $position="sticky" $top="0" $zIndex="1" $colorBg="white">
+                  <th colSpan={3}>The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;</th>
+                </Basic.Tr>
+                {
+                  runs.map((run, ix) => (
+                    <tr key={run.id}>
+                      <td>
+                        {dayjs(run.start_date_local).format('dddd MM/DD')}
+                      </td>
+                      <td>
+                        {run.distance_miles.toFixed(2)} miles
+                      </td>
+                      {ix === 0 && <td rowSpan={runs.length}>{sum.toFixed(2)} miles</td>}
+                    </tr>
+                  ))
+                }
+              </Fragment>
+            ))
+          }
+        </tbody>
       </Basic.Table>
     </Card>
   );

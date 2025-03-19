@@ -1,6 +1,8 @@
 import type { ApiStatusAction } from "../types";
 
 export const loadingSymbol = `Symbol('loading')`;
+export const receivingSymbol = `Symbol('receiving')`;
+export const receivedSymbol = `Symbol('received')`;
 export const successSymbol = `Symbol('success')`;
 export const errorSymbol = `Symbol('error')`;
 

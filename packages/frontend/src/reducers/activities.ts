@@ -7,6 +7,7 @@ import { createDeepEqualSelector } from '../utils';
 import { selectListPrerences } from './preferences';
 import {
   SET_ACTIVITIES,
+  SET_ACTIVITIES_STREAM,
   SET_ACTIVITIES_SUMMARY,
   SET_ACTIVITY_DETAIL,
   UPDATE_ACTIVITY,
@@ -76,6 +77,22 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
           }])
         );
         nextState.activitiesOrder = activitiesOrder;
+        nextState.loading = false;
+        nextState.error = undefined;
+      });
+    }
+
+    case SET_ACTIVITIES_STREAM: {
+      const activitiesOrder = action.payload.map(({ id }) => id);
+      return produce(state, (nextState) => {
+        nextState.activities = Object.assign({}, state.activities, Object.fromEntries(
+          action.payload.map((activity) => [activity.id, {
+            ...activity, zonesCaches: Object.fromEntries(
+              activity.zonesCaches?.map?.((zoneCache) => [zoneCache.heartZoneId, zoneCache]) || emptyArray
+            )
+          }])
+        ));
+        nextState.activitiesOrder = [...state.activitiesOrder, ...activitiesOrder];
         nextState.loading = false;
         nextState.error = undefined;
       });

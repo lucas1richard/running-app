@@ -15,7 +15,7 @@ const SetGlobalHeartZones = () => {
 
   const selectZone = useCallback((id) => {
     dispatch(setGlobalPrefsAct({ zonesId: id }));
-  }, [dispatch])
+  }, [dispatch]);
 
   return (
     <div>
@@ -23,11 +23,15 @@ const SetGlobalHeartZones = () => {
         Set Relative
       </Button>
       {allZones.map((zone) => (
-        <Flex key={zone.id} width="100%" border={propSelector({ '1px solid black': zone.id === preferences.zonesId })}>
+        <Flex
+          key={zone.id}
+          width="100%"
+          border={propSelector({ '1px solid black': zone.id === preferences.zonesId })}
+        >
           <Button onClick={() => selectZone(zone.id)} disabled={zone.id === preferences.zonesId}>
             Select
           </Button>
-          <Basic.Div flexGrow="1">
+          <Basic.Div $flexGrow="1">
             <ZonesHeader zones={zone} start={zone.start_date} isCompact={true} />
           </Basic.Div>
         </Flex>
