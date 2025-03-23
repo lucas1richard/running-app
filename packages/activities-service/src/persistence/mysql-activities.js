@@ -1,4 +1,4 @@
-const getMySQLConnection = require('./mysql-connection');
+const { getMySQLConnection } = require('./mysql-connection');
 
 const setHasStreams = async (id, hasStreams) => {
   const pool = await getMySQLConnection();

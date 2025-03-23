@@ -13,6 +13,7 @@ const {
     MYSQL_DB_FILE: DB_FILE,
 } = process.env;
 
+/** @type {import('mysql2').Pool} */
 let pool;
 
 const getMySQLConnection = async () => {
@@ -42,4 +43,15 @@ const getMySQLConnection = async () => {
   return pool;
 };
 
-module.exports = getMySQLConnection;
+const queryStream = async (
+  query = '',
+  streamOptions = { highWaterMark: 5 },
+) => {
+  const connection = await getMySQLConnection();
+  return connection.query(query).stream(streamOptions);
+};
+
+module.exports = {
+  getMySQLConnection,
+  queryStream,
+};

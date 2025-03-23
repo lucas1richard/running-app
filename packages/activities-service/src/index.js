@@ -15,6 +15,7 @@ const { analysisRouter } = require('./routes/analysis');
 const { userRouter } = require('./routes/user');
 const { segmentsRouter } = require('./routes/segments');
 const { activityRoutesRouter } = require('./routes/activity-routes');
+const { logger } = require('./utils/logger');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -33,7 +34,7 @@ app.use('/routes', activityRoutesRouter);
     await initSequelize();
 
     await app.listen(PORT);
-    console.log(`strava-client listening on port ${PORT}`);
+    logger.log({ message: `strava-client listening on port ${PORT}`});
 
     await waitPort({
       host: 'rabbitmq',
@@ -44,6 +45,6 @@ app.use('/routes', activityRoutesRouter);
 
     await setupConsumers();
   } catch (err) {
-    console.log('Error starting strava-client', err);
+    logger.error({ message: 'Error starting strava-client', err });
   }
 })();

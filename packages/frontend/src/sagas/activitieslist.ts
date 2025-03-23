@@ -20,7 +20,8 @@ function* fetchActivitiesSaga({ forceFetch }) {
     ...forceFetch ? { force: String(true) } : {},
   });
 
-  const eventStreamSaga = makeEventStreamSaga(`/activities/listStream`, function* (data) {
+  const eventStreamSaga = makeEventStreamSaga(
+    `/activities/listStream${queryParam ? '?' + queryParam : ''}`, function* (data) {
     yield put(setActivitiesStreamAct(data));
   });
 

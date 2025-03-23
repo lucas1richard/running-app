@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { getStartDistancedActivities, selectActivity, selectActivityDetails, selectStreamTypeData } from '../reducers/activities';
+import { selectActivity, selectActivityDetails, selectStreamTypeData } from '../reducers/activities';
 import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
 import HeartZonesDisplay from './HeartZonesDisplay';
-import { convertMetersToMiles, convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
+import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
 import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
@@ -34,8 +34,6 @@ import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
 import { Basic as B, Button, Card, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
-import Tabs, { Tab, TabContainer, TabHeader, TabPanel } from '../Common/Tabs';
-import Tile from '../Activities/Tile';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -50,7 +48,6 @@ const ActivityDetailPage = () => {
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
   const activity = useAppSelector((state) => selectActivity(state, id));
-  const similarStartDistActivities = useAppSelector((state) => getStartDistancedActivities(state, id));
 
   const [showMap, setShowMap] = useState(false);
 
@@ -165,40 +162,6 @@ const ActivityDetailPage = () => {
           </div>
         </Card>
       </Grid>
-
-      {/* <Tabs>
-        <TabHeader>
-          <Tab>Hey</Tab>
-          <Tab>Yo</Tab>
-        </TabHeader>
-        <TabContainer>
-          <TabPanel>Hey hey</TabPanel>
-          <TabPanel>
-
-            <Grid
-              $gap={1}
-              templateColumns="repeat(auto-fill, minmax(500px, 1fr))"
-              templateColumnsMd="1fr 1fr"
-              templateColumnsSmDown="1fr"
-            >
-              {similarStartDistActivities
-                .map(({ start_distance, activity, total_distance_diff, total_time_diff }) => (
-                <Tile activity={activity} isCompact={true}>
-                  <div>
-                    Start Distance: {Math.round(start_distance * 111.1 * 3280.84)} ft
-                  </div>
-                  <div>
-                    Total distance difference: {convertMetersToMiles(Number(total_distance_diff))} mi
-                  </div>
-                  <div>
-                    Total time difference: <DurationDisplay numSeconds={total_time_diff} />
-                  </div>
-                </Tile>
-              ))}
-            </Grid>
-          </TabPanel>
-        </TabContainer>
-      </Tabs> */}
 
       <HeartZonesDisplay
         zones={zones}

@@ -1,55 +1,49 @@
 const { Router } = require('express');
-const { findAllActivities } = require('../../persistence/activities');
+const { findAllActivitiesStream } = require('../../persistence/activities');
 const fetchStrava = require('../../utils/fetchStrava');
 const { bulkAddActivities } = require('../../persistence/setupdb-couchbase');
 const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
 const topics = require('../../messageQueue/topics');
 const { dispatchFanout } = require('../../messageQueue/client');
+const { logger } = require('../../utils/logger');
 
 const router = Router();
 
-const NUM_ACTIVITIES_PER_REQUEST = 30;
-const INTERVAL_TIME = 20; // ms
-
 router.get('/listStream', async (req, res) => {
+  const forceFetch = req.query.force;
+  const page = req.query.page || 1;
+  const perPage = req.query.per_page || 100;
+
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive'
+  });
+
   try {
-    const forceFetch = req.query.force;
-    const page = req.query.page || 1;
-    const perPage = req.query.per_page || 100;
-
-    res.writeHead(200, {
-      'Content-Type': 'text/event-stream',
-      'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive'
-    });
-
-    if (!forceFetch) {
-      const existingActivities = await findAllActivities();
-      let counter = 0;
-      const intervalId = setInterval(() => {
-        const data = `data: ${JSON.stringify(existingActivities.slice(counter * NUM_ACTIVITIES_PER_REQUEST, counter * NUM_ACTIVITIES_PER_REQUEST + NUM_ACTIVITIES_PER_REQUEST))}\n\n`;
-        res.write(data);
-        counter++;
-        if (counter * NUM_ACTIVITIES_PER_REQUEST >= existingActivities.length) {
-          clearInterval(intervalId);
-          res.end();
-        }
-      }, INTERVAL_TIME);
-
-      req.on('close', () => {
-        clearInterval(intervalId);
-        res.end();
-      });
-    } else {
+    if (forceFetch) {
       const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
       await bulkAddActivities(activitiesList); // couchdb
       const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
-      addedRecords.forEach((record) => dispatchFanout(topics.ACTIVITY_PULL, JSON.stringify({ id: record.id })))
-      const records = await findAllActivities();
-      res.json(records);
+      addedRecords.forEach((record) => dispatchFanout(topics.ACTIVITY_PULL, JSON.stringify({ id: record.id })));
+    }
+    const readableStream = await findAllActivitiesStream();
+    readableStream.resume();
+
+    readableStream.on('end', () => {
+      logger.info('End of stream');
+      res.write('event: close\ndata: Stream closed\n\n');
+
+      res.end();
+    });
+
+    for await (const batch of readableStream) {
+      res.write(`data: ${JSON.stringify(batch)}\n\n`); // send each row immediately
     }
   } catch (err) {
-    res.status(500).send(err.message);
+    console.error('Error in streaming activities:', err);
+    res.write('event: error\ndata: Error in streaming activities\n\n');
+    res.end();
   }
 });
 

@@ -25,7 +25,7 @@ const createIfNotExists = async (dbName) => {
   try {
     await nano.db.get(dbName);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     await nano.db.create(dbName);
   }
 };
@@ -61,10 +61,9 @@ const bulkAddActivities = async (activities, batchSize = 100) => {
 };
 
 const getAllActivities = async () => {
-  const db = await nano.db.use(ACTIVITIES_DB);
   const params = { include_docs: true, limit: 10000, descending: true };
 
-  const body = await db.list(params);
+  const body = await activitiesDb.list(params);
   const allRows = body
     ?.rows
     ?.map(({ doc } = {}) => doc) || [];
@@ -152,9 +151,8 @@ const updateUserPreferences = async (userId, preferences = {}) => {
 };
 
 const updateActivityPreferences = async (activityId, preferences = {}) => {
-  const db = await nano.db.use(ACTIVITY_PREFERENCES_DB);
   const existing = await getActivityPreferences(activityId) || {};
-  const res = await db.insert(deepmerge(existing, preferences), `${activityId}`);
+  const res = await activityPreferencesDb.insert(deepmerge(existing, preferences), `${activityId}`);
   return res;
 }
 
