@@ -18,7 +18,6 @@ import {
   SET_STREAM_PINS,
   SET_HEATMAP_DATA,
 } from './activities-actions';
-import { SET_SIMILAR_START } from './activitydetail-actions';
 import { selectAllHeartZones } from './heartzones';
 import { emptyArray, emptyObject } from '../constants';
 import type { RootState } from '.';
@@ -34,16 +33,6 @@ type ActivitiesState = {
   similarWorkouts: Record<number, number[]>;
   similarWorkoutsMeta: Record<number, TODO>;
   loading: boolean;
-  similarStart: Record<number,
-    Record<number, {
-      name: string;
-      start_date_local: string;
-      id: number;
-      start_distance: number;
-      total_distance_diff: string;
-      total_time_diff: number;
-    }>
-  >;
   error: any;
   heatMap: Array<HeatMapData>
 };
@@ -57,7 +46,6 @@ const activitiesInitialState: ActivitiesState = {
   similarWorkouts: {},
   similarWorkoutsMeta: {},
   loading: false,
-  similarStart: {},
   error: undefined,
   heatMap: [],
 };
@@ -168,15 +156,6 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
         nextState.activities[activityId] = { ...activity, stream_pins: pins };
       });
     }
-
-    case SET_SIMILAR_START:
-      return produce(state, (nextState) => {
-        const { activityId, radius, json } = action.payload;
-        nextState.similarStart[activityId] = {
-          ...state.similarStart[activityId],
-          ...Object.fromEntries(json.map((el) => [el.id, el])),
-        };
-      });
 
     case SET_HEATMAP_DATA:
       return produce(state, (nextState) => {
@@ -327,20 +306,5 @@ const getTimeGroupedRuns = (state: RootState, timeGroup: ManipulateType = 'week'
   return boxes;
 };
 export const selectTimeGroupedRuns = createDeepEqualSelector(getTimeGroupedRuns, (res) => res);
-
-export const getStartDistancedActivities = (state: RootState, activityId: number) => {
-  const activitiesState = getActivitiesState(state);
-  const startDistanced = activitiesState.similarStart[activityId];
-  const activities = activitiesState.activities;
-
-  if (!startDistanced) return [];
-
-  return Object.entries(startDistanced).map(([id, info]) => ({
-    ...info,
-    activity: activities[id],
-  }))
-  // filter hidden activities that may have been matched before they were hidden
-  .filter(({ activity }) => !!activity);
-};
 
 export default activitiesReducer;
