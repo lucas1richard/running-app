@@ -21,7 +21,7 @@ import { Basic, Button, Flex } from '../DLS';
 import useShowAfterMount from '../hooks/useShowAfterMount';
 import { useAppSelector } from '../hooks/redux';
 
-const HeatMap = React.lazy(() => import('./HeatMap'));
+const HeatMapContainer = React.lazy(() => import('./HeatMapContainer'));
 
 const hideFunctionKeypath = listDisplayHideFunction();
 const listDisplayControlsKeypath = listDisplayConfigControls();
@@ -60,7 +60,7 @@ const Activities = () => {
             }
           </Basic.Div>
           <React.Suspense fallback={<Basic.Div $height="900px"><Shimmer isVisible={true} /></Basic.Div>}>
-            <HeatMap />
+            <HeatMapContainer />
           </React.Suspense>
         </Basic.Div>
         <Basic.Div $widthLgUp="50%">
