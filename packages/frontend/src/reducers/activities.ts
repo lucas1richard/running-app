@@ -16,6 +16,7 @@ import {
   SET_SIMILAR_WORKOUTS,
   SET_WEATHER_DATA,
   SET_STREAM_PINS,
+  SET_HEATMAP_DATA,
 } from './activities-actions';
 import { SET_SIMILAR_START } from './activitydetail-actions';
 import { selectAllHeartZones } from './heartzones';
@@ -44,6 +45,7 @@ type ActivitiesState = {
     }>
   >;
   error: any;
+  heatMap: Array<HeatMapData>
 };
 
 const activitiesInitialState: ActivitiesState = {
@@ -57,6 +59,7 @@ const activitiesInitialState: ActivitiesState = {
   loading: false,
   similarStart: {},
   error: undefined,
+  heatMap: [],
 };
 
 interface Action {
@@ -173,6 +176,11 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
           ...state.similarStart[activityId],
           ...Object.fromEntries(json.map((el) => [el.id, el])),
         };
+      });
+
+    case SET_HEATMAP_DATA:
+      return produce(state, (nextState) => {
+        nextState.heatMap = nextState.heatMap.concat(action.payload);
       });
 
     default:

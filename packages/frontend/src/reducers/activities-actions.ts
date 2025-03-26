@@ -99,3 +99,9 @@ export const setWeatherDataAct = (data: Weather) => ({ type: SET_WEATHER_DATA, p
 
 export const SET_STREAM_PINS = 'activitiesReducer/SET_STREAM_PINS';
 export const setStreamPinsAct = (activityId: number, pins: StreamPin[]) => ({ type: SET_STREAM_PINS, payload: { activityId, pins } });
+
+export const FETCH_HEATMAP_DATA = 'activities/FETCH_HEATMAP_DATA';
+export const fetchHeatMapDataAct = (): AsyncAction => ({ type: FETCH_HEATMAP_DATA, key: FETCH_HEATMAP_DATA });
+
+export const SET_HEATMAP_DATA = 'activities/SET_HEATMAP_DATA';
+export const setHeatMapDataAct = (data: HeatMapData[]) => ({ type: SET_HEATMAP_DATA, payload: data });

@@ -16,6 +16,7 @@ const { userRouter } = require('./routes/user');
 const { segmentsRouter } = require('./routes/segments');
 const { activityRoutesRouter } = require('./routes/activity-routes');
 const { logger } = require('./utils/logger');
+const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -26,6 +27,7 @@ app.use('/analysis', analysisRouter);
 app.use('/user', userRouter);
 app.use('/segments', segmentsRouter);
 app.use('/routes', activityRoutesRouter);
+app.use('/routeCoordinates', routeCoordinatesRouter);
 
 (async () => {
   try {

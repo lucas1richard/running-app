@@ -30,16 +30,13 @@ router.get('/listStream', async (req, res) => {
     const readableStream = await findAllActivitiesStream();
     readableStream.resume();
 
-    readableStream.on('end', () => {
-      logger.info('End of stream');
-      res.write('event: close\ndata: Stream closed\n\n');
-
-      res.end();
-    });
-
     for await (const batch of readableStream) {
       res.write(`data: ${JSON.stringify(batch)}\n\n`); // send each row immediately
     }
+    logger.info('End of stream');
+    res.write('event: close\ndata: Stream closed\n\n');
+
+    res.end();
   } catch (err) {
     console.error('Error in streaming activities:', err);
     res.write('event: error\ndata: Error in streaming activities\n\n');

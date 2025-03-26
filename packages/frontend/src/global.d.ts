@@ -35,6 +35,12 @@ type StreamPin = {
   activityId: number;
 };
 
+type HeatMapData = {
+  lat: string;
+  lon: string;
+  total_seconds: number;
+};
+
 interface Activity {
   id: number;
   name: string;
