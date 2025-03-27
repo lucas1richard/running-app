@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActivities, selectListActivities, selectZoneGroupedRuns } from '../reducers/activities';
@@ -8,7 +8,6 @@ import { triggerFetchActivities } from '../reducers/activities-actions';
 import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
 import ConfigWidget from '../Config';
-import SpeedChart from './SpeedChart';
 import ListSort from './ListSort';
 import Shimmer from '../Loading/Shimmer';
 import PreferenceControl from '../PreferenceControl';
@@ -16,10 +15,11 @@ import { listDisplayConfigControls, listDisplayHideFunction } from '../Preferenc
 import usePreferenceControl from '../hooks/usePreferenceControl';
 import ActivityTile from './ActivityTile';
 import PRs from './PRs';
-// import HeatMap from './HeatMap';
 import { Basic, Button, Flex } from '../DLS';
 import useShowAfterMount from '../hooks/useShowAfterMount';
 import { useAppSelector } from '../hooks/redux';
+import dayjs from 'dayjs';
+import SpeedChart from '../Common/SpeedChart';
 
 const HeatMapContainer = React.lazy(() => import('./HeatMapContainer'));
 
@@ -42,6 +42,10 @@ const Activities = () => {
   );
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
+  const recentActivities = useMemo(() => {
+    const oneYearAgo = dayjs().subtract(1, 'year');
+    return activities.filter(({ start_date }) => dayjs(start_date).isAfter(oneYearAgo)).reverse();
+  }, [activities]);
 
   const runs = useAppSelector((state) => selectListActivities(state, 0, showAllActivities ? undefined: 10));
 
@@ -55,7 +59,7 @@ const Activities = () => {
         <Basic.Div $widthLgUp="50%">
           <Basic.Div $marginB={1}>
             {showChart
-              ? <SpeedChart activities={activities} />
+              ? <SpeedChart activities={recentActivities} />
               : <Basic.Div $height="600px" />
             }
           </Basic.Div>

@@ -7,6 +7,7 @@ import Tile from '../Activities/Tile';
 import { Basic, Button, Grid } from '../DLS';
 import { selectComparedActivities } from '../reducers/multimap';
 import { toggleComparedActivityAct } from '../reducers/multimap-actions';
+import SpeedChart from '../Common/SpeedChart';
 
 const SimilarWorkouts = ({ activity, zones }) => {
   const id = activity.id;
@@ -25,6 +26,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
         $templateColumnsMd="1fr 1fr"
         $templateColumnsSmDown="1fr"
       >
+        <SpeedChart activities={[...similarDist, activity].filter(Boolean)} />
         {similarDist.filter(Boolean).sort((a, b) => {
           const metaA = similarMeta[a.id];
           const metaB = similarMeta[b.id];
