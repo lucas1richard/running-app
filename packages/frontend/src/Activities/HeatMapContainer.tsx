@@ -1,7 +1,7 @@
 import { useAppSelector } from '../hooks/redux';
 import { success, useGetApiStatus, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { fetchHeatMapDataAct } from '../reducers/activities-actions';
-import HeatMap from '../Common/HeatMap';
+import HeatMapMapLibre from '../Common/HeatMapMapLibre';
 
 const HeatMapContainer = () => {
   const data = useAppSelector((state) => state.activities.heatMap) || [];
@@ -11,7 +11,7 @@ const HeatMapContainer = () => {
   const apiStatus = useGetApiStatus(fetchHeatMapDataAct());
 
   return (
-    <HeatMap data={data} measure="total_seconds" deferRender={apiStatus !== success} />
+    <HeatMapMapLibre data={data} measure="total_seconds" deferRender={apiStatus !== success} />
   );
 };
 

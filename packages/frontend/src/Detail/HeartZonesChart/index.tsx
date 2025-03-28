@@ -6,7 +6,7 @@ import usePreferenceControl from '../../hooks/usePreferenceControl';
 import { emptyArray } from '../../constants';
 import { useAppSelector } from '../../hooks/redux';
 import { Basic, Button } from '../../DLS';
-import HeatMap from '../../Common/HeatMap';
+import HeatMapMapLibre from '../../Common/HeatMapMapLibre';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
@@ -112,49 +112,54 @@ const HeartZonesChartContainer = ({ id }) => {
         $marginT="20px"
         $padT="20px"
         $borderT="1px solid #ccc"
+        $gap={1}
       >
         <Basic.Div $width="50%" $widthSmDown="100%">
-          <HeatMap
+          <Basic.Div $fontSize="h2" $marginB={1}>Heart Rate</Basic.Div>
+          <HeatMapMapLibre
             title="Heart Rate"
             data={hrHeatMapData}
             measure="measure"
-            height={400}
+            height={600}
             deferRender={hrHeatMapData.length === 0}
             minColor={[0, 0, 255, 1]}
             maxColor={[255, 0, 0, 1]}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
-          <HeatMap
+          <Basic.Div $fontSize="h2" $marginB={1}>Velocity</Basic.Div>
+          <HeatMapMapLibre
+            title="Velocity"
+            data={velocityHeatMapData}
+            measure="measure"
+            height={600}
+            deferRender={velocityHeatMapData.length === 0}
+            minColor={[255, 0, 0, 1]}
+            maxColor={[0, 255, 0, 1]}
+          />
+        </Basic.Div>
+        <Basic.Div $width="50%" $widthSmDown="100%">
+          <Basic.Div $fontSize="h2" $marginB={1}>Altitude</Basic.Div>
+          <HeatMapMapLibre
             title="Altitude"
             data={altitudeHeatMapData}
             measure="measure"
-            height={400}
+            height={600}
             deferRender={altitudeHeatMapData.length === 0}
             minColor={[0, 0, 255, 1]}
             maxColor={[255, 255, 0, 1]}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
-          <HeatMap
+          <Basic.Div $fontSize="h2" $marginB={1}>Grade</Basic.Div>
+          <HeatMapMapLibre
             title="Grade"
             data={gradeHeatMapData}
             measure="measure"
-            height={400}
+            height={600}
             deferRender={gradeHeatMapData.length === 0}
             minColor={[0, 255, 0, 1]}
             maxColor={[255, 0, 0, 1]}
-          />
-        </Basic.Div>
-        <Basic.Div $width="50%" $widthSmDown="100%">
-          <HeatMap
-            title="Velocity"
-            data={velocityHeatMapData}
-            measure="measure"
-            height={400}
-            deferRender={velocityHeatMapData.length === 0}
-            minColor={[255, 0, 0, 1]}
-            maxColor={[0, 255, 0, 1]}
           />
         </Basic.Div>
       </Basic.Div>

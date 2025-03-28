@@ -12,7 +12,6 @@ import SegmentsDetailDisplay from './Segments';
 import HeartZonesChartContainer from './HeartZonesChart';
 import UpdatableNameDescription from './UpdatableNameDescription';
 import SimilarWorkouts from './SimilarWorkouts';
-import ReactMap from '../ReactMap';
 import DetailDataFetcher, { streamTypes } from './DetailDataFetcher';
 import Laps from './Laps';
 import WeatherReporter from './WeatherReporter';
@@ -34,6 +33,7 @@ import { useAppSelector } from '../hooks/redux';
 import Shimmer from '../Loading/Shimmer';
 import { Basic as B, Button, Card, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
+import MapLibreHRZones from '../Common/MapLibreHRZones';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -48,8 +48,6 @@ const ActivityDetailPage = () => {
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
   const activity = useAppSelector((state) => selectActivity(state, id));
-
-  const [showMap, setShowMap] = useState(false);
 
   const [
     tileBgColor, setTileBgColor, savePreferences
@@ -163,6 +161,10 @@ const ActivityDetailPage = () => {
         </Card>
       </Grid>
 
+      <B.Div $height="600px">
+        <MapLibreHRZones id={id} />
+      </B.Div>
+
       <HeartZonesDisplay
         zones={zones}
         nativeZones={nativeZones}
@@ -171,15 +173,6 @@ const ActivityDetailPage = () => {
       />
 
       <HeartZonesChartContainer id={id} />
-
-      <Flex $direction="column" $alignItems="center">
-        {!showMap && <Button onClick={() => setShowMap(true)}>Show Map</Button>}
-        {showMap && (
-          <div style={{ height: 600, width: 600 }}>
-            <ReactMap id={id} />
-          </div>
-        )}
-      </Flex>
 
       <PreferenceControl
         subject="Laps & Best Efforts"
