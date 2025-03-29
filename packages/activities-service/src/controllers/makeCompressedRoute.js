@@ -68,8 +68,8 @@ const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = fi
 const makeCompressedRoute = async (activityId, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL, skipCheck = false) => {
   if (!skipCheck) {
     const existingRoute = await getRouteCoordinates(activityId, compressionLevel);
-    console.log(`EXISTING ROUTE FOUND: ${activityId}, ${compressionLevel}`);
     if (existingRoute?.length) {
+      console.log(`EXISTING ROUTE FOUND: ${activityId}, ${compressionLevel}`);
       return { activityId, route: existingRoute, compressionLevel };
     }
   }

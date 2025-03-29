@@ -4,7 +4,7 @@ const { findRelationsBySimilarRoute } = require('../../constants');
 
 // get the same shape as we would get from couchdb
 const formatResponse = (route) => {
-  return route.map((coords) => [coords.lat, coords.lon, coords.seconds_at_coords]);
+  return route.map((coords) => [String(coords.lat), String(coords.lon), coords.seconds_at_coords]);
 };
 
 class RouteCoordinates extends Model {
