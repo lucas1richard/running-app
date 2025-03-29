@@ -33,7 +33,7 @@ const findAllActivities = async (rowLimit) => {
 const findAllActivitiesStream = async () => {
   logger.info('Fetching all activities from MySQL with stream');
 
-  const readable = await queryStream(activitiesQuery, { highWaterMark: 30 })
+  const readable = await queryStream({ sql: activitiesQuery, streamOptions: { highWaterMark: 30 }})
 
   readable.on('close', () => {
     logger.info('Readable stream closed');

@@ -5,7 +5,12 @@ const { getAllCoordinatesStream } = require('../persistence/routeCoordinates');
 
 router.get('/heatmap', async (req, res) => {
   try {
-    const coords = await getAllCoordinatesStream();
+    const { referenceTime: refTime, timeframe } = req.query;
+    let referenceTime = refTime ? new Date(refTime).toISOString() : undefined;
+    if (timeframe && !referenceTime) {
+      referenceTime = new Date().toISOString();
+    }
+    const coords = await getAllCoordinatesStream(referenceTime, timeframe);
     coords.resume();
 
     res.writeHead(200, {

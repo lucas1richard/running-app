@@ -68,7 +68,6 @@ const calculateZoomLevel = (bounds, mapWidth: number, mapHeight: number, padding
 };
 
 const HeatMapMapLibre: React.FC<HeatMapProps> = ({
-  title = 'Heatmap',
   data,
   measure,
   deferRender,
@@ -76,6 +75,8 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   minColor = [20, 20, 255, 1], // Red with some transparency
   maxColor = [255, 0, 0, 1], // Green with full opacity
 }) => {
+  const heatmapSource = useId();
+  const heatmapLayer = useId();
   const largestValue = useMemo(() => {
     return Math.max(...data.map((d) => Number(d[measure])));
   }, [deferRender]);
@@ -156,7 +157,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
     pitch: 0,
     bearing: 0,
   }), [defaultCenter, initialZoom]);
-  
+
   return (
     <Basic.Div>
       {
@@ -170,7 +171,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                 mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
               >
                 <Source
-                  id="heatmap-source"
+                  id={heatmapSource}
                   type="geojson"
                   data={{
                     type: 'FeatureCollection',
@@ -187,9 +188,9 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                   }}
                 >
                   <Layer
-                    id="heatmap-layer"
+                    id={heatmapLayer}
                     type="fill"
-                    source="heatmap-source"
+                    // source={heatmapSource}
                     paint={{
                       "fill-color": ['get', 'color'],
                     }}

@@ -7,7 +7,6 @@ import {
   FETCH_ACTIVITY_STREAM_DATA,
   FETCH_ALL_STREAMS,
   FETCH_HEATMAP_DATA,
-  SET_HEATMAP_DATA,
   setActivitiesStreamAct,
   setActivitiesSummaryAct,
   setActivityDetailAct,
@@ -37,14 +36,18 @@ function* fetchActivitiesSaga({ forceFetch }) {
   yield call(eventStreamSaga);
 }
 
-function* fetchHeatMapSaga() {
+function* fetchHeatMapSaga({ timeframe, referenceTime }) {
   const data = [];
+  const queryParam = new URLSearchParams({
+    ...timeframe ? {timeframe} : {},
+    ...referenceTime ? {referenceTime} : {},
+  });
   
-  const eventStream = makeEventStreamSaga('/routeCoordinates/heatmap', function* ({ type, data: res }) {
+  const eventStream = makeEventStreamSaga(`/routeCoordinates/heatmap${queryParam ? '?' + queryParam : ''}`, function* ({ type, data: res }) {
     if (type === 'DATA') {
       data.push(res);
     } else if (type === 'CLOSE') {
-      yield put(setHeatMapDataAct(data.flat()));
+      yield put(setHeatMapDataAct(data.flat(), timeframe, referenceTime));
     }
   });
 

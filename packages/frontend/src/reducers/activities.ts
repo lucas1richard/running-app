@@ -34,7 +34,7 @@ type ActivitiesState = {
   similarWorkoutsMeta: Record<number, TODO>;
   loading: boolean;
   error: any;
-  heatMap: Array<HeatMapData>
+  heatMap: Record<string, Array<HeatMapData>>
 };
 
 const activitiesInitialState: ActivitiesState = {
@@ -47,7 +47,7 @@ const activitiesInitialState: ActivitiesState = {
   similarWorkoutsMeta: {},
   loading: false,
   error: undefined,
-  heatMap: [],
+  heatMap: {},
 };
 
 interface Action {
@@ -159,7 +159,11 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
 
     case SET_HEATMAP_DATA:
       return produce(state, (nextState) => {
-        nextState.heatMap = nextState.heatMap.concat(action.payload);
+        const key = [action.payload.timeframe, action.payload.referenceTime].filter(Boolean).join('|') || 'all';
+        if (!nextState.heatMap[key]) {
+          nextState.heatMap[key] = [];
+        }
+        nextState.heatMap[key] = nextState.heatMap[key].concat(action.payload.data);
       });
 
     default:

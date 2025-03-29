@@ -3,12 +3,15 @@ import { success, useGetApiStatus, useTriggerActionIfStatus } from '../reducers/
 import { fetchHeatMapDataAct } from '../reducers/activities-actions';
 import HeatMapMapLibre from '../Common/HeatMapMapLibre';
 
-const HeatMapContainer = () => {
-  const data = useAppSelector((state) => state.activities.heatMap) || [];
+const HeatMapContainer: React.FC<any> = ({ referenceTime, timeframe }) => {
+  const key = [timeframe, referenceTime].filter(Boolean).join('|') || 'all';
+  const data = useAppSelector((state) => state.activities.heatMap[key]) || [];
 
-  useTriggerActionIfStatus(fetchHeatMapDataAct(), 'idle');
+  const action = fetchHeatMapDataAct(timeframe, referenceTime, key);
+  
+  useTriggerActionIfStatus(action, 'idle');
 
-  const apiStatus = useGetApiStatus(fetchHeatMapDataAct());
+  const apiStatus = useGetApiStatus(action);
 
   return (
     <HeatMapMapLibre data={data} measure="total_seconds" deferRender={apiStatus !== success} />

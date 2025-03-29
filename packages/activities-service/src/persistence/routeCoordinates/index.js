@@ -4,8 +4,10 @@ const RouteCoordinates = require('./model-route-coordinates');
 const { queryStream } = require('../mysql-connection');
 const { pipeline } = require('stream');
 const { BatchTransformer } = require('../../utils/streams');
+const assert = require('assert');
 
-const sql = fs.readFileSync(path.join(__dirname, 'getHeatMap.sql'), 'utf8');
+const heatMapAllTimeSql = fs.readFileSync(path.join(__dirname, 'getHeatMap.sql'), 'utf8');
+const heatMapTimeframeSql = fs.readFileSync(path.join(__dirname, 'getHeatMapByTimeframe.sql'), 'utf8');
 
 // class SumTransformer extends Transform {
 //   constructor(iteratorSize = 10e3, options) {
@@ -32,8 +34,25 @@ const sql = fs.readFileSync(path.join(__dirname, 'getHeatMap.sql'), 'utf8');
 //   }
 // }
 
-const getAllCoordinatesStream = async () => {
-  const readable = await queryStream(sql, { highWaterMark: 500 });
+const getAllCoordinatesStream = async (referenceTime, timeframe) => {
+  if (timeframe) {
+    assert(
+      timeframe.toLowerCase().match(/^\d{1,2}\s*(day|week|month|year)?$/i),
+      'Timeframe must be a single or double digit number followed by day, month, or year (e.g. "7 day", "1 wee", "1 month", "2 year")'
+    );
+  }
+  if (referenceTime) {
+    assert(
+      new Date(referenceTime).toString() !== 'Invalid Date',
+      'Reference time must be a valid date'
+    );
+  }
+  const sql = timeframe ? heatMapTimeframeSql : heatMapAllTimeSql;
+  const readable = await queryStream({
+    sql: sql.replace(/_timeframe/g, timeframe),
+    queryOptions: { values: [referenceTime, timeframe] },
+    streamOptions: { highWaterMark: 500 },
+});
   return pipeline(readable, new BatchTransformer(500), (err) => {
     if (err) {
       console.error('Pipeline failed', err);

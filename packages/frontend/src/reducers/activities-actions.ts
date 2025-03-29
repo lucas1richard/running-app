@@ -101,7 +101,19 @@ export const SET_STREAM_PINS = 'activitiesReducer/SET_STREAM_PINS';
 export const setStreamPinsAct = (activityId: number, pins: StreamPin[]) => ({ type: SET_STREAM_PINS, payload: { activityId, pins } });
 
 export const FETCH_HEATMAP_DATA = 'activities/FETCH_HEATMAP_DATA';
-export const fetchHeatMapDataAct = (): AsyncAction => ({ type: FETCH_HEATMAP_DATA, key: FETCH_HEATMAP_DATA });
+export const fetchHeatMapDataAct = (timeframe?: string, referenceTime?: string, key?: string): AsyncAction => ({
+  type: FETCH_HEATMAP_DATA,
+  key: `${FETCH_HEATMAP_DATA}-${key}`,
+  timeframe,
+  referenceTime,
+});
 
 export const SET_HEATMAP_DATA = 'activities/SET_HEATMAP_DATA';
-export const setHeatMapDataAct = (data: HeatMapData[]) => ({ type: SET_HEATMAP_DATA, payload: data });
+export const setHeatMapDataAct = (data: HeatMapData[], timeframe?: string, referenceTime?: string) => ({
+  type: SET_HEATMAP_DATA,
+  payload: {
+    data,
+    timeframe,
+    referenceTime,
+  },
+});
