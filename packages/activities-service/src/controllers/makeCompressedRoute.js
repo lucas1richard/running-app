@@ -30,14 +30,13 @@ const compress = (route, compressionLevel) => {
         // this will help avoid the GPS glitches and instances where the athlete barely
         // crossed into the corner of a coordinate box
         // if (count >= 1)
-          compressedRoute.push([...current, count]);
+        compressedRoute.push([...current, count]);
         count = 0;
       } else {
         count++;
       }
     }
   }
-  console.log({rrl: roundedRoute.length, compressedRoute})
   return compressedRoute;
 };
 
@@ -56,7 +55,7 @@ const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = fi
   });
 
   const compressedRoutes = await Promise.all(
-    toCompress.map((activityId) => makeCompressedRoute(activityId, compressionLevel, true))
+    toCompress.map((activityId) => makeCompressedRoute(activityId, compressionLevel))
   );
 
   compressedRoutes.forEach((route) => {
@@ -69,7 +68,7 @@ const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = fi
 const makeCompressedRoute = async (activityId, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL, skipCheck = false) => {
   if (!skipCheck) {
     const existingRoute = await getRouteCoordinates(activityId, compressionLevel);
-    console.log('EXISTING ROUTE FOUND');
+    console.log(`EXISTING ROUTE FOUND: ${activityId}, ${compressionLevel}`);
     if (existingRoute?.length) {
       return { activityId, route: existingRoute, compressionLevel };
     }
