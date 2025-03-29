@@ -21,19 +21,12 @@ const makeSquare = ({ lat, lon }, size = 0.0001) => {
 type RGBATuple = [number, number, number, number];
 
 const makeColor = (minColor: RGBATuple, maxColor: RGBATuple, percent: number) => {
-  return `rgba(
-    ${Math.round(minColor[0] + (maxColor[0] - minColor[0]) * percent)},
-    ${Math.round(minColor[1] + (maxColor[1] - minColor[1]) * percent)},
-    ${Math.round(minColor[2] + (maxColor[2] - minColor[2]) * percent)},
-    ${Math.max(minColor[3], Math.min(maxColor[3], percent))}
-  )`;
+  const r = Math.round(minColor[0] + (maxColor[0] - minColor[0]) * percent);
+  const g = Math.round(minColor[1] + (maxColor[1] - minColor[1]) * percent);
+  const b = Math.round(minColor[2] + (maxColor[2] - minColor[2]) * percent);
+  const a = Math.max(minColor[3], Math.min(maxColor[3], percent));
+  return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
-
-const MINIMUM_SQUARE_SIZE = 0.0001;
-const MAXIMUM_SQUARE_SIZE = 0.0004;
-const MINIMUM_OPACITY = 0.05;
-const DEFAULT_MINIMUM_OPACITY = 0.1;
-const MAXIMUM_OPACITY = 1;
 
 type DataPoint = {
   lat: number | string;

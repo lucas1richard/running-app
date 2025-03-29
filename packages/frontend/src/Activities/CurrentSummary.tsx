@@ -31,7 +31,8 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
 
   return (
     <Grid
-      $templateColumnsLgDown="repeat(auto-fill, minmax(250px, 1fr))"
+      $templateColumns="repeat(3, 1fr)"
+      $templateColumnsSmDown="1fr"
       $colorBg="white"
       $pad={1}
       $gapSmDown={2}

@@ -1,11 +1,12 @@
 import { useMemo } from 'react';
-import { Basic } from '../DLS';
+import { Basic, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
 import CumulativeByRun from './CumulativeByRun';
 import VolumeTable from './VolumeTable';
 import { useAppSelector } from '../hooks/redux';
 import { selectActivities, selectListActivities } from '../reducers/activities';
 import useShowAfterMount from '../hooks/useShowAfterMount';
+import HeatMapContainer from '../Activities/HeatMapContainer';
 
 const Volume = () => {
   const showChart = useShowAfterMount();
@@ -45,6 +46,31 @@ const Volume = () => {
         groupedData={groupedData}
         greatestTotal={greatestTotal}
       />}
+      <Grid
+        $templateColumns="1fr"
+        $templateColumnsMdUp="repeat(2, 1fr)"
+        $templateColumnsXl="repeat(4, 1fr) !important"
+        $marginT={2}
+        $gap={1}
+      >
+        <div>
+          <Basic.Div $fontSize="h2" $marginB={1}>Past 7 Days</Basic.Div>
+          <HeatMapContainer timeframe="1 week" />
+        </div>
+        <div>
+          <Basic.Div $fontSize="h2" $marginB={1}>Past Month</Basic.Div>
+          <HeatMapContainer timeframe="1 month" />
+        </div>
+        <div>
+          <Basic.Div $fontSize="h2" $marginB={1}>Past 6 Months</Basic.Div>
+          <HeatMapContainer timeframe="6 month" />
+        </div>
+        <div>
+          <Basic.Div $fontSize="h2" $marginB={1}>Past 1 Year</Basic.Div>
+          <HeatMapContainer timeframe="1 year" />
+        </div>
+      </Grid>
+
       <Basic.Div
         $marginT={1}
         $display="flex"

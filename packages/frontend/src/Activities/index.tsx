@@ -64,20 +64,8 @@ const Activities = () => {
             }
           </Basic.Div>
           <React.Suspense fallback={<Basic.Div $height="900px"><Shimmer isVisible={true} /></Basic.Div>}>
-            <Basic.Div $fontSize="h2">All time</Basic.Div>
+            <Basic.Div $fontSize="h2" $marginB={1}>All time</Basic.Div>
             <HeatMapContainer />
-
-            <Basic.Div $fontSize="h2">1 Week</Basic.Div>
-            <HeatMapContainer timeframe="1 week" />
-
-            <Basic.Div $fontSize="h2">1 Month</Basic.Div>
-            <HeatMapContainer timeframe="1 month" />
-
-            <Basic.Div $fontSize="h2">6 Months</Basic.Div>
-            <HeatMapContainer timeframe="6 month" />
-
-            <Basic.Div $fontSize="h2">1 Year</Basic.Div>
-            <HeatMapContainer timeframe="1 year" />
           </React.Suspense>
         </Basic.Div>
         <Basic.Div $widthLgUp="50%">
