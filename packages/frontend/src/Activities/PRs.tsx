@@ -4,7 +4,7 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
 import { useAppSelector } from '../hooks/redux';
-import { Basic, Card, Flex } from '../DLS';
+import { Basic, Card, Flex, Grid } from '../DLS';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);
@@ -13,7 +13,11 @@ const PRs = () => {
     <div>
       <h2>All Time PRs</h2>
 
-      <Flex $wrap="wrap" $gap={1}>
+      <Grid
+        $templateColumnsLgDown="repeat(auto-fill, minmax(250px, 1fr))"
+        $templateColumnsLgUp="repeat(3, 1fr)"
+        $gap={1}
+      >
         {allTimePrs.map((pr) => (
           <Card key={pr.distance} $textAlign="center" $flexGrow="1">
             <Basic.Div $fontSize="h1">
@@ -33,7 +37,7 @@ const PRs = () => {
             </Basic.Div>
           </Card>
         ))}
-      </Flex>
+      </Grid>
 
     </div>
   );

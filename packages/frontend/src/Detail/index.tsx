@@ -161,8 +161,9 @@ const ActivityDetailPage = () => {
         </Card>
       </Grid>
 
-      <B.Div $height="600px">
+      <B.Div $height="600px" $display='flex'>
         <MapLibreHRZones id={id} />
+        <B.Div $widthSmDown={2} $height="100%" $colorBg="black" />
       </B.Div>
 
       <HeartZonesDisplay

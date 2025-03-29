@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { convertMetersToMiles } from '../utils';
-import { Basic, Flex } from '../DLS';
+import { Basic, Grid } from '../DLS';
 
 const NUMBER_OF_DAYS = 7;
 
@@ -30,7 +30,12 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
   const sameYearRuns = useMemo(() => findSameYear(activities), [activities]);
 
   return (
-    <Flex $colorBg="white" $pad={1} $directionSmDown="column" $gapSmDown={2}>
+    <Grid
+      $templateColumnsLgDown="repeat(auto-fill, minmax(250px, 1fr))"
+      $colorBg="white"
+      $pad={1}
+      $gapSmDown={2}
+    >
       <Basic.Div $flexGrow="1" $textAlign="center">
         <Basic.Div $fontSize="h5">Miles in the last {NUMBER_OF_DAYS} days</Basic.Div>
         <Basic.Div $fontSize="h2">{sumDistance(recentRuns).toFixed(2)}</Basic.Div>
@@ -45,7 +50,7 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
         <Basic.Div $fontSize="h5">All time</Basic.Div>
         <Basic.Div $fontSize="h2">{sumDistance(activities).toFixed(2)}</Basic.Div>
       </Basic.Div>
-    </Flex>
+    </Grid>
   );
 };
 

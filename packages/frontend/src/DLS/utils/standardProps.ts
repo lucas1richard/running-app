@@ -14,7 +14,13 @@ export interface StandardProps extends FontProps
   , SizeProp<'$gap', number | CSS.Property.Gap>
   , SizeProp<'$margin', number | CSS.Property.Margin>
   , SizeProp<'$position', CSS.Property.Position>
-  , SizeProp<'$width', number | CSS.Property.Width> {
+  , SizeProp<'$width', number | CSS.Property.Width>
+  , SizeProp<'$pad', number | CSS.Property.Padding>
+  , SizeProp<'$padT', number | CSS.Property.Padding>
+  , SizeProp<'$padL', number | CSS.Property.Padding>
+  , SizeProp<'$padR', number | CSS.Property.Padding>
+  , SizeProp<'$padB', number | CSS.Property.Padding>
+  {
   $gridArea?: CSS.Property.GridArea;
   $gap?: number | CSS.Property.Gap;
   $wrap?: CSS.Property.FlexWrap;
@@ -29,11 +35,6 @@ export interface StandardProps extends FontProps
   $marginL?: number | CSS.Property.MarginLeft;
   $marginR?: number | CSS.Property.MarginRight;
   $marginB?: number | CSS.Property.MarginBottom;
-  $pad?: number | CSS.Property.Padding;
-  $padT?: number | CSS.Property.PaddingTop;
-  $padL?: number | CSS.Property.PaddingLeft;
-  $padR?: number | CSS.Property.PaddingRight;
-  $padB?: number | CSS.Property.PaddingBottom;
   $maxWidth?: number | CSS.Property.MaxWidth;
   $height?: number | CSS.Property.Height;
   $maxHeight?: number | CSS.Property.MaxHeight;
@@ -102,6 +103,11 @@ const standardProps = css<StandardProps>`
   ['$wrap', 'flex-wrap'],
   ['$position', 'position'],
   ['$gap', 'gap'],
+  ['$pad', 'pad'],
+  ['$padT', 'padding-top'],
+  ['$padL', 'padding-left'],
+  ['$padR', 'padding-right'],
+  ['$padB', 'padding-bottom'],
 ])}
 
   ${makeFontRule}
