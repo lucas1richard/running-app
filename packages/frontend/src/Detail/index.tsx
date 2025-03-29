@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import { useParams } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -98,15 +98,10 @@ const ActivityDetailPage = () => {
     <Grid $pad={1} $gap={1}>
       <DetailDataFetcher id={id} />
       <Grid $templateColumns='1fr' $gap={1} $templateColumnsLgUp='1fr 1fr'>
-        <GoogleMapImage
-          activityId={id}
-          polyline={details?.map?.polyline}
-          imgHeight={600}
-          imgWidth={1200}
-          height={viewSize.gte('md') ? 600 : 400}
-          width={'100%'}
-          alt="route"
-        />
+        <B.Div $height="600px" $display='flex'>
+          <MapLibreHRZones id={id} />
+          <B.Div $widthSmDown={2} $height="100%" $colorBg="black" />
+        </B.Div>
         <Card>
           <div className={`$pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
             <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
@@ -161,10 +156,6 @@ const ActivityDetailPage = () => {
         </Card>
       </Grid>
 
-      <B.Div $height="600px" $display='flex'>
-        <MapLibreHRZones id={id} />
-        <B.Div $widthSmDown={2} $height="100%" $colorBg="black" />
-      </B.Div>
 
       <HeartZonesDisplay
         zones={zones}

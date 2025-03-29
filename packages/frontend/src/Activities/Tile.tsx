@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { selectStreamTypeData } from '../reducers/activities';
@@ -154,4 +154,4 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
   )
 };
 
-export default Tile;
+export default memo(Tile);

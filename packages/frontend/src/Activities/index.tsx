@@ -20,6 +20,7 @@ import useShowAfterMount from '../hooks/useShowAfterMount';
 import { useAppSelector } from '../hooks/redux';
 import dayjs from 'dayjs';
 import SpeedChart from '../Common/SpeedChart';
+import TileList from './TileList';
 
 const HeatMapContainer = React.lazy(() => import('./HeatMapContainer'));
 
@@ -28,7 +29,6 @@ const listDisplayControlsKeypath = listDisplayConfigControls();
 
 const Activities = () => {
   const showChart = useShowAfterMount();
-  const [showAllActivities, setShowAllActivities] = useState(false);
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities, fastDeepEqual);
   const listPreferences = useSelector(selectListPrerences);
@@ -46,8 +46,6 @@ const Activities = () => {
     const oneYearAgo = dayjs().subtract(1, 'year');
     return activities.filter(({ start_date }) => dayjs(start_date).isAfter(oneYearAgo)).reverse();
   }, [activities]);
-
-  const runs = useAppSelector((state) => selectListActivities(state, 0, showAllActivities ? undefined: 10));
 
   const onClickSync = useCallback(() => {
     dispatch(triggerFetchActivities(true));
@@ -91,42 +89,11 @@ const Activities = () => {
             </Button>
           </PreferenceControl>
 
-          <Flex>
-            <Basic.Div $flexGrow="1">
-              {/* {
-                activitiesApiStatus === success && (
-                  // categorizeRunsByZones.map(({ runs, zones, start }) => (
-                  //   <Flex $direction="column" $gap={1} key={start}>
-                  //     {isGroupByZonesSet && (
-                  //       <Basic.Div
-                  //         $marginT={3}
-                  //         $marginB={1}
-                  //         $position='sticky'
-                  //         $top={0}
-                  //         $zIndex={1}
-                  //         $colorBg='white'
-                  //       >
-                  //         <ZonesHeader zones={zones} start={start} />
-                  //       </Basic.Div>
-                  //     )} */}
-                      <Flex $direction="column" $gap={1}>
-                        {runs.map((activity) => (
-                          <ActivityTile
-                            key={activity.id}
-                            activity={activity}
-                            className="card"
-                            backgroundIndicator={tileBackgroundIndicator}
-                            showHideFunction={showHideFunction}
-                          />
-                        ))}
-                      </Flex>
-                    {/* // </Flex>
-                  ))
-                )
-              } */}
-            </Basic.Div>
-          </Flex>
-          <Button $width="100%" onClick={() => setShowAllActivities(true)}>Show All</Button>
+          <TileList
+            showHideFunction={showHideFunction}
+            tileBackgroundIndicator={tileBackgroundIndicator}
+          />
+          
         </Basic.Div>
       </Basic.Div>
       {/* <Shimmer

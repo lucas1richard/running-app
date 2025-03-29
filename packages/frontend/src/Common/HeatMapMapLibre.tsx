@@ -1,7 +1,7 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { useId, useMemo, useRef, useState } from 'react';
 import { Basic } from '../DLS';
 import Shimmer from '../Loading/Shimmer';
-import { Layer, Map, Source } from "@vis.gl/react-maplibre";
+import { FullscreenControl, Layer, Map, Source } from "@vis.gl/react-maplibre";
 import maplibregl from 'maplibre-gl';
 import "maplibre-gl/dist/maplibre-gl.css"; // Required!
 
@@ -42,6 +42,8 @@ type HeatMapProps = {
   minColor?: RGBATuple; // RGBA
   maxColor?: RGBATuple; // RGBA
   height?: number;
+  floorValue?: number;
+  ceilingValue?: number;
 };
 
 // Add this function to your component
@@ -67,6 +69,8 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   height = 900,
   minColor = [20, 20, 255, 1], // Red with some transparency
   maxColor = [255, 0, 0, 1], // Green with full opacity
+  floorValue,
+  ceilingValue,
 }) => {
   const heatmapSource = useId();
   const heatmapLayer = useId();
@@ -123,33 +127,37 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   const mapContainerRef = useRef(null);
   
   // Update dimensions on mount and window resize
-  useEffect(() => {
-    if (!mapContainerRef.current) return;
+  // useEffect(() => {
+  //   if (!mapContainerRef.current) return;
     
-    const updateDimensions = () => {
-      if (mapContainerRef.current) {
-        setMapDimensions({
-          width: mapContainerRef.current.clientWidth,
-          height: mapContainerRef.current.clientHeight
-        });
-      }
-    };
+  //   const updateDimensions = () => {
+  //     if (mapContainerRef.current) {
+  //       setMapDimensions({
+  //         width: mapContainerRef.current.clientWidth,
+  //         height: mapContainerRef.current.clientHeight
+  //       });
+  //     }
+  //   };
     
-    // Initial measurement
-    updateDimensions();
+  //   // Initial measurement
+  //   updateDimensions();
     
-    // Set up resize listener
-    window.addEventListener('resize', updateDimensions);
-    return () => window.removeEventListener('resize', updateDimensions);
-  }, [deferRender]);
+  //   // Set up resize listener
+  //   window.addEventListener('resize', updateDimensions);
+  //   return () => window.removeEventListener('resize', updateDimensions);
+  // }, [deferRender]);
 
-  const initialViewState = useMemo(() => ({
-    latitude: defaultCenter.lat,
-    longitude: defaultCenter.lon,
-    zoom: initialZoom,
-    pitch: 0,
-    bearing: 0,
-  }), [defaultCenter, initialZoom]);
+  const initialViewState = useMemo(() => {
+    const bounds = [
+      edges.minLng - 0.0006, edges.minLat - 0.0006,
+      edges.maxLng + 0.0006, edges.maxLat + 0.0006,
+    ] as [number, number, number, number];
+    return ({
+      bounds,
+      pitch: 0,
+      bearing: 0,
+    })
+  }, [edges]);
 
   return (
     <Basic.Div>
@@ -158,10 +166,12 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
           ? (
             <div ref={mapContainerRef}>
               <Map
+                // initialViewState={initialViewState}
                 initialViewState={initialViewState}
                 mapLib={maplibregl}
                 style={{ height }}
-                mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+                // mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+                mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
               >
                 <Source
                   id={heatmapSource}
@@ -169,6 +179,10 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                   data={{
                     type: 'FeatureCollection',
                     features: data.map(({ lat, lon, [measure]: point }) => {
+                      const floor = floorValue !== undefined ? floorValue : smallestValue;
+                      const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
+                      if (Number(point) < floor) point = smallestValue;
+                      if (Number(point) > ceiling) point = largestValue;
                       const percent = (Number(point) - smallestValue) / (largestValue - smallestValue);
                       return ({
                       type: 'Feature',
@@ -189,6 +203,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                     }}
                   />
                 </Source>
+                <FullscreenControl position="top-right" />
               </Map>
             </div>
           )
@@ -204,8 +219,8 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
             <rect x="0" y="0" width="100%" height="20" fill={`url(#${gradientId})`} />
           </svg>
           <Basic.Div $display="flex" $flexJustify="space-between" $fontSize="body">
-            <Basic.Div>Lowest ({smallestValue})</Basic.Div>
-            <Basic.Div>Highst ({largestValue})</Basic.Div>
+            <Basic.Div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</Basic.Div>
+            <Basic.Div>Highst ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</Basic.Div>
           </Basic.Div>
         </Basic.Div>
       )}

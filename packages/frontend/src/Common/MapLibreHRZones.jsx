@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Layer, Map, Marker, Source } from "@vis.gl/react-maplibre";
+import { FullscreenControl, Layer, Map, Marker, Source } from "@vis.gl/react-maplibre";
 import maplibregl from 'maplibre-gl';
 // import "maplibre-gl/dist/maplibre-gl.css";
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
@@ -58,13 +58,14 @@ function MapLibreHRZones({ id }) {
   return (
     <Map
       initialViewState={{
-        longitude: defaultCenter.lng,
-        latitude: defaultCenter.lat,
-        zoom: 620 * (edges.maxLat - edges.minLat), // Adjust zoom based on lat range
+        bounds: [
+          edges.minLng - 0.0006, edges.minLat - 0.0006,
+          edges.maxLng + 0.0006, edges.maxLat + 0.0006,
+        ],
       }}
       mapLib={maplibregl}
-      mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-      // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+      // mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
     >
       <Source data={data} type="geojson" id="geojson-source">
         <Layer
@@ -82,6 +83,7 @@ function MapLibreHRZones({ id }) {
             'line-width': 5
           }}
         />
+        <FullscreenControl position="top-right" />
       </Source>
     </Map>
   );

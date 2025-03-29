@@ -5,13 +5,14 @@ import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
 import { useAppSelector } from '../hooks/redux';
 import { Basic, Card, Flex, Grid } from '../DLS';
+import { memo } from 'react';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);
 
   return (
     <div>
-      <h2>All Time PRs</h2>
+      <Basic.Div $fontSize="h2" $marginB={1}>All Time PRs</Basic.Div>
 
       <Grid
         $templateColumnsLgDown="repeat(auto-fill, minmax(250px, 1fr))"
@@ -43,4 +44,4 @@ const PRs = () => {
   );
 };
 
-export default PRs;
+export default memo(PRs);
