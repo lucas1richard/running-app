@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import { Basic, Button, Flex } from '../DLS';
 import ActivityTile from './ActivityTile';
 import { useAppSelector } from '../hooks/redux';
@@ -11,7 +11,9 @@ type TileListProps = {
 
 const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundIndicator }) => {
   const [showAllActivities, setShowAllActivities] = useState(false);
-  const runs = useAppSelector((state) => selectListActivities(state, 0, showAllActivities ? undefined: 10));
+  const runs = useAppSelector((state) => selectListActivities(state, 0, undefined));
+
+  const displayActivities = useMemo(() => showAllActivities ? runs : runs.slice(0, 10), [runs, showAllActivities]);
 
   return (
     <div>
@@ -33,7 +35,7 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
             //       </Basic.Div>
             //     )} */}
                 <Flex $direction="column" $gap={1}>
-                  {runs.map((activity) => (
+                  {displayActivities.map((activity) => (
                     <ActivityTile
                       key={activity.id}
                       activity={activity}

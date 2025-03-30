@@ -1,9 +1,11 @@
-const app = require('./app');
-const PORT = require('./port');
 const path = require('path');
 const fs = require('fs');
+const waitPort = require('wait-port');
+const app = require('./app');
+const PORT = require('./port');
 const { googleAPIKey } = require('./constants');
 const downloadImage = require('./downloadImage');
+const { setupConsumers } = require('./messageQueue/consumers');
 
 app.get('*/routes/:img', async (req, res, next) => {
   const file = req.params.img;
@@ -43,11 +45,20 @@ app.use((err, req, res, next) => {
   res.sendStatus(500);
 });
 
+(async () => {
+  try {
+    await app.listen(PORT);
+    console.log(`image-service listening on port ${PORT}`);
 
-app.listen(PORT, (err) => {
-  if (err) {
+    await waitPort({
+      host: 'rabbitmq',
+      port: 5672,
+      timeout: 10000,
+      waitForDns: true,
+    });
+
+    await setupConsumers();
+  } catch (err) {
     console.log(err);
-    return;
   }
-  console.log(`image-service listening on port ${PORT}`);
-});
+})();

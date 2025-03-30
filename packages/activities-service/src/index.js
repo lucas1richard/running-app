@@ -1,9 +1,10 @@
+const waitPort = require('wait-port');
+
 const app = require('./app');
 const PORT = require('./port');
 const { setupdb } = require('./persistence/setupdb-couchbase');
 const { initMysql } = require('./persistence/setupdb-mysql');
 const { initSequelize } = require('./persistence/sequelize-init');
-const waitPort = require('wait-port');
 
 const { setupConsumers } = require('./messageQueue/consumers');
 
@@ -17,6 +18,7 @@ const { segmentsRouter } = require('./routes/segments');
 const { activityRoutesRouter } = require('./routes/activity-routes');
 const { logger } = require('./utils/logger');
 const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
+const { dispatchFanout } = require('./messageQueue/client');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -46,6 +48,9 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
     });
 
     await setupConsumers();
+
+    //
+    await dispatchFanout('Hello', 'World');
   } catch (err) {
     logger.error({ message: 'Error starting strava-client', err });
   }

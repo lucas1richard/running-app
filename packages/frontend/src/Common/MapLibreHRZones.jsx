@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { FullscreenControl, Layer, Map, Marker, Source } from "@vis.gl/react-maplibre";
+import React, { useCallback, useEffect, useId, useMemo, useRef } from 'react';
+import { FullscreenControl, Layer, Map, Marker, Source, Point } from "@vis.gl/react-maplibre";
 import maplibregl from 'maplibre-gl';
 // import "maplibre-gl/dist/maplibre-gl.css";
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
@@ -10,8 +10,11 @@ import { condenseZonesFromHeartRate } from '../utils';
 import { useAppSelector } from '../hooks/redux';
 import { DeckGlOverlay } from '../ReactMap/deckgl-overlay';
 import { hrZonesGraph } from '../colors/hrZones';
+import { Basic } from '../DLS';
 
 function MapLibreHRZones({ id }) {
+  const outlineSourceId = useId();
+  const hrZonesSourceId = useId();
   const latlngStreamData = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;
   const activity = useAppSelector((state) => selectActivity(state, id)) || emptyObject;
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
@@ -53,6 +56,35 @@ function MapLibreHRZones({ id }) {
     })
   };
 
+  const latlondata = {
+    type: 'FeatureCollection',
+    features: [{
+      type: 'Feature',
+      properties: {
+        name: 'Outline',
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: lnglatStream
+      }
+    }],
+  };
+
+  const mapRef = useRef(null);
+  const animationRef = useRef(null);
+
+  const animatedLineLayer = useCallback((time) => {
+    const coords = latlngStreamData[Math.floor((time / 5)) % latlngStreamData.length];
+    mapRef.current?.setLngLat({ lat: coords[0], lng: coords[1] });
+    animationRef.current = requestAnimationFrame(animatedLineLayer);
+  }, []);
+
+  useEffect(() => {
+    if (latlngStreamData.length === 0) return;
+    animatedLineLayer(0);
+    return () => cancelAnimationFrame(animationRef.current);
+  }, [animatedLineLayer, latlngStreamData.length]);
+
   if (lnglatStream.length === 0) return null;
 
   return (
@@ -64,18 +96,29 @@ function MapLibreHRZones({ id }) {
         ],
       }}
       mapLib={maplibregl}
-      // mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-      mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+      mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+      // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
     >
-      <Source data={data} type="geojson" id="geojson-source">
+      <Marker
+        ref={mapRef}
+        latitude={latlngStreamData[0][0]}
+        longitude={latlngStreamData[0][1]}
+      >
+        <Basic.Div $width={1} $height={1} $colorBg="black" $borderRadius="50%" />
+      </Marker>
+      <Source data={latlondata} type="geojson" id={outlineSourceId}>
         <Layer
+          source={outlineSourceId}
           id="outline-layer"
           type="line"
           paint={{
-            'line-width': 12
+            'line-width': 10,
           }}
         />
+      </Source>
+      <Source data={data} type="geojson" id={hrZonesSourceId}>
         <Layer
+          source={hrZonesSourceId}
           id="hr-zones-layer"
           type="line"
           paint={{
@@ -85,6 +128,7 @@ function MapLibreHRZones({ id }) {
         />
         <FullscreenControl position="top-right" />
       </Source>
+      
     </Map>
   );
 }

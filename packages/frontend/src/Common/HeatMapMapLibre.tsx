@@ -44,22 +44,7 @@ type HeatMapProps = {
   height?: number;
   floorValue?: number;
   ceilingValue?: number;
-};
-
-// Add this function to your component
-const calculateZoomLevel = (bounds, mapWidth: number, mapHeight: number, padding = 90) => {
-  const { minLng, maxLng, minLat, maxLat } = bounds;
-  
-  // Calculate the angular distance
-  const latDiff = maxLat - minLat;
-  const lngDiff = maxLng - minLng;
-  
-  // Calculate zoom level for width and height separately
-  const latZoom = Math.log2(360 * (mapHeight - 2 * padding) / (256 * latDiff));
-  const lngZoom = Math.log2(360 * (mapWidth - 2 * padding) / (256 * lngDiff * Math.cos(((maxLat + minLat) / 2) * Math.PI / 180)));
-  
-  // Return the minimum zoom level that fits both dimensions
-  return Math.min(latZoom, lngZoom, 18); // Cap at zoom level 18
+  squareSize?: number;
 };
 
 const HeatMapMapLibre: React.FC<HeatMapProps> = ({
@@ -71,6 +56,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   maxColor = [255, 0, 0, 1], // Green with full opacity
   floorValue,
   ceilingValue,
+  squareSize = 0.0001,
 }) => {
   const heatmapSource = useId();
   const heatmapLayer = useId();
@@ -101,52 +87,6 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   }, [deferRender]);
 
   
-  // Add state for map dimensions
-  const [mapDimensions, setMapDimensions] = useState({ width: 900, height });
-  
-  // Calculate initial zoom level
-  const initialZoom = useMemo(() => {
-    if (!data.length) return 12.5; // Default zoom
-    
-    // Add padding to ensure all points are visible
-    const paddedBounds = {
-      minLng: edges.minLng - 0.01,
-      maxLng: edges.maxLng + 0.01,
-      minLat: edges.minLat - 0.01,
-      maxLat: edges.maxLat + 0.01
-    };
-    
-    return calculateZoomLevel(
-      paddedBounds,
-      mapDimensions.width,
-      mapDimensions.height
-    );
-  }, [edges, mapDimensions, data.length]);
-  
-  // Ref for map container to get dimensions
-  const mapContainerRef = useRef(null);
-  
-  // Update dimensions on mount and window resize
-  // useEffect(() => {
-  //   if (!mapContainerRef.current) return;
-    
-  //   const updateDimensions = () => {
-  //     if (mapContainerRef.current) {
-  //       setMapDimensions({
-  //         width: mapContainerRef.current.clientWidth,
-  //         height: mapContainerRef.current.clientHeight
-  //       });
-  //     }
-  //   };
-    
-  //   // Initial measurement
-  //   updateDimensions();
-    
-  //   // Set up resize listener
-  //   window.addEventListener('resize', updateDimensions);
-  //   return () => window.removeEventListener('resize', updateDimensions);
-  // }, [deferRender]);
-
   const initialViewState = useMemo(() => {
     const bounds = [
       edges.minLng - 0.0006, edges.minLat - 0.0006,
@@ -164,48 +104,45 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
       {
         !deferRender
           ? (
-            <div ref={mapContainerRef}>
-              <Map
-                // initialViewState={initialViewState}
-                initialViewState={initialViewState}
-                mapLib={maplibregl}
-                style={{ height }}
-                // mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-                mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+            <Map
+              initialViewState={initialViewState}
+              mapLib={maplibregl}
+              style={{ height }}
+              mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+              // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+            >
+              <Source
+                id={heatmapSource}
+                type="geojson"
+                data={{
+                  type: 'FeatureCollection',
+                  features: data.map(({ lat, lon, [measure]: point }) => {
+                    const floor = floorValue !== undefined ? floorValue : smallestValue;
+                    const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
+                    if (Number(point) < floor) point = smallestValue;
+                    if (Number(point) > ceiling) point = largestValue;
+                    const percent = (Number(point) - smallestValue) / (largestValue - smallestValue);
+                    return ({
+                    type: 'Feature',
+                    geometry: {
+                      type: 'Polygon',
+                      coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat)}, squareSize)],
+                    },
+                    properties: { color: makeColor(minColor, maxColor, percent) },
+                  })}),
+                }}
               >
-                <Source
-                  id={heatmapSource}
-                  type="geojson"
-                  data={{
-                    type: 'FeatureCollection',
-                    features: data.map(({ lat, lon, [measure]: point }) => {
-                      const floor = floorValue !== undefined ? floorValue : smallestValue;
-                      const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
-                      if (Number(point) < floor) point = smallestValue;
-                      if (Number(point) > ceiling) point = largestValue;
-                      const percent = (Number(point) - smallestValue) / (largestValue - smallestValue);
-                      return ({
-                      type: 'Feature',
-                      geometry: {
-                        type: 'Polygon',
-                        coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat)})],
-                      },
-                      properties: { color: makeColor(minColor, maxColor, percent) },
-                    })}),
+                <Layer
+                  id={heatmapLayer}
+                  type="fill"
+                  // source={heatmapSource}
+                  paint={{
+                    "fill-color": ['get', 'color'],
                   }}
-                >
-                  <Layer
-                    id={heatmapLayer}
-                    type="fill"
-                    // source={heatmapSource}
-                    paint={{
-                      "fill-color": ['get', 'color'],
-                    }}
-                  />
-                </Source>
-                <FullscreenControl position="top-right" />
-              </Map>
-            </div>
+                />
+              </Source>
+              <FullscreenControl position="top-right" />
+            </Map>
           )
           : <Basic.Div $height={`${height}px`}><Shimmer isVisible={true} /></Basic.Div>
       }
