@@ -14,6 +14,7 @@ const { queryStream } = require('../mysql-connection');
 const { BatchTransformer } = require('../../utils/streams');
 
 const activitiesQuery = fs.readFileSync(path.resolve(path.join(__dirname, './getactivities.sql'))).toString();
+const activitiesByIdQuery = fs.readFileSync(path.resolve(path.join(__dirname, './getactivitiesById.sql'))).toString();
 
 
 const findActivityById = async (id) => {
@@ -69,6 +70,49 @@ const findAllActivitiesStream = async () => {
   });
 };
 
+const findActivitiesByIdStream = async (idsArray = []) => {
+  logger.info('Fetching all activities from MySQL with stream');
+
+  const readable = await queryStream({
+    sql: activitiesByIdQuery,
+    queryOptions: { values: [idsArray] },
+    streamOptions: { highWaterMark: 30 }
+  });
+
+  readable.on('close', () => {
+    logger.info('Readable stream closed');
+  });
+
+  logger.info('Stream created', { service: 'activities-service' });
+
+  const rowEnhancer = new Transform({
+    transform: function (row, enc, cb) {
+      row.distance = Math.round(row.distance * 100) / 100;
+      row.distance_miles = Math.round(row.distance_miles * 100) / 100;
+      row.total_elevation_gain = Number(row.total_elevation_gain);
+      row.average_seconds_per_mile = Math.round(row.average_seconds_per_mile);
+      row.average_speed = Number(row.average_speed);
+      row.max_speed = Number(row.max_speed);
+      row.average_heartrate = Number(row.average_heartrate);
+      row.elev_high = Number(row.elev_high);
+      row.elev_low = Number(row.elev_low);
+      this.push(row);
+      cb();
+    },
+    objectMode: true,
+  });
+
+  const batcher = new BatchTransformer(30);
+
+  return pipeline(readable, rowEnhancer, batcher, (err) => {
+    if (err) {
+      logger.error('Pipeline failed', { error: err });
+    } else {
+      logger.info('Pipeline succeeded');
+    }
+  });
+};
+
 const findNearbyStartingActivities = async (activity) => {
   Activity.findAll({
     where: {
@@ -87,6 +131,7 @@ module.exports = {
   findActivityById,
   findAllActivities,
   findAllActivitiesStream,
+  findActivitiesByIdStream,
   findNearbyStartingActivities,
   findRelationsBySimilarRoute,
   findRelationsBySimilarSegments,

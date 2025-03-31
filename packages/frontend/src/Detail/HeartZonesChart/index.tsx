@@ -137,7 +137,6 @@ const HeartZonesChartContainer = ({ id }) => {
             minColor={[255, 0, 0, 1]}
             maxColor={[0, 255, 0, 1]}
             floorValue={1}
-            ceilingValue={3}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">

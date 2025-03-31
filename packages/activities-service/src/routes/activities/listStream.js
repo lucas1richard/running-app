@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { findAllActivitiesStream } = require('../../persistence/activities');
+const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
 const fetchStrava = require('../../utils/fetchStrava');
 const { bulkAddActivities } = require('../../persistence/setupdb-couchbase');
 const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
@@ -26,6 +26,18 @@ router.get('/listStream', async (req, res) => {
       await bulkAddActivities(activitiesList); // couchdb
       const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
       addedRecords.forEach((record) => dispatchFanout(topics.ACTIVITY_PULL, JSON.stringify({ id: record.id })));
+
+      const readableStream = await findActivitiesByIdStream(addedRecords.map((record) => record.id));
+      readableStream.resume();
+
+      for await (const batch of readableStream) {
+        res.write(`data: ${JSON.stringify(batch)}\n\n`); // send each row immediately
+      }
+      logger.info('End of stream');
+      res.write('event: close\ndata: Stream closed\n\n');
+
+      res.end();
+      return;
     }
     const readableStream = await findAllActivitiesStream();
     readableStream.resume();
