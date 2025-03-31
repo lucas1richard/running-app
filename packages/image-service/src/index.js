@@ -20,11 +20,10 @@ app.get('*/routes/:img', async (req, res, next) => {
   const options = {
     root: rootDir
   };
-
+  
+  res.setHeader('Cache-Control', 'public, max-age=315576000');
   res.sendFile(file, options, async (err) => {
     if (err) {
-      // console.log(err);
-      // res.sendStatus(400)
       try {
         // get the image from google maps
         fs.mkdirSync(rootDir, { recursive: true });
@@ -33,7 +32,9 @@ app.get('*/routes/:img', async (req, res, next) => {
           `https://maps.googleapis.com/maps/api/staticmap?size=${size}&maptype=${maptype}&path=${routepath}&key=${googleAPIKey}`,
           path.join(__dirname, 'static', size, maptype, file)
         )
-        res.sendFile(file, options);
+        res.sendFile(file, {
+          root: rootDir,
+        });
       } catch (error) {
         return next(err);
       }
