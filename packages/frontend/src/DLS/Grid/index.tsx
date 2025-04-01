@@ -12,9 +12,11 @@ const Grid = styled.div<GridProps>`
   ${makeSizeProps([
     ['$templateColumns', 'grid-template-columns'],
     ['$templateAreas', 'grid-template-areas'],
+    ['$templateRows', 'grid-template-rows'],
     ['$colGap', 'column-gap'],
     ['$rowGap', 'row-gap'],
     ['$gap', 'gap'],
+    ['$gridAutoRows', 'grid-auto-rows'],
   ])}
 `;
 
@@ -23,6 +25,8 @@ interface GridProps extends SizeProp<'$templateColumns', CSS.Property.GridTempla
   SizeProp<'$colGap', CSS.Property.ColumnGap>,
   SizeProp<'$rowGap', CSS.Property.RowGap>,
   SizeProp<'$gap', number | CSS.Property.Gap>,
+  SizeProp<'$gridAutoRows', number | CSS.Property.GridAutoRows>,
+  SizeProp<'$templateRows', number | CSS.Property.GridTemplateRows>,
   StandardProps
   {
     className?: string;

@@ -25,6 +25,7 @@ import PersonalRecords from './PersonalRecords';
 import Volume from './Volume';
 import MultiMapPage from './MultiMap';
 import { Container } from './DLS';
+import CalendarView from './Calendar';
 
 enableMapSet();
 
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         Component: App,
+      },
+      {
+        path: '/calendar',
+        Component: CalendarView,
       },
       {
         path: '/:id/detail',

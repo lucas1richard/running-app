@@ -49,8 +49,19 @@ export const styledComponentsTheme = {
     blue2: 'rgb(100, 232, 255)',
     blue3: 'rgb(150, 255, 255)',
     black: 'rgb(0, 0, 0)',
+    gray: 'rgb(128, 128, 128)',
+    gray0: 'rgb(240, 240, 240)',
+    gray1: 'rgb(224, 224, 224)',
+    gray2: 'rgb(192, 192, 192)',
+    gray3: 'rgb(160, 160, 160)',
+    gray4: 'rgb(128, 128, 128)',
+    transparent: 'rgba(0, 0, 0, 0)',
   },
   $color: {
+    blue0: 'rgb(0, 132, 255)',
+    blue1: 'rgb(50, 182, 255)',
+    blue2: 'rgb(100, 232, 255)',
+    blue3: 'rgb(150, 255, 255)',
     hrZone1: 'rgba(0, 132, 255, 1)',
     hrZone2: 'rgba(0,255,0,1)',
     hrZone3: 'rgba(255, 251, 0, 1)',
@@ -60,6 +71,8 @@ export const styledComponentsTheme = {
     darkGold: 'rgb(184, 134, 11)',
     silver: 'rgb(142, 142, 142)',
     bronze: 'rgb(155, 77, 0)',
+    black: 'rgb(0, 0, 0)',
+    white: 'rgb(255, 255, 255)',
   }
 };
 

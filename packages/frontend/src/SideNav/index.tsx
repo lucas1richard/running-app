@@ -53,6 +53,8 @@ const SideNav: FC<SideNavProps> = () => {
     <SideBar>
       <Link to="/">Home</Link>
       <hr />
+      <Link to="/calendar">Calendar</Link>
+      <hr />
       <Link to="/personal-records">Personal Records</Link>
       <hr />
       <Link to="/volume">Volume</Link>

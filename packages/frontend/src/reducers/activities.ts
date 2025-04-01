@@ -311,4 +311,18 @@ const getTimeGroupedRuns = (state: RootState, timeGroup: ManipulateType = 'week'
 };
 export const selectTimeGroupedRuns = createDeepEqualSelector(getTimeGroupedRuns, (res) => res);
 
+export const selectActivitiesByDate = createDeepEqualSelector(
+  selectActivities,
+  (activities) => {
+    return activities.reduce((acc, activity) => {
+      const date = dayjs(activity.start_date_local).format('YYYY-MM-DD');
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(activity);
+      return acc;
+    }
+    , {});
+  });
+
 export default activitiesReducer;
