@@ -7,7 +7,6 @@ FROM
   LEFT OUTER JOIN activities ON `activities`.`id` = `route_coordinates_n`.`activityId`
 WHERE
   `compression_level` = 0.0001
-  -- AND `activities`.`start_date_local` > NOW () - INTERVAL 3 Month
   AND seconds_at_coords > 0
 GROUP BY
   lat,

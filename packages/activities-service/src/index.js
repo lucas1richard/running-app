@@ -19,6 +19,7 @@ const { activityRoutesRouter } = require('./routes/activity-routes');
 const { logger } = require('./utils/logger');
 const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 const { dispatchFanout } = require('./messageQueue/client');
+const { rpcRouter } = require('./routes/rpc');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -30,6 +31,7 @@ app.use('/user', userRouter);
 app.use('/segments', segmentsRouter);
 app.use('/routes', activityRoutesRouter);
 app.use('/routeCoordinates', routeCoordinatesRouter);
+app.use('/rpc', rpcRouter);
 
 (async () => {
   try {
