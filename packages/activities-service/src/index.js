@@ -20,6 +20,7 @@ const { logger } = require('./utils/logger');
 const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 const { dispatchFanout } = require('./messageQueue/client');
 const { rpcRouter } = require('./routes/rpc');
+require('./grpctest');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);

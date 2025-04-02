@@ -17,9 +17,25 @@ services:
     working_dir: /activities-service
     volumes:
       - ./packages/activities-service:/activities-service
+      - ./protos:/protos
     depends_on:
       - rabbitmq
+      - activity-matching-service
     env_file: "./activities-service.env" # gitignored file
+
+  activity-matching-service:
+    image: node:18-alpine
+    command: sh -c "npm install && npm run dev"
+    # ports:
+    #   - "50051:50051"
+    working_dir: /activity-matching-service
+    volumes:
+      - ./packages/activity-matching-service:/activity-matching-service
+      - ./protos:/protos
+    env_file: "./activities-service.env" # gitignored file
+    environment:
+      - SERVICE_NAME=activity-matching-service
+      - SERVICE_PORT=50051
 
   activities-go-server:
     build:
