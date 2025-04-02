@@ -25,7 +25,6 @@ const compactAreas = `
   "image title title"
   "stats stats stats"
   "zonesWidth zonesWidth zonesWidth"
-  "bestEfforts bestEfforts bestEfforts"
   "children children children"
 `;
 
@@ -47,10 +46,10 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
   const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
 
   return (
-    <Basic.Div $pad={1} className={`${backgroundColor}`}>
+    <Basic.Div $pad={0.5} className={`${backgroundColor}`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
       <Grid
-        $gap={1}
+        $gap={isCompact ? 0.5 : 1}
         $templateColumns={isCompact ? '1fr auto auto' : 'auto 1fr auto'}
         $templateAreas={isCompact
           ? compactAreas
@@ -133,8 +132,8 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
           )}
         </Basic.Div>
 
-        <Basic.Div $gridArea="bestEfforts" $display="flex" $gap={1}>
-          {!isCompact && bestEfforts.length > 0 && (
+        {!isCompact && (<Basic.Div $gridArea="bestEfforts" $display="flex" $gap={1}>
+          {bestEfforts.length > 0 && (
             bestEfforts.filter(({ pr_rank }) => pr_rank).map((effort) => (
               <Flex $flexShrink="1" $flexGrow="1" $alignItems='center' key={effort.distance}>
                 <span><PRMedal color={effort.pr_rank || 'black'} type={effort.pr_rank <= 3 ? 'native' : 'svg'} /></span>
@@ -144,7 +143,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
               </Flex>
             ))
           )}
-        </Basic.Div>
+        </Basic.Div>)}
 
         <Basic.Div $gridArea="children">
           {children}

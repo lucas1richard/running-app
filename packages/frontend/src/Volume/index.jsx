@@ -46,47 +46,51 @@ const Volume = () => {
         groupedData={groupedData}
         greatestTotal={greatestTotal}
       />}
-      <Grid
-        $templateColumns="1fr"
-        $templateColumnsMdUp="repeat(2, 1fr)"
-        $templateColumnsXl="repeat(4, 1fr) !important"
-        $marginT={2}
-        $gap={1}
-      >
-        <div>
-          <Basic.Div $fontSize="h2" $marginB={1}>Past 7 Days</Basic.Div>
-          <HeatMapContainer timeframe="1 week" />
-        </div>
-        <div>
-          <Basic.Div $fontSize="h2" $marginB={1}>Past Month</Basic.Div>
-          <HeatMapContainer timeframe="1 month" />
-        </div>
-        <div>
-          <Basic.Div $fontSize="h2" $marginB={1}>Past 6 Months</Basic.Div>
-          <HeatMapContainer timeframe="6 month" />
-        </div>
-        <div>
-          <Basic.Div $fontSize="h2" $marginB={1}>Past 1 Year</Basic.Div>
-          <HeatMapContainer timeframe="1 year" />
-        </div>
-      </Grid>
-
-      <Basic.Div
-        $marginT={1}
-        $display="flex"
-        $directionSmDown="column"
-        $flexJustify="center"
-        $gap={1}
-      >
-        <VolumeTable timeGroup="week" />
-        {viewSize.gte('md') && (
-          <>
-            <VolumeTable timeGroup="month" />
-            <VolumeTable timeGroup="year" />
-          </>
-        )}
+      <Basic.Div $display="flex">
+        <Basic.Div
+          $marginT={1}
+          $display="flex"
+          $directionSmDown="column"
+          $flexJustify="center"
+          $gap={1}
+        >
+          <VolumeTable timeGroup="week" />
+          {viewSize.gte('md') && (
+            <>
+              <VolumeTable timeGroup="month" />
+              <VolumeTable timeGroup="year" />
+            </>
+          )}
+        </Basic.Div>
+        <Basic.Div
+          $marginL={2}
+          $flexGrow="1"
+          // $templateColumns="1fr"
+          // $templateColumnsMdUp="repeat(2, 1fr)"
+          // $templateColumnsXl="repeat(4, 1fr) !important"
+          $marginT={2}
+          // $gap={1}
+        >
+          <div>
+            <Basic.Div $fontSize="h2" $marginB={1}>Past 7 Days</Basic.Div>
+            <HeatMapContainer timeframe="1 week" />
+          </div>
+          <div>
+            <Basic.Div $fontSize="h2" $marginT={3} $marginB={1}>Past Month</Basic.Div>
+            <HeatMapContainer timeframe="1 month" />
+          </div>
+          <div>
+            <Basic.Div $fontSize="h2" $marginT={3} $marginB={1}>Past 6 Months</Basic.Div>
+            <HeatMapContainer timeframe="6 month" />
+          </div>
+          <div>
+            <Basic.Div $fontSize="h2" $marginT={3} $marginB={1}>Past 1 Year</Basic.Div>
+            <HeatMapContainer timeframe="1 year" />
+          </div>
+        </Basic.Div>
+        </Basic.Div>
       </Basic.Div>
-    </Basic.Div>
+
   );
 };
 

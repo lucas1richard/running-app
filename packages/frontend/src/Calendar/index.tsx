@@ -108,7 +108,7 @@ const CalendarView = () => {
         $marginT={2}
         $templateColumns={`repeat(7, 1fr)`}
         $templateColumnsMdDown={"1fr"}
-        $templateRows={`auto repeat(${Math.round((daysUI.length) / 7)}, minmax(300px, 1fr))`}
+        $templateRows={`auto repeat(${Math.round((daysUI.length) / 7)}, minmax(222px, 1fr))`}
         $templateRowsMdDown="auto"
         $gap={0.5}
       >
