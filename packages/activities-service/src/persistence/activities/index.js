@@ -1,4 +1,4 @@
-const { Transform, pipeline } = require('node:stream');
+const { Transform, pipeline, Readable } = require('node:stream');
 const fs = require('fs');
 const path = require('path');
 const { Sequelize } = require('sequelize');
@@ -64,8 +64,6 @@ const findAllActivitiesStream = async () => {
   return pipeline(readable, rowEnhancer, batcher, (err) => {
     if (err) {
       logger.error('Pipeline failed', { error: err });
-    } else {
-      logger.info('Pipeline succeeded');
     }
   });
 };
@@ -73,7 +71,11 @@ const findAllActivitiesStream = async () => {
 const findActivitiesByIdStream = async (idsArray = []) => {
   logger.info('Fetching all activities from MySQL with stream');
 
-  const readable = await queryStream({
+  const readable = idsArray.length === 0 ? new Readable({
+    read() {
+      this.push(null);
+    }
+  }) : await queryStream({
     sql: activitiesByIdQuery,
     queryOptions: { values: [idsArray] },
     streamOptions: { highWaterMark: 30 }
@@ -107,8 +109,6 @@ const findActivitiesByIdStream = async (idsArray = []) => {
   return pipeline(readable, rowEnhancer, batcher, (err) => {
     if (err) {
       logger.error('Pipeline failed', { error: err });
-    } else {
-      logger.info('Pipeline succeeded');
     }
   });
 };

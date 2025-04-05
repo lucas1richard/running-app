@@ -56,8 +56,6 @@ const getAllCoordinatesStream = async (referenceTime, timeframe) => {
   return pipeline(readable, new BatchTransformer(500), (err) => {
     if (err) {
       console.error('Pipeline failed', err);
-    } else {
-      console.log('Pipeline succeeded');
     }
   });
 };
@@ -79,7 +77,7 @@ const bulkCreateRouteCoordinates = async (activityId, compressedRoute, compressi
     })),
     {
       updateOnDuplicate: ['seconds_at_coords', 'compression_level'],
-      logging: false,
+      // logging: false,
     }
   );
 };

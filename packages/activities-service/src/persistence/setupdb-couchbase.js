@@ -51,7 +51,7 @@ const bulkAddActivities = async (activities, batchSize = 100) => {
 
   // Process each batch sequentially
   for (const batch of batches) {
-    await activitiesDb.bulk({ 
+    await activitiesDb.bulk({
       docs: batch.map((activity) => ({
         _id: `${activity.id}`,
         ...activity,

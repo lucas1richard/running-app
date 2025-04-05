@@ -1,11 +1,7 @@
 const { Router } = require('express');
 const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
-const fetchStrava = require('../../utils/fetchStrava');
-const { bulkAddActivities } = require('../../persistence/setupdb-couchbase');
-const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
-const topics = require('../../messageQueue/topics');
-const { dispatchFanout } = require('../../messageQueue/client');
 const { logger } = require('../../utils/logger');
+const { getGrpcClient } = require('../../grpctest');
 
 const router = Router();
 
@@ -22,10 +18,17 @@ router.get('/listStream', async (req, res) => {
 
   try {
     if (forceFetch) {
-      const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
-      await bulkAddActivities(activitiesList); // couchdb
-      const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
-      addedRecords.forEach((record) => dispatchFanout(topics.ACTIVITY_PULL, JSON.stringify({ id: record.id })));
+      const stravaIngestionService = getGrpcClient({
+        serviceName: 'strava-ingestion-service',
+        servicePort: '50052',
+        protoPackage: 'stravaIngestion',
+        protoService: 'StravaIngestion'
+      });
+
+      const addedRecords = await new Promise((resolve, reject) => stravaIngestionService.fetchNewActivities({ perPage, page }, (error, response) => {
+        if (error) reject(error);
+        else resolve(response.activityId);
+      }));
 
       const readableStream = await findActivitiesByIdStream(addedRecords.map((record) => record.id));
       readableStream.resume();

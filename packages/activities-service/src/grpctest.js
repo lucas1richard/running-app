@@ -1,25 +1,35 @@
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
-const path = require('path');
 
-const packageDefinition = protoLoader.loadSync(
-  path.join(__dirname, '../../protos/activity-matching-service.proto'),
-  {
-    keepCase: true,
-    longs: String,
-    enums: String,
-    defaults: true,
-    oneofs: true
+const options = {
+  keepCase: true,
+  longs: String,
+  enums: String,
+  defaults: true,
+  oneofs: true
+};
+
+const clients = new Map();
+
+/**
+ * @param {{ serviceName: string, servicePort: string | number, protoPackage: string, protoService: string }} param0
+ */
+const getGrpcClient = ({ serviceName, servicePort, protoPackage, protoService }) => {
+  if (clients.has(serviceName)) {
+    return clients.get(serviceName);
   }
-);
-const activityMatching = grpc.loadPackageDefinition(packageDefinition).activityMatching;
+  const packageDefinition = protoLoader.loadSync(
+    `/protos/${serviceName}.proto`,
+    options
+  );
+  const serviceClientConstructor = grpc.loadPackageDefinition(packageDefinition)[protoPackage];
 
-const client = new activityMatching.ActivityMatching(
-  'activity-matching-service:50051',
-  grpc.credentials.createInsecure()
-);
+  const client = new serviceClientConstructor[protoService](
+    `${serviceName}:${servicePort}`,
+    grpc.credentials.createInsecure()
+  );
 
-client.hello({ name: 'World' }, (error, response) => {
-  if (error) console.error('Error:', error);
-  else console.log('WOWOWOW:', response.message);
-});
+  return client
+};
+
+module.exports = { getGrpcClient };

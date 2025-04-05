@@ -1,10 +1,6 @@
 const { Router } = require('express');
-const {
-  bulkAddActivities,
-  getAllStreams,
-} = require('../../persistence/setupdb-couchbase');
+const { getAllStreams } = require('../../persistence/setupdb-couchbase');
 const summary = require('../../persistence/mysql-activities');
-const fetchStrava = require('../../utils/fetchStrava');
 const { deleteRouter } = require('./byId/delete');
 const { detailsRouter } = require('./byId/detail');
 const { weatherRouter } = require('./byId/weather');
@@ -16,12 +12,10 @@ const { stravaRouter } = require('./byId/strava');
 const { routeRouter } = require('./byId/route');
 const { similarActivitiesRouter } = require('./byId/similar-activities');
 const { findAllActivities } = require('../../persistence/activities');
-const bulkAddActivitiesFromStrava = require('../../persistence/activities/bulkAddActivitiesFromStrava');
 const getPRsByDate = require('../../controllers/getPRsByDate');
 const getPRs = require('../../controllers/getPRs');
-const { dispatchFanout } = require('../../messageQueue/client');
-const topics = require('../../messageQueue/topics');
 const { listStreamRouter } = require('./listStream');
+const { getGrpcClient } = require('../../grpctest');
 
 const router = Router();
 
@@ -53,11 +47,17 @@ router.get('/list', async (req, res) => {
       }
     }
 
-    const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
-    await bulkAddActivities(activitiesList); // couchdb
-    const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
+    const stravaIngestionService = getGrpcClient({
+      serviceName: 'strava-ingestion-service',
+      servicePort: '50052',
+      protoPackage: 'stravaIngestion',
+      protoService: 'StravaIngestion'
+    });
 
-    addedRecords.forEach((record) => dispatchFanout(topics.ACTIVITY_PULL, JSON.stringify({ id: record.id })))
+    await new Promise((resolve, reject) => stravaIngestionService.fetchNewActivities({ perPage, page }, (error, response) => {
+      if (error) reject(error);
+      else resolve(response.activityId);
+    }));
 
     const records = await findAllActivities();
 
