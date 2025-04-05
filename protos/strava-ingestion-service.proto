@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package stravaIngestion;
+
+service StravaIngestion {
+  rpc FetchNewActivities (FetchNewActivitiesRequest) returns (FetchNewActivitiesResponse) {}
+}
+
+message Empty {}
+
+message FetchNewActivitiesResponse {
+  repeated string activityId = 1;
+}
+
+message FetchNewActivitiesRequest {
+  uint32 perPage = 1;
+  uint32 page = 2;
+}
