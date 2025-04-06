@@ -8,6 +8,12 @@ let channel = null;
 
 const boundChannels = new Map();
 
+const getRabbitMQConnection = async () => {
+  if (connection) return connection;
+  connection = await amqp.connect('amqp://guest:guest@rabbitmq:5672');
+  return connection;
+};
+
 /**
  * Get a channel from the connection.
  * If the connection is not established, it will create a new connection.
@@ -17,10 +23,10 @@ const boundChannels = new Map();
  */
 const getChannel = async ({ makeNew } = {}) => {
   if (!makeNew && channel) return channel;
-  if (!connection) connection = await amqp.connect('amqp://guest:guest@rabbitmq:5672');
+  const rabbit = await getRabbitMQConnection();
 
-  if (makeNew) return connection.createChannel();
-  channel = await connection.createChannel();
+  if (makeNew) return rabbit.createChannel();
+  channel = await rabbit.createChannel();
   return channel;
 };
 
@@ -38,7 +44,7 @@ const getBoundedChannel = async (exchangeName, boundedQueueName = '', type = 'fa
   if (boundChannels.has(key)) return boundChannels.get(key);
 
   const channel = await getChannel({ makeNew: true });
-  await channel.assertExchange(exchangeName, type, { durable: false });
+  await channel.assertExchange(exchangeName, type, { durable: true });
   const q = await channel.assertQueue(boundedQueueName, { exclusive: true });
   await channel.bindQueue(q.queue, exchangeName, '');
 
@@ -60,6 +66,7 @@ process.on('SIGINT', closeConnection);
 process.on('SIGTERM', closeConnection);
 
 module.exports = {
+  getRabbitMQConnection,
   getChannel,
   getBoundedChannel,
   closeConnection,
