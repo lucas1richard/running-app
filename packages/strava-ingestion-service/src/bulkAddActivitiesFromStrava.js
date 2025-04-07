@@ -67,7 +67,7 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
   if (stravaActivities.length > 0) {
     try {
       const connection = await getMySQLConnection();
-      const [existingRecords] = await connection.query('select id from activities where id in (?)', [stravaActivities.map(a => a.id)]);
+      const existingRecords = await query('select id from activities where id in (?)', [stravaActivities.map(a => a.id)]);
 
       const existingMap = existingRecords.reduce((a, r) => {
         a[r.id] = true;
@@ -134,7 +134,7 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
         return [];
       }
 
-      await connection.query(
+      await query(
         sql,
         [newActivities]
       );

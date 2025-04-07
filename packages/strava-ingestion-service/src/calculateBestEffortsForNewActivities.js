@@ -1,5 +1,5 @@
 const { calculateActivityBestEfforts } = require('./calculateActivityBestEfforts');
-const { getMySQLConnection } = require('./mysql-connection');
+const { query } = require('./mysql-connection');
 
 /**
  * @param {number[]} activityIds
@@ -7,17 +7,15 @@ const { getMySQLConnection } = require('./mysql-connection');
 const calculateBestEffortsForNewActivities = async (activityIds = []) => {
   if (activityIds.length === 0) return;
 
-  const connection = await getMySQLConnection();
-
   // get pre-existing calculated best efforts for activities within `activityIds` so they can
   // be excluded from re-calculation
-  const [calculatedBestEfforts] = await connection.query(`
+  const calculatedBestEfforts = await query(`
   SELECT DISTINCT(activityId) AS activityId
   FROM calculated_best_efforts AS calculatedBestEfforts
   WHERE calculatedBestEfforts.activityId IN (?)
   `, [activityIds]);
 
-  const [activities] = await connection.query(`
+  const activities = await query(`
     SELECT
       id, start_date_local, sport_type
       FROM activities AS activities
@@ -34,7 +32,7 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
 
   const NUM_RANKS_TO_TRACK = 10;
 
-  const [existingCalculatedBestEfforts] = await connection.query(
+  const existingCalculatedBestEfforts = await query(
     `SELECT * FROM (
       SELECT b.*, a.name as activity_name, ROW_NUMBER() OVER (PARTITION BY b.distance ORDER BY b.elapsed_time ASC) as row_num 
         FROM calculated_best_efforts AS b
@@ -82,7 +80,7 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
       return effort;
     });
 
-    await connection.query(`
+    await query(`
       INSERT INTO calculated_best_efforts (
       start_date_local,distance,elapsed_time,moving_time,pr_rank,name,start_index,end_index,activityId,createdAt,updatedAt
       )
