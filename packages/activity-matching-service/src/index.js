@@ -1,6 +1,7 @@
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
+require('./persistence/findSimilarStartDistance');
 
 const packageDefinition = protoLoader.loadSync(
   path.join(__dirname, '../../protos/activity-matching-service.proto'),
@@ -16,7 +17,9 @@ const activityMatching = grpc.loadPackageDefinition(packageDefinition).activityM
 
 function hello(call, callback) {
   console.log('Hello called');
-  callback(null, { message: 'Hello from the server!' });
+  setTimeout(() => {
+    callback(null, { message: 'Hello from the server!' });
+  }, 2000);
 }
 
 function getServer() {

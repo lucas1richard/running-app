@@ -15,4 +15,5 @@ message FetchNewActivitiesResponse {
 message FetchNewActivitiesRequest {
   uint32 perPage = 1;
   uint32 page = 2;
+  bool fetchAll = 3;
 }

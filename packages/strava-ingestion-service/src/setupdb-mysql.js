@@ -13,8 +13,6 @@ const {
   MYSQL_DB_FILE: DB_FILE,
 } = process.env;
 
-console.log(process.env)
-
 let pool;
 
 const createTokensTable = (dbPool) => new Promise((acc, rej) => {

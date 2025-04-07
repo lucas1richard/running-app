@@ -13,7 +13,7 @@ const {
 
 const deleteActivity = async (activityId) => {
   await Promise.all([
-    Activity.destroy({ where: { id: activityId } }),
+    Activity.scope('').destroy({ where: { id: activityId } }),
     AthleteSegment.destroy({ where: { activityId } }),
     BestEfforts.destroy({ where: { activityId } }),
     StreamPin.destroy({ where: { activityId } }),

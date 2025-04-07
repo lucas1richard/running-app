@@ -5,6 +5,13 @@ const { getGrpcClient } = require('../../grpctest');
 
 const router = Router();
 
+const stravaIngestionService = getGrpcClient({
+  serviceName: 'strava-ingestion-service',
+  servicePort: '50052',
+  protoPackage: 'stravaIngestion',
+  protoService: 'StravaIngestion'
+});
+
 router.get('/listStream', async (req, res) => {
   const forceFetch = req.query.force;
   const page = req.query.page || 1;
@@ -18,17 +25,11 @@ router.get('/listStream', async (req, res) => {
 
   try {
     if (forceFetch) {
-      const stravaIngestionService = getGrpcClient({
-        serviceName: 'strava-ingestion-service',
-        servicePort: '50052',
-        protoPackage: 'stravaIngestion',
-        protoService: 'StravaIngestion'
-      });
-
-      const addedRecords = await new Promise((resolve, reject) => stravaIngestionService.fetchNewActivities({ perPage, page }, (error, response) => {
-        if (error) reject(error);
-        else resolve(response.activityId);
-      }));
+      const addedRecords = await new Promise((resolve, reject) => stravaIngestionService
+        .fetchNewActivities({ perPage, page }, (error, response) => {
+          if (error) reject(error);
+          else resolve(response.activityId);
+        }));
 
       const readableStream = await findActivitiesByIdStream(addedRecords.map((record) => record.id));
       readableStream.resume();

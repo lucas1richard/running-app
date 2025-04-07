@@ -43,6 +43,12 @@ const getMySQLConnection = async () => {
   return pool;
 };
 
+const query = async (...args) => {
+  const connection = await getMySQLConnection();
+  const [rows] = await connection.query(...args);
+  return rows;
+};
+
 const queryStream = async ({
   sql = '',
   queryOptions = {
@@ -57,4 +63,5 @@ const queryStream = async ({
 module.exports = {
   getMySQLConnection,
   queryStream,
+  query,
 };

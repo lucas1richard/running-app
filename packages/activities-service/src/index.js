@@ -18,7 +18,6 @@ const { logger } = require('./utils/logger');
 const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 const { rpcRouter } = require('./routes/rpc');
 const { getRabbitMQConnection } = require('./messageQueue/rabbitmq');
-const { channelConfigs, getChannel } = require('./messageQueue/channels');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -45,13 +44,6 @@ app.use('/rpc', rpcRouter);
     await getRabbitMQConnection();
 
     await setupConsumers();
-
-    const channel = await getChannel(channelConfigs.imageService);
-    channel.publish(
-      channelConfigs.imageService.exchangeName,
-      '',
-      Buffer.from(JSON.stringify({ ...channelConfigs.imageService, channel: undefined }))
-    );
   } catch (err) {
     logger.error({ message: 'Error starting strava-client' });
     console.log(err)

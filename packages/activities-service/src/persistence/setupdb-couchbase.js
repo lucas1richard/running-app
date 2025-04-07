@@ -60,6 +60,24 @@ const bulkAddActivities = async (activities, batchSize = 100) => {
   }
 };
 
+const makeDeleteById = (db) => async (id) => {
+  try {
+    // First, get the current document to retrieve its _rev
+    const activity = await db.get(id);
+
+    // Then delete with the correct revision
+    const response = await db.destroy(id, activity._rev);
+    console.log(`Successfully deleted ${this} ${id}`);
+    return response;
+  } catch (error) {
+    if (error.statusCode === 404) {
+      console.log(`${this} ${id} not found, nothing to delete`);
+      return { ok: true, id: id, notFound: true };
+    }
+    console.error(`Error deleting ${this} ${id}:`, error);
+  }
+}
+
 const getAllActivities = async () => {
   const params = { include_docs: true, limit: 10000, descending: true };
 
@@ -78,17 +96,12 @@ const getActivity = async (id) => {
     const activity = await activitiesDb.get(`${id}`);
     return activity;
   } catch (err) {
+    console.log('getActivity', err);
     return undefined;
   }
 };
 
-const destroyActivity = async (id) => {
-  try {
-    await activitiesDb.destroy(`${id}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-};
+const destroyActivity = makeDeleteById(activitiesDb);
 
 const getActivityDetail = async (id) => {
   try {
@@ -99,13 +112,7 @@ const getActivityDetail = async (id) => {
   }
 };
 
-const destroyActivityDetail = async (id) => {
-  try {
-    await activitiesDetailDb.destroy(`${id}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-};
+const destroyActivityDetail = makeDeleteById(activitiesDetailDb);
 
 const addActivityDetail = async (activity) => {
   const res = await activitiesDetailDb.insert(activity, `${activity.id}`);
@@ -123,6 +130,7 @@ const getUserPreferences = async (userId) => {
     const preferences = await userPreferencesDb.get(`${userId}`);
     return preferences;
   } catch (err) {
+    console.log('getUserPreferences', err);
     return undefined;
   }
 };
@@ -136,13 +144,7 @@ const getActivityPreferences = async (activityId) => {
   }
 };
 
-const destroyActivityPreferences = async (activityId) => {
-  try {
-    await activityPreferencesDb.destroy(`${activityId}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-}
+const destroyActivityPreferences = makeDeleteById(activityPreferencesDb);
 
 const updateUserPreferences = async (userId, preferences = {}) => {
   const existing = await getUserPreferences(userId) || {};
@@ -166,17 +168,12 @@ const getStream = async (id) => {
     const stream = await streamsDb.get(`${id}`);
     return stream;
   } catch (err) {
+    console.log('getStream', err);
     return undefined;
   }
 };
 
-const destroyStream = async (id) => {
-  try {
-    await streamsDb.destroy(`${id}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-};
+const destroyStream = makeDeleteById(streamsDb);
 
 const getAllStreams = async () => {
   const params = { include_docs: true, limit: 10000, descending: true };

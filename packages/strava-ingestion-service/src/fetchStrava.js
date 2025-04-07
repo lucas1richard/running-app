@@ -46,6 +46,19 @@ const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
       ...options.headers,
     },
   });
+
+  const usageRaw = res.headers.get('x-readratelimit-usage');
+  const limitRaw = res.headers.get('x-readratelimit-limit');
+  const [fifteenMinUsage, dailyUsage] = usageRaw.split(',').map(Number);
+  const [fifteenMinLimit, dailyLimit] = limitRaw.split(',').map(Number);
+
+  console.log('Rate limit usage:', {
+    fifteenMinUsage,
+    fifteenMinLimit,
+    dailyUsage,
+    dailyLimit,
+  });
+
   const resjson = await res.json();
 
   return resjson;

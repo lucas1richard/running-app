@@ -13,7 +13,7 @@ type Props = {
 };
 
 const BestEfforts: FC<Props> = ({ bestEfforts }) => {
-  const bestEffortsList = useMemo(() => bestEfforts.filter(({ pr_rank }) => pr_rank !== null), [bestEfforts]);
+  const bestEffortsList = useMemo(() => (bestEfforts || []).filter(({ pr_rank }) => pr_rank !== null), [bestEfforts]);
 
   return (
     <div>

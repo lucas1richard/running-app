@@ -86,12 +86,11 @@ SELECT
       'start_index', `calculatedBestEffortsA`.`start_index`,
       'end_index', `calculatedBestEffortsA`.`end_index`
     )
-    ) FROM `calculated_best_efforts` AS `calculatedBestEffortsA`
+  ) FROM `calculated_best_efforts` AS `calculatedBestEffortsA`
     WHERE `calculatedBestEffortsA`.`activityId` = `activities`.`id`
     GROUP BY `calculatedBestEffortsA`.`activityId`
     ORDER BY `calculatedBestEffortsA`.`distance` DESC
-  )
-  AS `calculatedBestEfforts`
+  ) AS `calculatedBestEfforts`
 FROM
   `activities` AS `activities`
   LEFT OUTER JOIN `zones_cache` AS `zonesCachesA` ON `activities`.`id` = `zonesCachesA`.`activityId`

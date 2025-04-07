@@ -17,8 +17,6 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
   WHERE calculatedBestEfforts.activityId IN (?)
   `, [activityIds]);
 
-  console.log('calculatedBestEfforts', calculatedBestEfforts);
-
   const [activities] = await connection.query(`
     SELECT
       id, start_date_local, sport_type

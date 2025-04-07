@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { getMySQLConnection } = require('./mysql-connection');
+const { getMySQLConnection, query } = require('./mysql-connection');
 
 const sql = fs.readFileSync(__dirname + '/insertActivities.sql', 'utf8');
 
@@ -141,7 +141,7 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
 
       console.log(`Bulk Add Activities Complete - ${newActivities.length} new records`);
 
-      return newActivities.map(([id]) => ({ id }));
+      return query('select * from activities where id in (?)', [newActivities.map(a => a[0])]);
     } catch (err) {
       console.log(err);
       return [];
