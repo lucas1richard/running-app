@@ -141,7 +141,10 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
 
       console.log(`Bulk Add Activities Complete - ${newActivities.length} new records`);
 
-      return query('select * from activities where id in (?)', [newActivities.map(a => a[0])]);
+      const q = await  query('select * from activities where id in (?)', [newActivities.map(a => a[0])]);
+      console.log(q);
+
+      return q;
     } catch (err) {
       console.log(err);
       return [];

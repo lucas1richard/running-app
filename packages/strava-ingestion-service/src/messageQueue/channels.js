@@ -11,11 +11,27 @@ const channelConfigs = {
     type: 'direct',
     channel: null,
   },
-  activitiesService: {
-    exchangeName: 'Activities',
-    queueName: '',
-    type: 'fanout',
+  stravaIngestionService: {
+    exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
+    queueName: 'dataRequest',
+    type: 'direct',
+    routingKey: 'stravaIngestionService',
+    channel: null,
   },
+  fetchActivityDetails: {
+    exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
+    queueName: 'fetchActivityDetails',
+    type: 'direct',
+    routingKey: 'fetchActivityDetails',
+    channel: null,
+  },
+  fetchActivityStreams: {
+    exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
+    queueName: 'fetchActivityStreams',
+    type: 'direct',
+    routingKey: 'fetchActivityStreams',
+    channel: null,
+  }
 };
 
 const getChannel = async (config) => {
@@ -25,7 +41,7 @@ const getChannel = async (config) => {
   const channel = await connection.createChannel();
   await channel.assertExchange(config.exchangeName, config.type, { durable: true });
   await channel.assertQueue(config.queueName, { durable: true });
-  await channel.bindQueue(config.queueName, config.exchangeName, '');
+  await channel.bindQueue(config.queueName, config.exchangeName, config.routingKey || '');
   config.channel = channel;
 
   return channel;

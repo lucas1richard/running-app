@@ -16,6 +16,11 @@ const channelConfigs = {
     queueName: '',
     type: 'fanout',
   },
+  testService: {
+    exchangeName: 'Test',
+    queueName: 'wow',
+    type: 'direct',
+  }
 };
 
 const getChannel = async (config) => {

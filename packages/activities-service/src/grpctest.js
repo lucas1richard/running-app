@@ -29,6 +29,8 @@ const getGrpcClient = ({ serviceName, servicePort, protoPackage, protoService })
     grpc.credentials.createInsecure()
   );
 
+  clients.set(serviceName, client);
+
   return client
 };
 

@@ -22,7 +22,8 @@ async function initMysql() {
 }
 
 async function getItem(id) {
-  return query('SELECT * FROM tokens WHERE id=?', [id]);
+  const q = await query('SELECT * FROM tokens WHERE id=?', [id]);
+  return q[0];
 }
 
 async function storeItem(item, id) {

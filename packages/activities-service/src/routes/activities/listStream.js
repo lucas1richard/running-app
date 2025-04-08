@@ -1,7 +1,9 @@
 const { Router } = require('express');
+const { once } = require('node:events');
 const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
 const { logger } = require('../../utils/logger');
 const { getGrpcClient } = require('../../grpctest');
+const testEventEmitter = require('../../utils/eventEmitters/testEventEmitter');
 
 const router = Router();
 
@@ -43,6 +45,7 @@ router.get('/listStream', async (req, res) => {
       res.end();
       return;
     }
+
     const readableStream = await findAllActivitiesStream();
     readableStream.resume();
 

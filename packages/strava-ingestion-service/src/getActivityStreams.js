@@ -1,4 +1,4 @@
-const { getStream, addStream } = require('./setupdb-couchbase');
+const { addStream } = require('./setupdb-couchbase');
 const fetchStrava = require('./fetchStrava');
 
 const streamKeys = [
@@ -15,20 +15,15 @@ const streamKeys = [
   'grade_smooth',
 ];
 
-const getActivityStreams = async (activityId, keys = streamKeys) => {
-  const matchKeys = (streamData) => keys.map(
-    (key) => streamData?.find?.(({ type }) => type === key)
-      || { type: key, data: [], notFound: true }
-  );
-
-  const cachedStream = await getStream(activityId);
-  if (cachedStream) {
-    return matchKeys(cachedStream.stream);
+const getActivityStreams = async (activityId) => {
+  try {
+    const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
+    await addStream({ stream }, activityId);
+    return { activityId, status: 'success' };
+  } catch (err) {
+    console.error('Error adding stream:', err);
+    return { activityId, status: 'error', error: err.message };
   }
-
-  const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
-  await addStream({ stream }, activityId);
-  return keys.map((key) => stream?.find?.(({ type }) => type === key));
 };
 
 module.exports = {
