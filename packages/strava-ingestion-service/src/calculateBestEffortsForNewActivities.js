@@ -1,5 +1,11 @@
 const { calculateActivityBestEfforts } = require('./calculateActivityBestEfforts');
 const { query } = require('./mysql-connection');
+const {
+  selectExistingBestEffortActivityIdsSql,
+  selectActivitiesWithoutBestEffortsSql,
+  selectMostRecentBestEffortsSql,
+  insertBestEffortsSql,
+} = require('./sql-queries');
 
 /**
  * @param {number[]} activityIds
@@ -9,23 +15,17 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
 
   // get pre-existing calculated best efforts for activities within `activityIds` so they can
   // be excluded from re-calculation
-  const calculatedBestEfforts = await query(`
-  SELECT DISTINCT(activityId) AS activityId
-  FROM calculated_best_efforts AS calculatedBestEfforts
-  WHERE calculatedBestEfforts.activityId IN (?)
-  `, [activityIds]);
+  const calculatedBestEffortActivityIds = await query(
+    selectExistingBestEffortActivityIdsSql,
+    [activityIds]
+  );
 
-  const activities = await query(`
-    SELECT
-      id, start_date_local, sport_type
-      FROM activities AS activities
-      WHERE (activities.id IN ?)
-      AND NOT ((activities.id IN ?))
-      AND activities.sport_type = 'Run'
-      ORDER BY activities.start_date_local ASC;
-  `, [activityIds, calculatedBestEfforts]);
+  const activitiesWithoutBestEfforts = await query(
+    selectActivitiesWithoutBestEffortsSql,
+    [activityIds, calculatedBestEffortActivityIds]
+  );
 
-  if (activities.length === 0) {
+  if (activitiesWithoutBestEfforts.length === 0) {
     console.log('calculateBestEffortsForNewActivities: NO NEW ACTIVITIES FOR WHICH TO CALCULATE BEST EFFORTS')
     return;
   }
@@ -33,17 +33,12 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
   const NUM_RANKS_TO_TRACK = 10;
 
   const existingCalculatedBestEfforts = await query(
-    `SELECT * FROM (
-      SELECT b.*, a.name as activity_name, ROW_NUMBER() OVER (PARTITION BY b.distance ORDER BY b.elapsed_time ASC) as row_num 
-        FROM calculated_best_efforts AS b
-        JOIN activities AS a ON activityId = a.id
-        WHERE hidden IS NOT TRUE AND a.id NOT IN (:activityIds) AND b.start_date_local < :startDate
-    ) subquery
-     WHERE row_num <= ${NUM_RANKS_TO_TRACK}`,
-    {
+    selectMostRecentBestEffortsSql,
+    [
       activityIds,
-      startDate: activities[0].start_date_local, // Using the earliest activity's start date
-    }
+      activitiesWithoutBestEfforts[0].start_date_local, // Using the earliest activity's start date
+      NUM_RANKS_TO_TRACK,
+    ]
   );
 
   const existingRecords = existingCalculatedBestEfforts.reduce((r, e) => {
@@ -52,8 +47,8 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
     return r;
   });
 
-  for (let i = 0; i < activities.length; i++) {
-    const activity = activities[i];
+  for (let i = 0; i < activitiesWithoutBestEfforts.length; i++) {
+    const activity = activitiesWithoutBestEfforts[i];
     const efforts = await calculateActivityBestEfforts(activity.id);
 
     const rankedEfforts = efforts.map((e) => {
@@ -80,24 +75,21 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
       return effort;
     });
 
-    await query(`
-      INSERT INTO calculated_best_efforts (
-      start_date_local,distance,elapsed_time,moving_time,pr_rank,name,start_index,end_index,activityId,createdAt,updatedAt
-      )
-      VALUES ? ON DUPLICATE KEY UPDATE name=VALUES(name);
-    `, [rankedEfforts.map((effort) => [
-      effort.start_date_local,
-      effort.distance,
-      effort.elapsed_time,
-      effort.moving_time,
-      effort.pr_rank,
-      effort.name,
-      effort.start_index,
-      effort.end_index,
-      effort.activityId,
-      new Date(),
-      new Date(),
-    ])]);
+    await query(insertBestEffortsSql, [
+      rankedEfforts.map((effort) => [
+        effort.start_date_local,
+        effort.distance,
+        effort.elapsed_time,
+        effort.moving_time,
+        effort.pr_rank,
+        effort.name,
+        effort.start_index,
+        effort.end_index,
+        effort.activityId,
+        new Date(),
+        new Date(),
+      ])
+    ]);
   }
 };
 

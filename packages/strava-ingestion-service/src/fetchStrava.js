@@ -36,7 +36,7 @@ const refreshAccessToken = async () => {
 const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
   const accessToken = await getAccessToken();
 
-  console.log('FETCHING STRAVA: ', apiPath);
+  console.trace('FETCHING STRAVA: ', apiPath);
 
   const res = await fetch(`https://www.strava.com/api/v3${apiPath}`, {
     ...options,

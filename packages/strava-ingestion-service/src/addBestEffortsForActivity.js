@@ -1,5 +1,6 @@
 const { calculateBestEffortsForNewActivities } = require('./calculateBestEffortsForNewActivities');
 const { query } = require('./mysql-connection');
+const { insertStravaBestEffortsSql } = require('./sql-queries');
 
 /*
 +------------------+--------------+------+-----+---------+-------+
@@ -23,11 +24,7 @@ const { query } = require('./mysql-connection');
 
 
 const addBestEffortsForActivity = async (activityId, bestEfforts) => {
-  await query(`
-    INSERT INTO best_efforts (
-      effort_id, start_date_local, distance, elapsed_time, moving_time, pr_rank, name, start_index, end_index, createdAt, updatedAt, activityId
-    ) values ?
-  `, [
+  await query(insertStravaBestEffortsSql, [
     bestEfforts.filter(({ pr_rank }) => !!pr_rank).map((effort) => [
       effort.id,
       effort.start_date_local,

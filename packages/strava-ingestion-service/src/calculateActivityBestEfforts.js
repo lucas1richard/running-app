@@ -25,7 +25,7 @@ const calculateActivityBestEfforts = async (activityId, meterDistances = distanc
   const timeStream = streams?.find(({ type }) => type === 'time')?.data;
 
   if (!distanceStream || !timeStream) {
-    console.warn(`activity ${activityId} is missing stream data, so calculateActivityBestEfforts returning empty array`);
+    console.warn(`activity ${activityId} is missing stream data, so calculateActivityBestEfforts returning empty array`, console.trace());
     return [];
   }
 

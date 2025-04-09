@@ -2,13 +2,13 @@ const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const waitPort = require('wait-port');
-const { setupdb } = require('./setupdb-couchbase');
+const { setupCouchDb } = require('./setupdb-couchbase');
 const { initMysql } = require('./setupdb-mysql');
 const { fetchNewActivities } = require('./fetchNewActivities');
 const { getRabbitMQConnection } = require('./messageQueue/rabbitmq');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
-const { getActivityStreams } = require('./getActivityStreams');
 const ingestActivityDetails = require('./ingestActivityDetails');
+const ingestActivityStreams = require('./ingestActivityStreams');
 
 const packageDefinition = protoLoader.loadSync(
   path.join(__dirname, '../../protos/strava-ingestion-service.proto'),
@@ -20,10 +20,11 @@ const packageDefinition = protoLoader.loadSync(
     oneofs: true
   }
 );
+
 const stravaIngestion = grpc.loadPackageDefinition(packageDefinition).stravaIngestion;
 
 async function fetchNewActivitiesEndpoint(call, callback) {
-  console.log('fetchActivities called');
+  console.trace('fetchActivities called');
   const addedRecordIds = await fetchNewActivities(call.request);
 
   const streamsDataChannel = await getChannel(channelConfigs.fetchActivityStreams);
@@ -59,7 +60,7 @@ if (require.main === module) {
   // If this is run as a script, start a server on an unused port
   (async () => {
     await Promise.all([
-      setupdb(),
+      setupCouchDb(),
       initMysql(),
       waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true }),
     ]);
@@ -71,7 +72,7 @@ if (require.main === module) {
       `${process.env.SERVICE_NAME}:${process.env.SERVICE_PORT}`,
       grpc.ServerCredentials.createInsecure(),
       () => {
-        console.log(`Running on port ${process.env.SERVICE_PORT}`);
+        console.trace(`Running on port ${process.env.SERVICE_PORT}`);
       }
     );
 
@@ -104,7 +105,7 @@ if (require.main === module) {
     streamsDataChannel.consume(channelConfigs.fetchActivityStreams.queueName, async (msg) => {
       if (msg !== null) {
         const data = JSON.parse(msg.content.toString());
-        await getActivityStreams(data);
+        await ingestActivityStreams(data);
         streamsDataChannel.ack(msg);
       }
     });

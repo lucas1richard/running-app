@@ -2,7 +2,7 @@
 const bulkAddActivitiesFromStrava = require('./bulkAddActivitiesFromStrava');
 const fetchStrava = require('./fetchStrava');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
-const { bulkAddActivities/* , addActivityDetail, addStream */ } = require('./setupdb-couchbase');
+const { bulkAddActivities } = require('./setupdb-couchbase');
 
 const { imageService } = channelConfigs;
 
@@ -19,24 +19,12 @@ const fetchWorker = async (perPage, page) => {
       routePath: record?.summary_polyline || record.map?.summary_polyline,
       size: '400x200',
     };
-    channel.publish(imageService.exchangeName, '', Buffer.from(JSON.stringify(msgSm)));
+    channel.publish(
+      imageService.exchangeName,
+      imageService.queueName,
+      Buffer.from(JSON.stringify(msgSm))
+    );
   }
-
-  // // ingest activity details
-  // const activitiesDetails = await Promise.allSettled(addedRecords.map((record) => fetchStrava(`/activities/${record.id}`)));
-  // const errors = activitiesDetails.filter((activityDetail) => activityDetail.status === 'rejected');
-  // if (errors.length > 0) console.error('Errors fetching activity details:', errors);
-  // const succeeded = activitiesDetails.filter((activityDetail) => activityDetail.status === 'fulfilled');
-  // await Promise.allSettled(succeeded.map(({ value }) => addActivityDetail(value)));
-
-  // // ingest activity streams
-  // await Promise.allSettled(succeeded
-  //   .map(({ value }) => fetchStrava(`/activities/${value.id}/streams?keys=${streamKeys.join(',')}`)
-  //     .then((stream) => addStream({ stream }, value.id))
-  //     .catch((err) => console.error('Error adding stream:', err))
-  //   )
-  // );
-  // await Promise.allSettled(succeeded.map(({ value }) => addBestEffortsForActivity(value.id, value.best_efforts || [])));
 
   return addedRecords.map(({ id }) => id);
 };

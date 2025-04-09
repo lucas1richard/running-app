@@ -25,8 +25,8 @@ const createIfNotExists = async (dbName) => {
   }
 };
 
-const setupdb = async () => {
-  await Promise.allSettled([
+const setupCouchDb = async () => {
+  await Promise.all([
     createIfNotExists('_users'),
     createIfNotExists(ACTIVITIES_DB),
     createIfNotExists(ACTIVITIES_DETAIL_DB),
@@ -53,61 +53,8 @@ const bulkAddActivities = async (activities, batchSize = 100) => {
   }
 };
 
-const getAllActivities = async () => {
-  const params = { include_docs: true, limit: 10000, descending: true };
-
-  const body = await activitiesDb.list(params);
-  const allRows = body
-    ?.rows
-    ?.map(({ doc } = {}) => doc) || [];
-
-  allRows?.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
-
-  return allRows;
-};
-
-const getActivity = async (id) => {
-  try {
-    const activity = await activitiesDb.get(`${id}`);
-    return activity;
-  } catch (err) {
-    return undefined;
-  }
-};
-
-const destroyActivity = async (id) => {
-  try {
-    await activitiesDb.destroy(`${id}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-};
-
-const getActivityDetail = async (id) => {
-  try {
-    const activity = await activitiesDetailDb.get(`${id}`);
-    return activity;
-  } catch (err) {
-    return undefined;
-  }
-};
-
-const destroyActivityDetail = async (id) => {
-  try {
-    await activitiesDetailDb.destroy(`${id}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-};
-
 const addActivityDetail = async (activity) => {
   const res = await activitiesDetailDb.insert(activity, `${activity.id}`);
-  return res;
-};
-
-const updateActivityDetail = async (activityId, detail) => {
-  const existing = await activitiesDetailDb.get(`${activityId}`) || {};
-  const res = await activitiesDetailDb.insert({ ...existing, ...detail }, `${activityId}`);
   return res;
 };
 
@@ -116,41 +63,9 @@ const addStream = async (stream, documentId) => {
   return res;
 };
 
-const getStream = async (id) => {
-  try {
-    const stream = await streamsDb.get(`${id}`);
-    return stream;
-  } catch (err) {
-    return undefined;
-  }
-};
-
-const destroyStream = async (id) => {
-  try {
-    await streamsDb.destroy(`${id}`);
-  } catch (err) {
-    console.log(err.message);
-  }
-};
-
-const getAllStreams = async () => {
-  const params = { include_docs: true, limit: 10000, descending: true };
-  const body = await streamsDb.list(params);
-  return body?.rows?.map(({ doc } = {}) => doc) || [];
-};
-
 module.exports = {
   addActivityDetail,
   addStream,
-  setupdb,
+  setupCouchDb,
   bulkAddActivities,
-  destroyActivity,
-  destroyActivityDetail,
-  destroyStream,
-  getActivity,
-  getStream,
-  getAllStreams,
-  getActivityDetail,
-  getAllActivities,
-  updateActivityDetail,
 };

@@ -34,6 +34,16 @@ const channelConfigs = {
   }
 };
 
+const closeConnection = async () => {
+  if (channelConfigs.imageService.channel) await channelConfigs.imageService.channel.close();
+  if (channelConfigs.stravaIngestionService.channel) await channelConfigs.stravaIngestionService.channel.close();
+  if (channelConfigs.fetchActivityDetails.channel) await channelConfigs.fetchActivityDetails.channel.close();
+  if (channelConfigs.fetchActivityStreams.channel) await channelConfigs.fetchActivityStreams.channel.close();
+};
+
+process.on('SIGINT', closeConnection);
+process.on('SIGTERM', closeConnection);
+
 const getChannel = async (config) => {
   if (config.channel) return config.channel;
 

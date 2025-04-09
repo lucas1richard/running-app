@@ -1,0 +1,19 @@
+const fs = require('fs');
+const path = require('path');
+
+const getSqlFile = (filePath) => fs.readFileSync(path.join(__dirname, filePath), 'utf8');
+
+module.exports = {
+  createDatabaseSql: getSqlFile('createDatabase.sql'),
+  createTokenTableSql: getSqlFile('createTokensTable.sql'),
+  deleteTokenDataSql: getSqlFile('deleteTokenData.sql'),
+  insertBestEffortsSql: getSqlFile('insertBestEfforts.sql'),
+  insertStravaBestEffortsSql: getSqlFile('insertStravaBestEfforts.sql'),
+  insertTokenDataSql: getSqlFile('insertTokenData.sql'),
+  selectActivitiesMultiSql: getSqlFile('selectActivitiesMulti.sql'),
+  selectExistingBestEffortActivityIdsSql: getSqlFile('selectExistingBestEffortActivityIds.sql'),
+  selectMostRecentBestEffortsSql: getSqlFile('selectMostRecentBestEfforts.sql'),
+  selectActivitiesWithoutBestEffortsSql: getSqlFile('selectActivitiesWithoutBestEfforts.sql'),
+  selectTokenDataSql: getSqlFile('selectTokenData.sql'),
+  updateTokenDataSql: getSqlFile('updateTokenData.sql'),
+};

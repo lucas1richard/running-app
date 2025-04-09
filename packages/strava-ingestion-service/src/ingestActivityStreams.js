@@ -15,17 +15,15 @@ const streamKeys = [
   'grade_smooth',
 ];
 
-const getActivityStreams = async (activityId) => {
+const ingestActivityStreams = async (activityId) => {
   try {
     const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
     await addStream({ stream }, activityId);
     return { activityId, status: 'success' };
   } catch (err) {
-    console.error('Error adding stream:', err, console.trace());
+    console.error('Error adding stream:', err);
     return { activityId, status: 'error', error: err.message };
   }
 };
 
-module.exports = {
-  getActivityStreams,
-};
+module.exports = ingestActivityStreams;

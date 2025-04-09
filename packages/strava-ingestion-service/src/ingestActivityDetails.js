@@ -8,11 +8,9 @@ const ingestActivityDetails = async (activityId) => {
 
     return { activityId, status: 'success' };
   } catch (err) {
-    console.error('Error adding activity details:', err);
+    console.error('Error adding activity details:', err, console.trace());
     return { activityId, status: 'error', error: err.message };
   }
 };
 
-module.exports = {
-  getActivityDetails: ingestActivityDetails,
-};
+module.exports = ingestActivityDetails;

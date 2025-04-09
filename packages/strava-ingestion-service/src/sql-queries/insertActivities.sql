@@ -1,4 +1,5 @@
-INSERT INTO activities (
+INSERT INTO
+  activities (
     id,
     activity_name,
     has_streams,
@@ -50,4 +51,6 @@ INSERT INTO activities (
     createdAt,
     updatedAt,
     hidden
-) VALUES ?;
+  )
+VALUES
+  ?;
