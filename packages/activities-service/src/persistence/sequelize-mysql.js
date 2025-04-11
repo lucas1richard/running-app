@@ -25,6 +25,7 @@ const sequelize = new Sequelize(database, user, password, {
       exclude: ['createdAt', 'updatedAt'],
     },
   },
+  logging: false,
 });
 
 sequelize

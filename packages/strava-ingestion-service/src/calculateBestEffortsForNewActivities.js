@@ -26,7 +26,7 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
   );
 
   if (activitiesWithoutBestEfforts.length === 0) {
-    console.log('calculateBestEffortsForNewActivities: NO NEW ACTIVITIES FOR WHICH TO CALCULATE BEST EFFORTS')
+    console.trace('calculateBestEffortsForNewActivities: NO NEW ACTIVITIES FOR WHICH TO CALCULATE BEST EFFORTS')
     return;
   }
 

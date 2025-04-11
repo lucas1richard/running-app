@@ -59,7 +59,7 @@ async function initMysql() {
   });
 
   try {
-    await pool.query(
+    pool.query(
       'CREATE DATABASE IF NOT EXISTS strava_tokens',
       err => {
         if (err) return console.error(err);

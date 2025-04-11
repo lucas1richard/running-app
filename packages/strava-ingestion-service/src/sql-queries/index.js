@@ -1,12 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 
-const getSqlFile = (filePath) => fs.readFileSync(path.join(__dirname, filePath), 'utf8');
+const getSqlFile = (filePath) => {
+  const str = fs.readFileSync(path.join(__dirname, filePath), 'utf8');
+  if (!str) {
+    throw new Error(`SQL file ${filePath} not found or is empty`);
+  }
+  return str;
+}
 
 module.exports = {
   createDatabaseSql: getSqlFile('createDatabase.sql'),
   createTokenTableSql: getSqlFile('createTokensTable.sql'),
   deleteTokenDataSql: getSqlFile('deleteTokenData.sql'),
+  insertActivitiesSql: getSqlFile('insertActivities.sql'),
   insertBestEffortsSql: getSqlFile('insertBestEfforts.sql'),
   insertStravaBestEffortsSql: getSqlFile('insertStravaBestEfforts.sql'),
   insertTokenDataSql: getSqlFile('insertTokenData.sql'),

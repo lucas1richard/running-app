@@ -5,6 +5,9 @@ const exchangeNames = {
 }
 
 const channelConfigs = {
+  default: {
+    
+  },
   imageService: {
     exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
     queueName: 'imageService',
@@ -15,12 +18,8 @@ const channelConfigs = {
     exchangeName: 'Activities',
     queueName: '',
     type: 'fanout',
+    channel: null,
   },
-  testService: {
-    exchangeName: 'Test',
-    queueName: 'wow',
-    type: 'direct',
-  }
 };
 
 const getChannel = async (config) => {

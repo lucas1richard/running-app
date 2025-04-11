@@ -132,19 +132,23 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
         return [];
       }
 
-      await query(insertActivitiesSql, [newActivities]);
+      if (newActivities.length > 0) {
+        await query(insertActivitiesSql, [newActivities]);
+        console.log(`Bulk Add Activities Complete - ${newActivities.length} new records`);
 
-      console.log(`Bulk Add Activities Complete - ${newActivities.length} new records`);
+        const q = await query(selectActivitiesMultiSql, [newActivities.map(a => a[0])]);
+        console.log(q);
 
-      const q = await  query(selectActivitiesMultiSql, [newActivities.map(a => a[0])]);
-      console.log(q);
+        return q;
+      }
 
-      return q;
+      return [];
     } catch (err) {
       console.log(err);
       return [];
     }
   }
+  return [];
 };
 
 module.exports = bulkAddActivitiesFromStrava;

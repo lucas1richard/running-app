@@ -26,9 +26,11 @@ const stravaIngestion = grpc.loadPackageDefinition(packageDefinition).stravaInge
 async function fetchNewActivitiesEndpoint(call, callback) {
   console.trace('fetchActivities called');
   const addedRecordIds = await fetchNewActivities(call.request);
+  callback(null, { activityId: addedRecordIds });
 
   const streamsDataChannel = await getChannel(channelConfigs.fetchActivityStreams);
   const detailsDataChannel = await getChannel(channelConfigs.fetchActivityDetails);
+
 
   for (const recordId of addedRecordIds) {
     // add streams and details to the back of the queue
@@ -43,8 +45,6 @@ async function fetchNewActivitiesEndpoint(call, callback) {
       Buffer.from(String(recordId))
     );
   }
-
-  callback(null, { activityId: addedRecordIds });
 }
 
 
@@ -80,8 +80,12 @@ if (require.main === module) {
     const streamsDataChannel = await getChannel(channelConfigs.fetchActivityStreams);
     const detailsDataChannel = await getChannel(channelConfigs.fetchActivityDetails);
 
+    basicDataChannel.prefetch(1);
+    streamsDataChannel.prefetch(1);
+    detailsDataChannel.prefetch(1);
+
     // expect message to be in the format { perPage = 100, page = 1, fetchAll = false }
-    basicDataChannel.consume(channelConfigs.stravaIngestionService.queueName, async (msg) => {
+    await basicDataChannel.consume(channelConfigs.stravaIngestionService.queueName, async (msg) => {
       if (msg !== null) {
         const data = JSON.parse(msg.content.toString());
         const addedRecordIds = await fetchNewActivities(data);
@@ -101,21 +105,23 @@ if (require.main === module) {
           );
         }
       }
-    });
-    streamsDataChannel.consume(channelConfigs.fetchActivityStreams.queueName, async (msg) => {
-      if (msg !== null) {
-        const data = JSON.parse(msg.content.toString());
-        await ingestActivityStreams(data);
-        streamsDataChannel.ack(msg);
-      }
-    });
-    detailsDataChannel.consume(channelConfigs.fetchActivityDetails.queueName, async (msg) => {
-      if (msg !== null) {
-        const data = JSON.parse(msg.content.toString());
-        await ingestActivityDetails(data);
-        detailsDataChannel.ack(msg);
-      }
-    });
+    }, { noAck: false });
+    await Promise.all([
+      streamsDataChannel.consume(channelConfigs.fetchActivityStreams.queueName, async (msg) => {
+        if (msg !== null) {
+          const data = JSON.parse(msg.content.toString());
+          await ingestActivityStreams(data);
+          streamsDataChannel.ack(msg);
+        }
+      }, { noAck: false }),
+      detailsDataChannel.consume(channelConfigs.fetchActivityDetails.queueName, async (msg) => {
+        if (msg !== null) {
+          const data = JSON.parse(msg.content.toString());
+          await ingestActivityDetails(data);
+          detailsDataChannel.ack(msg);
+        }
+      }, { noAck: false }),
+    ]);
   })()
 }
 
