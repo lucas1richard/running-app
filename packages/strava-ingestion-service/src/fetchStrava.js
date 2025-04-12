@@ -59,6 +59,7 @@ const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
     dailyLimit,
   });
 
+  if (res.status === 429) console.trace('Rate limit exceeded: ', resjson);
   const resjson = await res.json();
 
   return resjson;
