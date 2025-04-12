@@ -1,8 +1,5 @@
 const EventEmitter = require('node:events');
 
-const CAPACITY = 10;
-const REFILL_RATE = 1000; // Milliseconds between token refills
-
 // states for the bucket:
 
 // 1. there are tokens available in the tokenLimit, and the bucket is at capacity
@@ -17,90 +14,130 @@ const REFILL_RATE = 1000; // Milliseconds between token refills
 // 4. there are no tokens available in the tokenLimit, and the bucket is below capacity
 // expected behavior: the bucket will not refill until the tokenLimit has tokens again
 
-class Bucket extends EventEmitter {
-  constructor({ capacity, refillRate, tokenLimit = 1000 }) {
+class FixedWindowCounter extends EventEmitter {
+  constructor({ windowDuration, limit }) {
     super();
 
-    this.t = new Date().getMinutes();
-    this.capacity = capacity;
-    this.tokens = capacity;
-    this.tokenLimit = tokenLimit - capacity;
-    this.refillInterval = null;
-    this.refillRate = refillRate;
-    this.resumeRefill();
-    this.limitRefreshInterval = setInterval(() => {
-      const shouldNotify = this.tokenLimit < 0;
-      // const updatedDate = new Date();
-      // if (updatedDate.getMinutes() === this.t) return console.log(updatedDate.getSeconds());
-      // this.t = updatedDate.getMinutes();
+    this.windowDuration = windowDuration;
+    this.limit = limit;
+    this.count = 0;
+    this.loanedFromNextWindow = 0;
+    this.resetInterval = null;
+    if (this.limit !== Infinity)  this.startResetInterval();
+  }
 
-      // we can't reset the capacity without potentially exceeding the refill window
-      this.tokenLimit = tokenLimit - this.tokens;
-      if (shouldNotify) this.emit('refilled');
-    }, 15000);
+  get hasTokens() {
+    return this.count < this.limit;
   }
-  pauseRefill() {
-    clearInterval(this.refillInterval);
+
+  get numTokens() {
+    return this.limit - this.count;
   }
-  resumeRefill() {
-    if (this.refillInterval) clearInterval(this.refillInterval);
+
+  provideTokens(numTokens = 1) {
+    if (this.limit === Infinity) return numTokens;
+    if (this.count < this.limit) {
+      this.count += numTokens;
+      return numTokens;
+    }
+    this.loanedFromNextWindow += numTokens;
+    // console.warn('No tokens available, loaning tokens', console.trace());
+    return numTokens;
+  }
+
+  reset(startCount = 0) {
+    const previousCount = this.count;
+    if (startCount >= this.limit) {
+      console.trace('Resetting count to a value greater than limit');
+    }
+    this.count = this.loanedFromNextWindow;
+    this.loanedFromNextWindow = Math.max(0, this.loanedFromNextWindow - this.limit);
+    this.emit('reset', { previousCount });
+  }
+
+  startResetInterval() {
+    if (this.resetInterval) clearInterval(this.resetInterval);
+    this.resetInterval = setInterval(() => {
+      this.reset();
+    }, this.windowDuration);
+  }
+}
+
+class TokenBucket extends EventEmitter {
+  constructor({ tokenProvider, capacity, refillRate }) {
+    super();
+
+    /** @type {FixedWindowCounter} */
+    this.provider = tokenProvider || new FixedWindowCounter({ limit: Infinity });
+
+    this.capacity = capacity;
+    this.tokens = this.provider.provideTokens(capacity);
+    this.refillRate = refillRate;
+    this.debt = 0;
+
+    const emit = this.emit.bind(this);
+
+    this.provider.on('reset', ({ previousCount }) => {
+      if (previousCount === 0) emit('refilled', this.tokens);
+    });
+
     this.refillInterval = setInterval(() => {
       if (this.tokens < this.capacity) this._refillToken();
     }, this.refillRate);
   }
-  _hasTokens() {
+
+  get hasTokens() {
     return this.tokens > 0;
   }
+
   consumeToken() {
-    if (this._hasTokens()) this.tokens -= 1;
+    if (this.hasTokens && this.provider.hasTokens) this.tokens -= 1;
     else this.emit('empty');
-    return ([this.tokens, this.tokenLimit]);
+    return ([this.tokens, this.provider.numTokens]);
   }
+
   _refillToken() {
-    const shouldNotify = !this._hasTokens() && this.tokenLimit > 0;
+    const shouldNotify = !this.hasTokens && this.provider.hasTokens;
     if (this.tokens < this.capacity) {
-      this.tokenLimit -= 1;
-      this.tokens += 1;
+      this.tokens += this.provider.provideTokens(1);
       if (shouldNotify) this.emit('refilled', this.tokens);
     }
   }
 }
-const bucket = new Bucket({
-  capacity: CAPACITY,
-  refillRate: REFILL_RATE,
-  tokenLimit: 27,
+
+const tokenProvider = new FixedWindowCounter({
+  windowDuration: 15000,
+  limit: 15,
+});
+
+const tokenBucket = new TokenBucket({
+  capacity: 10,
+  refillRate: 500,
+  tokenProvider,
 });
 
 if (require.main === module) {
   (async () => {
-    async function* generateConsumer(canContinue = true) {
-      console.log('Rate limiter initialized. Can continue:', canContinue);
-      while (yield) {
-        console.log({canContinue});
-        const numTotalTokensRemaining = await bucket.consumeToken();
+    console.log('Initializing rate limiter...');
+
+    async function* generateConsumer() {
+      while (true) {
+        if (tokenBucket.hasTokens === false || tokenProvider.hasTokens === false) {
+          yield 'none';
+          continue;
+        }
+        const numTotalTokensRemaining = await tokenBucket.consumeToken();
         console.log('Token consumed:', numTotalTokensRemaining);
         yield numTotalTokensRemaining || 'none';
       }
     }
     const consumer = await generateConsumer(true);
 
-    let myinterval = setInterval(async () => {
+    setInterval(async () => {
       await consumer.next(true);
     }, 10);
-
-    console.log('Initializing rate limiter...');
-    bucket.on('empty', async () => {
-      // await consumer.next(false);
-      clearInterval(myinterval);
-      console.log('Rate limit bucket is empty, pausing...');
-      bucket.once('refilled', async (tokens) => {
-        console.log('Rate limit bucket refilled, resuming...', tokens);
-        myinterval = setInterval(async () => {
-          await consumer.next(true);
-        }, 50);
-      });
-    });
   }
   )();
 }
-module.exports = bucket;
+
+module.exports = tokenBucket;
