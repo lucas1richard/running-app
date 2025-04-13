@@ -18,20 +18,12 @@ const channelConfigs = {
     routingKey: 'stravaIngestionService',
     channel: null,
   },
-  fetchActivityDetails: {
-    exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
-    queueName: 'fetchActivityDetails',
-    type: 'direct',
-    routingKey: 'fetchActivityDetails',
+  activitiesService: {
+    exchangeName: 'Activities',
+    queueName: '',
+    type: 'fanout',
     channel: null,
   },
-  fetchActivityStreams: {
-    exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
-    queueName: 'fetchActivityStreams',
-    type: 'direct',
-    routingKey: 'fetchActivityStreams',
-    channel: null,
-  }
 };
 
 const closeConnection = async () => {

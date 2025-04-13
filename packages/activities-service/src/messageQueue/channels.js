@@ -5,8 +5,12 @@ const exchangeNames = {
 }
 
 const channelConfigs = {
-  default: {
-    
+  stravaIngestionService: {
+    exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
+    queueName: 'dataRequest',
+    type: 'direct',
+    routingKey: 'stravaIngestionService',
+    channel: null,
   },
   imageService: {
     exchangeName: exchangeNames.ACTIVITY_SERVICE_UPDATES,
@@ -20,6 +24,11 @@ const channelConfigs = {
     type: 'fanout',
     channel: null,
   },
+};
+
+const getChannelSync = (config) => {
+  if (config.channel) return config.channel;
+  throw new Error('Channel not initialized');
 };
 
 const getChannel = async (config) => {
@@ -39,4 +48,5 @@ module.exports = {
   exchangeNames,
   channelConfigs,
   getChannel,
+  getChannelSync,
 };

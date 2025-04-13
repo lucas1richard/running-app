@@ -21,8 +21,8 @@ class FixedWindowCounter extends EventEmitter {
 
     this.windowDuration = windowDuration;
     this.limit = limit;
-    // this.count = 0;
-    // this.loanedFromNextWindow = 0;
+    this.count = 0;
+    this.loanedFromNextWindow = 0;
     this.resetInterval = null;
     this.syncFromRedis().then(() => {
       if (this.limit !== Infinity) this.startResetInterval();
@@ -107,7 +107,6 @@ class TokenBucket extends EventEmitter {
     this.capacity = capacity;
 
     this.refillRate = refillRate;
-    this.debt = 0;
 
     const emit = this.emit.bind(this);
 
@@ -146,12 +145,16 @@ class TokenBucket extends EventEmitter {
   }
 
   async consumeToken() {
+    console.log('Attempting to consume token...')
+    console.log('this:', this.capacity, this.tokens);
+    console.log('provider:', this.provider.limit, this.provider.count);
     if (this.hasTokens && this.provider.hasTokens) {
       this.tokens -= 1;
       await this.syncToRedis();
+      return true;
     }
-    else this.emit('empty');
-    return ([this.tokens, this.provider.numTokens]);
+    this.emit('empty');
+    return false;
   }
 
   async _refillToken() {
@@ -170,9 +173,9 @@ const tokenProvider = new FixedWindowCounter({
   limit: 15,
 });
 
-const tokenBucket = new TokenBucket({
+const redisRateLimiter = new TokenBucket({
   capacity: 10,
-  refillRate: 500,
+  refillRate: 4000,
   tokenProvider,
 });
 
@@ -183,11 +186,11 @@ if (require.main === module) {
     async function* generateConsumer() {
       yield 'initializing';
       while (true) {
-        if (tokenBucket.hasTokens === false || tokenProvider.hasTokens === false) {
+        if (redisRateLimiter.hasTokens === false || tokenProvider.hasTokens === false) {
           yield 'none';
           continue;
         }
-        const numTotalTokensRemaining = await tokenBucket.consumeToken();
+        const numTotalTokensRemaining = await redisRateLimiter.consumeToken();
         console.log('Token consumed:', numTotalTokensRemaining);
         yield numTotalTokensRemaining || 'none';
       }
@@ -214,4 +217,4 @@ if (require.main === module) {
   )();
 }
 
-module.exports = tokenBucket;
+module.exports = redisRateLimiter;

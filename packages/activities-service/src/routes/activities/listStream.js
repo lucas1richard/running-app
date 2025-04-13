@@ -1,16 +1,17 @@
 const { Router } = require('express');
 const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
 const { logger } = require('../../utils/logger');
-const { getGrpcClient } = require('../../grpctest');
+// const { getGrpcClient } = require('../../grpctest');
+const receiver = require('../../messageQueue/receiver');
 
 const router = Router();
 
-const stravaIngestionService = getGrpcClient({
-  serviceName: 'strava-ingestion-service',
-  servicePort: '50052',
-  protoPackage: 'stravaIngestion',
-  protoService: 'StravaIngestion'
-});
+// const stravaIngestionService = getGrpcClient({
+//   serviceName: 'strava-ingestion-service',
+//   servicePort: '50052',
+//   protoPackage: 'stravaIngestion',
+//   protoService: 'StravaIngestion'
+// });
 
 router.get('/listStream', async (req, res) => {
   const forceFetch = req.query.force;
@@ -25,17 +26,16 @@ router.get('/listStream', async (req, res) => {
 
   try {
     if (forceFetch) {
-      const addedRecords = await new Promise((resolve, reject) => stravaIngestionService
-        .fetchNewActivities({ perPage, page }, (error, response) => {
-          if (error) reject(error);
-          else resolve(response.activityId);
-        }));
+      logger.info('Waiting for new activities...');
+      const addedRecords = await receiver
+        .sendMessage('stravaIngestionService', 'basic', { perPage, page })
+        .waitForMessage('basic-response');
 
       const readableStream = await findActivitiesByIdStream(addedRecords.map((record) => record.id));
       readableStream.resume();
 
       for await (const batch of readableStream) {
-        res.write(`data: ${JSON.stringify(batch)}\n\n`); // send each row immediately
+        res.write(`data: ${JSON.stringify(batch)}\n\n`);
       }
       logger.info('End of stream');
       res.write('event: close\ndata: Stream closed\n\n');
@@ -48,7 +48,7 @@ router.get('/listStream', async (req, res) => {
     readableStream.resume();
 
     for await (const batch of readableStream) {
-      res.write(`data: ${JSON.stringify(batch)}\n\n`); // send each row immediately
+      res.write(`data: ${JSON.stringify(batch)}\n\n`);
     }
     logger.info('End of stream');
     res.write('event: close\ndata: Stream closed\n\n');

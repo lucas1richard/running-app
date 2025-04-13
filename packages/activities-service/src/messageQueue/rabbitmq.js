@@ -1,9 +1,7 @@
 const amqp = require('amqplib');
 
-/** @type {import('amqplib').ChannelModel} */
 let connection = null;
 
-/** @type {import('amqplib').ChannelModel} */
 let channel = null;
 
 const getRabbitMQConnection = async () => {

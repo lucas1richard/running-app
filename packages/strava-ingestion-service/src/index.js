@@ -29,20 +29,18 @@ async function fetchNewActivitiesEndpoint(call, callback) {
   const addedRecordIds = await fetchNewActivities(call.request);
   callback(null, { activityId: addedRecordIds });
 
-  const streamsDataChannel = await getChannel(channelConfigs.fetchActivityStreams);
-  const detailsDataChannel = await getChannel(channelConfigs.fetchActivityDetails);
-
+  const basicDataChannel = await getChannel(channelConfigs.stravaIngestionService);
 
   for (const recordId of addedRecordIds) {
     // add streams and details to the back of the queue
-    streamsDataChannel.publish(
-      channelConfigs.fetchActivityStreams.exchangeName,
-      channelConfigs.fetchActivityStreams.routingKey,
+    basicDataChannel.publish(
+      channelConfigs.stravaIngestionService.exchangeName,
+      channelConfigs.stravaIngestionService.routingKey,
       Buffer.from(String(recordId))
     );
-    detailsDataChannel.publish(
-      channelConfigs.fetchActivityDetails.exchangeName,
-      channelConfigs.fetchActivityDetails.routingKey,
+    basicDataChannel.publish(
+      channelConfigs.stravaIngestionService.exchangeName,
+      channelConfigs.stravaIngestionService.routingKey,
       Buffer.from(String(recordId))
     );
   }
@@ -64,9 +62,9 @@ if (require.main === module) {
       setupCouchDb(),
       initMysql(),
       waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true }),
+      getRedisClient(),
     ]);
 
-    const client = await getRedisClient();
     await getRabbitMQConnection();
 
     const routeServer = getServer();
@@ -79,54 +77,19 @@ if (require.main === module) {
     );
 
     const basicDataChannel = await getChannel(channelConfigs.stravaIngestionService);
-    const streamsDataChannel = await getChannel(channelConfigs.fetchActivityStreams);
-    const detailsDataChannel = await getChannel(channelConfigs.fetchActivityDetails);
 
     basicDataChannel.prefetch(1);
-    streamsDataChannel.prefetch(1);
-    detailsDataChannel.prefetch(1);
 
-    // expect message to be in the format { perPage = 100, page = 1, fetchAll = false }
-    await basicDataChannel.consume(channelConfigs.stravaIngestionService.queueName, async (msg) => {
+    // expect message to be in the type, payload: { perPage = 100, page = 1, fetchAll = false }
+    basicDataChannel.consume(channelConfigs.stravaIngestionService.queueName, async (msg) => {
       if (msg !== null) {
-        const data = JSON.parse(msg.content.toString());
-        const addedRecordIds = await fetchNewActivities(data);
+        const { payload, type } = JSON.parse(msg.content.toString());
+        if (type === 'basic') await fetchNewActivities(payload);
+        if (type === 'streams') await ingestActivityStreams(payload);
+        if (type === 'details') await ingestActivityDetails(payload);
         basicDataChannel.ack(msg);
-
-        for (const recordId of addedRecordIds) {
-          // add streams and details to the back of the queue
-          streamsDataChannel.publish(
-            channelConfigs.fetchActivityStreams.exchangeName,
-            channelConfigs.fetchActivityStreams.routingKey,
-            Buffer.from(String(recordId))
-          );
-          detailsDataChannel.publish(
-            channelConfigs.fetchActivityDetails.exchangeName,
-            channelConfigs.fetchActivityDetails.routingKey,
-            Buffer.from(String(recordId))
-          );
-        }
       }
     }, { noAck: false });
-    await Promise.all([
-      streamsDataChannel.consume(channelConfigs.fetchActivityStreams.queueName, async (msg) => {
-        if (msg !== null) {
-          const data = JSON.parse(msg.content.toString());
-          await ingestActivityStreams(data);
-          streamsDataChannel.ack(msg);
-        }
-      }, { noAck: false }),
-      detailsDataChannel.consume(channelConfigs.fetchActivityDetails.queueName, async (msg) => {
-        if (msg !== null) {
-          const data = JSON.parse(msg.content.toString());
-          await ingestActivityDetails(data);
-          detailsDataChannel.ack(msg);
-        }
-      }, { noAck: false }),
-    ]);
-    // await client.set('test', 'Redis is working!');
-    const res = await client.get('test');
-    console.log('Redis test key:', res);
   })()
 }
 
