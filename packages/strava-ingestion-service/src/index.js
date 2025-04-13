@@ -4,8 +4,9 @@ const protoLoader = require('@grpc/proto-loader');
 const waitPort = require('wait-port');
 const { setupCouchDb } = require('./setupdb-couchbase');
 const { initMysql } = require('./setupdb-mysql');
-const { fetchNewActivities } = require('./fetchNewActivities');
+const { getRedisClient } = require('./redis');
 const { getRabbitMQConnection } = require('./messageQueue/rabbitmq');
+const { fetchNewActivities } = require('./fetchNewActivities');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
 const ingestActivityDetails = require('./ingestActivityDetails');
 const ingestActivityStreams = require('./ingestActivityStreams');
@@ -65,6 +66,7 @@ if (require.main === module) {
       waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true }),
     ]);
 
+    const client = await getRedisClient();
     await getRabbitMQConnection();
 
     const routeServer = getServer();
@@ -122,6 +124,9 @@ if (require.main === module) {
         }
       }, { noAck: false }),
     ]);
+    // await client.set('test', 'Redis is working!');
+    const res = await client.get('test');
+    console.log('Redis test key:', res);
   })()
 }
 
