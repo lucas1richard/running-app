@@ -128,23 +128,23 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
       ]));
 
       if (newActivities.length === 0) {
-        console.log('No new activities to add');
+        console.trace('No new activities to add');
         return [];
       }
 
       if (newActivities.length > 0) {
         await query(insertActivitiesSql, [newActivities]);
-        console.log(`Bulk Add Activities Complete - ${newActivities.length} new records`);
+        console.trace(`Bulk Add Activities Complete - ${newActivities.length} new records`);
 
         const q = await query(selectActivitiesMultiSql, [newActivities.map(a => a[0])]);
-        console.log(q);
+        console.trace(q);
 
         return q;
       }
 
       return [];
     } catch (err) {
-      console.log(err);
+      console.trace(err);
       return [];
     }
   }

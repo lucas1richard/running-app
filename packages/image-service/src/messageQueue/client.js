@@ -5,7 +5,7 @@ const dispatchFanout = async (exchangeName, msg) => {
     const channel = await getBoundedChannel(exchangeName, '', 'fanout');
     channel.publish(exchangeName, '', Buffer.from(msg));
 
-    console.log(` [x] Sent ${msg}`);
+    console.trace(` [x] Sent ${msg}`);
     return true;
   } catch (err) {
     console.error('Error sending message', err);

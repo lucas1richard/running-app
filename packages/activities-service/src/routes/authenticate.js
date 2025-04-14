@@ -16,12 +16,12 @@ const router = Router();
 //   have a database of user records, the complete Strava profile is
 //   serialized and deserialized.
 passport.serializeUser(function(user, done) {
-  // console.log(user);
+  // console.trace(user);
   done(null, user);
 });
 
 passport.deserializeUser(function(obj, done) {
-  // console.log(obj);
+  // console.trace(obj);
   done(null, obj);
 });
 
@@ -32,7 +32,7 @@ passport.use(new StravaStrategy({
   scope: 'activity:write,activity:read_all'
 },
 function(accessToken, refreshToken, profile, done) {
-  console.log(profile);
+  console.trace(profile);
   // asynchronous verification, for effect...
   process.nextTick(function () {
 

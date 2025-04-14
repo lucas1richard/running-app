@@ -68,7 +68,7 @@ const makeCompressedRoute = async (activityId, compressionLevel = 0.0001, skipCh
   if (!skipCheck) {
     const existingRoute = await getRouteCoordinates(activityId, compressionLevel);
     if (existingRoute?.length) {
-      console.log(`EXISTING ROUTE FOUND: ${activityId}, ${compressionLevel}`);
+      console.trace(`EXISTING ROUTE FOUND: ${activityId}, ${compressionLevel}`);
       return { activityId, route: existingRoute, compressionLevel };
     }
   }

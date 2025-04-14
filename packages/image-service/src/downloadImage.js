@@ -9,7 +9,7 @@ const downloadImage = (url, toFile) => new Promise((acc, rej) => {
     // after download completed close filestream
     file.on("finish", () => {
       file.close();
-      console.log("Download Completed");
+      console.trace("Download Completed");
       acc();
     });
 

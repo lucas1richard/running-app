@@ -20,7 +20,7 @@ const createIfNotExists = async (dbName) => {
   try {
     await nano.db.get(dbName);
   } catch (err) {
-    console.log(err);
+    console.trace(err);
     await nano.db.create(dbName);
   }
 };

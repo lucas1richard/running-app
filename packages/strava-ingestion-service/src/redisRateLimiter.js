@@ -145,9 +145,9 @@ class TokenBucket extends EventEmitter {
   }
 
   async consumeToken() {
-    console.log('Attempting to consume token...')
-    console.log('this:', this.capacity, this.tokens);
-    console.log('provider:', this.provider.limit, this.provider.count);
+    console.trace('Attempting to consume token...')
+    console.trace('this:', this.capacity, this.tokens);
+    console.trace('provider:', this.provider.limit, this.provider.count);
     if (this.hasTokens && this.provider.hasTokens) {
       this.tokens -= 1;
       await this.syncToRedis();
@@ -181,7 +181,7 @@ const redisRateLimiter = new TokenBucket({
 
 if (require.main === module) {
   (async () => {
-    console.log('Initializing rate limiter...');
+    console.trace('Initializing rate limiter...');
 
     async function* generateConsumer() {
       yield 'initializing';
@@ -191,7 +191,7 @@ if (require.main === module) {
           continue;
         }
         const numTotalTokensRemaining = await redisRateLimiter.consumeToken();
-        console.log('Token consumed:', numTotalTokensRemaining);
+        console.trace('Token consumed:', numTotalTokensRemaining);
         yield numTotalTokensRemaining || 'none';
       }
     }
@@ -211,7 +211,7 @@ if (require.main === module) {
     setInterval(async () => {
       const store = await spoofClient.hGetAll('stravaFixedWindow');
       const tokenBucket = await spoofClient.hGetAll('stravaTokenBucket');
-      console.log('Redis store:', store, 'Token Bucket:', tokenBucket);
+      console.trace('Redis store:', store, 'Token Bucket:', tokenBucket);
     }, 1000);
   }
   )();

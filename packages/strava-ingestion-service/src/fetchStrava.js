@@ -52,7 +52,7 @@ const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
   const [fifteenMinUsage, dailyUsage] = usageRaw.split(',').map(Number);
   const [fifteenMinLimit, dailyLimit] = limitRaw.split(',').map(Number);
 
-  console.log('Rate limit usage:', {
+  console.trace('Rate limit usage:', {
     fifteenMinUsage,
     fifteenMinLimit,
     dailyUsage,

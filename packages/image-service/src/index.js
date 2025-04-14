@@ -39,12 +39,12 @@ app.use((err, req, res, next) => {
 (async () => {
   try {
     app.listen(PORT);
-    console.log(`image-service listening on port ${PORT}`);
+    console.trace(`image-service listening on port ${PORT}`);
 
     await waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true });
 
     await setupConsumers();
   } catch (err) {
-    console.log(err);
+    console.trace(err);
   }
 })();

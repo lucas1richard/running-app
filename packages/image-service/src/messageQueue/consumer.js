@@ -6,7 +6,7 @@ const consumeFromFanout = async (exchangeName, queueName = '', callback) => {
   await channel.consume(queueName, (msg) => {
     if (msg.content) callback(msg.content.toString());
   }, { noAck: true });
-  console.log(` [*] Waiting for messages in ${exchangeName}. To exit press CTRL+C`);
+  console.trace(` [*] Waiting for messages in ${exchangeName}. To exit press CTRL+C`);
   return channel;
 }
 

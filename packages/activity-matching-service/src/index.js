@@ -16,7 +16,7 @@ const packageDefinition = protoLoader.loadSync(
 const activityMatching = grpc.loadPackageDefinition(packageDefinition).activityMatching;
 
 function hello(call, callback) {
-  console.log('Hello called');
+  console.trace('Hello called');
   setTimeout(() => {
     callback(null, { message: 'Hello from the server!' });
   }, 2000);
@@ -37,7 +37,7 @@ if (require.main === module) {
     `${process.env.SERVICE_NAME}:${process.env.SERVICE_PORT}`,
     grpc.ServerCredentials.createInsecure(),
     () => {
-      console.log(`Running on port ${process.env.SERVICE_PORT}`);
+      console.trace(`Running on port ${process.env.SERVICE_PORT}`);
 
     }
   );

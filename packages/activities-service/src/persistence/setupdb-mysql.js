@@ -65,7 +65,7 @@ async function initMysql() {
         if (err) return console.error(err);
       });
   } catch (err) {
-    console.log(err);
+    console.trace(err);
   }
 
   await Promise.all([
@@ -73,7 +73,7 @@ async function initMysql() {
     createHeartRateZonesTable()
   ]);
 
-  console.log(`Connected to mysql db at host ${HOST}`);
+  console.trace(`Connected to mysql db at host ${HOST}`);
 }
 
 async function getItem(id) {

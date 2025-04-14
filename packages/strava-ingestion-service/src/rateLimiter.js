@@ -118,7 +118,7 @@ const tokenBucket = new TokenBucket({
 
 if (require.main === module) {
   (async () => {
-    console.log('Initializing rate limiter...');
+    console.trace('Initializing rate limiter...');
 
     async function* generateConsumer() {
       while (true) {
@@ -127,7 +127,7 @@ if (require.main === module) {
           continue;
         }
         const numTotalTokensRemaining = await tokenBucket.consumeToken();
-        console.log('Token consumed:', numTotalTokensRemaining);
+        console.trace('Token consumed:', numTotalTokensRemaining);
         yield numTotalTokensRemaining || 'none';
       }
     }

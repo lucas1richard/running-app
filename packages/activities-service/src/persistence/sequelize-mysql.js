@@ -30,7 +30,7 @@ const sequelize = new Sequelize(database, user, password, {
 
 sequelize
   .authenticate()
-  .then(() => console.log('Connection has been established successfully.'))
+  .then(() => console.trace('Connection has been established successfully.'))
   .catch((err) => console.error('Unable to connect to the database:', err));
 
 module.exports = {

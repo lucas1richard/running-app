@@ -25,7 +25,7 @@ const createIfNotExists = async (dbName) => {
   try {
     await nano.db.get(dbName);
   } catch (err) {
-    console.log(err);
+    console.trace(err);
     await nano.db.create(dbName);
   }
 };
@@ -86,7 +86,7 @@ const destroyActivity = async (id) => {
   try {
     await activitiesDb.destroy(`${id}`);
   } catch (err) {
-    console.log(err.message);
+    console.trace(err.message);
   }
 };
 
@@ -103,7 +103,7 @@ const destroyActivityDetail = async (id) => {
   try {
     await activitiesDetailDb.destroy(`${id}`);
   } catch (err) {
-    console.log(err.message);
+    console.trace(err.message);
   }
 };
 
@@ -140,7 +140,7 @@ const destroyActivityPreferences = async (activityId) => {
   try {
     await activityPreferencesDb.destroy(`${activityId}`);
   } catch (err) {
-    console.log(err.message);
+    console.trace(err.message);
   }
 }
 
@@ -174,7 +174,7 @@ const destroyStream = async (id) => {
   try {
     await streamsDb.destroy(`${id}`);
   } catch (err) {
-    console.log(err.message);
+    console.trace(err.message);
   }
 };
 

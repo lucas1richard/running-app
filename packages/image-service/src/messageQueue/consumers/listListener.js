@@ -11,7 +11,7 @@ const listListener = async (msg) => {
       if (msg.content) {
         const messageStr = msg.content.toString();
         const message = JSON.parse(messageStr);
-        console.log(' [x] Received ', messageStr);
+        console.trace(' [x] Received ', messageStr);
 
         channel.ack(msg);
         

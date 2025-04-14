@@ -90,7 +90,7 @@ router.get('/:id/segments/compare', async (req, res) => {
 
     res.json(comparedSegments);
   } catch (err) {
-    console.log(err)
+    console.trace(err)
     res.status(500).send(err)
   }
 });

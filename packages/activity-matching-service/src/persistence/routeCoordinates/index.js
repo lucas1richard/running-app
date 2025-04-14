@@ -57,7 +57,7 @@ const getAllCoordinatesStream = async (referenceTime, timeframe) => {
     if (err) {
       console.error('Pipeline failed', err);
     } else {
-      console.log('Pipeline succeeded');
+      console.trace('Pipeline succeeded');
     }
   });
 };
@@ -72,7 +72,7 @@ const getRouteCoordinates = async (activityId, compressionLevel = 0.0001) => {
 }
 
 const bulkCreateRouteCoordinates = async (activityId, compressedRoute, compressionLevel) => {
-  console.log('bulkCreateRouteCoordinates', activityId, compressedRoute.length);
+  console.trace('bulkCreateRouteCoordinates', activityId, compressedRoute.length);
   return RouteCoordinates.bulkCreate(
     compressedRoute.map(([lat, lon, seconds_at_coords = 1], index) => ({
       lat,

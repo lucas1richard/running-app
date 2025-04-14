@@ -11,13 +11,13 @@ const imageDownloadListener = async (msg) => {
       if (msg.content) {
         const messageStr = msg.content.toString();
         const message = JSON.parse(messageStr);
-        console.log(' [x] Received ', messageStr);
+        console.trace(' [x] Received ', messageStr);
 
         // Process the message here
         const { activityId, routePath, size, maptype } = message;
         handleImage(activityId, routePath, size, maptype)
           .then(() => {
-            console.log(`Image for activityId ${activityId} downloaded successfully`);
+            console.trace(`Image for activityId ${activityId} downloaded successfully`);
             channel.ack(msg);
           })
           .catch((error) => {

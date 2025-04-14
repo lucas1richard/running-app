@@ -23,7 +23,7 @@ router.get('/network', async (req, res) => {
 
     return res.json(network)
   } catch (err) {
-    console.log(err)
+    console.trace(err)
     res.status(500).send(err.message);
   }
 });

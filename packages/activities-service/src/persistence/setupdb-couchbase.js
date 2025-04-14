@@ -25,7 +25,7 @@ const createIfNotExists = async (dbName) => {
   try {
     await nano.db.get(dbName);
   } catch (err) {
-    console.log(err);
+    console.trace(err);
     await nano.db.create(dbName);
   }
 };
@@ -67,11 +67,11 @@ const makeDeleteById = (db) => async (id) => {
 
     // Then delete with the correct revision
     const response = await db.destroy(id, activity._rev);
-    console.log(`Successfully deleted ${this} ${id}`);
+    console.trace(`Successfully deleted ${this} ${id}`);
     return response;
   } catch (error) {
     if (error.statusCode === 404) {
-      console.log(`${this} ${id} not found, nothing to delete`);
+      console.trace(`${this} ${id} not found, nothing to delete`);
       return { ok: true, id: id, notFound: true };
     }
     console.error(`Error deleting ${this} ${id}:`, error);
@@ -96,7 +96,7 @@ const getActivity = async (id) => {
     const activity = await activitiesDb.get(`${id}`);
     return activity;
   } catch (err) {
-    console.log('getActivity', err);
+    console.trace('getActivity', err);
     return undefined;
   }
 };
@@ -130,7 +130,7 @@ const getUserPreferences = async (userId) => {
     const preferences = await userPreferencesDb.get(`${userId}`);
     return preferences;
   } catch (err) {
-    console.log('getUserPreferences', err);
+    console.trace('getUserPreferences', err);
     return undefined;
   }
 };
@@ -168,7 +168,7 @@ const getStream = async (id) => {
     const stream = await streamsDb.get(`${id}`);
     return stream;
   } catch (err) {
-    console.log('getStream', err);
+    console.trace('getStream', err);
     return undefined;
   }
 };

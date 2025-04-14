@@ -14,7 +14,7 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
         return a;
       }, {});
 
-      console.log(existingMap)
+      console.trace(existingMap)
 
       const records = await Activity.bulkCreate(stravaActivities
         .filter(a => !existingMap[a.id])
@@ -34,11 +34,11 @@ const bulkAddActivitiesFromStrava = async (stravaActivities) => {
         logging: false,
       });
 
-      console.log(`Bulk Add Activities Complete - ${records.length} new records`);
+      console.trace(`Bulk Add Activities Complete - ${records.length} new records`);
 
       return records;
     } catch (err) {
-      console.log(err);
+      console.trace(err);
       return [];
     }
   }

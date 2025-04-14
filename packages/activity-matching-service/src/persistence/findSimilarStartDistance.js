@@ -9,7 +9,7 @@ const findSimilarStartDistance = async (activityId, maxCount = 100) => {
   // const [[activity]] = await conn.query('SELECT * FROM activities WHERE id = ? limit 1', [activityId]);
   const [[activity]] = await conn.query('SELECT id, distance, elapsed_time, sport_type, start_latlng FROM activities WHERE id = ? limit 1', [activityId]);
 
-  console.log(activity)
+  console.trace(activity)
 
   const distanceDelta = Math.max(Number(activity.distance) * 0.1, 200);
   const timeDelta = Math.max(Number(activity.elapsed_time) * 0.1, 300);
@@ -30,7 +30,7 @@ const findSimilarStartDistance = async (activityId, maxCount = 100) => {
 };
 
 // findSimilarStartDistance('14053639538', 100)
-//   .then(console.log)
+//   .then(console.trace)
 //   .catch(console.error);
 
 module.exports = findSimilarStartDistance;

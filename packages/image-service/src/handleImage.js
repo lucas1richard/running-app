@@ -20,7 +20,7 @@ const handleImage = async (activityId, routePath, size  = '900x450', maptype = '
   const rootDir = path.join(__dirname, 'static', size, maptype);
 
   fs.mkdirSync(rootDir, { recursive: true });
-  console.log(`https://maps.googleapis.com/maps/api/staticmap?size=${size}&maptype=${maptype}&path=${routePath}&key=${googleAPIKey}`);
+  console.trace(`https://maps.googleapis.com/maps/api/staticmap?size=${size}&maptype=${maptype}&path=${routePath}&key=${googleAPIKey}`);
   await downloadImage(
     `https://maps.googleapis.com/maps/api/staticmap?size=${size}&maptype=${maptype}&path=${routePath}&key=${googleAPIKey}`,
     path.join(__dirname, 'static', size, maptype, file)
