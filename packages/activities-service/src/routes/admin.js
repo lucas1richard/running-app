@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const { getItem, storeItem } = require('../persistence/setupdb-mysql');
 const constants = require('../constants');
-const testEventEmitter = require('../utils/eventEmitters/testEventEmitter');
 
 const router = new Router();
 
@@ -26,8 +25,6 @@ router.post('/set-token', async (req, res) => {
 });
 
 router.get('/get-constants', async (req, res) => {
-  testEventEmitter.emit('shazam', 'Hello World');
-  console.trace('shazam');
   res.json(constants);
 });
 

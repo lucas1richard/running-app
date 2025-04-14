@@ -13,11 +13,11 @@ const streamKeys = [
   'temp',
   'moving',
   'grade_smooth',
-];
+].join(',');
 
 const getActivityStreams = async (activityId) => {
   try {
-    const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
+    const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys}`);
     await addStream({ stream }, activityId);
     return { activityId, status: 'success' };
   } catch (err) {
