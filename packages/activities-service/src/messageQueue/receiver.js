@@ -16,7 +16,8 @@ class Receiver extends EventEmitter {
       (msg) => {
         if (msg !== null) {
           const content = JSON.parse(msg.content.toString());
-          this.emit(content.type, content.payload);
+          const correlationId = msg.properties.correlationId;
+          this.emit(`${content.type}-${correlationId}`, content.payload);
           this.channel.ack(msg);
         }
       },
@@ -24,9 +25,9 @@ class Receiver extends EventEmitter {
     );
   }
 
-  async waitForMessage(type) {
+  async waitForMessage(type, correlationId) {
     return new Promise((resolve) => {
-      this.once(type, (payload) => {
+      this.once(`${type}-${correlationId}`, (payload) => {
         resolve(payload);
       });
     });
@@ -37,12 +38,14 @@ class Receiver extends EventEmitter {
    * @param {string} type
    * @param {any} payload
    */
-  sendMessage(configName, type, payload) {
+  sendMessage(configName, type, payload, correlationId) {
     const ingestionChannel = getChannelSync(channelConfigs[configName]);
     const message = Buffer.from(JSON.stringify({ type, payload }));
     const { routingKey, exchangeName } = channelConfigs[configName];
 
-    ingestionChannel.publish(exchangeName, routingKey, message);
+    ingestionChannel.publish(exchangeName, routingKey, message, {
+      correlationId,
+    });
 
     return this;
   }

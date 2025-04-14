@@ -19,9 +19,10 @@ const channelConfigs = {
     channel: null,
   },
   activitiesService: {
-    exchangeName: 'Activities',
-    queueName: '',
-    type: 'fanout',
+    exchangeName: 'activitiesService',
+    queueName: 'responses',
+    routingKey: 'responses',
+    type: 'direct',
     channel: null,
   },
 };

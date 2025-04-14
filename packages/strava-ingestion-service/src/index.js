@@ -84,7 +84,16 @@ if (require.main === module) {
     basicDataChannel.consume(channelConfigs.stravaIngestionService.queueName, async (msg) => {
       if (msg !== null) {
         const { payload, type } = JSON.parse(msg.content.toString());
-        if (type === 'basic') await fetchNewActivities(payload);
+        if (type === 'basic') {
+          const ids = await fetchNewActivities(payload);
+          const channel = await getChannel(channelConfigs.activitiesService);
+          channel.publish(
+            channelConfigs.activitiesService.exchangeName,
+            channelConfigs.activitiesService.routingKey,
+            Buffer.from(JSON.stringify({ type: 'basic-response', payload: ids })),
+            { correlationId: msg.properties.correlationId }
+          );
+        }
         if (type === 'streams') await ingestActivityStreams(payload);
         if (type === 'details') await ingestActivityDetails(payload);
         basicDataChannel.ack(msg);

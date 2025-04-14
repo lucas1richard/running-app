@@ -1,3 +1,4 @@
+const uuid = require('uuid');
 const { Router } = require('express');
 const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
 const { logger } = require('../../utils/logger');
@@ -26,10 +27,11 @@ router.get('/listStream', async (req, res) => {
 
   try {
     if (forceFetch) {
+      const correlationId = uuid.v4();
       logger.info('Waiting for new activities...');
       const addedRecords = await receiver
-        .sendMessage('stravaIngestionService', 'basic', { perPage, page })
-        .waitForMessage('basic-response');
+        .sendMessage('stravaIngestionService', 'basic', { perPage, page }, correlationId)
+        .waitForMessage('basic-response', correlationId);
 
       const readableStream = await findActivitiesByIdStream(addedRecords.map((record) => record.id));
       readableStream.resume();

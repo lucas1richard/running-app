@@ -19,9 +19,10 @@ const channelConfigs = {
     channel: null,
   },
   activitiesService: {
-    exchangeName: 'Activities',
-    queueName: '',
-    type: 'fanout',
+    exchangeName: 'activitiesService',
+    queueName: 'responses',
+    routingKey: 'responses',
+    type: 'direct',
     channel: null,
   },
 };
@@ -38,7 +39,7 @@ const getChannel = async (config) => {
   const channel = await connection.createChannel();
   await channel.assertExchange(config.exchangeName, config.type, { durable: true });
   await channel.assertQueue(config.queueName, { durable: true });
-  await channel.bindQueue(config.queueName, config.exchangeName, '');
+  await channel.bindQueue(config.queueName, config.exchangeName, config.routingKey || '');
   config.channel = channel;
 
   return channel;
@@ -50,3 +51,4 @@ module.exports = {
   getChannel,
   getChannelSync,
 };
+

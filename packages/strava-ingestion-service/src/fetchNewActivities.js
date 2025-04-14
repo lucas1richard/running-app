@@ -43,22 +43,9 @@ const fetchWorker = async (perPage, page) => {
   }
 };
 
-const dispatchBasics = async (addedRecords) => {
-  const channel = await getChannel(channelConfigs.activitiesService);
-    channel.publish(
-      channelConfigs.activitiesService.exchangeName,
-      channelConfigs.activitiesService.routingKey,
-      Buffer.from(JSON.stringify({
-        type: 'basic-response',
-        payload: addedRecords,
-      }))
-    );
-}
-
 const fetchNewActivities = async ({ perPage = 100, page = 1, fetchAll = false } = {}) => {
   if (!fetchAll) {
     const activityIds = await fetchWorker(perPage, page);
-    await dispatchBasics(activityIds);
     return activityIds;
   }
 
@@ -73,7 +60,6 @@ const fetchNewActivities = async ({ perPage = 100, page = 1, fetchAll = false } 
     currentPage += 1;
   } while (activitiesList.length === currentPerPage);
 
-  await dispatchBasics(allActivities);
   return allActivities;
 }
 
