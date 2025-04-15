@@ -93,6 +93,19 @@ if (require.main === module) {
             Buffer.from(JSON.stringify({ type: 'basic-response', payload: ids })),
             { correlationId: msg.properties.correlationId }
           );
+          for (const recordId of ids) {
+            // add streams and details to the back of the queue
+            basicDataChannel.publish(
+              channelConfigs.stravaIngestionService.exchangeName,
+              channelConfigs.stravaIngestionService.routingKey,
+              Buffer.from(JSON.stringify({ type: 'details', payload: recordId}))
+            );
+            basicDataChannel.publish(
+              channelConfigs.stravaIngestionService.exchangeName,
+              channelConfigs.stravaIngestionService.routingKey,
+              Buffer.from(JSON.stringify({ type: 'streams', payload: recordId}))
+            );
+          }
         }
         if (type === 'streams') await ingestActivityStreams(payload);
         if (type === 'details') await ingestActivityDetails(payload);
