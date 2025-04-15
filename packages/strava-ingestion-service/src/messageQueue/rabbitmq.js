@@ -1,4 +1,5 @@
 const amqp = require('amqplib');
+const waitPort = require('wait-port');
 
 /** @type {import('amqplib').Connection | null} */
 let connection = null;
@@ -8,6 +9,7 @@ let channel = null;
 
 const getRabbitMQConnection = async () => {
   if (connection) return connection;
+  await waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true })
   connection = await amqp.connect('amqp://guest:guest@rabbitmq:5672');
   return connection;
 };

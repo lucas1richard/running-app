@@ -1,5 +1,4 @@
 const EventEmitter = require('node:events');
-
 const { channelConfigs, getChannel, getChannelSync } = require('./channels');
 
 class Receiver extends EventEmitter {
@@ -11,18 +10,6 @@ class Receiver extends EventEmitter {
 
   async init() {
     this.channel = await getChannel(channelConfigs.activitiesService);
-    this.channel.consume(
-      channelConfigs.activitiesService.queueName,
-      (msg) => {
-        if (msg !== null) {
-          const content = JSON.parse(msg.content.toString());
-          const correlationId = msg.properties.correlationId;
-          this.emit(`${content.type}-${correlationId}`, content.payload);
-          this.channel.ack(msg);
-        }
-      },
-      { noAck: false }
-    );
   }
 
   async waitForMessage(type, correlationId) {

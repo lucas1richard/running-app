@@ -1,7 +1,6 @@
 const path = require('path');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
-const waitPort = require('wait-port');
 const { setupCouchDb } = require('./setupdb-couchbase');
 const { initMysql } = require('./setupdb-mysql');
 const { getRedisClient } = require('./redis');
@@ -10,6 +9,7 @@ const { fetchNewActivities } = require('./fetchNewActivities');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
 const ingestActivityDetails = require('./ingestActivityDetails');
 const ingestActivityStreams = require('./ingestActivityStreams');
+const receiver = require('./messageQueue/receiver');
 
 const packageDefinition = protoLoader.loadSync(
   path.join(__dirname, '../../protos/strava-ingestion-service.proto'),
@@ -29,23 +29,12 @@ async function fetchNewActivitiesEndpoint(call, callback) {
   const addedRecordIds = await fetchNewActivities(call.request);
   callback(null, { activityId: addedRecordIds });
 
-  const basicDataChannel = await getChannel(channelConfigs.stravaIngestionService);
-
   for (const recordId of addedRecordIds) {
     // add streams and details to the back of the queue
-    basicDataChannel.publish(
-      channelConfigs.stravaIngestionService.exchangeName,
-      channelConfigs.stravaIngestionService.routingKey,
-      Buffer.from(String(recordId))
-    );
-    basicDataChannel.publish(
-      channelConfigs.stravaIngestionService.exchangeName,
-      channelConfigs.stravaIngestionService.routingKey,
-      Buffer.from(String(recordId))
-    );
+    receiver.sendMessage('stravaIngestionService', 'details', recordId);
+    receiver.sendMessage('stravaIngestionService', 'streams', recordId);
   }
 }
-
 
 function getServer() {
   const server = new grpc.Server();
@@ -61,7 +50,6 @@ if (require.main === module) {
     await Promise.all([
       setupCouchDb(),
       initMysql(),
-      waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true }),
       getRedisClient(),
     ]);
 
@@ -86,25 +74,11 @@ if (require.main === module) {
         const { payload, type } = JSON.parse(msg.content.toString());
         if (type === 'basic') {
           const ids = await fetchNewActivities(payload);
-          const channel = await getChannel(channelConfigs.activitiesService);
-          channel.publish(
-            channelConfigs.activitiesService.exchangeName,
-            channelConfigs.activitiesService.routingKey,
-            Buffer.from(JSON.stringify({ type: 'basic-response', payload: ids })),
-            { correlationId: msg.properties.correlationId }
-          );
+          receiver.sendMessage('activitiesService', 'basic-response', ids, msg.properties.correlationId);
           for (const recordId of ids) {
             // add streams and details to the back of the queue
-            basicDataChannel.publish(
-              channelConfigs.stravaIngestionService.exchangeName,
-              channelConfigs.stravaIngestionService.routingKey,
-              Buffer.from(JSON.stringify({ type: 'details', payload: recordId}))
-            );
-            basicDataChannel.publish(
-              channelConfigs.stravaIngestionService.exchangeName,
-              channelConfigs.stravaIngestionService.routingKey,
-              Buffer.from(JSON.stringify({ type: 'streams', payload: recordId}))
-            );
+            receiver.sendMessage('stravaIngestionService', 'details', recordId);
+            receiver.sendMessage('stravaIngestionService', 'streams', recordId);
           }
         }
         if (type === 'streams') await ingestActivityStreams(payload);
