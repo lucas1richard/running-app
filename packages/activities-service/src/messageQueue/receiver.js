@@ -1,6 +1,8 @@
 const EventEmitter = require('node:events');
+const uuid = require('uuid');
 
 const { channelConfigs, getChannel, getChannelSync } = require('./channels');
+const { logger } = require('../utils/logger');
 
 class Receiver extends EventEmitter {
   constructor() {
@@ -10,6 +12,7 @@ class Receiver extends EventEmitter {
   }
 
   async init() {
+    // the receiver is for this service. it listens for messages from other services
     this.channel = await getChannel(channelConfigs.activitiesService);
     this.channel.consume(
       channelConfigs.activitiesService.queueName,
@@ -25,9 +28,20 @@ class Receiver extends EventEmitter {
     );
   }
 
+  /**
+   * The event emitted by this receiver upon receiving a message from the queue
+   * @param {string} type
+   * @param {string} correlationId
+   * @returns the payload of the message from the queue
+   */
   async waitForMessage(type, correlationId) {
+    const message = correlationId ? `${type}-${correlationId}` : type;
+    logger.info(
+      `Waiting for message \`${type}\` with correlationId \`${correlationId}\``,
+      { service: 'activities-service' }
+    );
     return new Promise((resolve) => {
-      this.once(`${type}-${correlationId}`, (payload) => {
+      this.once(message, (payload) => {
         resolve(payload);
       });
     });
@@ -39,6 +53,10 @@ class Receiver extends EventEmitter {
    * @param {any} payload
    */
   sendMessage(configName, type, payload, correlationId) {
+    logger.info(
+      `Sending message to \`${configName}\` with type \`${type}\``,
+      { service: 'activities-service' }
+    );
     const channel = getChannelSync(channelConfigs[configName]);
     const message = Buffer.from(JSON.stringify({ type, payload }));
     const { routingKey, exchangeName } = channelConfigs[configName];
@@ -48,6 +66,19 @@ class Receiver extends EventEmitter {
     });
 
     return this;
+  }
+
+  /**
+   * @param {keyof typeof channelConfigs} configName
+   * @param {string} type
+   * @param {any} payload
+   * @param {string} responseType
+   * @returns the payload of the message from the queue
+   */
+  sendAndAwaitMessage(configName, type, payload, responseType = `${type}-response`) {
+    const correlationId = uuid.v4();
+    this.sendMessage(configName, type, payload, correlationId);
+    return this.waitForMessage(responseType, correlationId);
   }
 }
 

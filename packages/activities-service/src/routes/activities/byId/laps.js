@@ -1,6 +1,6 @@
 const { Router } = require('express');
-const { getActivityDetail, updateActivityDetail } = require('../../../persistence/setupdb-couchbase');
-const fetchStrava = require('../../../utils/fetchStrava');
+const { getActivityDetail } = require('../../../persistence/setupdb-couchbase');
+const receiver = require('../../../messageQueue/receiver');
 
 const router = new Router();
 
@@ -13,9 +13,15 @@ router.get('/:id/laps', async (req, res) => {
       return res.json(detail.laps);
     }
 
-    const laps = await fetchStrava(`/activities/${activityId}/laps`);
-    await updateActivityDetail(activityId, { laps, has_detailed_laps: true });
-    res.json(laps);
+    await receiver.sendAndAwaitMessage('stravaIngestionService', 'laps', activityId);
+
+    const updated = await getActivityDetail(activityId);
+
+    if (updated?.has_detailed_laps) {
+      return res.json(updated.laps);
+    }
+
+    return res.status(404).send('Laps not found');
   } catch (err) {
     res.status(500).send(err.message)
   }

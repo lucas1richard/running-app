@@ -58,6 +58,12 @@ const addActivityDetail = async (activity) => {
   return res;
 };
 
+const updateActivityDetail = async (activityId, detail) => {
+  const existing = await activitiesDetailDb.get(`${activityId}`) || {};
+  const res = await activitiesDetailDb.insert({ ...existing, ...detail }, `${activityId}`);
+  return res;
+};
+
 const addStream = async (stream, documentId) => {
   const res = await streamsDb.insert(stream, `${documentId}`)
   return res;
@@ -68,4 +74,5 @@ module.exports = {
   addStream,
   setupCouchDb,
   bulkAddActivities,
+  updateActivityDetail,
 };

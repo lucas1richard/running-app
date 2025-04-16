@@ -50,8 +50,14 @@ const getChannel = async (config) => {
   return channel;
 };
 
+const getChannelSync = (config) => {
+  if (config.channel) return config.channel;
+  throw new Error('Channel not initialized');
+};
+
 module.exports = {
   exchangeNames,
   channelConfigs,
   getChannel,
+  getChannelSync,
 };

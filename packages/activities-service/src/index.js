@@ -1,5 +1,3 @@
-const waitPort = require('wait-port');
-
 const app = require('./app');
 const PORT = require('./port');
 
@@ -39,15 +37,14 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
     await initMysql();
     await initSequelize();
 
-    await app.listen(PORT);
-    logger.info({ message: `strava-client listening on port ${PORT}`});
-
-    await waitPort({ host: 'rabbitmq', port: 5672, timeout: 10000, waitForDns: true });
     await getRabbitMQConnection();
     await Promise.all([
       getChannel(channelConfigs.stravaIngestionService),
       getChannel(channelConfigs.activitiesService)
     ]);
+
+    await app.listen(PORT);
+    logger.info({ message: `strava-client listening on port ${PORT}`});
   } catch (err) {
     logger.error({ message: 'Error starting strava-client' });
     console.trace(err)

@@ -12,9 +12,14 @@ class Receiver extends EventEmitter {
     this.channel = await getChannel(channelConfigs.activitiesService);
   }
 
+  getMessage(type, correlationId) {
+    return correlationId ? `${type}-${correlationId}` : type;
+  }
+
   async waitForMessage(type, correlationId) {
+    const message = this.getMessage(type, correlationId);
     return new Promise((resolve) => {
-      this.once(`${type}-${correlationId}`, (payload) => {
+      this.once(message, (payload) => {
         resolve(payload);
       });
     });
@@ -24,6 +29,7 @@ class Receiver extends EventEmitter {
    * @param {keyof typeof channelConfigs} configName
    * @param {string} type
    * @param {any} payload
+   * @param {string} correlationId
    */
   sendMessage(configName, type, payload, correlationId) {
     const channel = getChannelSync(channelConfigs[configName]);

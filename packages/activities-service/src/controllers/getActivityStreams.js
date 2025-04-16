@@ -1,5 +1,4 @@
-const { getStream, addStream } = require('../persistence/setupdb-couchbase');
-const fetchStrava = require('../utils/fetchStrava');
+const { getStream } = require('../persistence/setupdb-couchbase');
 
 const streamKeys = [
   'time',
@@ -25,10 +24,6 @@ const getActivityStreams = async (activityId, keys = streamKeys) => {
   if (cachedStream) {
     return matchKeys(cachedStream.stream);
   }
-
-  const stream = await fetchStrava(`/activities/${activityId}/streams?keys=${streamKeys.join(',')}`);
-  await addStream({ stream }, activityId);
-  return keys.map((key) => stream?.find?.(({ type }) => type === key));
 };
 
 module.exports = {
