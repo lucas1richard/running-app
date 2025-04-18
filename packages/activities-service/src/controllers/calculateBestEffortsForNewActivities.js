@@ -23,10 +23,12 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
 
   const activities = await Activity.findAll({
     where: {
-      [Op.or]: activityIds.map((id) => ({ id })),
-      [Op.not]: {
-        [Op.or]: calculatedBestEfforts.map(({ activityId }) => ({ id: activityId }))
-      }
+      id: {
+        [Op.in]: activityIds,
+        [Op.not]: {
+          [Op.in]: calculatedBestEfforts.map(({ activityId }) => activityId)
+        }
+      },
     },
     order: [['start_date_local', 'asc']],
   });

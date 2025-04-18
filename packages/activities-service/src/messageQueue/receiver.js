@@ -19,8 +19,10 @@ class Receiver extends EventEmitter {
       (msg) => {
         if (msg !== null) {
           const content = JSON.parse(msg.content.toString());
+          const type = content.type;
           const correlationId = msg.properties.correlationId;
-          this.emit(`${content.type}-${correlationId}`, content.payload);
+          const message = correlationId ? `${type}-${correlationId}` : type;
+          this.emit(message, content.payload);
           this.channel.ack(msg);
         }
       },
