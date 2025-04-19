@@ -32,14 +32,13 @@ func (e Endpoint) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func NewAPIServer(addr string, storage *gorm.DB) (*APIServer, error) {
+func NewAPIServer(addr string) (*APIServer, error) {
 	if addr == "" {
 		return nil, errors.New("addr cannot be blank")
 	}
 
 	return &APIServer{
-		addr:    addr,
-		storage: storage,
+		addr: addr,
 	}, nil
 }
 
@@ -70,7 +69,7 @@ func (s *APIServer) router() http.Handler {
 
 	router.HandleFunc("/", s.defaultRoute)
 	// router.Methods("POST").Path("/items").Handler(Endpoint{s.createItem})
-	router.Methods("GET").Path("/items").Handler(Endpoint{s.listItems})
+	// router.Methods("GET").Path("/items").Handler(Endpoint{s.listItems})
 	return router
 }
 
