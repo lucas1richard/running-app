@@ -2,13 +2,12 @@ package functions
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"fmt"
 	"math"
 
 	_ "github.com/go-kivik/couchdb/v3" // CouchDB driver
-	"github.com/go-kivik/kivik/v3"
+	"github.com/lucas1richard/activities-go-server/persistance"
 )
 
 type Activity struct {
@@ -56,15 +55,12 @@ type StreamDoc struct {
 	Stream []Stream `json:"stream"`
 }
 
-func LongestCommonSubsequence(dbConn *sql.DB, couchDb *kivik.Client) {
-	rows, er := dbConn.Query("select id, name from activities limit 1")
-	if er != nil {
-		panic(er)
-	}
+func LongestCommonSubsequence(activityId1, activityId2 string) {
+	couchDb := persistance.InitCouchDB()
 	ctx := context.Background()
 	streamsDb := couchDb.DB(ctx, "streams")
-	activity1Doc := streamsDb.Get(ctx, "14207820023")
-	activity2Doc := streamsDb.Get(ctx, "13875355229")
+	activity1Doc := streamsDb.Get(ctx, activityId1)
+	activity2Doc := streamsDb.Get(ctx, activityId2)
 
 	var d1 StreamDoc
 	var activity1Compacted []LatLng
@@ -95,6 +91,11 @@ func LongestCommonSubsequence(dbConn *sql.DB, couchDb *kivik.Client) {
 
 	defer couchDb.Close(ctx)
 
+	dbConn := persistance.InitMysql()
+	rows, queryErr := dbConn.Query("select id, name from activities limit 1")
+	if queryErr != nil {
+		panic(queryErr)
+	}
 	i := &Activity{}
 
 	defer rows.Close()

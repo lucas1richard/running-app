@@ -58,6 +58,9 @@ services:
     env_file: "./activities-service.env" # gitignored file
     ports:
       - "3003:3003"
+    depends_on:
+      - strava-couch-db
+      - strava-mysql
 
   tcp-service:
     image: node:18-alpine

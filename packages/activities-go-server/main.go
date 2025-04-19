@@ -1,26 +1,23 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
 
 	// Make sure you change this line to match your module
-	"github.com/go-kivik/kivik/v3"
+
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
 	"github.com/lucas1richard/activities-go-server/apiserver"
 	"github.com/lucas1richard/activities-go-server/functions"
+	"github.com/lucas1richard/activities-go-server/persistance"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )
 
 const (
-	apiServerAddrFlagName       string = "addr"
-	apiServerStorageDatabaseURL string = "database-url"
-	couchDbUser                 string = "admin"
-	couchDbPassword             string = "password"
+	apiServerAddrFlagName string = "addr"
 )
 
 func main() {
@@ -45,9 +42,6 @@ func apiServerCmd() *cli.Command {
 		Usage: "starts the API server",
 		Flags: []cli.Flag{
 			&cli.StringFlag{Name: apiServerAddrFlagName, EnvVars: []string{"API_SERVER_ADDR"}},
-			&cli.StringFlag{Name: apiServerStorageDatabaseURL, EnvVars: []string{"MYSQL_URL"}},
-			&cli.StringFlag{Name: couchDbUser, EnvVars: []string{"COUCHDB_USER"}},
-			&cli.StringFlag{Name: couchDbPassword, EnvVars: []string{"COUCHDB_PASSWORD"}},
 		},
 		Action: func(c *cli.Context) error {
 			done := make(chan os.Signal, 1)
@@ -58,10 +52,7 @@ func apiServerCmd() *cli.Command {
 				<-done
 				close(stopper)
 			}()
-
-			databaseURL := c.String(apiServerStorageDatabaseURL)
-
-			fmt.Println(databaseURL)
+			godotenv.Load()
 
 			addr := c.String(apiServerAddrFlagName)
 			server, err := apiserver.NewAPIServer(addr)
@@ -69,21 +60,12 @@ func apiServerCmd() *cli.Command {
 				return err
 			}
 
-			dbConn, dbConnErr := sql.Open("mysql", databaseURL)
-			if dbConnErr != nil {
-				return dbConnErr
-			}
+			couchDb := persistance.InitCouchDB()
+			dbConn := persistance.InitMysql()
 			defer dbConn.Close()
+			defer couchDb.Close(c.Context)
 
-			fmt.Println(couchDbUser, couchDbPassword)
-
-			dataSourceName := fmt.Sprintf(
-				"http://%s:%s@strava-couch-db:5984", couchDbUser, couchDbPassword)
-			couchDb, err := kivik.New("couch", dataSourceName)
-			if err != nil {
-				panic(err)
-			}
-			functions.LongestCommonSubsequence(dbConn, couchDb)
+			functions.LongestCommonSubsequence("14207820023", "13875355229")
 
 			return server.Start(stopper)
 		},

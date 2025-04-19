@@ -7,6 +7,7 @@ require (
 	github.com/go-kivik/kivik/v3 v3.2.4
 	github.com/go-sql-driver/mysql v1.8.1
 	github.com/gorilla/mux v1.8.1
+	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/cli/v2 v2.27.5
 	gorm.io/gorm v1.25.12
