@@ -11,6 +11,12 @@ message LCSRequest {
   repeated string compare = 2;
 }
 
+message ResponseItem {
+  string activityId = 1;
+  int32 longestCommonSubsequence = 2;
+  bool error = 3;
+}
+
 message LCSResponse {
-  map<string, int32> longestCommonSubsequence = 1;
+  map<string, ResponseItem> longestCommonSubsequence = 1;
 }

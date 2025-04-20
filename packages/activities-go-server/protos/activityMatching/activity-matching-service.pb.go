@@ -77,6 +77,7 @@ type ResponseItem struct {
 	state                    protoimpl.MessageState `protogen:"open.v1"`
 	ActivityId               string                 `protobuf:"bytes,1,opt,name=activityId,proto3" json:"activityId,omitempty"`
 	LongestCommonSubsequence int32                  `protobuf:"varint,2,opt,name=longestCommonSubsequence,proto3" json:"longestCommonSubsequence,omitempty"`
+	Error                    bool                   `protobuf:"varint,3,opt,name=error,proto3" json:"error,omitempty"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
@@ -125,9 +126,16 @@ func (x *ResponseItem) GetLongestCommonSubsequence() int32 {
 	return 0
 }
 
+func (x *ResponseItem) GetError() bool {
+	if x != nil {
+		return x.Error
+	}
+	return false
+}
+
 type LCSResponse struct {
-	state                    protoimpl.MessageState `protogen:"open.v1"`
-	LongestCommonSubsequence map[string]int32       `protobuf:"bytes,1,rep,name=longestCommonSubsequence,proto3" json:"longestCommonSubsequence,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
+	state                    protoimpl.MessageState   `protogen:"open.v1"`
+	LongestCommonSubsequence map[string]*ResponseItem `protobuf:"bytes,1,rep,name=longestCommonSubsequence,proto3" json:"longestCommonSubsequence,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
@@ -162,7 +170,7 @@ func (*LCSResponse) Descriptor() ([]byte, []int) {
 	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *LCSResponse) GetLongestCommonSubsequence() map[string]int32 {
+func (x *LCSResponse) GetLongestCommonSubsequence() map[string]*ResponseItem {
 	if x != nil {
 		return x.LongestCommonSubsequence
 	}
@@ -177,17 +185,18 @@ const file_protos_activityMatching_activity_matching_service_proto_rawDesc = "" 
 	"\n" +
 	"LCSRequest\x12\x12\n" +
 	"\x04base\x18\x01 \x01(\tR\x04base\x12\x18\n" +
-	"\acompare\x18\x02 \x03(\tR\acompare\"j\n" +
+	"\acompare\x18\x02 \x03(\tR\acompare\"\x80\x01\n" +
 	"\fResponseItem\x12\x1e\n" +
 	"\n" +
 	"activityId\x18\x01 \x01(\tR\n" +
 	"activityId\x12:\n" +
-	"\x18longestCommonSubsequence\x18\x02 \x01(\x05R\x18longestCommonSubsequence\"\xd3\x01\n" +
+	"\x18longestCommonSubsequence\x18\x02 \x01(\x05R\x18longestCommonSubsequence\x12\x14\n" +
+	"\x05error\x18\x03 \x01(\bR\x05error\"\xf3\x01\n" +
 	"\vLCSResponse\x12w\n" +
-	"\x18longestCommonSubsequence\x18\x01 \x03(\v2;.activityMatching.LCSResponse.LongestCommonSubsequenceEntryR\x18longestCommonSubsequence\x1aK\n" +
+	"\x18longestCommonSubsequence\x18\x01 \x03(\v2;.activityMatching.LCSResponse.LongestCommonSubsequenceEntryR\x18longestCommonSubsequence\x1ak\n" +
 	"\x1dLongestCommonSubsequenceEntry\x12\x10\n" +
-	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
-	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x012p\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x124\n" +
+	"\x05value\x18\x02 \x01(\v2\x1e.activityMatching.ResponseItemR\x05value:\x028\x012p\n" +
 	"\x10ActivityMatching\x12\\\n" +
 	"\x1bGetLongestCommonSubsequence\x12\x1c.activityMatching.LCSRequest\x1a\x1d.activityMatching.LCSResponse\"\x00BGZEgithub.com/lucas1richard/activities-go-server/protos/activityMatchingb\x06proto3"
 
@@ -212,13 +221,14 @@ var file_protos_activityMatching_activity_matching_service_proto_goTypes = []any
 }
 var file_protos_activityMatching_activity_matching_service_proto_depIdxs = []int32{
 	3, // 0: activityMatching.LCSResponse.longestCommonSubsequence:type_name -> activityMatching.LCSResponse.LongestCommonSubsequenceEntry
-	0, // 1: activityMatching.ActivityMatching.GetLongestCommonSubsequence:input_type -> activityMatching.LCSRequest
-	2, // 2: activityMatching.ActivityMatching.GetLongestCommonSubsequence:output_type -> activityMatching.LCSResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	1, // 1: activityMatching.LCSResponse.LongestCommonSubsequenceEntry.value:type_name -> activityMatching.ResponseItem
+	0, // 2: activityMatching.ActivityMatching.GetLongestCommonSubsequence:input_type -> activityMatching.LCSRequest
+	2, // 3: activityMatching.ActivityMatching.GetLongestCommonSubsequence:output_type -> activityMatching.LCSResponse
+	3, // [3:4] is the sub-list for method output_type
+	2, // [2:3] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_protos_activityMatching_activity_matching_service_proto_init() }

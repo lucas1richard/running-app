@@ -10,6 +10,7 @@ import (
 	_ "github.com/go-kivik/couchdb/v3" // CouchDB driver
 	"github.com/go-kivik/kivik/v3"
 	"github.com/lucas1richard/activities-go-server/persistance"
+	"github.com/lucas1richard/activities-go-server/protos/activityMatching"
 )
 
 type Activity struct {
@@ -57,43 +58,39 @@ type StreamDoc struct {
 	Stream []Stream `json:"stream"`
 }
 
-type ResponseItem struct {
-	ActivityId               string
-	LongestCommonSubsequence int32
-}
-
-func LongestCommonSubsequence(baseId string, compareIds []string) (map[string]int32, error) {
+func LongestCommonSubsequence(baseId string, compareIds []string) (map[string]*activityMatching.ResponseItem, error) {
 	couchDb, er := persistance.InitCouchDB()
 	ctx := context.Background()
 	defer couchDb.Close(ctx)
-	resMap := make(map[string]int32)
+	resMap := make(map[string]*activityMatching.ResponseItem)
 	if er != nil {
 		return resMap, er
 	}
 
 	streamsDb := couchDb.DB(ctx, "streams")
-	calcChannel := make(chan ResponseItem)
+	calcChannel := make(chan *activityMatching.ResponseItem)
 	act1Latlng, er := getLatLngForActivity(streamsDb, baseId)
 	activity1Compacted := compactLatlng(act1Latlng)
 
 	for _, id2 := range compareIds {
 		go func() {
 			act2Latlng, er := getLatLngForActivity(streamsDb, id2)
-			if er != nil {
-			}
+			hasErr := er != nil
 			activity2Compacted := compactLatlng(act2Latlng)
 
-			calcChannel <- ResponseItem{
+			calcChannel <- &activityMatching.ResponseItem{
 				ActivityId:               id2,
 				LongestCommonSubsequence: longestCommonLatlng(activity1Compacted, activity2Compacted),
+				Error:                    hasErr,
 			}
 		}()
 	}
 
 	for range compareIds {
 		r := <-calcChannel
-		resMap[r.ActivityId] = r.LongestCommonSubsequence
+		resMap[r.ActivityId] = r
 	}
+
 	close(calcChannel)
 
 	return resMap, nil

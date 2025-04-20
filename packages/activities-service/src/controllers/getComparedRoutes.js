@@ -25,10 +25,15 @@ const getComparedRoutes = async (activityId) => {
   });
 
   // compare routes
-  const data = Object.values(allRoutes).map(
-    (value) => {
-      const lcs = lcsMap.longestCommonSubsequence[value?.activityId];
-      return {
+  const data = Object.values(allRoutes).reduce(
+    (acc, value) => {
+      const lcsItem = lcsMap.longestCommonSubsequence[value?.activityId];
+      const lcs = lcsItem?.longestCommonSubsequence;
+      const lcsError = lcsItem?.error;
+      if (lcsError) {
+        return acc;
+      }
+      acc.push({
         baseActivity: activityId,
         relatedActivity: value?.activityId,
         longestCommonSegmentSubsequence: lcs,
@@ -36,8 +41,9 @@ const getComparedRoutes = async (activityId) => {
         routeScoreFromBase: activityRouteStr ? lcs / activityRouteStr.length : 0,
         numberRelatedSegments: value?.route?.length,
         numberBaseSegments: activityRouteStr?.length,
-      }
-  });
+      });
+      return acc;
+  }, []);
 
   // save compared routes
   await bulkCreateRelatedRoutes(data);
