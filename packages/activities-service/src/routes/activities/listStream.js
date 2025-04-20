@@ -1,17 +1,9 @@
 const { Router } = require('express');
 const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
 const { logger } = require('../../utils/logger');
-// const { getGrpcClient } = require('../../grpctest');
 const receiver = require('../../messageQueue/receiver');
 
 const router = Router();
-
-// const stravaIngestionService = getGrpcClient({
-//   serviceName: 'strava-ingestion-service',
-//   servicePort: '50052',
-//   protoPackage: 'stravaIngestion',
-//   protoService: 'StravaIngestion'
-// });
 
 router.get('/listStream', async (req, res) => {
   const forceFetch = req.query.force;

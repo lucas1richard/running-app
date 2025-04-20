@@ -15,7 +15,6 @@ const { findAllActivities } = require('../../persistence/activities');
 const getPRsByDate = require('../../controllers/getPRsByDate');
 const getPRs = require('../../controllers/getPRs');
 const { listStreamRouter } = require('./listStream');
-const { getGrpcClient } = require('../../grpctest');
 
 const router = Router();
 
@@ -37,31 +36,10 @@ router.use([
 router.get('/list', async (req, res) => {
   try {
     const forceFetch = req.query.force;
-    const page = req.query.page || 1;
-    const perPage = req.query.per_page || 100;
 
-    if (!forceFetch) {
-      const existingActivities = await findAllActivities();
-      if (existingActivities.length > 0) {
-        return res.json(existingActivities);
-      }
-    }
-
-    const stravaIngestionService = getGrpcClient({
-      serviceName: 'strava-ingestion-service',
-      servicePort: '50052',
-      protoPackage: 'stravaIngestion',
-      protoService: 'StravaIngestion'
-    });
-
-    await new Promise((resolve, reject) => stravaIngestionService.fetchNewActivities({ perPage, page }, (error, response) => {
-      if (error) reject(error);
-      else resolve(response.activityId);
-    }));
-
-    const records = await findAllActivities();
-
-    res.json(records);
+    if (forceFetch) return res.status(400).send('Force fetch is not supported on this endpoint. Use /listStream instead.');
+    const existingActivities = await findAllActivities();
+    return res.json(existingActivities);
   } catch (err) {
     res.status(500).send(err.message);
   }
