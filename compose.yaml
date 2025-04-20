@@ -20,7 +20,7 @@ services:
       - ./protos:/protos
     depends_on:
       - rabbitmq
-      - activity-matching-service
+      - activities-go-server
     env_file: "./activities-service.env" # gitignored file
 
   strava-ingestion-service:
@@ -35,17 +35,17 @@ services:
       - SERVICE_NAME=strava-ingestion-service
       - SERVICE_PORT=50052
 
-  activity-matching-service:
-    image: node:18-alpine
-    command: sh -c "npm install && npm run dev"
-    working_dir: /activity-matching-service
-    volumes:
-      - ./packages/activity-matching-service:/activity-matching-service
-      - ./protos:/protos
-    env_file: "./activities-service.env" # gitignored file
-    environment:
-      - SERVICE_NAME=activity-matching-service
-      - SERVICE_PORT=50051
+  # activity-matching-service:
+  #   image: node:18-alpine
+  #   command: sh -c "npm install && npm run dev"
+  #   working_dir: /activity-matching-service
+  #   volumes:
+  #     - ./packages/activity-matching-service:/activity-matching-service
+  #     - ./protos:/protos
+  #   env_file: "./activities-service.env" # gitignored file
+  #   environment:
+  #     - SERVICE_NAME=activity-matching-service
+  #     - SERVICE_PORT=50055
 
   activities-go-server:
     build:
@@ -57,10 +57,10 @@ services:
       - ./packages/activities-go-server:/app
     env_file: "./activities-service.env" # gitignored file
     ports:
-      - "3003:3003"
-    depends_on:
-      - strava-couch-db
-      - strava-mysql
+      - "50051:50051"
+    environment:
+      - SERVICE_NAME=activity-matching-service
+      - SERVICE_PORT=50051
 
   tcp-service:
     image: node:18-alpine

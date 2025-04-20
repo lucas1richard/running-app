@@ -3,10 +3,12 @@ package functions
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"math"
 
 	_ "github.com/go-kivik/couchdb/v3" // CouchDB driver
+	"github.com/go-kivik/kivik/v3"
 	"github.com/lucas1richard/activities-go-server/persistance"
 )
 
@@ -55,74 +57,81 @@ type StreamDoc struct {
 	Stream []Stream `json:"stream"`
 }
 
-func LongestCommonSubsequence(activityId1, activityId2 string) {
-	couchDb := persistance.InitCouchDB()
+func LongestCommonSubsequence(activityId1, activityId2 string) (int32, error) {
+	couchDb, er := persistance.InitCouchDB()
+	if er != nil {
+		return 0, er
+	}
+
 	ctx := context.Background()
 	streamsDb := couchDb.DB(ctx, "streams")
-	activity1Doc := streamsDb.Get(ctx, activityId1)
-	activity2Doc := streamsDb.Get(ctx, activityId2)
 
-	var d1 StreamDoc
-	var activity1Compacted []LatLng
-
-	var d2 StreamDoc
-	var activity2Compacted []LatLng
-
-	scer1 := activity1Doc.ScanDoc(&d1)
-	if scer1 != nil {
-		panic(scer1)
+	act1Latlng, er := getLatLngForActivity(streamsDb, activityId1)
+	if er != nil {
+		return 0, er
 	}
-	scer2 := activity2Doc.ScanDoc(&d2)
-	if scer2 != nil {
-		panic(scer2)
-	}
+	activity1Compacted := compactLatlng(act1Latlng)
 
-	for _, item := range d1.Stream {
-		if item.Type == "latlng" {
-			activity1Compacted = compactLatlng(item.Data)
-		}
+	act2Latlng, er := getLatLngForActivity(streamsDb, activityId2)
+	if er != nil {
+		return 0, er
 	}
-
-	for _, item := range d2.Stream {
-		if item.Type == "latlng" {
-			activity2Compacted = compactLatlng(item.Data)
-		}
-	}
+	activity2Compacted := compactLatlng(act2Latlng)
 
 	defer couchDb.Close(ctx)
 
-	dbConn := persistance.InitMysql()
-	rows, queryErr := dbConn.Query("select id, name from activities limit 1")
-	if queryErr != nil {
-		panic(queryErr)
-	}
-	i := &Activity{}
+	// dbConn := persistance.InitMysql()
+	// rows, queryErr := dbConn.Query("select id, name from activities limit 1")
+	// if queryErr != nil {
+	// 	panic(queryErr)
+	// }
+	// i := &Activity{}
+	//
+	// defer rows.Close()
+	//
+	// for rows.Next() {
+	// 	rows.Scan(
+	// 		&i.ID,
+	// 		&i.Name,
+	// 	)
+	//
+	// 	fmt.Println(i.ID, i.Name)
+	// }
 
-	defer rows.Close()
-
-	for rows.Next() {
-		rows.Scan(
-			&i.ID,
-			&i.Name,
-		)
-
-		fmt.Println(i.ID, i.Name)
-	}
-
-	fmt.Println("\n\n\n", longestCommonLatlng(activity1Compacted, activity2Compacted))
+	return longestCommonLatlng(activity1Compacted, activity2Compacted), nil
 }
 
-func longestCommonLatlng(c1 []LatLng, c2 []LatLng) int {
-	memo := make([][]int, len(c1))
+func getLatLngForActivity(streamsDb *kivik.DB, id string) ([]LatLng, error) {
+	activity1Doc := streamsDb.Get(context.Background(), id)
+
+	var d1 StreamDoc
+
+	scer1 := activity1Doc.ScanDoc(&d1)
+	if scer1 != nil {
+		message := fmt.Sprintf("Error getting streams document for activity with id %s", id)
+		return nil, errors.Join(errors.New(message), scer1)
+	}
+	for _, item := range d1.Stream {
+		if item.Type == "latlng" {
+			return item.Data, nil
+		}
+	}
+
+	message := fmt.Sprintf("Document for %s does not have latlng stream", id)
+	return nil, errors.New(message)
+}
+
+func longestCommonLatlng(c1 []LatLng, c2 []LatLng) int32 {
+	memo := make([][]int32, len(c1))
 	for i := range memo {
-		memo[i] = make([]int, len(c2))
+		memo[i] = make([]int32, len(c2))
 		for j := range memo[i] {
 			memo[i][j] = -1
 		}
 	}
 
-	var recurse func(i, j int) int
-	recurse = func(i, j int) int {
+	var recurse func(i, j int) int32
+	recurse = func(i, j int) int32 {
 		if i >= len(c1) || j >= len(c2) {
 			return 0
 		}

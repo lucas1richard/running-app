@@ -1,6 +1,11 @@
 package main
 
 import (
+	"context"
+	"flag"
+	"fmt"
+	"log"
+	"net"
 	"os"
 	"os/signal"
 	"syscall"
@@ -9,15 +14,20 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
-	"github.com/lucas1richard/activities-go-server/apiserver"
 	"github.com/lucas1richard/activities-go-server/functions"
 	"github.com/lucas1richard/activities-go-server/persistance"
+	"github.com/lucas1richard/activities-go-server/protos/activityMatching"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
+	"google.golang.org/grpc"
 )
 
 const (
 	apiServerAddrFlagName string = "addr"
+)
+
+var (
+	port = flag.Int("port", 50051, "The server port")
 )
 
 func main() {
@@ -34,6 +44,20 @@ func app() *cli.App {
 			apiServerCmd(),
 		},
 	}
+}
+
+type activityMatchingServer struct {
+	activityMatching.UnimplementedActivityMatchingServer
+}
+
+func (s *activityMatchingServer) GetLongestCommonSubsequence(_ context.Context, req *activityMatching.LCSRequest) (*activityMatching.LCSResponse, error) {
+	lcs, er := functions.LongestCommonSubsequence(req.Base, req.Compare)
+	return &activityMatching.LCSResponse{LongestCommonSubsequence: lcs}, er
+}
+
+func newServer() *activityMatchingServer {
+	s := &activityMatchingServer{}
+	return s
 }
 
 func apiServerCmd() *cli.Command {
@@ -53,21 +77,34 @@ func apiServerCmd() *cli.Command {
 				close(stopper)
 			}()
 			godotenv.Load()
+			flag.Parse()
 
-			addr := c.String(apiServerAddrFlagName)
-			server, err := apiserver.NewAPIServer(addr)
+			lis, err := net.Listen("tcp", fmt.Sprintf("activities-go-server:%d", *port))
+			// addr := c.String(apiServerAddrFlagName)
+			// server, err := apiserver.NewAPIServer(addr)
 			if err != nil {
 				return err
 			}
 
-			couchDb := persistance.InitCouchDB()
-			dbConn := persistance.InitMysql()
+			couchDb, er := persistance.InitCouchDB()
+			if er != nil {
+				return er
+			}
+			dbConn, er := persistance.InitMysql()
+			if er != nil {
+				return er
+			}
 			defer dbConn.Close()
 			defer couchDb.Close(c.Context)
 
-			functions.LongestCommonSubsequence("14207820023", "13875355229")
-
-			return server.Start(stopper)
+			grpcServer := grpc.NewServer()
+			activityMatching.RegisterActivityMatchingServer(grpcServer, newServer())
+			log.Printf("server listening at %v", lis.Addr())
+			grpcServer.Serve(lis)
+			if err := grpcServer.Serve(lis); err != nil {
+				log.Fatalf("failed to serve: %v", err)
+			}
+			return nil
 		},
 	}
 }

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = "github.com/lucas1richard/activities-go-server/protos/activityMatching";
+
+package activityMatching;
+
+service ActivityMatching {
+  rpc GetLongestCommonSubsequence (LCSRequest) returns (LCSResponse) {}
+}
+
+message LCSRequest {
+  string base = 1;
+  string compare = 2;
+}
+
+message LCSResponse {
+  int32 longestCommonSubsequence = 1;
+}

@@ -9,9 +9,9 @@ import (
 var dbConn *sql.DB
 var dbConnErr error
 
-func InitMysql() *sql.DB {
+func InitMysql() (*sql.DB, error) {
 	if dbConn != nil {
-		return dbConn
+		return dbConn, nil
 	}
 	databaseUrl := GetEnvWithDefault("MYSQL_URL", "")
 
@@ -24,8 +24,8 @@ func InitMysql() *sql.DB {
 
 	dbConn, dbConnErr = sql.Open("mysql", databaseUrl)
 	if dbConnErr != nil {
-		panic(dbConnErr)
+		return nil, dbConnErr
 	}
 
-	return dbConn
+	return dbConn, nil
 }
