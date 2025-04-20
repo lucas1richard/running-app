@@ -8,8 +8,9 @@ service ActivityMatching {
 
 message LCSRequest {
   string base = 1;
-  string compare = 2;
+  repeated string compare = 2;
 }
+
 message LCSResponse {
-  int32 longestCommonSubsequence = 1;
+  map<string, int32> longestCommonSubsequence = 1;
 }

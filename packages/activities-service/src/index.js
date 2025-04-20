@@ -19,7 +19,6 @@ const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 
 const { logger } = require('./utils/logger');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
-const activityMatchingReceiver = require('./grpc/activityMatchingReceiver');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -43,15 +42,6 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
       getChannel(channelConfigs.stravaIngestionService),
       getChannel(channelConfigs.activitiesService)
     ]);
-
-    try {
-      const r = await activityMatchingReceiver
-        .request('getLongestCommonSubsequence', { base: '14207820023', compare: '13875355229' });
-
-      console.log('gRPC response:', r);
-    } catch (err) {
-      console.error('gRPC error:', err);
-    }
     await app.listen(PORT);
     logger.info({ message: `strava-client listening on port ${PORT}`});
   } catch (err) {

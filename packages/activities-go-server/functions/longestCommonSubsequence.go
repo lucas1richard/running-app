@@ -57,48 +57,46 @@ type StreamDoc struct {
 	Stream []Stream `json:"stream"`
 }
 
-func LongestCommonSubsequence(activityId1, activityId2 string) (int32, error) {
+type ResponseItem struct {
+	ActivityId               string
+	LongestCommonSubsequence int32
+}
+
+func LongestCommonSubsequence(baseId string, compareIds []string) (map[string]int32, error) {
 	couchDb, er := persistance.InitCouchDB()
-	if er != nil {
-		return 0, er
-	}
-
 	ctx := context.Background()
-	streamsDb := couchDb.DB(ctx, "streams")
-
-	act1Latlng, er := getLatLngForActivity(streamsDb, activityId1)
+	defer couchDb.Close(ctx)
+	resMap := make(map[string]int32)
 	if er != nil {
-		return 0, er
+		return resMap, er
 	}
+
+	streamsDb := couchDb.DB(ctx, "streams")
+	calcChannel := make(chan ResponseItem)
+	act1Latlng, er := getLatLngForActivity(streamsDb, baseId)
 	activity1Compacted := compactLatlng(act1Latlng)
 
-	act2Latlng, er := getLatLngForActivity(streamsDb, activityId2)
-	if er != nil {
-		return 0, er
+	for _, id2 := range compareIds {
+		go func() {
+			act2Latlng, er := getLatLngForActivity(streamsDb, id2)
+			if er != nil {
+			}
+			activity2Compacted := compactLatlng(act2Latlng)
+
+			calcChannel <- ResponseItem{
+				ActivityId:               id2,
+				LongestCommonSubsequence: longestCommonLatlng(activity1Compacted, activity2Compacted),
+			}
+		}()
 	}
-	activity2Compacted := compactLatlng(act2Latlng)
 
-	defer couchDb.Close(ctx)
+	for range compareIds {
+		r := <-calcChannel
+		resMap[r.ActivityId] = r.LongestCommonSubsequence
+	}
+	close(calcChannel)
 
-	// dbConn := persistance.InitMysql()
-	// rows, queryErr := dbConn.Query("select id, name from activities limit 1")
-	// if queryErr != nil {
-	// 	panic(queryErr)
-	// }
-	// i := &Activity{}
-	//
-	// defer rows.Close()
-	//
-	// for rows.Next() {
-	// 	rows.Scan(
-	// 		&i.ID,
-	// 		&i.Name,
-	// 	)
-	//
-	// 	fmt.Println(i.ID, i.Name)
-	// }
-
-	return longestCommonLatlng(activity1Compacted, activity2Compacted), nil
+	return resMap, nil
 }
 
 func getLatLngForActivity(streamsDb *kivik.DB, id string) ([]LatLng, error) {
@@ -135,17 +133,14 @@ func longestCommonLatlng(c1 []LatLng, c2 []LatLng) int32 {
 		if i >= len(c1) || j >= len(c2) {
 			return 0
 		}
-
 		if memo[i][j] != -1 {
 			return memo[i][j]
 		}
-
 		if c1[i] == c2[j] {
 			memo[i][j] = 1 + recurse(i+1, j+1)
 		} else {
 			memo[i][j] = max(recurse(i+1, j), recurse(i, j+1))
 		}
-
 		return memo[i][j]
 	}
 
@@ -157,7 +152,7 @@ func roundToNearest(num float32) float32 {
 }
 
 func compactLatlng(latlng []LatLng) []LatLng {
-	if len(latlng) <= 1 {
+	if len(latlng) == 0 {
 		return latlng
 	}
 

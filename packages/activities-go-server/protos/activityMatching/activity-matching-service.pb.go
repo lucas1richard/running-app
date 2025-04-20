@@ -24,7 +24,7 @@ const (
 type LCSRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Base          string                 `protobuf:"bytes,1,opt,name=base,proto3" json:"base,omitempty"`
-	Compare       string                 `protobuf:"bytes,2,opt,name=compare,proto3" json:"compare,omitempty"`
+	Compare       []string               `protobuf:"bytes,2,rep,name=compare,proto3" json:"compare,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -66,23 +66,75 @@ func (x *LCSRequest) GetBase() string {
 	return ""
 }
 
-func (x *LCSRequest) GetCompare() string {
+func (x *LCSRequest) GetCompare() []string {
 	if x != nil {
 		return x.Compare
+	}
+	return nil
+}
+
+type ResponseItem struct {
+	state                    protoimpl.MessageState `protogen:"open.v1"`
+	ActivityId               string                 `protobuf:"bytes,1,opt,name=activityId,proto3" json:"activityId,omitempty"`
+	LongestCommonSubsequence int32                  `protobuf:"varint,2,opt,name=longestCommonSubsequence,proto3" json:"longestCommonSubsequence,omitempty"`
+	unknownFields            protoimpl.UnknownFields
+	sizeCache                protoimpl.SizeCache
+}
+
+func (x *ResponseItem) Reset() {
+	*x = ResponseItem{}
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResponseItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResponseItem) ProtoMessage() {}
+
+func (x *ResponseItem) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResponseItem.ProtoReflect.Descriptor instead.
+func (*ResponseItem) Descriptor() ([]byte, []int) {
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *ResponseItem) GetActivityId() string {
+	if x != nil {
+		return x.ActivityId
 	}
 	return ""
 }
 
+func (x *ResponseItem) GetLongestCommonSubsequence() int32 {
+	if x != nil {
+		return x.LongestCommonSubsequence
+	}
+	return 0
+}
+
 type LCSResponse struct {
 	state                    protoimpl.MessageState `protogen:"open.v1"`
-	LongestCommonSubsequence int32                  `protobuf:"varint,1,opt,name=longestCommonSubsequence,proto3" json:"longestCommonSubsequence,omitempty"`
+	LongestCommonSubsequence map[string]int32       `protobuf:"bytes,1,rep,name=longestCommonSubsequence,proto3" json:"longestCommonSubsequence,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"varint,2,opt,name=value"`
 	unknownFields            protoimpl.UnknownFields
 	sizeCache                protoimpl.SizeCache
 }
 
 func (x *LCSResponse) Reset() {
 	*x = LCSResponse{}
-	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[1]
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -94,7 +146,7 @@ func (x *LCSResponse) String() string {
 func (*LCSResponse) ProtoMessage() {}
 
 func (x *LCSResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[1]
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -107,14 +159,14 @@ func (x *LCSResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LCSResponse.ProtoReflect.Descriptor instead.
 func (*LCSResponse) Descriptor() ([]byte, []int) {
-	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{1}
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *LCSResponse) GetLongestCommonSubsequence() int32 {
+func (x *LCSResponse) GetLongestCommonSubsequence() map[string]int32 {
 	if x != nil {
 		return x.LongestCommonSubsequence
 	}
-	return 0
+	return nil
 }
 
 var File_protos_activityMatching_activity_matching_service_proto protoreflect.FileDescriptor
@@ -125,9 +177,17 @@ const file_protos_activityMatching_activity_matching_service_proto_rawDesc = "" 
 	"\n" +
 	"LCSRequest\x12\x12\n" +
 	"\x04base\x18\x01 \x01(\tR\x04base\x12\x18\n" +
-	"\acompare\x18\x02 \x01(\tR\acompare\"I\n" +
-	"\vLCSResponse\x12:\n" +
-	"\x18longestCommonSubsequence\x18\x01 \x01(\x05R\x18longestCommonSubsequence2p\n" +
+	"\acompare\x18\x02 \x03(\tR\acompare\"j\n" +
+	"\fResponseItem\x12\x1e\n" +
+	"\n" +
+	"activityId\x18\x01 \x01(\tR\n" +
+	"activityId\x12:\n" +
+	"\x18longestCommonSubsequence\x18\x02 \x01(\x05R\x18longestCommonSubsequence\"\xd3\x01\n" +
+	"\vLCSResponse\x12w\n" +
+	"\x18longestCommonSubsequence\x18\x01 \x03(\v2;.activityMatching.LCSResponse.LongestCommonSubsequenceEntryR\x18longestCommonSubsequence\x1aK\n" +
+	"\x1dLongestCommonSubsequenceEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
+	"\x05value\x18\x02 \x01(\x05R\x05value:\x028\x012p\n" +
 	"\x10ActivityMatching\x12\\\n" +
 	"\x1bGetLongestCommonSubsequence\x12\x1c.activityMatching.LCSRequest\x1a\x1d.activityMatching.LCSResponse\"\x00BGZEgithub.com/lucas1richard/activities-go-server/protos/activityMatchingb\x06proto3"
 
@@ -143,19 +203,22 @@ func file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP() 
 	return file_protos_activityMatching_activity_matching_service_proto_rawDescData
 }
 
-var file_protos_activityMatching_activity_matching_service_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_protos_activityMatching_activity_matching_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_protos_activityMatching_activity_matching_service_proto_goTypes = []any{
-	(*LCSRequest)(nil),  // 0: activityMatching.LCSRequest
-	(*LCSResponse)(nil), // 1: activityMatching.LCSResponse
+	(*LCSRequest)(nil),   // 0: activityMatching.LCSRequest
+	(*ResponseItem)(nil), // 1: activityMatching.ResponseItem
+	(*LCSResponse)(nil),  // 2: activityMatching.LCSResponse
+	nil,                  // 3: activityMatching.LCSResponse.LongestCommonSubsequenceEntry
 }
 var file_protos_activityMatching_activity_matching_service_proto_depIdxs = []int32{
-	0, // 0: activityMatching.ActivityMatching.GetLongestCommonSubsequence:input_type -> activityMatching.LCSRequest
-	1, // 1: activityMatching.ActivityMatching.GetLongestCommonSubsequence:output_type -> activityMatching.LCSResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	3, // 0: activityMatching.LCSResponse.longestCommonSubsequence:type_name -> activityMatching.LCSResponse.LongestCommonSubsequenceEntry
+	0, // 1: activityMatching.ActivityMatching.GetLongestCommonSubsequence:input_type -> activityMatching.LCSRequest
+	2, // 2: activityMatching.ActivityMatching.GetLongestCommonSubsequence:output_type -> activityMatching.LCSResponse
+	2, // [2:3] is the sub-list for method output_type
+	1, // [1:2] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_protos_activityMatching_activity_matching_service_proto_init() }
@@ -169,7 +232,7 @@ func file_protos_activityMatching_activity_matching_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protos_activityMatching_activity_matching_service_proto_rawDesc), len(file_protos_activityMatching_activity_matching_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
