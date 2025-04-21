@@ -1,6 +1,4 @@
 const { Transform, pipeline, Readable } = require('node:stream');
-const fs = require('fs');
-const path = require('path');
 const { Sequelize } = require('sequelize');
 const Activity = require('./model-activities');
 const findRelationsBySimilarRoute = require('./findRelationsBySimilarRoute');
@@ -12,10 +10,7 @@ const bulkCreateRelatedRoutes = require('./bulkCreateRelatedRoutes');
 const { logger } = require('../../utils/logger');
 const { queryStream } = require('../mysql-connection');
 const { BatchTransformer } = require('../../utils/streams');
-
-const activitiesQuery = fs.readFileSync(path.resolve(path.join(__dirname, './getactivities.sql'))).toString();
-const activitiesByIdQuery = fs.readFileSync(path.resolve(path.join(__dirname, './getactivitiesById.sql'))).toString();
-
+const { getActivitiesSql, getActivitiesByIdSql } = require('../sql-queries');
 
 const findActivityById = async (id) => {
   return Activity.findByPk(id);
@@ -34,7 +29,7 @@ const findAllActivities = async (rowLimit) => {
 const findAllActivitiesStream = async () => {
   logger.info('Fetching all activities from MySQL with stream');
 
-  const readable = await queryStream({ sql: activitiesQuery, streamOptions: { highWaterMark: 30 }})
+  const readable = await queryStream({ sql: getActivitiesSql, streamOptions: { highWaterMark: 30 }})
 
   readable.on('close', () => {
     logger.info('Readable stream closed');
@@ -76,7 +71,7 @@ const findActivitiesByIdStream = async (idsArray = []) => {
       this.push(null);
     }
   }) : await queryStream({
-    sql: activitiesByIdQuery,
+    sql: getActivitiesByIdSql,
     queryOptions: { values: [idsArray] },
     streamOptions: { highWaterMark: 30 }
   });

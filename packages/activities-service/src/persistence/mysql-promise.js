@@ -1,6 +1,6 @@
 const waitPort = require('wait-port');
 const fs = require('fs');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 
 const {
   MYSQL_HOST: HOST,
