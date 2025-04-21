@@ -35,18 +35,6 @@ services:
       - SERVICE_NAME=strava-ingestion-service
       - SERVICE_PORT=50052
 
-  # activity-matching-service:
-  #   image: node:18-alpine
-  #   command: sh -c "npm install && npm run dev"
-  #   working_dir: /activity-matching-service
-  #   volumes:
-  #     - ./packages/activity-matching-service:/activity-matching-service
-  #     - ./protos:/protos
-  #   env_file: "./activities-service.env" # gitignored file
-  #   environment:
-  #     - SERVICE_NAME=activity-matching-service
-  #     - SERVICE_PORT=50055
-
   activities-go-server:
     build:
       dockerfile: ./packages/activities-go-server/Dockerfile

@@ -30,16 +30,14 @@ const getComparedRoutes = async (activityId) => {
       const lcsItem = lcsMap.longestCommonSubsequence[value?.activityId];
       const lcs = lcsItem?.longestCommonSubsequence;
       const lcsError = lcsItem?.error;
-      if (lcsError) {
-        return acc;
-      }
+      if (lcsError || !value) return acc;
       acc.push({
         baseActivity: activityId,
-        relatedActivity: value?.activityId,
+        relatedActivity: value.activityId,
         longestCommonSegmentSubsequence: lcs,
-        routeScoreFromRelated: value?.route ? lcs / value.route.length : 0,
+        routeScoreFromRelated: value.route ? lcs / value.route.length : 0,
         routeScoreFromBase: activityRouteStr ? lcs / activityRouteStr.length : 0,
-        numberRelatedSegments: value?.route?.length,
+        numberRelatedSegments: value.route?.length,
         numberBaseSegments: activityRouteStr?.length,
       });
       return acc;
