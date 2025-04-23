@@ -32,6 +32,7 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, activity.id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
+  console.log(activity.zonesCaches[zones.id]);
   const bestEfforts = activity?.calculatedBestEfforts || emptyArray;
 
   const onMouseEnter = useCallback(() => {

@@ -2,8 +2,7 @@ import { FC, useEffect } from 'react';
 import requestor from '../utils/requestor/index';
 import { convertHeartDataToZoneTimes } from '../utils';
 import { selectActivity, selectStreamTypeData } from '../reducers/activities';
-import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/heartzones';
-import { selectPreferencesZonesId } from '../reducers/preferences';
+import { selectApplicableHeartZone } from '../reducers/heartzones';
 import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
 import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
 import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
@@ -19,11 +18,7 @@ type Props = {
 
 const DetailDataFetcher: FC<Props> = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
-  const configZonesId = useAppSelector(selectPreferencesZonesId);
-  const allZones = useAppSelector(selectAllHeartZones);
-  const nativeZones = useAppSelector((state) => selectApplicableHeartZone(state, activity?.start_date));
-  const zonesId = configZonesId === -1 ? nativeZones?.id : configZonesId;
-  const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
+  const zones = useAppSelector((state) => selectApplicableHeartZone(state, activity?.start_date));
 
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
 

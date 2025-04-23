@@ -5,4 +5,4 @@ import type { Dispatch } from 'redux';
 import type { RootState } from '../reducers';
 
 export const useAppDispatch: () => Dispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = (getter, eqFn) => useSelector(getter, eqFn || fastDeepEqual);
+export const useAppSelector: TypedUseSelectorHook<RootState> = (getter, eqFn) => useSelector(getter);

@@ -40,7 +40,13 @@ func InitCouchDB() (*kivik.Client, error) {
 		fmt.Printf("Warning: CouchDB port wait failed: %v\n", err)
 	}
 
-	connectionString := fmt.Sprintf("http://%s:%s@%s:%s", couchDbUser, couchDbPass, couchDbHost, couchDbPort)
+	connectionString := fmt.Sprintf(
+		"http://%s:%s@%s:%s",
+		couchDbUser,
+		couchDbPass,
+		couchDbHost,
+		couchDbPort,
+	)
 
 	fmt.Println("Connecting to CouchDB at:", connectionString)
 	client, connectErr = kivik.New("couch", connectionString)

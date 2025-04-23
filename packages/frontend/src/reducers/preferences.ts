@@ -119,14 +119,15 @@ export const selectGlobalPrerences = createDeepEqualSelector(
   }
 );
 
+const getPreferencesZoneId = (preferences: InitialState) => {
+  const { default: defaultPreferences, defined } = preferences.global;
+  return typeof defined.zonesId === 'number'
+    ? defined.zonesId
+    : defaultPreferences.zonesId;
+};
 export const selectPreferencesZonesId = createDeepEqualSelector(
   getPreferencesState,
-  (state) => {
-    const { default: defaultPreferences, defined } = state.global;
-    return typeof defined.zonesId === 'number'
-      ? defined.zonesId
-      : defaultPreferences.zonesId;
-  }
+  getPreferencesZoneId
 );
 
 const getActivityPreferences = (state: RootState, id: number) => {

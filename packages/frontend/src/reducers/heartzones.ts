@@ -34,28 +34,33 @@ export const selectAllHeartZones = createDeepEqualSelector(
   (heartzones) => heartzones.record
 );
 
-const getApplicableHeartZone = (state: RootState, date: string) => {
-  const allzones = selectAllHeartZones(state);
+const getDate = (_, date: string) => date;
+export const getApplicableHeartZone = (allzones: any[], date: string) => {
   const currDate = new Date(date);
   // heart rate zones should be ordered by `start_date` descending
   return allzones.find(({ start_date }) => new Date(start_date) < currDate) || emptyObject;
 };
-export const selectApplicableHeartZone = createDeepEqualSelector(getApplicableHeartZone, (res) => res);
+export const selectApplicableHeartZone = createDeepEqualSelector(
+  [selectAllHeartZones, getDate], getApplicableHeartZone
+);
 
-// /**
-//  * - If zones are configured to be relative to date, get the applicable zone.
-//  * - If zones are set to a specific value, use that value.
-//  * @param {string} date 
-//  */
-const getHeartZones = (state: RootState, date: string) => {
-  const configZonesId = selectPreferencesZonesId(state);
-  const allZones = selectAllHeartZones(state);
-  const nativeZones = getApplicableHeartZone(state, date);
+export const getHeartZones = (allZones, date: string, nativeZones, configZonesId) => {
   const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
-  const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
-
-  return zones;
+  return allZones.find(({ id }) => id === zonesId) || nativeZones;
 };
-export const selectHeartZones = createDeepEqualSelector(getHeartZones, (res) => res);
+/**
+ * - If zones are configured to be relative to date, get the applicable zone.
+ * - If zones are set to a specific value, use that value.
+ * @param {string} date 
+ */
+export const selectHeartZones = createDeepEqualSelector(
+  [
+    selectAllHeartZones,
+    getDate,
+    (state, date) => selectApplicableHeartZone(state, date),
+    selectPreferencesZonesId
+  ],
+  getHeartZones
+);
 
 export default heartzonesReducer;

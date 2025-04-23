@@ -7,7 +7,6 @@ import { selectApplicableHeartZone, selectAllHeartZones } from '../reducers/hear
 import HeartZonesDisplay from './HeartZonesDisplay';
 import { convertMetricSpeedToMPH, getWeatherStyles } from '../utils';
 import DurationDisplay from '../Common/DurationDisplay';
-import GoogleMapImage from '../Common/GoogleMapImage';
 import SegmentsDetailDisplay from './Segments';
 import HeartZonesChartContainer from './HeartZonesChart';
 import UpdatableNameDescription from './UpdatableNameDescription';

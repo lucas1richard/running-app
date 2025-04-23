@@ -50,7 +50,10 @@ type activityMatchingServer struct {
 	activityMatching.UnimplementedActivityMatchingServer
 }
 
-func (s *activityMatchingServer) GetLongestCommonSubsequence(_ context.Context, req *activityMatching.LCSRequest) (*activityMatching.LCSResponse, error) {
+func (s *activityMatchingServer) GetLongestCommonSubsequence(
+	_ context.Context,
+	req *activityMatching.LCSRequest,
+) (*activityMatching.LCSResponse, error) {
 	lcs, er := functions.LongestCommonSubsequence(req.Base, req.Compare)
 	return &activityMatching.LCSResponse{LongestCommonSubsequence: lcs}, er
 }

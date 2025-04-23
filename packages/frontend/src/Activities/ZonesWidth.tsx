@@ -3,6 +3,32 @@ import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../
 import { hrZonesText } from '../colors/hrZones';
 import { Flex } from '../DLS';
 
+export const ZonesWidthPercents = ({ id, percents = [] }) => {
+  const widthStyles = useMemo(() => {
+    return percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({
+      width: `${percent}%`,
+      background: hrZonesText[ix + 1],
+      border: `1px solid ${hrZonesText[ix + 1]}`,
+      height: '1rem',
+      overflow: 'hidden',
+    }));
+  }, [percents]);
+
+  return (
+    <div>
+      <Flex>
+        {widthStyles.map((style, ix) => (
+          <div
+            key={`${style.background}-${ix}-${id}`}
+            style={style}
+            title={style.width}
+          />
+        ))}
+      </Flex>
+    </div>
+  );
+}
+
 type ZonesWidthProps = {
   zones: HeartZone;
   heartData: number[];
@@ -16,29 +42,10 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
     return convertHeartDataToZonePercents(heartData, zones)
   }, [heartData, zones, zonesCaches]);
 
-  const widthStyles = useMemo(() => {
-    return percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({
-      width: `${percent}%`,
-      background: hrZonesText[ix + 1],
-      border: `1px solid ${hrZonesText[ix + 1]}`,
-      height: '1rem',
-      overflow: 'hidden',
-    }));
-  }, []);
-
   if (!zones && !heartData) return null;
 
   return (
-    <div>
-      <Flex>
-        {widthStyles.map((style, ix) => (
-          <div
-            key={`${style.background}-${ix}-${id}`}
-            style={style}
-          />
-        ))}
-      </Flex>
-    </div>
+    <ZonesWidthPercents id={id} percents={percents} />
   );
 };
 
