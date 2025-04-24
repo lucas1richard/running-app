@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Profiler } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit'
@@ -39,14 +39,21 @@ const AppContent = styled.div`
 `;
 
 const AppLayout = () => (
-  <Container providesViewSize={true}>
-    <SideNav />
-    <AppContent>
-      <Container showViewSizeDisplay={true} providesViewSize={true}>
-        <Outlet />
-      </Container>
-    </AppContent>
-  </Container>
+  <Profiler
+    id="App"
+    onRender={(id, phase, actualDuration, unMemodDuration) => {
+      console.log({ id, phase, actualDuration, unMemodDuration });
+    }}
+  >
+    <Container providesViewSize={true}>
+      <SideNav />
+      <AppContent>
+        <Container showViewSizeDisplay={true} providesViewSize={true}>
+          <Outlet />
+        </Container>
+      </AppContent>
+    </Container>
+  </Profiler>
 );
 
 // create the saga middleware

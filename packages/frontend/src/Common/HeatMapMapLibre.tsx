@@ -76,21 +76,14 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
     const minLat = data.reduce((min, { lat }) => Math.min(min, Number(lat)), Infinity);
 
     return { maxLng, minLng, maxLat, minLat };
-  }, [deferRender])
-  
-  const defaultCenter = useMemo(() => {
-    if (!data.length) return { lat: 37.74, lon: -122.4 };
-    
-    const lon = (edges.maxLng + edges.minLng) / 2;
-    const lat = (edges.maxLat + edges.minLat) / 2;
-    return { lat, lon };
   }, [deferRender]);
 
-  
   const initialViewState = useMemo(() => {
+    const deltaLng = edges.maxLng - edges.minLng;
+    const deltaLat = edges.maxLat - edges.minLat;
     const bounds = [
-      edges.minLng - 0.0006, edges.minLat - 0.0006,
-      edges.maxLng + 0.0006, edges.maxLat + 0.0006,
+      edges.minLng - deltaLng * 0.1, edges.minLat - deltaLat * 0.1,
+      edges.maxLng + deltaLng * 0.1, edges.maxLat + deltaLat * 0.1,
     ] as [number, number, number, number];
     return ({
       bounds,
@@ -99,6 +92,31 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
     })
   }, [edges]);
 
+  const mapRef = useRef<maplibregl.Map | null>(null);
+
+  const [pointSize, setPointSize] = useState(squareSize);
+
+  const setPointSizeOnZoom = ({ viewState }) => {
+    const zoom = viewState.zoom;
+    setPointSize(() => {
+      switch (true) {
+        case zoom < 1: return 0.8;
+        case zoom < 2: return 0.7;
+        case zoom < 3: return 0.6;
+        case zoom < 4: return 0.5;
+        case zoom < 5: return 0.4;
+        case zoom < 6: return 0.3;
+        case zoom < 7: return 0.1;
+        case zoom < 8.5: return 0.01;
+        case zoom < 9: return 0.00066;
+        case zoom < 10: return 0.00047;
+        case zoom < 11: return 0.0003;
+        case zoom < 12: return 0.0002;
+        default: return squareSize;
+      }
+    });
+  };
+
   return (
     <Basic.Div>
       {
@@ -106,10 +124,14 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
           ? (
             <Map
               initialViewState={initialViewState}
+              // @ts-expect-error -- ref
+              ref={mapRef}
               mapLib={maplibregl}
               style={{ height }}
+              onZoom={setPointSizeOnZoom}
+              onRender={() => setPointSizeOnZoom({ viewState: { zoome: mapRef.current.getZoom() } })}
               mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-              // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+            // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
             >
               <Source
                 id={heatmapSource}
@@ -123,13 +145,14 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                     if (Number(point) > ceiling) point = largestValue;
                     const percent = (Number(point) - smallestValue) / (largestValue - smallestValue);
                     return ({
-                    type: 'Feature',
-                    geometry: {
-                      type: 'Polygon',
-                      coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat)}, squareSize)],
-                    },
-                    properties: { color: makeColor(minColor, maxColor, percent) },
-                  })}),
+                      type: 'Feature',
+                      geometry: {
+                        type: 'Polygon',
+                        coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat) }, pointSize)],
+                      },
+                      properties: { color: makeColor(minColor, maxColor, percent) },
+                    })
+                  }),
                 }}
               >
                 <Layer
@@ -157,7 +180,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
           </svg>
           <Basic.Div $display="flex" $flexJustify="space-between" $fontSize="body">
             <Basic.Div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</Basic.Div>
-            <Basic.Div>Highst ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</Basic.Div>
+            <Basic.Div>Highest ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</Basic.Div>
           </Basic.Div>
         </Basic.Div>
       )}

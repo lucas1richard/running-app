@@ -41,12 +41,16 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
                 <Basic.Tr $position="sticky" $top="0" $zIndex="1" $colorBg="white">
                   <th colSpan={3}>
                     The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;
+                  </th>
+                </Basic.Tr>
+                <tr>
+                  <td colSpan={3}>
                     <ZonesWidthPercents
                       percents={convertZonesCacheToPercents(zones)}
                       id={runs[0]?.id}
                     />
-                  </th>
-                </Basic.Tr>
+                  </td>
+                </tr>
                 {
                   runs.map((run, ix) => (
                     <tr key={run.id}>
