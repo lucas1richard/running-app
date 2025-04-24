@@ -106,13 +106,13 @@ class TokenBucket extends EventEmitter {
 }
 
 const tokenProvider = new FixedWindowCounter({
-  windowDuration: 15000,
-  limit: 15,
+  windowDuration: 86400000,
+  limit: 1000,
 });
 
 const tokenBucket = new TokenBucket({
-  capacity: 10,
-  refillRate: 500,
+  capacity: 100,
+  refillRate: 9000,
   tokenProvider,
 });
 
