@@ -1,13 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+const assert = require('assert');
+const { pipeline } = require('stream');
 const RouteCoordinates = require('./model-route-coordinates');
 const { queryStream } = require('../mysql-connection');
-const { pipeline } = require('stream');
 const { BatchTransformer } = require('../../utils/streams');
-const assert = require('assert');
-
-const heatMapAllTimeSql = fs.readFileSync(path.join(__dirname, 'getHeatMap.sql'), 'utf8');
-const heatMapTimeframeSql = fs.readFileSync(path.join(__dirname, 'getHeatMapByTimeframe.sql'), 'utf8');
+const { getHeatMapByTimeframeSql, getHeatMapSql } = require('../sql-queries');
 
 // class SumTransformer extends Transform {
 //   constructor(iteratorSize = 10e3, options) {
@@ -47,7 +43,7 @@ const getAllCoordinatesStream = async (referenceTime, timeframe) => {
       'Reference time must be a valid date'
     );
   }
-  const sql = timeframe ? heatMapTimeframeSql : heatMapAllTimeSql;
+  const sql = timeframe ? getHeatMapByTimeframeSql : getHeatMapSql;
   const readable = await queryStream({
     sql: sql.replace(/_timeframe/g, timeframe),
     queryOptions: { values: [referenceTime, timeframe] },

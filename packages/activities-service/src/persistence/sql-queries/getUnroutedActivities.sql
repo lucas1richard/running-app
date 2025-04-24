@@ -9,6 +9,8 @@ WHERE
     FROM
       route_coordinates_n
   )
-  AND
-  sport_type = "run"
-  AND (`hidden` = false OR `hidden` IS NULL);
+  AND sport_type = "Run"
+  AND (
+    `hidden` = false
+    OR `hidden` IS NULL
+  );

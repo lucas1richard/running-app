@@ -9,6 +9,7 @@ WHERE
   `compression_level` = 0.0001
   AND `activities`.`start_date_local` > ? - INTERVAL _timeframe
   AND seconds_at_coords > 0
+  AND `activities`.`sport_type` = "Run"
 GROUP BY
   lat,
   lon

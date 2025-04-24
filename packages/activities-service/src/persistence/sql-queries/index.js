@@ -12,5 +12,7 @@ const getSqlFile = (filePath) => {
 module.exports = {
   getActivitiesSql: getSqlFile('getActivities.sql'),
   getActivitiesByIdSql: getSqlFile('getActivitiesById.sql'),
+  getHeatMapByTimeframeSql: getSqlFile('getHeatMapByTimeframe.sql'),
+  getHeatMapSql: getSqlFile('getHeatMap.sql'),
   getPRsSql: getSqlFile('getPRs.sql'),
 };
