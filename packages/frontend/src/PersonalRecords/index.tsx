@@ -3,13 +3,12 @@ import { getPRs, getPRsByDate } from '../reducers/prs';
 import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
-import PRDateCard from './PRDateCard';
 import { useAppSelector } from '../hooks/redux';
 import { Basic, Card, Flex } from '../DLS';
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import useShowAfterMount from '../hooks/useShowAfterMount';
-import propSelector from '../utils/propSelector';
 import PRChart from './PRChart';
+import { getDurationString } from '../utils';
 
 const ChartLoading = () => (
   <Basic.Div $height="2200px" />
@@ -49,7 +48,8 @@ const PRs = () => {
           {showChart && Object.keys(prsByDate).length > 0
           ? <PRChart records={prsByDate} title="All" />
           : <ChartLoading />}
-          <Basic.Div $marginT={1} $display="flex" $directionSmDown="column" $directionMdUp="row" $gap={1}>
+
+          <Basic.Div $marginT={1} $display="flex" $directionMdDown="column" $directionLgUp="row" $gap={1}>
             {names.map((name) => (
               <Basic.Div key={name} $width="100%">
                 <Basic.Div
@@ -73,26 +73,26 @@ const PRs = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {prsByDate[name].map((pr) => (
-                      <Basic.Tr key={pr.start_date_local} $colorBg={propSelector({
-                        'gold': pr.pr_rank === 1,
-                        'silver': pr.pr_rank === 2,
-                        'bronze': pr.pr_rank === 3,
-                        'blue3': pr.pr_rank === 4,
-                      })}>
+                    {prsByDate[name].map((pr) => {
+                      let colorBg: 'white' | 'gold' | 'silver' | 'bronze' = 'white';
+                      if (pr.pr_rank === 1) colorBg = 'gold';
+                      if (pr.pr_rank === 2) colorBg = 'silver';
+                      if (pr.pr_rank === 3) colorBg = 'bronze';
+                      return (
+                      <tr key={pr.start_date_local}>
                         <td>
                           <Link to={`/${pr.activityId}/detail`}>
                             {dayjs(pr.start_date_local).format('MMM DD, YYYY')}
                           </Link>
                         </td>
-                        <Basic.Td>
-                          {pr.pr_rank}
-                        </Basic.Td>
                         <td>
-                          <DurationDisplay numSeconds={pr.elapsed_time} />
+                          {pr.pr_rank}
                         </td>
-                      </Basic.Tr>
-                    ))}
+                        <td>
+                          {getDurationString(pr.elapsed_time)}
+                        </td>
+                      </tr>
+                    )})}
                   </tbody>
                 </Basic.Table>
               </Basic.Div>

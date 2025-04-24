@@ -26,6 +26,7 @@ import Volume from './Volume';
 import MultiMapPage from './MultiMap';
 import { Container } from './DLS';
 import CalendarView from './Calendar';
+import roundToNearest from './utils/roundToNearest';
 
 enableMapSet();
 
@@ -41,8 +42,8 @@ const AppContent = styled.div`
 const AppLayout = () => (
   <Profiler
     id="App"
-    onRender={(id, phase, actualDuration, unMemodDuration) => {
-      console.log({ id, phase, actualDuration, unMemodDuration });
+    onRender={(id, phase, aD, bD) => {
+      console.log({ id, phase, actualDuration: roundToNearest(aD, 10), unMemodDuration: roundToNearest(bD, 10) });
     }}
   >
     <Container providesViewSize={true}>

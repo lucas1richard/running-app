@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
@@ -19,9 +19,9 @@ const CalendarView = () => {
   const daysInMonth = currentMonth.daysInMonth();
   const firstDayOfMonth = currentMonth.startOf('month').weekday();
   
-  const navigateMonth = (direction: number) => {
+  const navigateMonth = useCallback((direction: number) => {
     setCurrentMonth(currentMonth.add(direction, 'month'));
-  };
+  }, [currentMonth]);
   
   const isMobile = viewSize.lte('md');
 
@@ -81,6 +81,10 @@ const CalendarView = () => {
     };
   }, [daysInMonth, firstDayOfMonth, currentMonth, dateActivities, isMobile]);
 
+  const backOneMonth = useCallback(() => navigateMonth(-1), [navigateMonth]);
+  const forwardOneMonth = useCallback(() => navigateMonth(1), [navigateMonth]);
+  const snapToCurrent = useCallback(() => setCurrentMonth(dayjs()), []);
+
   return (
     <Basic.Div $maxWidth="100%" $overflowX="auto" $pad={2}>
       <Basic.Div
@@ -92,13 +96,13 @@ const CalendarView = () => {
           <Basic.Div $fontSize="h1">
             {currentMonth.format('MMMM YYYY')}
           </Basic.Div>
-          <Button $padL={1} $padR={1} onClick={() => navigateMonth(-1)} $fontSize="h4">
+          <Button $padL={1} $padR={1} onClick={backOneMonth} $fontSize="h4">
             &larr;
           </Button>
-          <Button $padL={1} $padR={1} onClick={() => setCurrentMonth(dayjs())} $fontSize="h4">
+          <Button $padL={1} $padR={1} onClick={snapToCurrent} $fontSize="h4">
             Snap to Current
           </Button>
-          <Button $padL={1} $padR={1} onClick={() => navigateMonth(1)} $fontSize="h4">
+          <Button $padL={1} $padR={1} onClick={forwardOneMonth} $fontSize="h4">
             &rarr;
           </Button>
         </Basic.Div>

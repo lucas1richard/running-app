@@ -8,6 +8,7 @@ import {
   SET_PREFS_FREE,
 } from './preferences-actions';
 import type { RootState } from '.';
+import { makeGet2ndArg } from '../utils/selectorUtils';
 
 export type PreferencesKeyPath = [string, string, ...string[]];
 
@@ -17,7 +18,7 @@ export type ActivityPreferences = {
   shouldShowSimilar?: boolean;
 };
 
-type InitialState = {
+type PreferencesState = {
   activities: {
     default: ActivityPreferences;
   } & Record<number, ActivityPreferences>;
@@ -31,7 +32,7 @@ type InitialState = {
   };
 };
 
-const initialState: InitialState = {
+const initialState: PreferencesState = {
   activities: {
     default: {
       shouldShowLaps: true,
@@ -119,7 +120,7 @@ export const selectGlobalPrerences = createDeepEqualSelector(
   }
 );
 
-const getPreferencesZoneId = (preferences: InitialState) => {
+const getPreferencesZoneId = (preferences: PreferencesState) => {
   const { default: defaultPreferences, defined } = preferences.global;
   return typeof defined.zonesId === 'number'
     ? defined.zonesId
@@ -130,22 +131,23 @@ export const selectPreferencesZonesId = createDeepEqualSelector(
   getPreferencesZoneId
 );
 
-const getActivityPreferences = (state: RootState, id: number) => {
-  const { default: defaultPreferences, [id]: idPrefs } = getPreferencesState(state).activities;
+const getActivityPreferences = (preferencesState: PreferencesState, id: number) => {
+  const { default: defaultPreferences, [id]: idPrefs } = preferencesState.activities;
   return { ...defaultPreferences, ...idPrefs };
 };
 
-export const selectActivityPreferences = createDeepEqualSelector(
-  getActivityPreferences, (res) => res
-);
+export const selectActivityPreferences = createDeepEqualSelector([
+  getActivityPreferences,
+  makeGet2ndArg<number>(),
+], getActivityPreferences);
 
-export const getPreferenceFree = (state: RootState, keyPath: PreferencesKeyPath) => {
+export const getPreferenceFree = (preferencesState: PreferencesState, keyPath: PreferencesKeyPath) => {
   const copyPath = [...keyPath];
   const firstMainArea = copyPath.shift();
   const localArea = copyPath.shift();
   const combined = {
-    ...state.preferences[firstMainArea].default,
-    ...state.preferences[firstMainArea][localArea],
+    ...preferencesState[firstMainArea].default,
+    ...preferencesState[firstMainArea][localArea],
   };
   const lastKey = copyPath.pop();
   const lastObj = copyPath.reduce((acc, key) => acc[key] || {}, combined);
@@ -153,8 +155,9 @@ export const getPreferenceFree = (state: RootState, keyPath: PreferencesKeyPath)
   return lastObj;
 }
 
-export const selectPreferenceFree = createDeepEqualSelector(
-  getPreferenceFree, (res) => res
-);
+export const selectPreferenceFree = createDeepEqualSelector([
+  getPreferencesState,
+  makeGet2ndArg<PreferencesKeyPath>(),
+], getPreferenceFree);
 
 export default preferencesReducer;

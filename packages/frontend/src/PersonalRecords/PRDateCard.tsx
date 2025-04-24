@@ -10,12 +10,13 @@ import propSelector from '../utils/propSelector';
 
 const PRDateCard = ({ pr }) => {
   const activity = useAppSelector(state => selectActivity(state, pr.activityId));
+  let colorBg: 'white' | 'gold' | 'silver' | 'bronze' = 'white';
+  if (pr.pr_rank === 1) colorBg = 'gold';
+  if (pr.pr_rank === 2) colorBg = 'silver';
+  if (pr.pr_rank === 3) colorBg = 'bronze';
+
   return (
-    <Card key={pr.id} $textAlign="center" $flexShrink="0" $flexGrow="1" $colorBg={propSelector({
-      'gold': pr.pr_rank === 1,
-      'silver': pr.pr_rank === 2,
-      'bronze': pr.pr_rank === 3,
-    })}>
+    <Card key={pr.id} $textAlign="center" $flexShrink="0" $flexGrow="1" $colorBg={colorBg}>
       <Basic.Div $fontSize="h3">
         <DurationDisplay numSeconds={pr.elapsed_time} />
       </Basic.Div>

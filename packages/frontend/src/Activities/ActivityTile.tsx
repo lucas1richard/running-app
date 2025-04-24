@@ -5,6 +5,7 @@ import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/acti
 import Spinner from '../Loading/Spinner';
 import { Basic } from '../DLS';
 import Tile from './Tile';
+import useViewSize from '../hooks/useViewSize';
 
 type ActivityTileProps = {
   className: string;
@@ -24,10 +25,12 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
   const hideActivity = useCallback(() => {
     dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }));
   }, [activity.hidden, activity.id, dispatch]);
+  const viewSize = useViewSize();
 
   return (
     <div key={activity.id} className={className}>
       <Tile
+        isCompact={viewSize.lte('sm')}
         activity={activity}
         backgroundIndicator={backgroundIndicator}
       />

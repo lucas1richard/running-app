@@ -129,7 +129,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
               mapLib={maplibregl}
               style={{ height }}
               onZoom={setPointSizeOnZoom}
-              onRender={() => setPointSizeOnZoom({ viewState: { zoome: mapRef.current.getZoom() } })}
+              // onRender={() => setPointSizeOnZoom({ viewState: { zoome: mapRef.current.getZoom() } })}
               mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
             // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
             >

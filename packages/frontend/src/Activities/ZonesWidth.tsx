@@ -21,7 +21,7 @@ export const ZonesWidthPercents = ({ id, percents = [] }) => {
           <div
             key={`${style.background}-${ix}-${id}`}
             style={style}
-            title={style.width}
+            title={`Heart Rate Zone ${ix + 1}: ${style.width}`}
           />
         ))}
       </Flex>

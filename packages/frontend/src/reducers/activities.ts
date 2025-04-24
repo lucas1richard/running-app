@@ -21,6 +21,7 @@ import {
 import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from './heartzones';
 import { emptyArray, emptyObject } from '../constants';
 import type { RootState } from '.';
+import { makeGet2ndArg, makeGet3rdArg } from '../utils/selectorUtils';
 
 dayjs.extend(weekday);
 
@@ -188,9 +189,7 @@ export const selectActivities = createDeepEqualSelector(
   }
 );
 
-const getListActivities = (state: RootState, fromIx: number, toIx: number) => {
-  const activities = getActivitiesState(state);
-  const { sortBy, sortOrder } = selectListPrerences(state);
+const getListActivities = (activities, { sortBy, sortOrder}, fromIx: number, toIx: number) => {
   const order = [...activities.activitiesOrder].slice(fromIx, toIx);
 
     order.sort((a, b) => {
@@ -208,19 +207,32 @@ const getListActivities = (state: RootState, fromIx: number, toIx: number) => {
 
     return order.map((id) => activities.activities[id]);
 };
-export const selectListActivities = createDeepEqualSelector(getListActivities, (res) => res);
+export const selectListActivities = createDeepEqualSelector([
+  getActivitiesState,
+  selectListPrerences,
+  makeGet2ndArg<number>(),
+  makeGet3rdArg<number>(),
+], getListActivities);
 
-const getActivity = (state: RootState, id: number) => getActivitiesState(state).activities[id];
-export const selectActivity = createDeepEqualSelector(getActivity, (res) => res)
+const getActivity = (activities: ActivitiesState, id: number) => activities.activities[id];
+export const selectActivity = createDeepEqualSelector([
+  getActivitiesState,
+  makeGet2ndArg<number>(),
+], getActivity)
 
-const getActivityDetails = (state: RootState, id: number) => getActivitiesState(state).details[id];
-export const selectActivityDetails = createDeepEqualSelector(getActivityDetails, (res) => res);
+const getActivityDetails = (activities: ActivitiesState, id: number) => activities.details[id];
+export const selectActivityDetails = createDeepEqualSelector([
+  getActivitiesState,
+  makeGet2ndArg<number>(),
+], getActivityDetails);
 
-const getActivityDetailsMulti = (state: RootState, ids: number[]) => {
-  const activities = getActivitiesState(state);
+const getActivityDetailsMulti = (activities: ActivitiesState, ids: number[]) => {
   return ids?.map((id) => activities.details[id])
 };
-export const selectActivityDetailsMulti = createDeepEqualSelector(getActivityDetailsMulti, (res) => res);
+export const selectActivityDetailsMulti = createDeepEqualSelector([
+  getActivitiesState,
+  makeGet2ndArg<number[]>()
+], getActivityDetailsMulti);
 
 interface SelectStreamTypeData<Multi = false> {
   (state: RootState, id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream['data'][] : Stream['data'];
@@ -246,23 +258,24 @@ const getStreamTypeMulti = (state: RootState, ids: number[], findType: string) =
 }
 export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res) as SelectStreamTypeData<true>;
 
-const getSimilarWorkouts = (state: RootState, id: number) => {
-  const activitiesState = getActivitiesState(state);
+const getSimilarWorkouts = (activitiesState: ActivitiesState, id: number) => {
   const similarsIds = activitiesState.similarWorkouts[id] || emptyArray;
   return similarsIds.map((id) => activitiesState.activities[id]);
 };
-export const selectSimilarWorkouts = createDeepEqualSelector(getSimilarWorkouts, (res) => res);
+export const selectSimilarWorkouts = createDeepEqualSelector([
+  getActivitiesState,
+  makeGet2ndArg<number>(),
+], getSimilarWorkouts);
 
-const getSimilarWorkoutsMeta = (state: RootState, id: number) => {
-  const activitiesState = getActivitiesState(state);
+const getSimilarWorkoutsMeta = (activitiesState: ActivitiesState, id: number) => {
   return activitiesState.similarWorkoutsMeta[id] || emptyArray;
 };
-export const selectSimilarWorkoutsMeta = createDeepEqualSelector(getSimilarWorkoutsMeta, (res) => res);
+export const selectSimilarWorkoutsMeta = createDeepEqualSelector([
+  getActivitiesState,
+  makeGet2ndArg<number>(),
+], getSimilarWorkoutsMeta);
 
-const getZoneGroupedRuns = (state: RootState, fromIx = undefined, toIx = undefined) => {
-  const activities = selectListActivities(state, fromIx, toIx);
-  const { isGroupByZonesSet } = selectListPrerences(state);
-  const allzones = selectAllHeartZones(state);
+const getZoneGroupedRuns = (activities: any[], {isGroupByZonesSet}, allzones, fromIx = undefined, toIx = undefined) => {
   if (!isGroupByZonesSet) {
     return [{ runs: activities, zones: {}, start: '' }];
   }
@@ -282,7 +295,12 @@ const getZoneGroupedRuns = (state: RootState, fromIx = undefined, toIx = undefin
 
   return vals;
 }
-export const selectZoneGroupedRuns = createDeepEqualSelector(getZoneGroupedRuns, (res) => res);
+export const selectZoneGroupedRuns = createDeepEqualSelector([
+  selectListActivities,
+  selectListPrerences,
+  selectAllHeartZones,
+  makeGet2ndArg<number>(),
+], getZoneGroupedRuns);
 
 const getTimeGroup = (_: RootState, timeGroup: ManipulateType = 'week') => timeGroup;
 const getTimeGroupedRuns = (preferenceZoneId, allheartzones, activities: Activity[], timeGroup: ManipulateType) => {
