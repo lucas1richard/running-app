@@ -177,6 +177,274 @@ func (x *LCSResponse) GetLongestCommonSubsequence() map[string]*ResponseItem {
 	return nil
 }
 
+type RouteItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Lat           float32                `protobuf:"fixed32,1,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lon           float32                `protobuf:"fixed32,2,opt,name=lon,proto3" json:"lon,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RouteItem) Reset() {
+	*x = RouteItem{}
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RouteItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RouteItem) ProtoMessage() {}
+
+func (x *RouteItem) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RouteItem.ProtoReflect.Descriptor instead.
+func (*RouteItem) Descriptor() ([]byte, []int) {
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *RouteItem) GetLat() float32 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *RouteItem) GetLon() float32 {
+	if x != nil {
+		return x.Lon
+	}
+	return 0
+}
+
+type CompactedRouteRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Route         []*RouteItem           `protobuf:"bytes,1,rep,name=route,proto3" json:"route,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompactedRouteRequest) Reset() {
+	*x = CompactedRouteRequest{}
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompactedRouteRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompactedRouteRequest) ProtoMessage() {}
+
+func (x *CompactedRouteRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompactedRouteRequest.ProtoReflect.Descriptor instead.
+func (*CompactedRouteRequest) Descriptor() ([]byte, []int) {
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *CompactedRouteRequest) GetRoute() []*RouteItem {
+	if x != nil {
+		return x.Route
+	}
+	return nil
+}
+
+type CompactedRouteItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Lat           float32                `protobuf:"fixed32,1,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lon           float32                `protobuf:"fixed32,2,opt,name=lon,proto3" json:"lon,omitempty"`
+	Sec           int32                  `protobuf:"varint,3,opt,name=sec,proto3" json:"sec,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CompactedRouteItem) Reset() {
+	*x = CompactedRouteItem{}
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompactedRouteItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompactedRouteItem) ProtoMessage() {}
+
+func (x *CompactedRouteItem) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompactedRouteItem.ProtoReflect.Descriptor instead.
+func (*CompactedRouteItem) Descriptor() ([]byte, []int) {
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *CompactedRouteItem) GetLat() float32 {
+	if x != nil {
+		return x.Lat
+	}
+	return 0
+}
+
+func (x *CompactedRouteItem) GetLon() float32 {
+	if x != nil {
+		return x.Lon
+	}
+	return 0
+}
+
+func (x *CompactedRouteItem) GetSec() int32 {
+	if x != nil {
+		return x.Sec
+	}
+	return 0
+}
+
+type CRItem struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Lat           string                 `protobuf:"bytes,1,opt,name=lat,proto3" json:"lat,omitempty"`
+	Lon           string                 `protobuf:"bytes,2,opt,name=lon,proto3" json:"lon,omitempty"`
+	Sec           int32                  `protobuf:"varint,3,opt,name=sec,proto3" json:"sec,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CRItem) Reset() {
+	*x = CRItem{}
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CRItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CRItem) ProtoMessage() {}
+
+func (x *CRItem) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CRItem.ProtoReflect.Descriptor instead.
+func (*CRItem) Descriptor() ([]byte, []int) {
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *CRItem) GetLat() string {
+	if x != nil {
+		return x.Lat
+	}
+	return ""
+}
+
+func (x *CRItem) GetLon() string {
+	if x != nil {
+		return x.Lon
+	}
+	return ""
+}
+
+func (x *CRItem) GetSec() int32 {
+	if x != nil {
+		return x.Sec
+	}
+	return 0
+}
+
+type CompactedRouteResponse struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ActivityId     string                 `protobuf:"bytes,1,opt,name=activityId,proto3" json:"activityId,omitempty"`
+	CompactedRoute []*CRItem              `protobuf:"bytes,2,rep,name=compactedRoute,proto3" json:"compactedRoute,omitempty"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CompactedRouteResponse) Reset() {
+	*x = CompactedRouteResponse{}
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CompactedRouteResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CompactedRouteResponse) ProtoMessage() {}
+
+func (x *CompactedRouteResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_protos_activityMatching_activity_matching_service_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CompactedRouteResponse.ProtoReflect.Descriptor instead.
+func (*CompactedRouteResponse) Descriptor() ([]byte, []int) {
+	return file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *CompactedRouteResponse) GetActivityId() string {
+	if x != nil {
+		return x.ActivityId
+	}
+	return ""
+}
+
+func (x *CompactedRouteResponse) GetCompactedRoute() []*CRItem {
+	if x != nil {
+		return x.CompactedRoute
+	}
+	return nil
+}
+
 var File_protos_activityMatching_activity_matching_service_proto protoreflect.FileDescriptor
 
 const file_protos_activityMatching_activity_matching_service_proto_rawDesc = "" +
@@ -196,9 +464,28 @@ const file_protos_activityMatching_activity_matching_service_proto_rawDesc = "" 
 	"\x18longestCommonSubsequence\x18\x01 \x03(\v2;.activityMatching.LCSResponse.LongestCommonSubsequenceEntryR\x18longestCommonSubsequence\x1ak\n" +
 	"\x1dLongestCommonSubsequenceEntry\x12\x10\n" +
 	"\x03key\x18\x01 \x01(\tR\x03key\x124\n" +
-	"\x05value\x18\x02 \x01(\v2\x1e.activityMatching.ResponseItemR\x05value:\x028\x012p\n" +
+	"\x05value\x18\x02 \x01(\v2\x1e.activityMatching.ResponseItemR\x05value:\x028\x01\"/\n" +
+	"\tRouteItem\x12\x10\n" +
+	"\x03lat\x18\x01 \x01(\x02R\x03lat\x12\x10\n" +
+	"\x03lon\x18\x02 \x01(\x02R\x03lon\"J\n" +
+	"\x15CompactedRouteRequest\x121\n" +
+	"\x05route\x18\x01 \x03(\v2\x1b.activityMatching.RouteItemR\x05route\"J\n" +
+	"\x12CompactedRouteItem\x12\x10\n" +
+	"\x03lat\x18\x01 \x01(\x02R\x03lat\x12\x10\n" +
+	"\x03lon\x18\x02 \x01(\x02R\x03lon\x12\x10\n" +
+	"\x03sec\x18\x03 \x01(\x05R\x03sec\">\n" +
+	"\x06CRItem\x12\x10\n" +
+	"\x03lat\x18\x01 \x01(\tR\x03lat\x12\x10\n" +
+	"\x03lon\x18\x02 \x01(\tR\x03lon\x12\x10\n" +
+	"\x03sec\x18\x03 \x01(\x05R\x03sec\"z\n" +
+	"\x16CompactedRouteResponse\x12\x1e\n" +
+	"\n" +
+	"activityId\x18\x01 \x01(\tR\n" +
+	"activityId\x12@\n" +
+	"\x0ecompactedRoute\x18\x02 \x03(\v2\x18.activityMatching.CRItemR\x0ecompactedRoute2\xda\x01\n" +
 	"\x10ActivityMatching\x12\\\n" +
-	"\x1bGetLongestCommonSubsequence\x12\x1c.activityMatching.LCSRequest\x1a\x1d.activityMatching.LCSResponse\"\x00BGZEgithub.com/lucas1richard/activities-go-server/protos/activityMatchingb\x06proto3"
+	"\x1bGetLongestCommonSubsequence\x12\x1c.activityMatching.LCSRequest\x1a\x1d.activityMatching.LCSResponse\"\x00\x12h\n" +
+	"\x11GetCompactedRoute\x12'.activityMatching.CompactedRouteRequest\x1a(.activityMatching.CompactedRouteResponse\"\x00BGZEgithub.com/lucas1richard/activities-go-server/protos/activityMatchingb\x06proto3"
 
 var (
 	file_protos_activityMatching_activity_matching_service_proto_rawDescOnce sync.Once
@@ -212,23 +499,32 @@ func file_protos_activityMatching_activity_matching_service_proto_rawDescGZIP() 
 	return file_protos_activityMatching_activity_matching_service_proto_rawDescData
 }
 
-var file_protos_activityMatching_activity_matching_service_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_protos_activityMatching_activity_matching_service_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_protos_activityMatching_activity_matching_service_proto_goTypes = []any{
-	(*LCSRequest)(nil),   // 0: activityMatching.LCSRequest
-	(*ResponseItem)(nil), // 1: activityMatching.ResponseItem
-	(*LCSResponse)(nil),  // 2: activityMatching.LCSResponse
-	nil,                  // 3: activityMatching.LCSResponse.LongestCommonSubsequenceEntry
+	(*LCSRequest)(nil),             // 0: activityMatching.LCSRequest
+	(*ResponseItem)(nil),           // 1: activityMatching.ResponseItem
+	(*LCSResponse)(nil),            // 2: activityMatching.LCSResponse
+	(*RouteItem)(nil),              // 3: activityMatching.RouteItem
+	(*CompactedRouteRequest)(nil),  // 4: activityMatching.CompactedRouteRequest
+	(*CompactedRouteItem)(nil),     // 5: activityMatching.CompactedRouteItem
+	(*CRItem)(nil),                 // 6: activityMatching.CRItem
+	(*CompactedRouteResponse)(nil), // 7: activityMatching.CompactedRouteResponse
+	nil,                            // 8: activityMatching.LCSResponse.LongestCommonSubsequenceEntry
 }
 var file_protos_activityMatching_activity_matching_service_proto_depIdxs = []int32{
-	3, // 0: activityMatching.LCSResponse.longestCommonSubsequence:type_name -> activityMatching.LCSResponse.LongestCommonSubsequenceEntry
-	1, // 1: activityMatching.LCSResponse.LongestCommonSubsequenceEntry.value:type_name -> activityMatching.ResponseItem
-	0, // 2: activityMatching.ActivityMatching.GetLongestCommonSubsequence:input_type -> activityMatching.LCSRequest
-	2, // 3: activityMatching.ActivityMatching.GetLongestCommonSubsequence:output_type -> activityMatching.LCSResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	8, // 0: activityMatching.LCSResponse.longestCommonSubsequence:type_name -> activityMatching.LCSResponse.LongestCommonSubsequenceEntry
+	3, // 1: activityMatching.CompactedRouteRequest.route:type_name -> activityMatching.RouteItem
+	6, // 2: activityMatching.CompactedRouteResponse.compactedRoute:type_name -> activityMatching.CRItem
+	1, // 3: activityMatching.LCSResponse.LongestCommonSubsequenceEntry.value:type_name -> activityMatching.ResponseItem
+	0, // 4: activityMatching.ActivityMatching.GetLongestCommonSubsequence:input_type -> activityMatching.LCSRequest
+	4, // 5: activityMatching.ActivityMatching.GetCompactedRoute:input_type -> activityMatching.CompactedRouteRequest
+	2, // 6: activityMatching.ActivityMatching.GetLongestCommonSubsequence:output_type -> activityMatching.LCSResponse
+	7, // 7: activityMatching.ActivityMatching.GetCompactedRoute:output_type -> activityMatching.CompactedRouteResponse
+	6, // [6:8] is the sub-list for method output_type
+	4, // [4:6] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_protos_activityMatching_activity_matching_service_proto_init() }
@@ -242,7 +538,7 @@ func file_protos_activityMatching_activity_matching_service_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_protos_activityMatching_activity_matching_service_proto_rawDesc), len(file_protos_activityMatching_activity_matching_service_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

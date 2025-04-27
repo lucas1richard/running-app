@@ -6,6 +6,7 @@ package activityMatching;
 
 service ActivityMatching {
   rpc GetLongestCommonSubsequence (LCSRequest) returns (LCSResponse) {}
+  rpc GetCompactedRoute (CompactedRouteRequest) returns (CompactedRouteResponse) {}
 }
 
 message LCSRequest {
@@ -21,4 +22,30 @@ message ResponseItem {
 
 message LCSResponse {
   map<string, ResponseItem> longestCommonSubsequence = 1;
+}
+
+message RouteItem {
+  float lat = 1;
+  float lon = 2;
+}
+
+message CompactedRouteRequest {
+  repeated RouteItem route = 1;
+}
+
+message CompactedRouteItem {
+  float lat = 1;
+  float lon = 2;
+  int32 sec = 3;
+}
+
+message CRItem {
+  string lat = 1;
+  string lon = 2;
+  int32 sec = 3;
+}
+
+message CompactedRouteResponse {
+  string activityId = 1;
+  repeated CRItem compactedRoute = 2;
 }

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math"
 
 	_ "github.com/go-kivik/couchdb/v3" // CouchDB driver
 	"github.com/go-kivik/kivik/v3"
@@ -70,13 +69,13 @@ func LongestCommonSubsequence(baseId string, compareIds []string) (map[string]*a
 	streamsDb := couchDb.DB(ctx, "streams")
 	calcChannel := make(chan *activityMatching.ResponseItem)
 	act1Latlng, er := getLatLngForActivity(streamsDb, baseId)
-	activity1Compacted := compactLatlng(act1Latlng)
+	activity1Compacted := GetCompactedRoute(act1Latlng)
 
 	for _, id2 := range compareIds {
 		go func() {
 			act2Latlng, er := getLatLngForActivity(streamsDb, id2)
 			hasErr := er != nil
-			activity2Compacted := compactLatlng(act2Latlng)
+			activity2Compacted := GetCompactedRoute(act2Latlng)
 
 			calcChannel <- &activityMatching.ResponseItem{
 				ActivityId:               id2,
@@ -116,7 +115,7 @@ func getLatLngForActivity(streamsDb *kivik.DB, id string) ([]LatLng, error) {
 	return nil, errors.New(message)
 }
 
-func longestCommonLatlng(c1 []LatLng, c2 []LatLng) int32 {
+func longestCommonLatlng(c1 []*activityMatching.CompactedRouteItem, c2 []*activityMatching.CompactedRouteItem) int32 {
 	memo := make([][]int32, len(c1))
 	for i := range memo {
 		memo[i] = make([]int32, len(c2))
@@ -133,7 +132,7 @@ func longestCommonLatlng(c1 []LatLng, c2 []LatLng) int32 {
 		if memo[i][j] != -1 {
 			return memo[i][j]
 		}
-		if c1[i] == c2[j] {
+		if c1[i].Lat == c2[j].Lat && c1[i].Lon == c2[j].Lon {
 			memo[i][j] = 1 + recurse(i+1, j+1)
 		} else {
 			memo[i][j] = max(recurse(i+1, j), recurse(i, j+1))
@@ -142,27 +141,4 @@ func longestCommonLatlng(c1 []LatLng, c2 []LatLng) int32 {
 	}
 
 	return recurse(0, 0)
-}
-
-func roundToNearest(num float32) float32 {
-	return float32(math.Round(float64(num*10000)) / 10000)
-}
-
-func compactLatlng(latlng []LatLng) []LatLng {
-	if len(latlng) == 0 {
-		return latlng
-	}
-
-	var i int
-	out := []LatLng{{roundToNearest(latlng[0][0]), roundToNearest(latlng[0][1])}}
-
-	for i = 1; i < len(latlng); i++ {
-		curr := LatLng{roundToNearest(latlng[i][0]), roundToNearest(latlng[i][1])}
-
-		if curr[0] != out[len(out)-1][0] || curr[1] != out[len(out)-1][1] {
-			out = append(out, curr)
-		}
-	}
-
-	return out
 }

@@ -10,8 +10,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	// Make sure you change this line to match your module
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	"github.com/lucas1richard/activities-go-server/functions"
@@ -56,6 +54,29 @@ func (s *activityMatchingServer) GetLongestCommonSubsequence(
 ) (*activityMatching.LCSResponse, error) {
 	lcs, er := functions.LongestCommonSubsequence(req.Base, req.Compare)
 	return &activityMatching.LCSResponse{LongestCommonSubsequence: lcs}, er
+}
+
+func (s *activityMatchingServer) GetCompactedRoute(
+	_ context.Context,
+	req *activityMatching.CompactedRouteRequest,
+) (*activityMatching.CompactedRouteResponse, error) {
+	coords := make([]functions.LatLng, len(req.Route))
+	for i, v := range req.Route {
+		coords[i] = functions.LatLng{v.Lat, v.Lon}
+	}
+	res := functions.GetCompactedRoute(coords)
+	fmt.Println(res[1])
+	cr := make([]*activityMatching.CRItem, len(res))
+	for i, v := range res {
+		cr[i] = &activityMatching.CRItem{
+			Lat: fmt.Sprintf("%.4f", v.Lat),
+			Lon: fmt.Sprintf("%.4f", v.Lon),
+			Sec: v.Sec,
+		}
+	}
+	return &activityMatching.CompactedRouteResponse{
+		CompactedRoute: cr,
+	}, nil
 }
 
 func newServer() *activityMatchingServer {
@@ -107,6 +128,9 @@ func apiServerCmd() *cli.Command {
 			if err := grpcServer.Serve(lis); err != nil {
 				log.Fatalf("failed to serve: %v", err)
 			}
+
+			rr := make([]functions.LatLng, 0)
+			functions.GetCompactedRoute(rr)
 			return nil
 		},
 	}
