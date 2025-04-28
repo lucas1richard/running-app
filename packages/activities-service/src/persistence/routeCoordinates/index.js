@@ -63,11 +63,11 @@ const getRouteCoordinates = async (activityId, compressionLevel) => {
 const bulkCreateRouteCoordinates = async (activityId, compressedRoute, compressionLevel) => {
   console.trace('bulkCreateRouteCoordinates', activityId, compressedRoute.length);
   return RouteCoordinates.bulkCreate(
-    compressedRoute.map(([lat, lon, seconds_at_coords = 1], index) => ({
+    compressedRoute.map(([lat, lon, seconds_at_coords], index) => ({
       lat,
       lon,
       position_index: index,
-      seconds_at_coords,
+      seconds_at_coords: seconds_at_coords || 1, // grpc returns 0, local returns undefined
       activityId,
       compression_level: compressionLevel,
     })),

@@ -1,4 +1,5 @@
 const { findRelationsBySimilarRoute } = require('../constants');
+const activityMatchingReceiver = require('../grpc/activityMatchingReceiver');
 const {
   getRouteCoordinates,
   bulkCreateRouteCoordinates
@@ -9,36 +10,36 @@ const {
 } = require('../persistence/setupdb-couchbase');
 const { getActivityDetails } = require('./getActivityDetails');
 
-const compress = (route, compressionLevel) => {
-  const roundedRoute = route.map(
-    ([lat, lng]) => [
-      (Math.round(lat / compressionLevel) * compressionLevel).toFixed(6),
-      (Math.round(lng / compressionLevel) * compressionLevel).toFixed(6)
-    ]
-  );
-  const compressedRoute = [];
-  let count = 0;
+// const compress = (route, compressionLevel) => {
+//   const roundedRoute = route.map(
+//     ([lat, lng]) => [
+//       (Math.round(lat / compressionLevel) * compressionLevel).toFixed(6),
+//       (Math.round(lng / compressionLevel) * compressionLevel).toFixed(6)
+//     ]
+//   );
+//   const compressedRoute = [];
+//   let count = 0;
 
-  for (let i = 0; i < roundedRoute.length; i++) {
-    if (i === 0) {
-      compressedRoute.push(roundedRoute[i]);
-    } else {
-      const lastEl = compressedRoute[compressedRoute.length - 1];
-      const current = roundedRoute[i];
-      if (lastEl[0] !== current[0] || lastEl[1] !== current[1]) {
-        // only include a coordinate box if the athlete spent at least 3 seconds in it.
-        // this will help avoid the GPS glitches and instances where the athlete barely
-        // crossed into the corner of a coordinate box
-        // if (count >= 1)
-        compressedRoute.push([...current, count]);
-        count = 0;
-      } else {
-        count++;
-      }
-    }
-  }
-  return compressedRoute;
-};
+//   for (let i = 0; i < roundedRoute.length; i++) {
+//     if (i === 0) {
+//       compressedRoute.push(roundedRoute[i]);
+//     } else {
+//       const lastEl = compressedRoute[compressedRoute.length - 1];
+//       const current = roundedRoute[i];
+//       if (lastEl[0] !== current[0] || lastEl[1] !== current[1]) {
+//         // only include a coordinate box if the athlete spent at least 3 seconds in it.
+//         // this will help avoid the GPS glitches and instances where the athlete barely
+//         // crossed into the corner of a coordinate box
+//         // if (count >= 1)
+//         compressedRoute.push([...current, count]);
+//         count = 0;
+//       } else {
+//         count++;
+//       }
+//     }
+//   }
+//   return compressedRoute;
+// };
 
 const makeMultiCompressedRoutes = async (activityIdsArray, compressionLevel = findRelationsBySimilarRoute.COMPRESSION_LEVEL) => {
   const existingRoutes = await getRouteCoordinates(activityIdsArray, compressionLevel);
@@ -99,7 +100,9 @@ const makeCompressedRoute = async (activityId, compressionLevel = findRelationsB
     return { activityId, route, compressionLevel };
   }
 
-  const compressedRoute = compress(route, compressionLevel);
+  // const compressedRoute = compress(route, compressionLevel);
+  const compressedRouteFromGrpc = await activityMatchingReceiver.getCompressedRouteForActivity(activityId);
+  const compressedRoute = compressedRouteFromGrpc.map((a) => [a.lat, a.lon, a.sec]);
 
   // save compressed route to couchdb
   const couchDbPromise = updateActivityDetail(

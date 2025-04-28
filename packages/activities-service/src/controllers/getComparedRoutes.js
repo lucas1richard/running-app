@@ -18,16 +18,14 @@ const getComparedRoutes = async (activityId) => {
     : activityRoute.route.map((a) => [a[0].toFixed(6), a[1].toFixed(6), a[2]])
 
   // get route of each activity
-  const allRoutes = await makeMultiCompressedRoutes(nearbyActivities.map(({ id }) => id));
-  const lcsMap = await activityMatchingReceiver.request('getLongestCommonSubsequence', {
-    base: activityId,
-    compare: nearbyActivities.map(({ id }) => id),
-  });
+  const nearbyActivitiesIds = nearbyActivities.map(({ id }) => id);
+  const allRoutes = await makeMultiCompressedRoutes(nearbyActivitiesIds);
+  const lcsMap = await activityMatchingReceiver.getLongestCommonSubsequence(activityId, nearbyActivitiesIds);
 
   // compare routes
   const data = Object.values(allRoutes).reduce(
     (acc, value) => {
-      const lcsItem = lcsMap.longestCommonSubsequence[value?.activityId];
+      const lcsItem = lcsMap[value?.activityId];
       const lcs = lcsItem?.longestCommonSubsequence;
       const lcsError = lcsItem?.error;
       if (lcsError || !value) return acc;
