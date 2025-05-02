@@ -10,6 +10,7 @@ const getSqlFile = (filePath) => {
 }
 
 module.exports = {
+  addCompressedRouteSql: getSqlFile('addCompressedRoute.sql'),
   createDatabaseSql: getSqlFile('createDatabase.sql'),
   createTokenTableSql: getSqlFile('createTokensTable.sql'),
   deleteTokenDataSql: getSqlFile('deleteTokenData.sql'),

@@ -19,6 +19,7 @@ const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 
 const { logger } = require('./utils/logger');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
+const addAllCompressedRoutes = require('./functions/addAllCompressedRoutes');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
@@ -42,7 +43,11 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
       getChannel(channelConfigs.stravaIngestionService),
       getChannel(channelConfigs.activitiesService)
     ]);
+
     await app.listen(PORT);
+
+    // await addAllCompressedRoutes();
+
     logger.info({ message: `strava-client listening on port ${PORT}`});
   } catch (err) {
     logger.error({ message: 'Error starting strava-client' });

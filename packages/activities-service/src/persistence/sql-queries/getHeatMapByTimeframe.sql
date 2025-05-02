@@ -3,8 +3,8 @@ SELECT * FROM (SELECT
   lon,
   SUM(seconds_at_coords + 1) AS total_seconds
 FROM
-  route_coordinates_n
-  LEFT OUTER JOIN activities ON `activities`.`id` = `route_coordinates_n`.`activityId`
+  compressed_routes
+  LEFT OUTER JOIN activities ON `activities`.`id` = `compressed_routes`.`activityId`
 WHERE
   `compression_level` = 0.0001
   AND `activities`.`start_date_local` > ? - INTERVAL _timeframe

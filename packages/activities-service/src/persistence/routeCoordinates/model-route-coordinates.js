@@ -43,6 +43,7 @@ RouteCoordinates.init(
     position_index: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      primaryKey: true,
     },
     seconds_at_coords: {
       type: DataTypes.INTEGER,
@@ -59,7 +60,7 @@ RouteCoordinates.init(
   {
     sequelize: sequelizeMysql,
     modelName: 'routeCoordinates',
-    tableName: 'route_coordinates_n',
+    tableName: 'compressed_routes',
   }
 );
 

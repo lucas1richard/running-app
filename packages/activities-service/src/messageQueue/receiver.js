@@ -11,6 +11,10 @@ class Receiver extends EventEmitter {
     this.init();
   }
 
+  generateCorrelationId() {
+    return uuid.v4();
+  }
+
   async init() {
     // the receiver is for this service. it listens for messages from other services
     this.channel = await getChannel(channelConfigs.activitiesService);
@@ -19,6 +23,8 @@ class Receiver extends EventEmitter {
       (msg) => {
         if (msg !== null) {
           const content = JSON.parse(msg.content.toString());
+          console.trace('Received message:', content);
+
           const type = content.type;
           const correlationId = msg.properties.correlationId;
           const message = correlationId ? `${type}-${correlationId}` : type;
@@ -33,7 +39,7 @@ class Receiver extends EventEmitter {
   /**
    * The event emitted by this receiver upon receiving a message from the queue
    * @param {string} type
-   * @param {string} correlationId
+   * @param {string} [correlationId]
    * @returns the payload of the message from the queue
    */
   async waitForMessage(type, correlationId) {
@@ -53,6 +59,8 @@ class Receiver extends EventEmitter {
    * @param {keyof typeof channelConfigs} configName
    * @param {string} type
    * @param {any} payload
+   * @param {string} [correlationId]
+   * @returns {Receiver}
    */
   sendMessage(configName, type, payload, correlationId) {
     logger.info(
@@ -74,13 +82,32 @@ class Receiver extends EventEmitter {
    * @param {keyof typeof channelConfigs} configName
    * @param {string} type
    * @param {any} payload
-   * @param {string} responseType
-   * @returns the payload of the message from the queue
+   * @param {string} [responseType]
+   * @returns {any} the payload of the message from the queue
    */
   sendAndAwaitMessage(configName, type, payload, responseType = `${type}-response`) {
-    const correlationId = uuid.v4();
+    const correlationId = this.generateCorrelationId();
     this.sendMessage(configName, type, payload, correlationId);
     return this.waitForMessage(responseType, correlationId);
+  }
+
+  /**
+   * @param {keyof typeof channelConfigs} configName
+   * @param {string} type
+   * @param {any} payload
+   * @param {string[]} responseTypes
+   * @returns {Promise<any>[]}
+   */
+  sendAndAwaitCorrelatedMessages(configName, type, payload, responseTypes) {
+    const correlationId = this.generateCorrelationId();
+    this.sendMessage(configName, type, payload, correlationId);
+
+    return this.waitForCorrelatedMessages(responseTypes, correlationId);
+  }
+
+  waitForCorrelatedMessages(types, correlationId) {
+    const promises = types.map((type) => this.waitForMessage(type, correlationId));
+    return promises;
   }
 }
 

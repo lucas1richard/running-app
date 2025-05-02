@@ -1,4 +1,4 @@
-const { getActivityStreams } = require('./getActivityStreams');
+const { ingestActivityStreams } = require('./ingestActivityStreams');
 
 const distances = [
   { name: '100 yards', distance: 91.44 },
@@ -20,19 +20,20 @@ const distances = [
 ];
 
 const calculateActivityBestEfforts = async (activityId, meterDistances = distances) => {
-  const streams = await getActivityStreams(activityId, ['distance', 'time']);
+  const streams = await ingestActivityStreams(activityId, ['distance', 'time']);
   const distanceStream = streams?.find(({ type }) => type === 'distance')?.data;
   const timeStream = streams?.find(({ type }) => type === 'time')?.data;
 
   if (!distanceStream || !timeStream) {
-    console.warn(`activity ${activityId} is missing stream data, so calculateActivityBestEfforts returning empty array`, console.trace());
+    console.trace(`activity ${activityId} is missing stream data, so calculateActivityBestEfforts returning empty array`);
     return [];
   }
 
   const len = distanceStream.length;
+  const furthestDistance = distanceStream.at(-1);
 
   return meterDistances
-    .filter(({ distance }) => distance <= distanceStream[len - 1])
+    .filter(({ distance }) => distance <= furthestDistance)
     .map(({ name, distance }) => {
       let start = 0;
       let end = 0;

@@ -79,7 +79,7 @@ if (require.main === module) {
           const ids = await fetchNewActivities(payload);
           receiver.sendMessage('activitiesService', 'basic-response', ids, correlationId);
           for (const recordId of ids) {
-            // add streams and details to the back of the queue
+            // add streams and details request to the back of the queue
             receiver.sendMessage('stravaIngestionService', 'details', recordId);
             receiver.sendMessage('stravaIngestionService', 'streams', recordId);
           }

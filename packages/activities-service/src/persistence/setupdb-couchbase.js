@@ -168,7 +168,6 @@ const getStream = async (id) => {
     const stream = await streamsDb.get(`${id}`);
     return stream;
   } catch (err) {
-    console.trace('getStream', err);
     return undefined;
   }
 };

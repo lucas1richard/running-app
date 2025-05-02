@@ -7,9 +7,9 @@ WHERE
     SELECT distinct
       activityId
     FROM
-      route_coordinates_n
+      compressed_routes
   )
-  AND sport_type = "Run"
+  -- AND sport_type = "Run"
   AND (
     `hidden` = false
     OR `hidden` IS NULL
