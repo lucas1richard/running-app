@@ -1,7 +1,7 @@
 const { addStream } = require('./setupdb-couchbase');
 const fetchStrava = require('./fetchStrava');
 const { query } = require('./mysql-connection');
-const { addCompressedRouteSql } = require('./sql-queries');
+const { addCompressedRouteSql, selectHeartZonesAtDateSql, insertHeartRateZonesCacheSql } = require('./sql-queries');
 
 const compress = (route = [], compressionLevel = 0.0001) => {
   const roundedRoute = route.map(
@@ -24,6 +24,18 @@ const compress = (route = [], compressionLevel = 0.0001) => {
     }
   }
   return compressedRoute;
+};
+
+const convertHeartDataToZoneTimes = (heartData, zones) => {
+  if (!heartData) return [];
+  const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
+
+  return heartData.reduce((acc, heartrate) => {
+    const zone = rangeMap.findIndex((threshhold, ix) => threshhold <= heartrate && rangeMap[ix + 1] > heartrate);
+    const newacc = [...acc];
+    newacc[zone] = (newacc[zone] || 0) + 1;
+    return newacc;
+  }, new Array(5).fill(0));
 };
 
 const streamKeys = [
@@ -61,6 +73,27 @@ const ingestActivityStreams = async (activityId) => {
         date // updatedAt
       ]),
     ]);
+
+    const applicableHeartRateZones = await query(selectHeartZonesAtDateSql, [date]);
+    const heartRateZones = applicableHeartRateZones[0];
+
+    const zones = convertHeartDataToZoneTimes(
+      stream.find(({ type }) => type === 'heartrate')?.data,
+      heartRateZones
+    );
+
+    await query(insertHeartRateZonesCacheSql, [
+      zones[0],
+      zones[1],
+      zones[2],
+      zones[3],
+      zones[4],
+      activityId,
+      heartRateZones.id,
+      date,
+      date,
+    ]);
+
 
     return { activityId, status: 'success' };
   } catch (err) {

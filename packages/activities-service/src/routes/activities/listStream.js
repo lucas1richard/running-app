@@ -19,8 +19,14 @@ router.get('/listStream', async (req, res) => {
   try {
     if (forceFetch) {
       logger.info('Waiting for new activities...');
-      const addedRecordsIds = await receiver
-        .sendAndAwaitMessage('stravaIngestionService', 'basic', { perPage, page });
+      const correlationId = receiver.generateCorrelationId();
+      receiver.sendMessage('stravaIngestionService', 'basic', { perPage, page }, correlationId);
+      const addedRecordsIds = await receiver.waitForMessage('activitiesService', 'basic-response', correlationId);
+      await receiver.waitForMessage('activitiesService', 'streams-response', correlationId);
+
+      // logger.info('Waiting for new activities with correlationId:', correlationId);
+      // const addedRecordsIds = await receiver
+      //   .sendAndAwaitMessage('stravaIngestionService', 'basic', { perPage, page });
 
       const readableStream = await findActivitiesByIdStream(addedRecordsIds);
       readableStream.resume();
