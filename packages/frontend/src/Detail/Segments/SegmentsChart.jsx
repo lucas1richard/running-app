@@ -1,8 +1,10 @@
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import styles from '../Detail.module.css';
+import Surface from '../../DLS/Surface';
+import useDarkReaderMode from '../../hooks/useDarkReaderMode';
 
-const getPlotbandConfig = ({ ix, text, to, from } = {}) => {
+const getPlotbandConfig = ({ ix, text, to, from } = {}, borderColor, color) => {
     return {
       from,
       to,
@@ -19,20 +21,23 @@ const getPlotbandConfig = ({ ix, text, to, from } = {}) => {
         },
       },
       borderWidth: 1,
-      borderColor: 'black',
-      color: 'rgba(0,0,0,0.05)',
+      borderColor,
+      color,
       useHTML: true,
       id: ix
     };
 };
 
 const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
+  const isDarkMode = useDarkReaderMode();
+  const contrastColor = isDarkMode ? '#fff' : '#000';
   /** @type {Highcharts.Options} */
   const options = {
     chart: {
       type: 'line',
       height: 400,
       width,
+      backgroundColor: 'transparent',
     },
     title: {
       text: title,
@@ -51,7 +56,7 @@ const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
         data: velocity.map(val => Math.round((val * 100 * 2.237)) / 100),
         yAxis: 1,
         lineWidth: 1,
-        color: 'black',
+        color: contrastColor,
         animation: false,
       }
     ].filter(Boolean),
@@ -61,7 +66,7 @@ const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
           from: band.start_index,
           to: band.end_index,
           text: band.name
-        }),
+        }, contrastColor, 'rgba(0,0,0,0.05)'),
       ),
       gridLineWidth: 0,
       alignTicks: false,
@@ -87,13 +92,13 @@ const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
         title: {
           text: 'Velocity',
           style: {
-            color: 'black'
+            color: contrastColor
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'black'
+            color: contrastColor
           }
         },
         opposite: true,
@@ -102,13 +107,13 @@ const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
   };
 
   return (
-    <div>
+    <Surface>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
         allowChartUpdate={true}
       />
-    </div>
+    </Surface>
   );
 };
 

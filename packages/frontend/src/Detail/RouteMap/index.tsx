@@ -11,6 +11,7 @@ import getGradeColorAbs from '../HeartZonesChart/getGradeColorAbs';
 import { emptyArray } from '../../constants';
 import useViewSize from '../../hooks/useViewSize';
 import { Button } from '../../DLS';
+import Surface from '../../DLS/Surface';
 
 HighchartsMap(Highcharts);
 
@@ -185,6 +186,7 @@ const RouteMap: React.FC<Props> = ({
       height,
       width,
       animation: false,
+      backgroundColor: 'transparent',
     },
     title: {
       text: 'Route',
@@ -199,7 +201,7 @@ const RouteMap: React.FC<Props> = ({
   }), [height, width, memoPointer, memoHighlightedSegment, memoPins, memoSeries, series]);
 
   return (
-    <div>
+    <Surface>
       {`${convertMetricSpeedToMPH(velocity[usedPointer]).toFixed(2)} mph`}
       <HighchartsReact
         highcharts={Highcharts}
@@ -209,7 +211,7 @@ const RouteMap: React.FC<Props> = ({
       <div>
         <Button onClick={() => setAnimating((prev) => !prev)}>Animate</Button>
       </div>
-    </div>
+    </Surface>
   );
 };
 

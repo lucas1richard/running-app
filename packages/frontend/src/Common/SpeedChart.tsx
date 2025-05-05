@@ -6,6 +6,8 @@ import { convertMetricSpeedToMPH } from '../utils';
 import { useMemo } from 'react';
 import useViewSize from '../hooks/useViewSize';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
+import Surface from '../DLS/Surface';
+import useDarkReaderMode from '../hooks/useDarkReaderMode';
 
 const seriesDefaultConfig = {
   type: 'line',
@@ -23,10 +25,9 @@ const seriesDefaultConfig = {
 
 const yAxisDefaultConfig = {
   crosshair: true,
-  minorTickInterval: 'auto',
+  // minorTickInterval: 'auto',
   tickInterval: 1,
-  gridLineColor: 'rgba(0,0,0,0.4)',
-  minorGridLineColor: 'rgba(0,0,0,0.1)',
+  minorGridLineColor: 'transparent',
   height: '25%',
   opposite: false,
 } satisfies Highcharts.YAxisOptions;
@@ -45,12 +46,16 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
   }, [activitiesProp]);
 
   const enableYAxis = viewSize.gte('md');
+  const isDarkMode = useDarkReaderMode();
+  const contrastColor = isDarkMode ? 'white' : 'black';
+  const gridColor = isDarkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
 
   const options = useMemo<Highcharts.Options>(() =>
     ({
     chart: {
       type: 'line',
       height: 450,
+      backgroundColor: 'transparent',
       zooming: {
         type: 'x',
       },
@@ -84,7 +89,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
         //   linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
         //   stops: [[0, 'rgba(0,0,255,1)'], [1, 'rgba(0,0,55,1)']],
         // },
-        color: 'black',
+        color: contrastColor,
         ...seriesDefaultConfig,
       },
       {
@@ -109,58 +114,61 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       crosshair: true,
       type: 'datetime',
       gridLineWidth: 1,
-      gridLineColor: 'rgba(0,0,0,0.4)',
+      gridLineColor: gridColor,
       labels: {
         style: {
-          color: 'black'
+          color: contrastColor
         }
       }
     },
     yAxis: [
       {
         ...yAxisDefaultConfig,
+        gridLineColor: gridColor,
         title: {
           enabled: enableYAxis,
           text: 'Avg Speed',
           style: {
-            color: 'black'
+            color: contrastColor
           }
         },
         labels: {
           enabled: enableYAxis,
           format: '{value} mph',
           style: {
-            color: 'black',
+            color: contrastColor,
           },
         },
       },
       { // Secondary yAxis
         ...yAxisDefaultConfig,
+        gridLineColor: gridColor,
         top: '25%',
         title: {
           enabled: enableYAxis,
           text: 'Distance',
           style: {
-            color: 'black',
+            color: contrastColor,
           },
         },
         labels: {
           enabled: enableYAxis,
           format: '{value} mi',
           style: {
-            color: 'black',
+            color: contrastColor,
           },
         },
         opposite: true,
       },
       {
         ...yAxisDefaultConfig,
+        gridLineColor: gridColor,
         top: '50%',
         title: {
           enabled: enableYAxis,
           text: 'Avg HR',
           style: {
-            color: 'black'
+            color: contrastColor
           }
         },
         tickInterval: 10,
@@ -169,12 +177,13 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
           enabled: enableYAxis,
           format: '{value}',
           style: {
-            color: 'black',
+            color: contrastColor,
           },
         },
       },
       {
         ...yAxisDefaultConfig,
+        gridLineColor: gridColor,
         top: '75%',
         title: {
           enabled: enableYAxis,
@@ -231,14 +240,16 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
         fontSize: '18px'
       },
     },
-  }), [activities, enableYAxis]);
+  }), [isDarkMode, activities, enableYAxis]);
 
   return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={options}
-      allowChartUpdate={true}
-    />
+    <Surface>
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={options}
+        allowChartUpdate={true}
+      />
+    </Surface>
   );
 };
 

@@ -11,24 +11,25 @@ import DetailDataFetcher from '../Detail/DetailDataFetcher';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import { emptyArray } from '../constants';
 import { useAppSelector } from '../hooks/redux';
-import { Basic, Flex, Grid } from '../DLS';
 import ZonesWidth from './ZonesWidth';
+import styles from './Tile.module.css';
+import Surface from '../DLS/Surface';
 
 type Props = {
   activity: Activity;
   isCompact?: boolean;
   backgroundIndicator?: string;
   children?: React.ReactNode;
+  className?: string;
 }
 
-const compactAreas = `
-  "image title title"
-  "stats stats stats"
-  "zonesWidth zonesWidth zonesWidth"
-  "children children children"
-`;
-
-const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, children }) => {
+const Tile: React.FC<Props> = ({
+  activity,
+  backgroundIndicator,
+  isCompact,
+  children,
+  className = '',
+}) => {
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, activity.id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
@@ -43,26 +44,17 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
     [activity.elapsed_time]
   );
 
-  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: 'dls-white-bg' };
+  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: '' };
+  const largeText = isCompact ? 'text-h5' : 'text-h4';
+  const smallText = isCompact ? 'text-sm' : 'text-md';
 
   return (
-    <Basic.Div $pad={0.5} className={`${backgroundColor}`}>
+    <Surface className={`pad-compact ${backgroundColor} ${className}`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
-      <Grid
-        $gap={isCompact ? 0.5 : 1}
-        $templateColumns={isCompact ? '1fr auto auto' : 'auto 1fr auto'}
-        $templateAreas={isCompact
-          ? compactAreas
-          : `
-          "image title stats"
-          "zonesWidth zonesWidth zonesWidth"
-          "bestEfforts bestEfforts bestEfforts"
-          "children children children"
-        `}
-        $templateColumnsSmDown={'auto'}
-        $templateAreasSmDown={compactAreas}
+      <div
+        className={isCompact ? styles.gridCompact : styles.grid}
       >
-        <Basic.Div $gridArea="image">
+        <div className={styles.gridImage}>
           <GoogleMapImage
             activityId={activity.id}
             polyline={getSummaryPolyline(activity)}
@@ -72,56 +64,65 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
             width={100}
             height={75}
           />
-        </Basic.Div>
+        </div>
 
-        <Basic.Div $gridArea="title" $textAlign={isCompact ? 'right' : 'left'} $textAlignSmDown="right">
+        <div className={`${styles.gridTitle} text-${isCompact ? 'right' : 'left'}`}>
           <div>
             {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
           </div>
 
           <Link
             to={`/${activity.id}/detail`}
-            className="heading-4"
+            className={`${largeText} dls-blue`}
             onMouseEnter={onMouseEnter}
             onFocus={onMouseEnter}
           >
             {activity.name}
           </Link>
-        </Basic.Div>
+        </div>
 
-        <Basic.Div $gridArea="stats">
-          <Basic.Div $textAlign={isCompact ? 'left' : 'right'} $textAlignSmDown='left'>
+        <div className={styles.gridStats}>
+          <div className={`text-${isCompact ? 'left' : 'right'}`}>
             <div>
-              {duration}
-              <Basic.Span $marginL={1} $fontSize="h4" $color="darkGold">
+              <span className={`${smallText}`}>
+                {duration}
+                </span>
+              <span className={`margin-l ${largeText} dls-dark-gold`}>
                 {activity.distance_miles} <abbr>mi</abbr>
-              </Basic.Span>
+              </span>
             </div>
 
             <div>
-              <Basic.Span $fontSize="sm">Average Speed</Basic.Span>
-              <Basic.Span $marginL={1} $fontSize="h4">
+              <span className={`${smallText}`}>Average Speed</span>
+              <span className={`margin-l ${largeText}`}>
                 {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-              </Basic.Span>
+              </span>
             </div>
 
             <div>
-              <Basic.Span $fontSize="sm">Average HR</Basic.Span>
-              <Basic.Span $marginL={1} $fontSize="h4">
-                {Math.round(activity.average_heartrate)} bpm (max {activity.max_heartrate} bpm)
-              </Basic.Span>
+              <span className={`${smallText}`}>Average HR</span>
+              <span className={`margin-l ${largeText}`}>
+                {Math.round(activity.average_heartrate)} bpm
+              </span>
             </div>
 
-            <div className="dls-blue">
-              <Basic.Span $fontSize="sm">Efficiency Factor</Basic.Span>
-              <Basic.Span $marginL={1} $fontSize="h4">
+            <div>
+              <span className={`${smallText}`}>Max HR</span>
+              <span className={`margin-l ${largeText}`}>
+                {activity.max_heartrate} bpm
+              </span>
+            </div>
+
+            <div>
+              <span className={`${smallText} dls-blue`}>Efficiency Factor</span>
+              <span className={`margin-l ${largeText} dls-blue`}>
                 {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
-              </Basic.Span>
+              </span>
             </div>
-          </Basic.Div>
-        </Basic.Div>
+          </div>
+        </div>
 
-        <Basic.Div $gridArea="zonesWidth">
+        <div  className={styles.gridZonesWidth}>
           {(heartRateStream || activity.zonesCaches[zones.id]) && (
             <ZonesWidth
               id={activity.id}
@@ -130,26 +131,26 @@ const Tile: React.FC<Props> = ({ activity, backgroundIndicator, isCompact, child
               heartData={heartRateStream}
             />
           )}
-        </Basic.Div>
+        </div>
 
-        {!isCompact && (<Basic.Div $gridArea="bestEfforts" $display="flex" $gap={1}>
+        {!isCompact && (<div className={styles.gridBestEfforts}>
           {bestEfforts.length > 0 && (
             bestEfforts.filter(({ pr_rank }) => pr_rank).map((effort) => (
-              <Flex $flexShrink="1" $flexGrow="1" $alignItems='center' key={effort.distance}>
+              <div key={effort.distance} className="flex flex-align-center">
                 <span><PRMedal color={effort.pr_rank || 'black'} type={effort.pr_rank <= 3 ? 'native' : 'svg'} /></span>
                 <small>
                   {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
                 </small>
-              </Flex>
+              </div>
             ))
           )}
-        </Basic.Div>)}
+        </div>)}
 
-        <Basic.Div $gridArea="children">
+        <div className={styles.gridChildren}>
           {children}
-        </Basic.Div>
-      </Grid>
-    </Basic.Div>
+        </div>
+      </div>
+    </Surface>
   )
 };
 

@@ -7,6 +7,8 @@ import classNames from 'classnames';
 import { getDurationString } from '../utils';
 import { rankMap } from '../Common/Icons/PRMedal';
 import useViewSize from '../hooks/useViewSize';
+import Surface from '../DLS/Surface';
+import useDarkReaderMode from '../hooks/useDarkReaderMode';
 
 const prColorsArr = [
   { value: 0, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
@@ -50,6 +52,8 @@ const PRChart = ({ records: recordsProp, title }) => {
       data: recordsProp[name].filter(({ start_date_local }) => dayjs(start_date_local).isAfter(dayjs().subtract(1, 'year'))).reverse()
     }))
   }, []);
+  const isDarkMode = useDarkReaderMode();
+  const contrastColor = isDarkMode ? 'white' : 'black';
 
   const options = useMemo(() =>
   /** @type {Highcharts.Options} */
@@ -60,6 +64,7 @@ const PRChart = ({ records: recordsProp, title }) => {
       zooming: {
         type: 'x',
       },
+      backgroundColor: 'transparent',
     },
     legend: {
       enabled: false,
@@ -104,7 +109,7 @@ const PRChart = ({ records: recordsProp, title }) => {
             `;
         },
         style: {
-          color: 'black',
+          color: contrastColor,
         },
       },
       ...seriesDefaultConfig,
@@ -115,7 +120,7 @@ const PRChart = ({ records: recordsProp, title }) => {
       gridLineColor: 'rgba(0,0,0,0.4)',
       labels: {
         style: {
-          color: 'black'
+          color: contrastColor
         }
       },
       min: dayjs().subtract(1, 'year').toDate().getTime(),
@@ -134,7 +139,7 @@ const PRChart = ({ records: recordsProp, title }) => {
       labels: {
         format: '{value} sec',
         style: {
-          color: 'black',
+          color: contrastColor,
         },
       },
       height: `${60 / (sets.length || 1)}%`,
@@ -158,11 +163,13 @@ const PRChart = ({ records: recordsProp, title }) => {
   }), [isSmall, sets, title]);
 
   return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={options}
-      allowChartUpdate={true}
-    />
+    <Surface>
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={options}
+        allowChartUpdate={true}
+      />
+    </Surface>
   );
 };
 

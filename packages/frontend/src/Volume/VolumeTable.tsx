@@ -5,6 +5,7 @@ import { useAppSelector } from '../hooks/redux';
 import { Basic, Card } from '../DLS';
 import { ZonesWidthPercents } from '../Activities/ZonesWidth';
 import { convertZonesCacheToPercents } from '../utils';
+import Surface from '../DLS/Surface';
 
 const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'month' }) => {
   const [tg, setTimeGroup] = useState<ManipulateType>(timeGroup);
@@ -15,7 +16,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
   const activities = useAppSelector((state) => selectTimeGroupedRuns(state, tg));
 
   return (
-    <Card $width="100%">
+    <Surface className="card">
       <label htmlFor="timeGroupSelect">Time Group:</label>
       &nbsp;
       <select id="timeGroupSelect" value={tg} onChange={handleChange}>
@@ -38,9 +39,11 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
           {
             activities.map(({ start, sum, runs, zones }) => (
               <Fragment key={start.toString()}>
-                <Basic.Tr $position="sticky" $top="0" $zIndex="1" $colorBg="white">
+                <Basic.Tr $position="sticky" $top="0" $zIndex="1">
                   <th colSpan={3}>
-                    The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;
+                    <Surface>
+                      The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;
+                    </Surface>
                   </th>
                 </Basic.Tr>
                 <tr>
@@ -69,7 +72,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
           }
         </tbody>
       </Basic.Table>
-    </Card>
+    </Surface>
   );
 };
 

@@ -4,6 +4,7 @@ import { hrZonesBg, hrZonesText } from '../colors/hrZones';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '../utils';
 import styled from 'styled-components';
 import { Basic, Flex } from '../DLS';
+import Surface from '../DLS/Surface';
 
 type HeartZonesDisplayProps = {
   zones: HeartZone;
@@ -102,13 +103,13 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
   const isUsingNonNativeZones = nativeZones.id !== zones.id;
 
   return (
-    <Basic.Div $colorBg="white">
+    <Surface>
       {isUsingNonNativeZones && (
         <div>
           <small>Note: Using Non-native Heart Rate Zones</small>
         </div>
       )}
-      <Basic.Div $border="1px solid #dedede">
+      <Basic.Div>
         <Flex $direction="column" $directionMdUp="row">
           <Cell
             ix={0}
@@ -152,7 +153,7 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
           />
         </Flex>
       </Basic.Div>
-    </Basic.Div>
+    </Surface>
   );
 };
 

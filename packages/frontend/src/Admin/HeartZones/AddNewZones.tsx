@@ -1,7 +1,8 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addHeartZonesAct } from '../../reducers/heartzones-actions';
-import { Button, Card, Flex } from '../../DLS';
+import { Button, Flex } from '../../DLS';
+import Surface from '../../DLS/Surface';
 
 const AddNewHRZones = ({ latestZone }) => {
   const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const AddNewHRZones = ({ latestZone }) => {
   }, [z1, z2, z3, z4, z5, startDate, dispatch]);
 
   return (
-    <Card>
+    <Surface className="card pad">
       <form onSubmit={onFormSubmit}>
         <Flex $gap={1} $directionSmDown="column">
           <Flex $alignItems="center">
@@ -94,7 +95,7 @@ const AddNewHRZones = ({ latestZone }) => {
           Add
         </Button>
       </form>
-    </Card>
+    </Surface>
   );
 };
 

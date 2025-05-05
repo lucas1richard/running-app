@@ -10,6 +10,7 @@ import useHRZoneIndicators from '../Detail/RouteMap/useHRZoneIndicators';
 import dayjs from 'dayjs';
 import { emptyArray } from '../constants';
 import { Button } from '../DLS';
+import Surface from '../DLS/Surface';
 
 HighchartsMap(Highcharts);
 
@@ -147,6 +148,7 @@ const MultiMap = ({
       map: 'custom/world',
       height: 1200,
       animation: false,
+      backgroundColor: 'transparent',
     },
     title: {
       text: 'Route',
@@ -175,7 +177,7 @@ const MultiMap = ({
   }), [series, memoHighlightedSegment, coordsPure, activities, usedPointer, indicatorColors]);
 
   return (
-    <div>
+    <Surface>
       {ids.map((id, ix) => <DetailDataFetcher key={id} id={id} />)}
       <HighchartsReact
         highcharts={Highcharts}
@@ -194,7 +196,7 @@ const MultiMap = ({
           {hoverProgress}
         </div>
       )}
-    </div>
+    </Surface>
   );
 };
 

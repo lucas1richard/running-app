@@ -4,6 +4,8 @@ import Shimmer from '../Loading/Shimmer';
 import { FullscreenControl, Layer, Map, Source } from "@vis.gl/react-maplibre";
 import maplibregl from 'maplibre-gl';
 import "maplibre-gl/dist/maplibre-gl.css"; // Required!
+import useDarkReaderMode from '../hooks/useDarkReaderMode';
+import Surface from '../DLS/Surface';
 
 const makeSquare = ({ lat, lon }, size = 0.0001) => {
   const delta = size / 2;
@@ -52,12 +54,21 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   measure,
   deferRender,
   height = 900,
-  minColor = [20, 20, 255, 1], // Red with some transparency
-  maxColor = [255, 0, 0, 1], // Green with full opacity
+  minColor = [20, 20, 255, 0.5], // Red with some transparency
+  maxColor = [255, 0, 0, 0.5], // Green with full opacity
   floorValue,
   ceilingValue,
   squareSize = 0.0001,
 }) => {
+  const isDarkReaderMode = useDarkReaderMode();
+
+  let activeMinColor = minColor;
+  let activeMaxColor = maxColor;
+  if (isDarkReaderMode) {
+    activeMinColor = [255 - minColor[0], 255 - minColor[1], 255 - minColor[2], minColor[3]];
+    activeMaxColor = [255 - maxColor[0], 255 - maxColor[1], 255 - maxColor[2], maxColor[3]];
+  }
+  
   const heatmapSource = useId();
   const heatmapLayer = useId();
   const largestValue = useMemo(() => {
@@ -118,7 +129,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   };
 
   return (
-    <Basic.Div>
+    <Surface>
       {
         !deferRender
           ? (
@@ -130,8 +141,10 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
               style={{ height }}
               onZoom={setPointSizeOnZoom}
               // onRender={() => setPointSizeOnZoom({ viewState: { zoome: mapRef.current.getZoom() } })}
-              mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-            // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+              mapStyle={isDarkReaderMode
+                ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+                : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+              }
             >
               <Source
                 id={heatmapSource}
@@ -150,7 +163,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                         type: 'Polygon',
                         coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat) }, pointSize)],
                       },
-                      properties: { color: makeColor(minColor, maxColor, percent) },
+                      properties: { color: makeColor(activeMinColor, activeMaxColor, percent) },
                     })
                   }),
                 }}
@@ -170,11 +183,11 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
           : <Basic.Div $height={`${height}px`}><Shimmer isVisible={true} /></Basic.Div>
       }
       {!deferRender && (
-        <Basic.Div>
+        <div>
           <svg width="100%" height="20">
             <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: `rgb(${minColor[0]}, ${minColor[1]}, ${minColor[2]})`, stopOpacity: minColor[3] }} />
-              <stop offset="100%" style={{ stopColor: `rgb(${maxColor[0]}, ${maxColor[1]}, ${maxColor[2]})`, stopOpacity: maxColor[3] }} />
+              <stop offset="0%" style={{ stopColor: `rgb(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]})`, stopOpacity: activeMinColor[3] }} />
+              <stop offset="100%" style={{ stopColor: `rgb(${activeMaxColor[0]}, ${activeMaxColor[1]}, ${activeMaxColor[2]})`, stopOpacity: activeMaxColor[3] }} />
             </linearGradient>
             <rect x="0" y="0" width="100%" height="20" fill={`url(#${gradientId})`} />
           </svg>
@@ -182,9 +195,9 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
             <Basic.Div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</Basic.Div>
             <Basic.Div>Highest ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</Basic.Div>
           </Basic.Div>
-        </Basic.Div>
+        </div>
       )}
-    </Basic.Div>
+    </Surface>
   );
 };
 

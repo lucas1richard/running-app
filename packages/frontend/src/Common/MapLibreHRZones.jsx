@@ -11,8 +11,10 @@ import { useAppSelector } from '../hooks/redux';
 import { DeckGlOverlay } from '../ReactMap/deckgl-overlay';
 import { hrZonesGraph } from '../colors/hrZones';
 import { Basic } from '../DLS';
+import useDarkReaderMode from '../hooks/useDarkReaderMode';
 
 function MapLibreHRZones({ id }) {
+  const isDarkReaderMode = useDarkReaderMode();
   const outlineSourceId = useId();
   const hrZonesSourceId = useId();
   const latlngStreamData = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;
@@ -96,8 +98,10 @@ function MapLibreHRZones({ id }) {
         ],
       }}
       mapLib={maplibregl}
-      mapStyle="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-      // mapStyle="https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+      mapStyle={isDarkReaderMode
+        ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+        : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+      }
     >
       <Marker
         ref={mapRef}

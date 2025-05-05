@@ -6,6 +6,7 @@ import PRMedal from '../Common/Icons/PRMedal';
 import { useAppSelector } from '../hooks/redux';
 import { Basic, Card, Flex, Grid } from '../DLS';
 import { memo } from 'react';
+import Surface from '../DLS/Surface';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);
@@ -20,7 +21,7 @@ const PRs = () => {
         $gap={1}
       >
         {allTimePrs.map((pr) => (
-          <Card key={pr.distance} $textAlign="center" $flexGrow="1">
+          <Surface className="card text-center flex-item-grow pad" key={pr.distance}>
             <Basic.Div $fontSize="h1">
               <PRMedal type="native" color="gold" />
             </Basic.Div>
@@ -36,7 +37,7 @@ const PRs = () => {
             <Basic.Div $fontSize="h3">
               <DurationDisplay numSeconds={pr.elapsed_time} />
             </Basic.Div>
-          </Card>
+          </Surface>
         ))}
       </Grid>
 

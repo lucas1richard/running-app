@@ -21,6 +21,7 @@ import { useAppSelector } from '../hooks/redux';
 import dayjs from 'dayjs';
 import SpeedChart from '../Common/SpeedChart';
 import TileList from './TileList';
+import Surface from '../DLS/Surface';
 
 const HeatMapContainer = React.lazy(() => import('./HeatMapContainer'));
 
@@ -56,13 +57,14 @@ const Activities = () => {
       <Basic.Div $display="flex" $directionLgUp="row-reverse" $directionMdDown="column" $gap={1}>
         <Basic.Div $widthLgUp="50%">
           <Basic.Div $marginB={1}>
+            <h2 className="text-h2 pad-b">Metrics Over Time</h2>
             {showChart
               ? <SpeedChart activities={recentActivities} />
               : <Basic.Div $height="600px" />
             }
           </Basic.Div>
           <React.Suspense fallback={<Basic.Div $height="900px"><Shimmer isVisible={true} /></Basic.Div>}>
-            <Basic.Div $fontSize="h2" $marginB={1}>All time</Basic.Div>
+            <Basic.Div $fontSize="h2" $marginB={1}>Heat Map - All time</Basic.Div>
             <HeatMapContainer />
           </React.Suspense>
         </Basic.Div>
@@ -74,21 +76,27 @@ const Activities = () => {
             <PRs />
           </Basic.Div>
           <Basic.Div $marginT={1} $marginB={1}>
+            <h2 className="text-h2 pad-b">Mileage</h2>
             <CurrentSummary activities={activities} />
           </Basic.Div>
-          <PreferenceControl
-            subject="Display Config"
-            keyPath={listDisplayControlsKeypath}
-            showSaveButton={true}
-            defaultValue={true}
-          >
-            <ConfigWidget />
-            <ListSort />
-            <Button onClick={hideFn}>
-              Toggle Display of Hide Functionality
-            </Button>
-          </PreferenceControl>
+          <div className="margin-b">
+            <PreferenceControl
+              subject="Display Config"
+              keyPath={listDisplayControlsKeypath}
+              showSaveButton={true}
+              defaultValue={true}
+            >
+              <Surface className="card pad">
+                <ConfigWidget />
+                <ListSort />
+                <Button onClick={hideFn}>
+                  Toggle Display of Hide Functionality
+                </Button>
+              </Surface>
+            </PreferenceControl>
+          </div>
 
+          <h2 className="text-h2 pad-b">Activities</h2>
           <TileList
             showHideFunction={showHideFunction}
             tileBackgroundIndicator={tileBackgroundIndicator}

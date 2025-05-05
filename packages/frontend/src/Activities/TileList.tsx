@@ -17,7 +17,7 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
 
   return (
     <div>
-      <Basic.Div>
+      <div>
         {/* {
           activitiesApiStatus === success && (
             // categorizeRunsByZones.map(({ runs, zones, start }) => (
@@ -34,7 +34,7 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
             //         <ZonesHeader zones={zones} start={start} />
             //       </Basic.Div>
             //     )} */}
-                <Flex $direction="column" $gap={1}>
+                <div className="flex flex-column gap">
                   {displayActivities.map((activity) => (
                     <ActivityTile
                       key={activity.id}
@@ -44,12 +44,12 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
                       showHideFunction={showHideFunction}
                     />
                   ))}
-                </Flex>
+                </div>
               {/* // </Flex>
             ))
           )
         } */}
-      </Basic.Div>
+      </div>
       <Button $width="100%" onClick={() => setShowAllActivities(true)}>Show All</Button>
     </div>
   )

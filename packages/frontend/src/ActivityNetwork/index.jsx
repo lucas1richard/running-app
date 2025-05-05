@@ -3,6 +3,7 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import networkgraph from 'highcharts/modules/networkgraph';
 import testdata from './testdata.json';
+import Surface from '../DLS/Surface';
 
 networkgraph(Highcharts);
 
@@ -12,6 +13,7 @@ const ActivityNetworkChart = () => {
       type: 'networkgraph',
       plotBorderWidth: 1,
       allowPointSelect: true,
+      backgroundColor: 'transparent',
     },
     title: {
       text: ''
@@ -77,11 +79,13 @@ const ActivityNetworkChart = () => {
   }), []);
 
   return (
-    <HighchartsReact
-      highcharts={Highcharts}
-      options={options}
-      allowChartUpdate={true}
-    />
+    <Surface>
+      <HighchartsReact
+        highcharts={Highcharts}
+        options={options}
+        allowChartUpdate={true}
+      />
+    </Surface>
   );
 };
 

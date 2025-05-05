@@ -29,7 +29,6 @@ const ZonesHeader: React.FC<ZonesHeaderProps> = ({ zones, start, isCompact }) =>
             <Basic.Div
               $textAlign="center"
               $flexGrow="1"
-              $colorBg="white"
               $pad={padLevel}
             >
               {establishedText}

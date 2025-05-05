@@ -5,12 +5,16 @@ import HighchartsReact from 'highcharts-react-official';
 import { selectActivities } from '../reducers/activities';
 import useViewSize from '../hooks/useViewSize';
 import dayjs from 'dayjs';
+import Surface from '../DLS/Surface';
+import useDarkReaderMode from '../hooks/useDarkReaderMode';
 
 const currentYear = new Date().getFullYear();
 
 const CumulativeByRun = ({data, greatestTotal, groupedData }) => {
   const viewSize = useViewSize();
   const isSmall = viewSize.lte('sm');
+  const isDarkMode = useDarkReaderMode();
+  const contrastColor = isDarkMode ? '#fff' : '#000';
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
     ({
@@ -18,19 +22,48 @@ const CumulativeByRun = ({data, greatestTotal, groupedData }) => {
       type: 'line',
       height: isSmall ? 800 : 600,
       animation: false,
+      backgroundColor: 'transparent',
+      zooming: {
+        type: 'x',
+      }
     },
     title: {
       text: 'Volume by Run',
+      style: {
+        color: contrastColor,
+      },
     },
     xAxis: {
       type: 'datetime',
       title: {
         text: 'Date',
+        style: {
+          color: contrastColor,
+        },
+      },
+      labels: {
+        style: {
+          color: contrastColor,
+        },
       },
     },
+    legend: {
+      enabled: true,
+      itemStyle: {
+        color: contrastColor,
+      },
+    },    
     yAxis: {
       title: {
         text: 'Distance (miles)',
+        style: {
+          color: contrastColor,
+        },
+      },
+      labels: {
+        style: {
+          color: contrastColor,
+        },
       },
       max: greatestTotal,
     },
@@ -51,15 +84,15 @@ const CumulativeByRun = ({data, greatestTotal, groupedData }) => {
       }
     )
     }),
-  }), [data, isSmall]);
+  }), [data, isSmall, isDarkMode]);
 
   return (
-    <div>
+    <Surface>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
       />
-    </div>
+    </Surface>
   );
 };
 

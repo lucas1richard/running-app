@@ -1,0 +1,46 @@
+@import "../DLS/theme.css";
+
+.grid {
+  display: grid;
+  gap: 1rem;
+
+  grid-template-columns: auto 1fr auto;
+  grid-template-areas: 
+  "image title stats"
+  "zonesWidth zonesWidth zonesWidth"
+  "bestEfforts bestEfforts bestEfforts"
+  "children children children";
+}
+
+.gridCompact {
+  display: grid;
+  gap: 0.5rem;
+  
+  grid-template-columns: 1fr auto auto;
+  grid-template-areas: "image title title"
+    "stats stats stats"
+    "zonesWidth zonesWidth zonesWidth"
+    "children children children";
+}
+
+.gridImage {
+  grid-area: image;
+}
+.gridTitle {
+  grid-area: title;
+}
+.gridStats {
+  grid-area: stats;
+}
+.gridZonesWidth {
+  grid-area: zonesWidth;
+}
+.gridBestEfforts {
+  grid-area: bestEfforts;
+  display: flex;
+  align-content: start;
+  gap: 1rem;
+}
+.gridChildren {
+  grid-area: children;
+}

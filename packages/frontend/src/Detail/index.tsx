@@ -33,6 +33,7 @@ import Shimmer from '../Loading/Shimmer';
 import { Basic as B, Button, Card, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
 import MapLibreHRZones from '../Common/MapLibreHRZones';
+import Surface from '../DLS/Surface';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -101,7 +102,7 @@ const ActivityDetailPage = () => {
           <MapLibreHRZones id={id} />
           <B.Div $widthSmDown={2} $height="100%" $colorBg="black" />
         </B.Div>
-        <Card>
+        <Surface>
           <div className={`$pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
             <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
             <UpdatableNameDescription
@@ -152,7 +153,7 @@ const ActivityDetailPage = () => {
               <WeatherReporter id={id} />
             </div>
           </div>
-        </Card>
+        </Surface>
       </Grid>
 
 

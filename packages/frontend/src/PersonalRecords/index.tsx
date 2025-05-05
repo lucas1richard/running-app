@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 import useShowAfterMount from '../hooks/useShowAfterMount';
 import PRChart from './PRChart';
 import { getDurationString } from '../utils';
+import Surface from '../DLS/Surface';
 
 const ChartLoading = () => (
   <Basic.Div $height="2200px" />
@@ -25,7 +26,7 @@ const PRs = () => {
       <h2>All Time PRs</h2>
       <Flex $wrap="wrap" $gap={1}>
         {allTimePrs.map((pr) => (
-          <Card key={pr.distance} $widthXs="100%" $textAlign="center" $flexGrow="1">
+          <Surface key={pr.distance} className="card text-center flex-item-grow pad">
             <Basic.Div $fontSize="h1">
               <PRMedal type="native" color="gold" />
             </Basic.Div>
@@ -38,7 +39,7 @@ const PRs = () => {
             <Basic.Div $fontSize="h3">
               <DurationDisplay numSeconds={pr.elapsed_time} />
             </Basic.Div>
-          </Card>
+          </Surface>
         ))}
       </Flex>
       <Basic.Div $marginT={1}>
@@ -50,21 +51,20 @@ const PRs = () => {
           : <ChartLoading />}
 
           <Basic.Div $marginT={1} $display="flex" $directionMdDown="column" $directionLgUp="row" $gap={1}>
-            {names.map((name) => (
-              <Basic.Div key={name} $width="100%">
+            {names.map((name) => name.startsWith('100') ? null : (
+              <div key={name} className="full-width">
                 <Basic.Div
                   $fontSize="h2"
                   $textAlign="center"
                   $position="sticky"
                   $top="0"
-                  $colorBg="white"
                   $border="1px solid"
-                  $padT={1}
-                  $padB={1}
                 >
-                  {name}
+                  <Surface className="pad-tb">
+                    {name}
+                  </Surface>
                 </Basic.Div>
-                <Basic.Table $borderT="none" $colorBg="white" $width="100%" key={name}>
+                <Basic.Table className="bg-foreground" $borderT="none" $width="100%" key={name}>
                   <thead>
                     <tr>
                       <th>Date</th>
@@ -95,7 +95,7 @@ const PRs = () => {
                     )})}
                   </tbody>
                 </Basic.Table>
-              </Basic.Div>
+              </div>
             ))}
           </Basic.Div>
         </Basic.Div>

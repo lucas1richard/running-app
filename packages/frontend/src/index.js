@@ -27,6 +27,7 @@ import MultiMapPage from './MultiMap';
 import { Container } from './DLS';
 import CalendarView from './Calendar';
 import roundToNearest from './utils/roundToNearest';
+import Surface from './DLS/Surface';
 
 enableMapSet();
 
@@ -46,14 +47,16 @@ const AppLayout = () => (
       console.log({ id, phase, actualDuration: roundToNearest(aD, 10), unMemodDuration: roundToNearest(bD, 10) });
     }}
   >
-    <Container providesViewSize={true}>
-      <SideNav />
-      <AppContent>
-        <Container showViewSizeDisplay={true} providesViewSize={true}>
-          <Outlet />
-        </Container>
-      </AppContent>
-    </Container>
+    <Surface variant="base">
+      <Container providesViewSize={true}>
+        <SideNav />
+        <AppContent>
+          <Container showViewSizeDisplay={true} providesViewSize={true}>
+            <Outlet />
+          </Container>
+        </AppContent>
+      </Container>
+    </Surface>
   </Profiler>
 );
 

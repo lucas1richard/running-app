@@ -1,0 +1,18 @@
+@import "../theme.css";
+
+.base {
+  background-color: var(--color-background);
+  color: var(--color-text);
+}
+
+.foreground {
+  background-color: var(--color-foreground);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  .base {
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+} */
+

@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import styles from './Detail.module.css';
+import Surface from '../DLS/Surface';
 
 const getPlotbandConfig = ({ ix, text, to, from } = {}) => ({
   from,
@@ -19,7 +20,7 @@ const getPlotbandConfig = ({ ix, text, to, from } = {}) => ({
     },
   },
   borderWidth: 1,
-  borderColor: 'black',
+  // borderColor: 'black',
   color: 'rgba(0,0,0,0.05)',
   useHTML: true,
   id: ix
@@ -33,6 +34,7 @@ const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
       type: 'line',
       height: 400,
       width,
+      backgroundColor: 'transparent',
     },
     title: {
       text: title,
@@ -89,13 +91,13 @@ const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
         title: {
           text: 'Velocity',
           style: {
-            color: 'black'
+            // color: 'black'
           }
         },
         labels: {
           format: '{value} mph',
           style: {
-            color: 'black'
+            // color: 'black'
           }
         },
         opposite: true,
@@ -104,13 +106,13 @@ const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
   }), [data, segments, title, velocity, width]);
 
   return (
-    <div>
+    <Surface>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
         allowChartUpdate={true}
       />
-    </div>
+    </Surface>
   );
 };
 

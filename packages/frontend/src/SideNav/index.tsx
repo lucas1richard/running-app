@@ -2,10 +2,11 @@ import { type FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Card } from '../DLS';
+import Surface from '../DLS/Surface';
 
 type SideNavProps = {};
 
-const SideBar = styled(Card)`
+const SideBar = styled.div`
   margin: 0;
   padding: 0;
   width: 200px;
@@ -18,7 +19,6 @@ const SideBar = styled(Card)`
     display: block;
     padding: 0.5rem 0.5rem;
     text-decoration: none;
-    color: blue;
     font-weight: bold;
     text-decoration: none;
     font-size: 15px;
@@ -51,17 +51,14 @@ const SideBar = styled(Card)`
 const SideNav: FC<SideNavProps> = () => {
   return (
     <SideBar>
-      <Link to="/">Home</Link>
-      <hr />
-      <Link to="/calendar">Calendar</Link>
-      <hr />
-      <Link to="/personal-records">Personal Records</Link>
-      <hr />
-      <Link to="/volume">Volume</Link>
-      <hr />
-      <Link to="/multi-map">Multi Map</Link>
-      <hr />
-      <Link to="/admin">Admin</Link>
+      <Surface className="pad">
+        <Link to="/">Home</Link>
+        <Link to="/calendar">Calendar</Link>
+        <Link to="/personal-records">Personal Records</Link>
+        <Link to="/volume">Volume</Link>
+        <Link to="/multi-map">Multi Map</Link>
+        <Link to="/admin">Admin</Link>
+      </Surface>
     </SideBar>
   );
 };

@@ -1,33 +1,29 @@
 import React, { memo, useMemo } from 'react';
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../utils';
 import { hrZonesText } from '../colors/hrZones';
-import { Flex } from '../DLS';
 
-export const ZonesWidthPercents = ({ id, percents = [] }) => {
-  const widthStyles = useMemo(() => {
-    return percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({
+export const ZonesWidthPercents: React.FC<{ id: string | number, percents: string[] }> = memo(({ id, percents = [] }) => {
+  const widthStyles = percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({
       width: `${percent}%`,
-      background: hrZonesText[ix + 1],
-      border: `1px solid ${hrZonesText[ix + 1]}`,
       height: '1rem',
       overflow: 'hidden',
     }));
-  }, [percents]);
 
   return (
     <div>
-      <Flex>
+      <div className="flex">
         {widthStyles.map((style, ix) => (
           <div
-            key={`${style.background}-${ix}-${id}`}
+            key={`${ix}-${id}`}
             style={style}
+            className={`hr-zone-${ix + 1}-bg hr-zone-${ix + 1}-border`}
             title={`Heart Rate Zone ${ix + 1}: ${style.width}`}
           />
         ))}
-      </Flex>
+      </div>
     </div>
   );
-}
+})
 
 type ZonesWidthProps = {
   zones: HeartZone;

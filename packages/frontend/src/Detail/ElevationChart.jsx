@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { getGradeColor } from '../utils';
+import Surface from '../DLS/Surface';
 
 const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
   const gradePlots = useMemo(() => getGradeColor(grade, { relativeMode: true, vertex: 20 }), []);
@@ -12,6 +13,7 @@ const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
       type: 'line',
       height: 400,
       width,
+      backgroundColor: 'transparent',
     },
     title: {
       text: title,
@@ -93,13 +95,13 @@ const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
   };
 
   return (
-    <div>
+    <Surface>
       <HighchartsReact
         highcharts={Highcharts}
         options={options2}
         allowChartUpdate={true}
       />
-    </div>
+    </Surface>
   );
 };
 

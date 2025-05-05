@@ -5,6 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import roundToNearest from '../utils/roundToNearest';
 import { Basic, Button } from '../DLS';
 import Shimmer from '../Loading/Shimmer';
+import Surface from '../DLS/Surface';
 
 HighchartsMap(Highcharts);
 
@@ -101,7 +102,7 @@ const HeatMap: React.FC<HeatMapProps> = ({
         map: 'custom/world',
         animation: false,
         height,
-        backgroundColor: 'black',
+        backgroundColor: 'transparent',
       },
       mapNavigation: {
         enabled: true,
@@ -116,7 +117,7 @@ const HeatMap: React.FC<HeatMapProps> = ({
   }, [lineSeries]);
 
   return (
-    <Basic.Div>
+    <Surface>
       {
         !deferRender
           ? (
@@ -150,7 +151,7 @@ const HeatMap: React.FC<HeatMapProps> = ({
           Minimum Opacity: {minimumOpacity} | Largest Value: {largestValue}
         </Basic.Div>
       </Basic.Div>
-    </Basic.Div>
+    </Surface>
   );
 };
 

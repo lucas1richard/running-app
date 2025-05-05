@@ -25,6 +25,8 @@ import { deleteStreamPin, setStreamPin } from '../../reducers/activities-actions
 import StreamPinForm from './StreamPinForm';
 import { useAppSelector } from '../../hooks/redux';
 import { selectStreamTypeData } from '../../reducers/activities';
+import useDarkReaderMode from '../../hooks/useDarkReaderMode';
+import Surface from '../../DLS/Surface';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -218,6 +220,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     animation: false,
   }), [isSmall]);
 
+  const isDarkMode = useDarkReaderMode();
+  const contractLabelColor = isDarkMode ? 'white' : 'black';
+
   const options = useMemo(() => 
     /** @type {Highcharts.Options} */
     ({
@@ -227,6 +232,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       alignThresholds: true,
       alignTicks: true,
       zooming: { type: 'x' },
+      backgroundColor: 'transparent',
       scrollablePlotArea: { minWidth: magnificationFactor, scrollPositionX: 0 },
     },
     legend: { enabled: false },
@@ -263,7 +269,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         data: velocityData,
         yAxis: 1,
         fillOpacity: 0.1,
-        color: 'black',
+        color: contractLabelColor,
         tooltip: {
           valueSuffix: ' mph',
           pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
@@ -287,12 +293,12 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         type: 'variwide',
         yAxis: 2,
         fillOpacity: 0.1,
-        borderColor: 'rgba(0,0,0, 1)',
+        borderColor: isDarkMode ? 'rgba(144,144,144,1)' : 'rgba(0,0,0,1)',
         borderWidth: 3,
         dataLabels: {
           enabled: false,
         },
-        color: 'rgba(0,0,0, 0.1)',
+        color: isDarkMode ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
         tooltip: {
           valueSuffix: ' mph',
           pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/>'
@@ -442,8 +448,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         min: velMin,
         max: velMax,
         id: 'vel',
-        title: { enabled: enableYAxisLabels, text: 'Velocity', style: { color: 'black', fontSize: '1.25rem' } },
-        labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: 'black' } },
+        title: { enabled: enableYAxisLabels, text: 'Velocity', style: { color: contractLabelColor, fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: contractLabelColor } },
         opposite: true,
       },
       { // Secondary yAxis
@@ -452,8 +458,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         top: '10%',
         id: 'laps',
         // min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin * 0.97,
-        title: { enabled: enableYAxisLabels, text: segments.name, style: { color: 'black', fontSize: '1.25rem' } },
-        labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: 'black' } },
+        title: { enabled: enableYAxisLabels, text: segments.name, style: { color: contractLabelColor, fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: contractLabelColor } },
         opposite: true,
       },
       { // Secondary yAxis
@@ -489,14 +495,14 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         opposite: false,
       },
     ]
-  }), [isSmall, seriesDefaultConfig, magnificationFactor, heartRateData, velocityData, segments.name, segments.data, altitudeData, grade, bestEffortsData, efficiencyFactorData, hrMin, hrMax, enableYAxisLabels, velMin, velMax, altMin, altMax, addPin, bestEfforts]);
+  }), [isDarkMode, isSmall, seriesDefaultConfig, magnificationFactor, heartRateData, velocityData, segments.name, segments.data, altitudeData, grade, bestEffortsData, efficiencyFactorData, hrMin, hrMax, enableYAxisLabels, velMin, velMax, altMin, altMax, addPin, bestEfforts]);
 
   return (
     <Grid
       $templateColumns="1fr"
       $templateColumnsXl="3fr 1fr"
     >
-      <Basic.Div $flexGrow="1">
+      <Surface className="flex-item-grow">
         <div>
           <label>
             Smooth Average Window (seconds):{' '}
@@ -583,7 +589,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             </div>
           ))}
         </div>
-      </Basic.Div>
+      </Surface>
       <Basic.Div $flexGrow="1">
         <RouteMap
           id={id}

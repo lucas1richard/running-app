@@ -1,6 +1,7 @@
 import { type FC, useMemo } from 'react';
 import DurationDisplay from '../Common/DurationDisplay';
 import { Basic } from '../DLS';
+import Surface from '../DLS/Surface';
 
 const rankMap = {
   1: '🥇',
@@ -16,8 +17,8 @@ const BestEfforts: FC<Props> = ({ bestEfforts }) => {
   const bestEffortsList = useMemo(() => (bestEfforts || []).filter(({ pr_rank }) => pr_rank !== null), [bestEfforts]);
 
   return (
-    <div>
-      <Basic.Table $colorBg="white">
+    <Surface>
+      <table>
         <thead>
           <tr>
             <th colSpan={3}>Best Efforts</th>
@@ -42,8 +43,8 @@ const BestEfforts: FC<Props> = ({ bestEfforts }) => {
             </tr>
           ))}
         </tbody>
-      </Basic.Table>
-    </div>
+      </table>
+    </Surface>
   );
 };
 

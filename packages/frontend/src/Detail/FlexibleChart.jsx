@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import Surface from '../DLS/Surface';
 
 const FlexibleChart = ({ title, data, width }) => {
   /** @type {Highcharts.Options} */
@@ -63,13 +64,13 @@ const FlexibleChart = ({ title, data, width }) => {
   }), [data, title, width]);
 
   return (
-    <div style={{ height: 690 }}>
+    <Surface style={{ height: 690 }}>
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
         allowChartUpdate={true}
       />
-    </div>
+    </Surface>
   );
 };
 

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { Basic, Button, Grid } from '../DLS';
@@ -7,6 +7,7 @@ import { useAppSelector } from '../hooks/redux';
 import { selectActivitiesByDate } from '../reducers/activities';
 import Tile from '../Activities/Tile';
 import useViewSize from '../hooks/useViewSize';
+import Surface from '../DLS/Surface';
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
@@ -66,12 +67,12 @@ const CalendarView = () => {
       }
       
       days.push(
-        <Basic.Div $colorBg="white" $pad={hasActivities ? 0 : 0.5} key={`day-${day}`}>
+        <Surface className={`${hasActivities ? '' : 'pad-compact'}`} key={`day-${day}`}>
           {!hasActivities && <Basic.Div $textAlign="right">{day}</Basic.Div>}
           {dateActivities[formattedDate]?.map((activity) => (
             <Tile key={activity.id} activity={activity} isCompact={true} />
           ))}
-        </Basic.Div>
+        </Surface>
       );
     });
     
