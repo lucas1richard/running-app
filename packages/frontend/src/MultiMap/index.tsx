@@ -3,8 +3,9 @@ import { selectActivities } from '../reducers/activities';
 import MultiMap from './MultiMap';
 import { toggleComparedActivityAct } from '../reducers/multimap-actions';
 import { selectComparedActivities } from '../reducers/multimap';
-import { Button, Grid } from '../DLS';
+import { Basic, Button, Grid } from '../DLS';
 import Tile from '../Activities/Tile';
+import MultiMapMapLibre from './MultiMapMapLibre';
 
 const MultiMapPage = () => {
   const activities = useSelector(selectActivities);
@@ -17,7 +18,9 @@ const MultiMapPage = () => {
 
   return (
     <div className="pad">
-      <MultiMap activityConfigs={compared} showSegments={false} />
+      <Basic.Div $height="900px" $width="100%">
+        <MultiMapMapLibre activityConfigs={compared} />
+      </Basic.Div>
       <Grid className="margin-t gap" $templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
         {activities.map((activity) => {
           const isToggled = compared.some(({ id }) => id === activity.id);

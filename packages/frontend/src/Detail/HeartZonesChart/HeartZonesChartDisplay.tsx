@@ -27,6 +27,7 @@ import { useAppSelector } from '../../hooks/redux';
 import { selectStreamTypeData } from '../../reducers/activities';
 import useDarkReaderMode from '../../hooks/useDarkReaderMode';
 import Surface from '../../DLS/Surface';
+import MapLibreHRZones from '../../Common/MapLibreHRZones';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -591,15 +592,15 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         </div>
       </Surface>
       <Basic.Div $flexGrow="1">
-        <RouteMap
+        <MapLibreHRZones
           id={id}
           pointer={latlngPointer}
-          segments={segments.data}
-          velocity={smoothVelocity}
-          pins={streamPins}
-          highlightedSegment={highlightedSegment}
-          smoothAverageWindow={smoothAverageWindow}
-          averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
+          // segments={segments.data}
+          // velocity={smoothVelocity}
+          // pins={streamPins}
+          // highlightedSegment={highlightedSegment}
+          // smoothAverageWindow={smoothAverageWindow}
+          // averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
         />
       </Basic.Div>
     </Grid>

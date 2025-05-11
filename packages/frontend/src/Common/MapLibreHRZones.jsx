@@ -13,7 +13,7 @@ import { hrZonesGraph } from '../colors/hrZones';
 import { Basic } from '../DLS';
 import useDarkReaderMode from '../hooks/useDarkReaderMode';
 
-function MapLibreHRZones({ id }) {
+function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
   const isDarkReaderMode = useDarkReaderMode();
   const outlineSourceId = useId();
   const hrZonesSourceId = useId();
@@ -64,6 +64,7 @@ function MapLibreHRZones({ id }) {
       type: 'Feature',
       properties: {
         name: 'Outline',
+        color: isDarkReaderMode ? '#ffffff' : '#000000',
       },
       geometry: {
         type: 'LineString',
@@ -83,9 +84,9 @@ function MapLibreHRZones({ id }) {
 
   useEffect(() => {
     if (latlngStreamData.length === 0) return;
-    animatedLineLayer(0);
+    if (animated) animatedLineLayer(0);
     return () => cancelAnimationFrame(animationRef.current);
-  }, [animatedLineLayer, latlngStreamData.length]);
+  }, [animated, animatedLineLayer, latlngStreamData.length]);
 
   if (lnglatStream.length === 0) return null;
 
@@ -105,10 +106,10 @@ function MapLibreHRZones({ id }) {
     >
       <Marker
         ref={mapRef}
-        latitude={latlngStreamData[0][0]}
-        longitude={latlngStreamData[0][1]}
+        latitude={latlngStreamData[pointer][0]}
+        longitude={latlngStreamData[pointer][1]}
       >
-        <Basic.Div $width={1} $height={1} $colorBg="black" $borderRadius="50%" />
+        <Basic.Div $width={1.2} $height={1.2} $colorBg="gold" $borderRadius="50%" />
       </Marker>
       <Source data={latlondata} type="geojson" id={outlineSourceId}>
         <Layer

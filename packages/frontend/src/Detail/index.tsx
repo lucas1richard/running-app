@@ -99,7 +99,7 @@ const ActivityDetailPage = () => {
       <DetailDataFetcher id={id} />
       <Grid $templateColumns='1fr' $gap={1} $templateColumnsLgUp='1fr 1fr'>
         <B.Div $height="600px" $display='flex'>
-          <MapLibreHRZones id={id} />
+          <MapLibreHRZones id={id} animated={true} />
           <B.Div $widthSmDown={2} $height="100%" $colorBg="black" />
         </B.Div>
         <Surface>
