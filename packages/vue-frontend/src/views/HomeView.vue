@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import TileList from '@/components/Activities/TileList.vue';
+import PageWrapper from '@/components/PageWrapper.vue';
 </script>
 
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+  <PageWrapper>
+    <TileList />
+  </PageWrapper>
 </template>
