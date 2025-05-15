@@ -4,6 +4,7 @@ import { onMounted } from 'vue';
 import { useActivitiesStore } from './stores/activities';
 import SideNav from './SideNav.vue';
 import useHeartZonesStore from './stores/heartzones';
+import { usePRStore } from './stores/prs';
 
 const activitiesStore = useActivitiesStore();
 const heartzonesStore = useHeartZonesStore();
@@ -12,6 +13,7 @@ onMounted(async() => {
   await Promise.allSettled([
     activitiesStore.fetchActivities(),
     heartzonesStore.fetchHeartZones(),
+    usePRStore().fetchPRs(),
   ]);
 })
 </script>

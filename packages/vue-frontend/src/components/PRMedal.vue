@@ -1,20 +1,41 @@
 <script lang="ts" setup>
-const { class: className, color } = defineProps({
-  class: String,
-  color: [Number, String, null]
-})
+import prColors from '@/utils/colors/prColors';
+
+type PRMedalProps = {
+  class?: string;
+  color: 'gold' | 'silver' | 'bronze' | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  type: 'native' | 'svg';
+};
+const { class: className, color, type } = defineProps<PRMedalProps>()
+const rankMap = {
+  gold: '🥇',
+  silver: '🥈',
+  bronze: '🥉',
+  1: '🥇',
+  2: '🥈',
+  3: '🥉',
+  4: '4th',
+  5: '5th',
+  6: '6th',
+  7: '7th',
+  8: '8th',
+  9: '9th',
+  10: '10th',
+}
 </script>
 
 <template>
-<svg
+  <span v-if="type === 'native'">{{ rankMap[color] }}</span>
+  <svg
+    v-else
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     width="24"
-    fill="transparent"
-    stroke="black"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    :fill="prColors[color as keyof typeof prColors]?.fill || 'transparent'"
+    :stroke="prColors[color as keyof typeof prColors]?.stroke || 'black'"
     :class="className"
   >
     <circle cx="12" cy="8" r="7" />

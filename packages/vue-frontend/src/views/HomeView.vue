@@ -3,6 +3,7 @@ import TileList from '@/components/Activities/TileList.vue'
 import PageWrapper from '@/components/PageWrapper.vue'
 import Surface from '@/components/DLS/Surface.vue'
 import MileageSummary from '@/components/MileageSummary.vue';
+import AllTimePRs from '@/components/AllTimePRs.vue';
 </script>
 
 <template>
@@ -11,9 +12,7 @@ import MileageSummary from '@/components/MileageSummary.vue';
       <div class="flex flex-column gap width-50">
         <div>
           <h2 class="text-h2 margin-b">All Time PRs</h2>
-          <Surface variant="foreground" class="pad">
-            Placeholder
-          </Surface>
+            <AllTimePRs />
         </div>
         <div>
           <h2 class="text-h2 margin-b">Mileage</h2>

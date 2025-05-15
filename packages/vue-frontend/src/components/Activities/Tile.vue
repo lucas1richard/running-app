@@ -85,7 +85,7 @@ const heartzonesStore = useHeartZonesStore();
       <div v-if="!isCompact" class="gridBestEfforts">
         <div v-for="effort of activity.calculatedBestEfforts?.filter(({ pr_rank }) => pr_rank)" :key="effort.distance" className="flex flex-align-center">
           <span>
-            <PRMedal :color="effort.pr_rank" />
+            <PRMedal :type="'svg'" :color="effort.pr_rank || 10" />
           </span>
           <small>
             {{ effort.name }} &rarr; {{ getDurationString(effort.elapsed_time) }}

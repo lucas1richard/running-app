@@ -5,8 +5,10 @@ declare module '*.css' {
 
 type TODO = any;
 
+type PRRank = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
 type BestEffort = {
-  pr_rank: null | number;
+  pr_rank: null | PRRank;
   name: string;
   elapsed_time: number;
   effort_id: number;
