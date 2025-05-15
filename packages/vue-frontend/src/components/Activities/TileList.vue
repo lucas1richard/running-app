@@ -1,12 +1,11 @@
 <script lang="ts" setup>
 
 import { useActivitiesStore } from '@/stores/activities';
-import { computed, onMounted, ref } from 'vue';
+import { computed } from 'vue';
 import Tile from './Tile.vue';
-import Surface from '../DLS/Surface.vue';
 
 const activitiesStore = useActivitiesStore();
-const activities = computed(() => activitiesStore.selectDateOrderedActivities);
+const activities = computed(() => activitiesStore.dateOrderedActivities);
 </script>
 
 <template>

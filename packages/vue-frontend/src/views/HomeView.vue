@@ -2,6 +2,7 @@
 import TileList from '@/components/Activities/TileList.vue'
 import PageWrapper from '@/components/PageWrapper.vue'
 import Surface from '@/components/DLS/Surface.vue'
+import MileageSummary from '@/components/MileageSummary.vue';
 </script>
 
 <template>
@@ -16,9 +17,7 @@ import Surface from '@/components/DLS/Surface.vue'
         </div>
         <div>
           <h2 class="text-h2 margin-b">Mileage</h2>
-          <Surface variant="foreground" class="pad">
-            Placeholder
-          </Surface>
+          <MileageSummary />
         </div>
         <div>
           <h2 class="text-h2 margin-b">Activities</h2>

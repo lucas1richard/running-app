@@ -18,7 +18,6 @@ const percentage = computed(() => {
   if (zonesCaches?.[zones.id]) return convertZonesCacheToPercents(zonesCaches[zones.id]);
   return convertHeartDataToZonePercents(heartData, zones);
 });
-console.log(percentage)
 </script>
 
 <template>
