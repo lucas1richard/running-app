@@ -1,6 +1,12 @@
+<script setup lang="ts">
+import Surface from './DLS/Surface.vue';
+</script>
+
 <template>
   <main class="page-wrapper">
-    <slot></slot>
+    <Surface>
+      <slot></slot>
+    </Surface>
   </main>
 </template>
 

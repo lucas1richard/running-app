@@ -3,23 +3,26 @@ import { RouterView } from 'vue-router'
 import { onMounted } from 'vue';
 import { useActivitiesStore } from './stores/activities';
 import SideNav from './SideNav.vue';
+import useHeartZonesStore from './stores/heartzones';
 
 const activitiesStore = useActivitiesStore();
+const heartzonesStore = useHeartZonesStore();
 
 onMounted(async() => {
-  await activitiesStore.fetchActivities();
+  await Promise.allSettled([
+    activitiesStore.fetchActivities(),
+    heartzonesStore.fetchHeartZones(),
+  ]);
 })
 </script>
 
 <template>
-  <Container providesViewSize={true}>
-    <SideNav />
-    <div class="app-content">
-      <Container showViewSizeDisplay={true} providesViewSize={true}>
-        <RouterView />
-      </Container>
-    </div>
-  </Container>
+  <SideNav />
+  <div class="app-content">
+    <!-- <Container showViewSizeDisplay={true} providesViewSize={true}> -->
+      <RouterView />
+    <!-- </Container> -->
+  </div>
 </template>
 
 <style scoped>

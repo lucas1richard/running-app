@@ -1,14 +1,14 @@
 <script lang="ts" setup>
-  import { useActivitiesStore } from '@/stores/activities';
-  import { computed, ref } from 'vue'
-  import { useRoute } from 'vue-router'
+import { useActivitiesStore } from '@/stores/activities';
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import Surface from '../../components/DLS/Surface.vue';
 import PageWrapper from '../../components/PageWrapper.vue';
 
-  const activitiesStore = useActivitiesStore();
-  const route = useRoute();
-  const activityId = ref(route.params.id);
-  const activity = computed(() => activitiesStore.activities.find(activity => String(activity.id) === activityId.value));
+const activitiesStore = useActivitiesStore();
+const route = useRoute();
+const activityId = Number(route.params.id);
+const activity = computed(() => activitiesStore.activities[activityId]);
 
 </script>
 
