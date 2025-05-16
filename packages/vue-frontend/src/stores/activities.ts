@@ -39,8 +39,7 @@ export const useActivitiesStore = defineStore('activities', {
   getters: {
     dateOrderedActivities: (state) => {
       const activities = state.activitiesOrder.map((id) => state.activities[id]);
-      activities.sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime());
-      return activities
+      return activities.sort((a, b) => new Date(b.start_date_local).getTime() - new Date(a.start_date_local).getTime());
     }
   }
 });

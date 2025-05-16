@@ -20,7 +20,7 @@ const allTimePRs = computed(() => prsStore.prs);
         class="pad card text-center"
       >
         <div class="text-h1">
-          <PRMedal :type="'native'" color="gold" />
+          <PRMedal type="native" color="gold" />
         </div>
         <div class="text-h4">
           <RouterLink :to="`/details/${pr.activityId}`">{{ pr.name }}</RouterLink>
@@ -28,7 +28,7 @@ const allTimePRs = computed(() => prsStore.prs);
         <div>
           {{ dayjs(pr.start_date_local).format('MMMM DD, YYYY') }}
         </div>
-        <div>
+        <div class="text-h3">
           {{ getDurationString(pr.elapsed_time) }}
         </div>
       </Surface>

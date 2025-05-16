@@ -4,6 +4,7 @@ import PageWrapper from '@/components/PageWrapper.vue'
 import Surface from '@/components/DLS/Surface.vue'
 import MileageSummary from '@/components/MileageSummary.vue';
 import AllTimePRs from '@/components/AllTimePRs.vue';
+import MetricsChart from '@/components/MetricsChart.vue';
 </script>
 
 <template>
@@ -26,9 +27,7 @@ import AllTimePRs from '@/components/AllTimePRs.vue';
       <div class="flex flex-column gap width-50">
         <div>
           <h2 class="text-h2 margin-b">Metrics Over Time</h2>
-          <Surface variant="foreground" class="pad">
-            Placeholder
-          </Surface>
+          <MetricsChart />
         </div>
         <div>
           <h2 class="text-h2 margin-b">Heat Map - All Time</h2>
