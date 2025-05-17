@@ -236,7 +236,7 @@ const options = computed(() => ({
 </script>
 
 <template>
-  <Surface variant="foreground" class="pad card">
+  <Surface class="pad card">
     <Chart
       :options="options"
       :highcharts="highcharts"

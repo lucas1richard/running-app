@@ -7,14 +7,13 @@ import PageWrapper from '../PageWrapper.vue';
 
   const activitiesStore = useActivitiesStore();
   const route = useRoute();
-  const activityId = ref(route.params.id);
-  const activity = computed(() => activitiesStore.activities.find(activity => String(activity.id) === activityId.value));
+  const activity = computed(() => activitiesStore.activities[Number(route.params.id) as number]);
 
 </script>
 
 <template>
   <PageWrapper>
-    <Surface variant="foreground">
+    <Surface>
       <div v-if="!!activity" class="activity-detail">
         <h1 class="text-h1">Activity Detail</h1>
         <p class="text-body">Activity ID: {{ activity?.id }}</p>

@@ -1,21 +1,23 @@
 <script setup lang="ts">
-  const {
-    polyline,
-    activityId,
-    imgWidth,
-    imgHeight,
-    height,
-    width,
-  } = defineProps({
-    polyline: { type: String, required: false },
-    activityId: { type: Number, required: true },
-    imgWidth: { type: Number, required: false },
-    imgHeight: { type: Number, required: false },
-    height: { type: [Number, String], required: false },
-    width: { type: [Number, String], required: false },
-  })
+type GoogleMapImageProps = {
+  polyline: string;
+  activityId: number;
+  imgWidth?: number;
+  imgHeight?: number;
+  height?: number | string;
+  width?: number | string;
+  alt?: string;
+}
+const {
+  polyline,
+  activityId,
+  imgWidth,
+  imgHeight,
+  height,
+  width,
+} = defineProps<GoogleMapImageProps>()
 
-  const src = `http://localhost:3002/routes/${activityId}.png?size=${imgWidth || 900}x${imgHeight || 450}&maptype=roadmap&path=enc:${polyline}`;
+const src = `http://localhost:3002/routes/${activityId}.png?size=${imgWidth || 900}x${imgHeight || 450}&maptype=roadmap&path=enc:${polyline}`;
 </script>
 
 <template>

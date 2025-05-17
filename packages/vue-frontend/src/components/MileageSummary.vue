@@ -37,7 +37,7 @@ const milesAllTime = computed(() => sumDistance(activities.value).toFixed(2))
 </script>
 
 <template>
-  <Surface variant="foreground" class="pad card">
+  <Surface class="pad card">
     <div class="grid">
       <div class="text-center">
         <h5 class="text-h5">Miles in the last 7 days</h5>

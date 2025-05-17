@@ -14,7 +14,7 @@ const activity = computed(() => activitiesStore.activities[activityId]);
 
 <template>
   <PageWrapper>
-    <Surface variant="foreground">
+    <Surface>
       <div v-if="!!activity" class="activity-detail">
         <h1 class="text-h1">Activity Detail</h1>
         <p class="text-body">Activity ID: {{ activity?.id }}</p>

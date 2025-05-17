@@ -4,7 +4,7 @@ import Surface from './DLS/Surface.vue';
 
 <template>
   <main class="page-wrapper">
-    <Surface>
+    <Surface variant="base">
       <slot></slot>
     </Surface>
   </main>

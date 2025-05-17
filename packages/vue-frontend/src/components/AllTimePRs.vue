@@ -16,7 +16,6 @@ const allTimePRs = computed(() => prsStore.prs);
       <Surface
         v-for="pr of allTimePRs"
         :key="pr.distance"
-        variant="foreground"
         class="pad card text-center"
       >
         <div class="text-h1">

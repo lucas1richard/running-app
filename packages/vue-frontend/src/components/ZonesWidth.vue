@@ -1,18 +1,14 @@
 <script lang="ts" setup>
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '@/utils';
 import { computed } from 'vue';
-const { zonesCaches, zones, heartData } = defineProps({
-  zones: {
-    type: Object as () => HeartZone,
-    required: true,
-  },
-  heartData: {
-    type: Array as () => number[],
-    required: true,
-  },
-  id: [Number, String],
-  zonesCaches: Object as () => Record<string, HeartZoneCache>,
-});
+
+type ZonesWidthProps = {
+  zones: HeartZone;
+  heartData: number[];
+  id: number | string;
+  zonesCaches: Record<string, HeartZoneCache>;
+};
+const { zonesCaches, zones, heartData } = defineProps<ZonesWidthProps>();
 const percentage = computed(() => {
   if (!zones && !heartData) return [];
   if (zonesCaches?.[zones.id]) return convertZonesCacheToPercents(zonesCaches[zones.id]);

@@ -31,7 +31,7 @@ import MetricsChart from '@/components/MetricsChart.vue';
         </div>
         <div>
           <h2 class="text-h2 margin-b">Heat Map - All Time</h2>
-          <Surface variant="foreground" class="pad card">
+          <Surface class="pad card">
             Placeholder
           </Surface>
         </div>

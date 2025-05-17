@@ -24,7 +24,7 @@ const heartzonesStore = useHeartZonesStore();
 </script>
 
 <template>
-  <Surface variant="foreground" class="card pad">
+  <Surface class="card pad">
     <div :class="{ grid: !isCompact, gridCompact: isCompact }">
       <div class="gridImage">
         <GoogleMapsImage :activityId="activity.id" :polyline="getSummaryPolyline(activity)" :imgWidth="400"

@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-  const props = defineProps({
-    variant: {
-      type: String,
-      default: 'base',
-      validator: (v: string) => ['base', 'foreground'].includes(v),
-    }
-  })
+type SurfaceProps = {
+  variant?: 'base' | 'foreground';
+}
+const { variant = 'foreground' } = defineProps<SurfaceProps>()
 </script>
 
 <template>
