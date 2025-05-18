@@ -7,7 +7,7 @@ import {
 } from '@indoorequal/vue-maplibre-gl';
 import { computed, ref, useId } from 'vue';
 import Surface from './DLS/Surface.vue';
-
+import useDarkMode from './hooks/useIsDarkMode';
 
 type RGBATuple = [number, number, number, number];
 type DataPoint = {
@@ -32,7 +32,7 @@ const {
   data,
   measure,
   deferRender,
-  height = '2000px',
+  height = '1000px',
   minColor = [20, 20, 255, 0.5], // Red with some transparency
   maxColor = [255, 0, 0, 0.5], // Green with full opacity
   floorValue,
@@ -40,22 +40,20 @@ const {
   squareSize = 0.0001,
 } = defineProps<HeatMapProps>()
 
-const isDarkReaderMode = true;
+const isDarkReaderMode = useDarkMode()
 
-let activeMinColor = minColor;
-let activeMaxColor = maxColor;
-if (isDarkReaderMode) {
-  activeMinColor = [255 - minColor[0], 255 - minColor[1], 255 - minColor[2], minColor[3]];
-  activeMaxColor = [255 - maxColor[0], 255 - maxColor[1], 255 - maxColor[2], maxColor[3]];
-}
+const activeMinColor = computed<RGBATuple>(() => isDarkReaderMode.value
+  ? [255 - minColor[0], 255 - minColor[1], 255 - minColor[2], minColor[3]]
+  : minColor
+);
+const activeMaxColor = computed<RGBATuple>(() => isDarkReaderMode.value
+  ? [255 - maxColor[0], 255 - maxColor[1], 255 - maxColor[2], maxColor[3]]
+  : maxColor
+);
 
 const heatmapSource = useId();
-const largestValue = computed(() => {
-  return Math.max(...data.map((d) => Number(d[measure])));
-});
-const smallestValue = computed(() => {
-  return Math.min(...data.map((d) => Number(d[measure])));
-});
+const largestValue = computed(() => Math.max(...data.map((d) => Number(d[measure]))));
+const smallestValue = computed(() => Math.min(...data.map((d) => Number(d[measure]))));
 
 const gradientId = useId();
 
@@ -90,7 +88,7 @@ const makeSquare = ({ lat, lon }: { lat: number, lon: number }, size = 0.0001) =
     [lon + delta, lat + delta], // top-right
     [lon + delta, lat - delta], // bottom-right
     [lon - delta, lat - delta], // bottom-left (to close the square)
-  ] as const;
+  ] as [number, number][];
 
   return squareCoords;
 };
@@ -121,43 +119,66 @@ const zoomHandler = (ar: any) => {
   }
 };
 
-const features = computed(() => {
-  return data.map(({ lat, lon, [measure]: point }) => {
+const mapData = computed<GeoJSON.FeatureCollection>(() => {
+  const res = data.map(({ lat, lon, [measure]: point }) => {
     const floor = floorValue !== undefined ? floorValue : smallestValue.value;
     const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue.value;
     if (Number(point) < floor) point = smallestValue.value;
     if (Number(point) > ceiling) point = largestValue.value;
     const percent = (Number(point) - smallestValue.value) / (largestValue.value - smallestValue.value);
-    const _features = {
+    return {
       type: 'Feature',
       geometry: {
         type: 'Polygon',
         coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat) }, pointSize.value)],
       },
-      properties: { color: makeColor(activeMinColor, activeMaxColor, percent) },
-    } as const
-    return _features
+      properties: { color: makeColor(activeMinColor.value, activeMaxColor.value, percent) },
+    } satisfies GeoJSON.Feature
   });
+  return { type: 'FeatureCollection', features: res };
 })
 </script>
 
 <template>
-  <Surface class="card" :style="`height: ${height}`">
-    <mgl-map
-      v-if="!deferRender"
-      @map:zoom="zoomHandler"
-      map-style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-      :bounds="initialViewState.bounds"
-    >
-      <mgl-geo-json-source
-        :source-id="heatmapSource"
-        :data="{ type: 'FeatureCollection', features }"
+  <div v-if="!deferRender">
+    <!-- we need 2 instances because mgl-map crashes out when the map-style changes -->
+    <Surface :style="`height: ${height}`" v-if="isDarkReaderMode">
+      <mgl-map
+        @map:zoom="zoomHandler"
+        :map-style="'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'"
+        :bounds="initialViewState.bounds"
       >
-        <mgl-fill-layer :layer-id="heatmapSource" :paint="{ 'fill-color': ['get', 'color'] }" />
-      </mgl-geo-json-source>
-      <mgl-fullscreen-control position="top-right" />
-    </mgl-map>
-    <div v-if="!deferRender">
+        <mgl-geo-json-source
+          source-id="heatmapLayer"
+          :data="mapData"
+        >
+          <mgl-fill-layer
+            layer-id="heatmapLayer"
+            :paint="{ 'fill-color': ['get', 'color'] }"
+          />
+        </mgl-geo-json-source>
+        <mgl-fullscreen-control position="top-right" />
+      </mgl-map>
+    </Surface>
+    <Surface :style="`height: ${height}`" v-if="!isDarkReaderMode">
+      <mgl-map
+        @map:zoom="zoomHandler"
+        :map-style="'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'"
+        :bounds="initialViewState.bounds"
+      >
+        <mgl-geo-json-source
+          source-id="heatmapLayerLight"
+          :data="mapData"
+        >
+          <mgl-fill-layer
+            layer-id="heatmapLayerLight"
+            :paint="{ 'fill-color': ['get', 'color'] }"
+          />
+        </mgl-geo-json-source>
+        <mgl-fullscreen-control position="top-right" />
+      </mgl-map>
+    </Surface>
+    <div>
       <svg width="100%" height="20">
         <linearGradient :id="gradientId" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" :style="`stop-color: rgb(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]}); stop-opacity: ${activeMinColor[3]};`" />
@@ -174,7 +195,8 @@ const features = computed(() => {
         </div>
       </div>
     </div>
-  </Surface>
+    Is Dark Reader Mode: {{ isDarkReaderMode }}
+  </div>
 </template>
 
 <style lang="css" scoped>
