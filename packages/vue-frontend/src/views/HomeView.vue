@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import TileList from '@/components/Activities/TileList.vue'
 import PageWrapper from '@/components/PageWrapper.vue'
-import Surface from '@/components/DLS/Surface.vue'
 import MileageSummary from '@/components/MileageSummary.vue';
 import AllTimePRs from '@/components/AllTimePRs.vue';
 import MetricsChart from '@/components/MetricsChart.vue';
+import HeatMapContainer from '@/components/HeatMapContainer.vue';
 </script>
 
 <template>
@@ -31,9 +31,7 @@ import MetricsChart from '@/components/MetricsChart.vue';
         </div>
         <div>
           <h2 class="text-h2 margin-b">Heat Map - All Time</h2>
-          <Surface class="pad card">
-            Placeholder
-          </Surface>
+          <HeatMapContainer />
         </div>
       </div>
     </div>

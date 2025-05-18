@@ -35,6 +35,22 @@ export const useActivitiesStore = defineStore('activities', {
         this.setActivitiesAction(data);
       };
     },
+    async fetchHeatMapData(timeframe?: string, referenceTime?: string) {
+      const data: HeatMapData[] = [];
+      const queryParam = new URLSearchParams({
+        ...timeframe ? { timeframe } : {},
+        ...referenceTime ? { referenceTime } : {},
+      });
+      const key = [timeframe, referenceTime].filter(Boolean).join('|') || 'all';
+      const eventSource = requestor.stream(`/routeCoordinates/heatmap${queryParam ? '?' + queryParam : ''}`);
+      eventSource.onmessage = (event) => {
+        const res = JSON.parse(event.data);
+        data.push(res);
+      }
+      eventSource.addEventListener('close', () => {
+        this.heatMap[key] = data.flat();
+      })
+    },
   },
   getters: {
     dateOrderedActivities: (state) => {

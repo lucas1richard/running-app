@@ -1,6 +1,6 @@
 <script setup lang="ts">
 type GoogleMapImageProps = {
-  polyline: string;
+  polyline?: string;
   activityId: number;
   imgWidth?: number;
   imgHeight?: number;
