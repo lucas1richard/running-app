@@ -21,7 +21,8 @@ const percentage = computed(() => {
     <div
       v-for="(percent, ix) of percentage"
       :key="`${ix}-${id}`"
-      :class="`hr-zone-${ix + 1}-bg hr-zone-${ix + 1}-border`"
+      :class="!percent.startsWith('0') ? `hr-zone-${ix + 1}-bg hr-zone-${ix + 1}-border` : ''"
+      :title="`Zone ${ix + 1}: ${percent}%`"
       :style="`width: ${percent}%; height: 1rem; overflow: hidden`"
     ></div>
   </div>
