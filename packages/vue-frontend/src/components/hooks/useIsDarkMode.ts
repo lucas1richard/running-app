@@ -1,6 +1,6 @@
-import { computed, onUnmounted, ref, watchEffect } from 'vue';
+import { inject, onUnmounted, provide, ref } from 'vue';
 
-function useDarkMode() {
+function useIsDarkMode() {
   const isDarkMode = ref<boolean | null>(document.documentElement.getAttribute('data-darkreader-mode') === 'dynamic'
     || window.matchMedia('(prefers-color-scheme: dark)').matches);
 
@@ -19,4 +19,16 @@ function useDarkMode() {
   return isDarkMode;
 }
 
-export default useDarkMode;
+export const provideIsDarkMode = () => {
+  const isDarkMode = useIsDarkMode();
+  provide('isDarkMode', isDarkMode);
+}
+
+export const injectIsDarkMode = () => {
+  const isDarkMode = ref<boolean | null>(null);
+  const injectedIsDarkMode = inject('isDarkMode', isDarkMode);
+
+  return injectedIsDarkMode;
+}
+
+export default useIsDarkMode;

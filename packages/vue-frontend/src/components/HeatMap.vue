@@ -7,7 +7,7 @@ import {
 } from '@indoorequal/vue-maplibre-gl';
 import { computed, ref, useId } from 'vue';
 import Surface from './DLS/Surface.vue';
-import useDarkMode from './hooks/useIsDarkMode';
+import { injectIsDarkMode } from './hooks/useIsDarkMode';
 
 type RGBATuple = [number, number, number, number];
 type DataPoint = {
@@ -32,7 +32,7 @@ const {
   data,
   measure,
   deferRender,
-  height = '1000px',
+  height = '60rem',
   minColor = [20, 20, 255, 0.5], // Red with some transparency
   maxColor = [255, 0, 0, 0.5], // Green with full opacity
   floorValue,
@@ -40,18 +40,19 @@ const {
   squareSize = 0.0001,
 } = defineProps<HeatMapProps>()
 
-const isDarkReaderMode = useDarkMode()
+const isDarkMode = injectIsDarkMode();
 
-const activeMinColor = computed<RGBATuple>(() => isDarkReaderMode.value
+const activeMinColor = computed<RGBATuple>(() => isDarkMode.value
   ? [255 - minColor[0], 255 - minColor[1], 255 - minColor[2], minColor[3]]
   : minColor
 );
-const activeMaxColor = computed<RGBATuple>(() => isDarkReaderMode.value
+const activeMaxColor = computed<RGBATuple>(() => isDarkMode.value
   ? [255 - maxColor[0], 255 - maxColor[1], 255 - maxColor[2], maxColor[3]]
   : maxColor
 );
 
 const heatmapSource = useId();
+const heatmapSourceLight = useId();
 const largestValue = computed(() => Math.max(...data.map((d) => Number(d[measure]))));
 const smallestValue = computed(() => Math.min(...data.map((d) => Number(d[measure]))));
 
@@ -142,36 +143,36 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
 <template>
   <div v-if="!deferRender">
     <!-- we need 2 instances because mgl-map crashes out when the map-style changes -->
-    <Surface :style="`height: ${height}`" v-if="isDarkReaderMode">
+    <Surface :style="`height: ${height}`" v-if="isDarkMode">
       <mgl-map
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'"
         :bounds="initialViewState.bounds"
       >
         <mgl-geo-json-source
-          source-id="heatmapLayer"
+          :source-id="heatmapSource"
           :data="mapData"
         >
           <mgl-fill-layer
-            layer-id="heatmapLayer"
+            :layer-id="heatmapSource"
             :paint="{ 'fill-color': ['get', 'color'] }"
           />
         </mgl-geo-json-source>
         <mgl-fullscreen-control position="top-right" />
       </mgl-map>
     </Surface>
-    <Surface :style="`height: ${height}`" v-if="!isDarkReaderMode">
+    <Surface :style="`height: ${height}`" v-if="!isDarkMode">
       <mgl-map
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'"
         :bounds="initialViewState.bounds"
       >
         <mgl-geo-json-source
-          source-id="heatmapLayerLight"
+          :source-id="heatmapSourceLight"
           :data="mapData"
         >
           <mgl-fill-layer
-            layer-id="heatmapLayerLight"
+            :layer-id="heatmapSourceLight"
             :paint="{ 'fill-color': ['get', 'color'] }"
           />
         </mgl-geo-json-source>
@@ -179,12 +180,12 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
       </mgl-map>
     </Surface>
     <div>
-      <svg width="100%" height="20">
+      <svg width="100%" height="2rem">
         <linearGradient :id="gradientId" x1="0%" y1="0%" x2="100%" y2="0%">
           <stop offset="0%" :style="`stop-color: rgb(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]}); stop-opacity: ${activeMinColor[3]};`" />
           <stop offset="100%" :style="`stop-color: rgb(${activeMaxColor[0]}, ${activeMaxColor[1]}, ${activeMaxColor[2]}); stop-opacity: ${activeMaxColor[3]};`" />
         </linearGradient>
-        <rect x="0" y="0" width="100%" height="20" :fill="`url(#${gradientId})`" />
+        <rect x="0" y="0" width="100%" height="2rem" :fill="`url(#${gradientId})`" />
       </svg>
       <div class="flex flex-justify-between">
         <div>
@@ -195,7 +196,6 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
         </div>
       </div>
     </div>
-    Is Dark Reader Mode: {{ isDarkReaderMode }}
   </div>
 </template>
 
