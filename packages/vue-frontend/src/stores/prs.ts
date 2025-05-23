@@ -1,41 +1,37 @@
 import requestor from '@/utils/requestor';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useApiCallback } from './apiStatus';
 
 export const usePRStore = defineStore('prs', () => {
+  const makeApiCallback = useApiCallback();
   const prs = ref<BestEffort[]>([]);
   const byDate = ref<Record<string, BestEffort[]>>({});
 
-  function setPRsAction(payload: BestEffort[]) {
-    prs.value = payload;
-  }
-
-  function setPRsByDateAction(payload: Record<string, BestEffort[]>) {
-    byDate.value = payload;
-  }
-
-  async function fetchPRs() {
+  const fetchPRsCb = async () => {
     const res = await requestor.get('/activities/prs');
     if (res.status === 200) {
       const data = await res.json();
-      setPRsAction(data);
+      prs.value = data;
+    } else {
+      throw new Error(`Failed to fetch PRs: ${res.statusText}`);
     }
-  }
+  };
 
-  async function fetchPRsByDate() {
+  const fetchPRsByDateCb = async () => {
     const res = await requestor.get('/activities/prs/by-date');
     if (res.status === 200) {
       const data = await res.json();
-      setPRsByDateAction(data);
+      byDate.value = data;
+    } else {
+      throw new Error(`Failed to fetch PRs by date: ${res.statusText}`);
     }
-  }
+  };
 
   return {
     prs,
     byDate,
-    fetchPRs,
-    fetchPRsByDate,
-    setPRsAction,
-    setPRsByDateAction,
+    fetchPRs: makeApiCallback('fetchPRs', fetchPRsCb),
+    fetchPRsByDate: makeApiCallback('fetchPRsByDate', fetchPRsByDateCb),
   };
 });

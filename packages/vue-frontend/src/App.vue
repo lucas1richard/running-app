@@ -6,19 +6,13 @@ import SideNav from './SideNav.vue';
 import useHeartZonesStore from './stores/heartzones';
 import { usePRStore } from './stores/prs';
 import { provideIsDarkMode } from './components/hooks/useIsDarkMode';
-
-const activitiesStore = useActivitiesStore();
-const heartzonesStore = useHeartZonesStore();
+import { useTriggerActionIfStatus } from './components/hooks/useTriggerActionIfStatus';
 
 provideIsDarkMode()
 
-onMounted(async() => {
-  await Promise.allSettled([
-    activitiesStore.fetchActivities(),
-    heartzonesStore.fetchHeartZones(),
-    usePRStore().fetchPRs(),
-  ]);
-})
+useTriggerActionIfStatus('fetchActivities', useActivitiesStore().fetchActivities);
+useTriggerActionIfStatus('fetchHeartZones', useHeartZonesStore().fetchHeartZones);
+useTriggerActionIfStatus('fetchPRs', usePRStore().fetchPRs);
 </script>
 
 <template>

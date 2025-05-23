@@ -8,17 +8,21 @@ import Surface from './DLS/Surface.vue';
 import { Chart } from 'highcharts-vue';
 import highcharts from 'highcharts';
 import dayjs from 'dayjs';
+import { injectIsDarkMode } from './hooks/useIsDarkMode';
 
 const activitiesStore = useActivitiesStore();
 const oneYearAgo = dayjs().subtract(1, 'year');
-const activities = computed(() => activitiesStore.dateOrderedActivities.filter(({ start_date }) => dayjs(start_date).isAfter(oneYearAgo)).reverse());
+const activities = computed(() => activitiesStore
+  .dateOrderedActivities
+  .filter(({ start_date_local }) => dayjs(start_date_local).isAfter(oneYearAgo))
+  .reverse());
 
   // const viewSize = useViewSize();
 
   const enableYAxis = true
-  const isDarkMode = true;
-  const contrastColor = isDarkMode ? 'white' : 'black';
-  const gridColor = isDarkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
+  const isDarkMode = injectIsDarkMode();
+  const contrastColor = computed(() => isDarkMode.value ? 'white' : 'black');
+  const gridColor = computed(() => isDarkMode.value ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)');
 
 const seriesDefaultConfig = {
   type: 'line',
@@ -49,7 +53,7 @@ const options = computed(() => ({
       height: 450,
       backgroundColor: 'transparent',
       zooming: {
-        // type: 'x',
+        type: 'x',
       },
     },
     legend: {
@@ -81,7 +85,7 @@ const options = computed(() => ({
         //   linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
         //   stops: [[0, 'rgba(0,0,255,1)'], [1, 'rgba(0,0,55,1)']],
         // },
-        color: contrastColor,
+        color: contrastColor.value,
         ...seriesDefaultConfig,
       },
       {
@@ -106,61 +110,61 @@ const options = computed(() => ({
       crosshair: true,
       type: 'datetime',
       gridLineWidth: 1,
-      gridLineColor: gridColor,
+      gridLineColor: gridColor.value,
       labels: {
         style: {
-          color: contrastColor
+          color: contrastColor.value
         }
       }
     },
     yAxis: [
       {
         ...yAxisDefaultConfig,
-        gridLineColor: gridColor,
+        gridLineColor: gridColor.value,
         title: {
           enabled: enableYAxis,
           text: 'Avg Speed',
           style: {
-            color: contrastColor
+            color: contrastColor.value
           }
         },
         labels: {
           enabled: enableYAxis,
           format: '{value} mph',
           style: {
-            color: contrastColor,
+            color: contrastColor.value,
           },
         },
       },
       { // Secondary yAxis
         ...yAxisDefaultConfig,
-        gridLineColor: gridColor,
+        gridLineColor: gridColor.value,
         top: '25%',
         title: {
           enabled: enableYAxis,
           text: 'Distance',
           style: {
-            color: contrastColor,
+            color: contrastColor.value,
           },
         },
         labels: {
           enabled: enableYAxis,
           format: '{value} mi',
           style: {
-            color: contrastColor,
+            color: contrastColor.value,
           },
         },
         opposite: true,
       },
       {
         ...yAxisDefaultConfig,
-        gridLineColor: gridColor,
+        gridLineColor: gridColor.value,
         top: '50%',
         title: {
           enabled: enableYAxis,
           text: 'Avg HR',
           style: {
-            color: contrastColor
+            color: contrastColor.value
           }
         },
         tickInterval: 10,
@@ -169,13 +173,13 @@ const options = computed(() => ({
           enabled: enableYAxis,
           format: '{value}',
           style: {
-            color: contrastColor,
+            color: contrastColor.value,
           },
         },
       },
       {
         ...yAxisDefaultConfig,
-        gridLineColor: gridColor,
+        gridLineColor: gridColor.value,
         top: '75%',
         title: {
           enabled: enableYAxis,

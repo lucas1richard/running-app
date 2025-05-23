@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 import { useActivitiesStore } from '@/stores/activities';
-import { computed, onMounted } from 'vue';
+import { computed } from 'vue';
 import HeatMap from './HeatMap.vue';
+import { useTriggerActionIfStatus } from './hooks/useTriggerActionIfStatus';
 
 type ContainerProps = {
   referenceTime?: string;
@@ -11,9 +12,8 @@ const { referenceTime, timeframe } = defineProps<ContainerProps>();
 
 const key = [timeframe, referenceTime].filter(Boolean).join('|') || 'all';
 const activitiesStore = useActivitiesStore();
-onMounted(async () => {
-  await activitiesStore.fetchHeatMapData(timeframe, referenceTime);
-})
+useTriggerActionIfStatus(key, activitiesStore.makeFetchHeatMapData(timeframe, referenceTime));
+
 const data = computed(() => activitiesStore.heatMap[key] || []);
 </script>
 
