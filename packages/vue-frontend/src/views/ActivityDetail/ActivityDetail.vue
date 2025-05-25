@@ -25,7 +25,7 @@ activitiesStore
 <template>
   <PageWrapper>
     <div class="grid" v-if="!!activity">
-      <Tile :activity="activity" :is-compact="true" />
+      <Tile :activity="activity" :is-compact="false" />
       <HeartZonesDisplay :activity="activity" />
     </div>
   </PageWrapper>

@@ -2,7 +2,7 @@
 import usePreferencesStore from '@/stores/preferences';
 import Surface from './DLS/Surface.vue';
 import useHeartZonesStore from '@/stores/heartzones';
-import { computed } from 'vue';
+import { computed, type Ref } from 'vue';
 import { useActivitiesStore } from '@/stores/activities';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH, getDurationString } from '@/utils';
 
@@ -16,22 +16,22 @@ const allZones = hrStore.record;
 const configZonesId = prefStore.getPreferredHRZoneId();
 const nativeZones = hrStore.selectHeartZones(activity.start_date_local);
 const heartData = activitiesStore.getStreamTypeData(activity.id, 'heartrate')
-const velocityData = activitiesStore.getStreamTypeData(activity.id, 'velocity_smooth');
+const velocityData = activitiesStore.getStreamTypeData(activity.id, 'velocity_smooth')
 
-const zonesId = computed(() => configZonesId === -1 ? nativeZones.id : configZonesId);
-const zones = computed(() => allZones.find(({ id }) => id === zonesId) || nativeZones);
-const totalTimes = computed(() => convertHeartDataToZoneTimes(heartData, zones.value));
-const percents = computed(() => totalTimes.value.map((time) => (100 * time / heartData?.length).toFixed(2)));
-const avg = computed(() => convertHeartDataToZoneSpeeds(zones.value, heartData, velocityData));
+const zonesId = computed(() => configZonesId === -1 ? nativeZones.value.id : configZonesId);
+const zones = computed(() => allZones.find(({ id }) => id === zonesId) || nativeZones.value);
+const totalTimes = computed(() => convertHeartDataToZoneTimes(heartData.value, zones.value));
+const percents = computed(() => totalTimes.value.map((time) => (100 * time / heartData.value.length).toFixed(2)));
+const avg = computed(() => convertHeartDataToZoneSpeeds(zones.value, heartData.value, velocityData.value));
 
-const isUsingNonNativeZones = computed(() => nativeZones.id !== zones.value.id);
+const isUsingNonNativeZones = computed(() => nativeZones.value.id !== zones.value.id);
 const data = computed(() => {
   const ranges = [
     [zones.value.z1, zones.value.z2 - 1],
     [zones.value.z2, zones.value.z3 - 1],
     [zones.value.z3, zones.value.z4 - 1],
     [zones.value.z4, zones.value.z5 - 1],
-    [zones.value.z5]
+    [zones.value.z5, 'Max']
   ]
   return [1,2,3,4,5].map((n, i) => ({
     title: `Zone ${n}`,

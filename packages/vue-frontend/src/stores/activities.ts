@@ -94,14 +94,19 @@ export const useActivitiesStore = defineStore('activities', () => {
     });
   }
 
-  const getStreamTypeData = computed<SelectStreamTypeData>(() => (id, findType) => {
-    const stream = streams[id]?.stream?.find?.(({ type }) => type === findType);
-    return stream?.data || emptyArray;
-  });
+  const getStreamTypeData = <F extends SimpleStreamTypes>(id: number, findType: F) => {
+    return computed(() => {
+      const stream = streams[id]?.stream?.find?.(({ type }) => type === findType);
+      return (stream?.data || emptyArray) as F extends 'latlng' ? LatLng[] : number[];
+    })
+  };
 
-  const getStreamTypeMulti = computed(() => (ids: number[], findType: string) => {
-    return ids?.map((id) => streams[id]?.stream?.find?.(({ type }) => type === findType)?.data);
-  })
+  const getStreamTypeMulti = <F extends SimpleStreamTypes>(ids: number[], findType: F) => computed(
+    () => ids.map((id) => {
+      const stream = streams[id]?.stream?.find?.(({ type }) => type === findType)
+      return (stream?.data || emptyArray) as F extends 'latlng' ? LatLng[] : number[];
+    })
+  )
 
   const dateOrderedActivities = computed(() => activitiesOrder.value
     .map((id) => activities[id])

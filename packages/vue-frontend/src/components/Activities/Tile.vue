@@ -19,6 +19,7 @@ const activityId = activity.id;
 const largeText = computed(() => isCompact ? 'text-h5' : 'text-h4');
 const smallText = computed(() => isCompact ? 'text-sm' : 'text-md');
 const heartzonesStore = useHeartZonesStore();
+const hrZones = heartzonesStore.selectHeartZones(activity.start_date);
 // const bestEfforts = activity?.calculatedBestEfforts || emptyArray;
 
 </script>
@@ -79,7 +80,7 @@ const heartzonesStore = useHeartZonesStore();
         </div>
       </div>
       <div class="gridZonesWidth">
-        <ZonesWidth :id="activity.id" :zones="heartzonesStore.selectHeartZones(activity.start_date)"
+        <ZonesWidth :id="activity.id" :zones="hrZones"
           :zonesCaches="activity.zonesCaches" :heartData="[]" />
       </div>
       <div v-if="!isCompact" class="gridBestEfforts">

@@ -15,7 +15,7 @@ const useHeartZonesStore = defineStore('heartzones', () => {
     }
   }
   
-  const selectHeartZones = computed(() => (date: string) => {
+  const selectHeartZones = (date: string) => computed<HeartZone>(() => {
     const currDate = new Date(date);
     return record.value.find(({ start_date }) => new Date(start_date) < currDate) || {};
   });

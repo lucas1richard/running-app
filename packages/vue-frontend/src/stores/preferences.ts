@@ -77,7 +77,7 @@ const usePreferencesStore = defineStore('preferences', () => {
     });
   }
 
-  const getPreferenceFree = computed(() => (keyPath: PreferencesKeyPath) => {
+  const getPreferenceFree = (keyPath: PreferencesKeyPath) => computed(() => {
     const copyPath = [...keyPath];
     const firstMainArea = copyPath.shift() as keyof PreferencesState;
     const localArea = copyPath.shift() as string;

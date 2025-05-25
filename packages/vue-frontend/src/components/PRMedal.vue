@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import prColors from '@/utils/colors/prColors';
+import useIsDarkMode from './hooks/useIsDarkMode';
+import { computed } from 'vue';
 
 type PRMedalProps = {
   class?: string;
@@ -22,6 +24,8 @@ const rankMap = {
   9: '9th',
   10: '10th',
 }
+const isDarkMode = useIsDarkMode();
+const defaultColor = computed(() => isDarkMode.value ? 'white' : 'black');
 </script>
 
 <template>
@@ -35,7 +39,7 @@ const rankMap = {
     strokeLinecap="round"
     strokeLinejoin="round"
     :fill="prColors[color as keyof typeof prColors]?.fill || 'transparent'"
-    :stroke="prColors[color as keyof typeof prColors]?.stroke || 'black'"
+    :stroke="prColors[color as keyof typeof prColors]?.stroke || defaultColor"
     :class="className"
   >
     <circle cx="12" cy="8" r="7" />
@@ -45,7 +49,7 @@ const rankMap = {
       y="9"
       text-anchor="middle"
       dominant-baseline="middle"
-      stroke="black"
+      :stroke="defaultColor"
       font-size="11"
       font-weight={100}
     >
