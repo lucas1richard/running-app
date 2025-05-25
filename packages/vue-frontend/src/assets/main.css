@@ -221,6 +221,15 @@ select {
   width: 100%;
 }
 
+.full-height {
+  height: 100%;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--color-text);
+}
+
 .flex {
   display: flex;
 }
@@ -477,6 +486,25 @@ input[type="range"]::-webkit-slider-thumb {
 
 .hr-zone-5-bg {
   background-color: color-mix(in srgb, var(--hrZone5) 90%, black 10%) !important;
+}
+.hr-zone-1-bg-light {
+  background-color: color-mix(in srgb, var(--hrZone1) 30%, transparent 70%) !important;
+}
+
+.hr-zone-2-bg-light {
+  background-color: color-mix(in srgb, var(--hrZone2) 30%, transparent 70%) !important;
+}
+
+.hr-zone-3-bg-light {
+  background-color: color-mix(in srgb, var(--hrZone3) 30%, transparent 70%) !important;
+}
+
+.hr-zone-4-bg-light {
+  background-color: color-mix(in srgb, var(--hrZone4) 30%, transparent 70%) !important;
+}
+
+.hr-zone-5-bg-light {
+  background-color: color-mix(in srgb, var(--hrZone5) 30%, transparent 70%) !important;
 }
 
 .hr-zone-1-text {
@@ -808,9 +836,23 @@ input[type="range"]::-webkit-slider-thumb {
   color: var(--color-text);
 }
 
+.text-no-wrap {
+  white-space: nowrap;
+}
+.text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.text-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .card {
   border-radius: var(--space-unit);
   box-shadow: var(--box-shadow);
+  overflow: hidden;
 }
 
 a {

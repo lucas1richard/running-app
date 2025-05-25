@@ -4,9 +4,19 @@ import requestor from '@/utils/requestor';
 import { emptyArray } from '@/constants';
 import { computed, reactive, ref } from 'vue';
 
+interface SelectStreamTypeData<Multi = false> {
+  (id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (id: Multi extends true ? number[] : number, findType: 'heartrate'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (id: Multi extends true ? number[] : number, findType: 'distance'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (id: Multi extends true ? number[] : number, findType: 'altitude'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (id: Multi extends true ? number[] : number, findType: 'velocity_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (id: Multi extends true ? number[] : number, findType: 'grade_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
+  (id: Multi extends true ? number[] : number, findType: 'latlng'): Multi extends true ? LatLngStream['data'][] : LatLngStream['data'];
+}
+
 export const useActivitiesStore = defineStore('activities', () => {
   const makeApiCallback = useApiCallback();
-  
+
   const activities = reactive<Record<number, Activity>>({});
   const activitiesOrder = ref<number[]>([]);
   const details = reactive<Record<number, ActivityDetails>>({});
@@ -56,6 +66,43 @@ export const useActivitiesStore = defineStore('activities', () => {
     });
   }
 
+  function makeFetchActivityDetail(id: number) {
+    return makeApiCallback(`activityDetail/${id}`, async () => {
+      const res = await requestor.get(`/activities/${id}/detail`);
+      if (res.status === 200) {
+        const detail = await res.json();
+        details[id] = detail;
+      } else {
+        throw new Error(`Failed to fetch activity detail: ${res.statusText}`);
+      }
+    });
+  }
+
+  function makeFetchActivityStreams(id: number) {
+    const streamTypes: SimpleStreamTypes[] = [
+      'heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time', 'grade_smooth', 'distance'
+    ];
+    return makeApiCallback(`activityStreams/${id}`, async () => {
+      const typesQuery = new URLSearchParams({ keys: streamTypes });
+      const res = await requestor.get(`/activities/${id}/streams?${typesQuery}`);
+      if (res.status === 200) {
+        const stream = await res.json();
+        streams[id] = stream;
+      } else {
+        throw new Error(`Failed to fetch activity streams: ${res.statusText}`);
+      }
+    });
+  }
+
+  const getStreamTypeData = computed<SelectStreamTypeData>(() => (id, findType) => {
+    const stream = streams[id]?.stream?.find?.(({ type }) => type === findType);
+    return stream?.data || emptyArray;
+  });
+
+  const getStreamTypeMulti = computed(() => (ids: number[], findType: string) => {
+    return ids?.map((id) => streams[id]?.stream?.find?.(({ type }) => type === findType)?.data);
+  })
+
   const dateOrderedActivities = computed(() => activitiesOrder.value
     .map((id) => activities[id])
     .sort((a, b) => new Date(b.start_date_local).getTime() - new Date(a.start_date_local).getTime()));
@@ -72,5 +119,9 @@ export const useActivitiesStore = defineStore('activities', () => {
     dateOrderedActivities,
     fetchActivities: makeApiCallback('fetchActivities', fetchActivitiesCb),
     makeFetchHeatMapData: fetchHeatMapDataCb,
+    makeFetchActivityDetail,
+    makeFetchActivityStreams,
+    getStreamTypeData,
+    getStreamTypeMulti,
   };
 });

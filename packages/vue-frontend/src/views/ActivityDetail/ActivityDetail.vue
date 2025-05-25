@@ -4,17 +4,29 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import PageWrapper from '../../components/PageWrapper.vue';
 import Tile from '@/components/Activities/Tile.vue';
+import { useTriggerActionIfStatus } from '@/components/hooks/useTriggerActionIfStatus';
+import HeartZonesDisplay from '@/components/HeartZonesDisplay.vue';
 
 const activitiesStore = useActivitiesStore();
 const route = useRoute();
 const activityId = Number(route.params.id);
 const activity = computed(() => activitiesStore.activities[activityId]);
+useTriggerActionIfStatus(
+  `activityDetail/${activityId}`,
+  activitiesStore.makeFetchActivityDetail(activityId)
+)
+useTriggerActionIfStatus(
+  `activityStreams/${activityId}`,
+  activitiesStore.makeFetchActivityStreams(activityId)
+)
+activitiesStore
 </script>
 
 <template>
   <PageWrapper>
-    <div class="grid">
+    <div class="grid" v-if="!!activity">
       <Tile :activity="activity" :is-compact="true" />
+      <HeartZonesDisplay :activity="activity" />
     </div>
   </PageWrapper>
 </template>

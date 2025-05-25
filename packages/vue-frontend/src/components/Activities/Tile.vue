@@ -79,7 +79,7 @@ const heartzonesStore = useHeartZonesStore();
         </div>
       </div>
       <div class="gridZonesWidth">
-        <ZonesWidth :id="activity.id" :zones="heartzonesStore.getHeartZones(activity.start_date)"
+        <ZonesWidth :id="activity.id" :zones="heartzonesStore.selectHeartZones(activity.start_date)"
           :zonesCaches="activity.zonesCaches" :heartData="[]" />
       </div>
       <div v-if="!isCompact" class="gridBestEfforts">

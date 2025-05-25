@@ -15,21 +15,15 @@ const useHeartZonesStore = defineStore('heartzones', () => {
     }
   }
   
-  const getHeartZones = computed(() => (date: string) => {
+  const selectHeartZones = computed(() => (date: string) => {
     const currDate = new Date(date);
     return record.value.find(({ start_date }) => new Date(start_date) < currDate) || {};
-  });
-  
-  const getApplicableHeartZone = computed(() => (date: string, nativeZones: any, configZonesId: number) => {
-    const zonesId = configZonesId === -1 ? nativeZones.id : configZonesId;
-    return record.value.find(({ id }) => id === zonesId) || nativeZones;
   });
   
   return {
     record,
     fetchHeartZones: makeApiCallback('fetchHeartZones', fetchHeartZonesCb),
-    getHeartZones,
-    getApplicableHeartZone,
+    selectHeartZones,
   };
 });
 
