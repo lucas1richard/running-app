@@ -26,6 +26,34 @@
   }
 }
 
+// Small devices
+@mixin sm {
+  @container (min-width: 600px) {
+    @content;
+  }
+}
+
+// Medium devices
+@mixin md {
+  @container (min-width: 960px) {
+    @content;
+  }
+}
+
+// Large devices
+@mixin lg {
+  @container (min-width: 1280px) {
+    @content;
+  }
+}
+
+// Extra large devices
+@mixin xl {
+  @container (min-width: 1920px) {
+    @content;
+  }
+}
+
 *,
 *::before,
 *::after {

@@ -108,6 +108,8 @@ export const useActivitiesStore = defineStore('activities', () => {
     })
   )
 
+  const getActivityDetailsMulti = (ids: number[]) => computed(() => ids.map((id) => details[id]));
+
   const dateOrderedActivities = computed(() => activitiesOrder.value
     .map((id) => activities[id])
     .sort((a, b) => new Date(b.start_date_local).getTime() - new Date(a.start_date_local).getTime()));
@@ -128,5 +130,6 @@ export const useActivitiesStore = defineStore('activities', () => {
     makeFetchActivityStreams,
     getStreamTypeData,
     getStreamTypeMulti,
+    getActivityDetailsMulti,
   };
 });

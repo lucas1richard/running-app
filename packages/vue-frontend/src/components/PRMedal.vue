@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import prColors from '@/utils/colors/prColors';
-import useIsDarkMode from './hooks/useIsDarkMode';
+import { injectIsDarkMode } from './hooks/useIsDarkMode';
 import { computed } from 'vue';
 
 type PRMedalProps = {
@@ -24,7 +24,7 @@ const rankMap = {
   9: '9th',
   10: '10th',
 }
-const isDarkMode = useIsDarkMode();
+const isDarkMode = injectIsDarkMode();
 const defaultColor = computed(() => isDarkMode.value ? 'white' : 'black');
 </script>
 

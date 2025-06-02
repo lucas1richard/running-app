@@ -55,11 +55,14 @@ const milesAllTime = computed(() => sumDistance(activities.value).toFixed(2))
   </Surface>
 </template>
 
-<style lang="css" scoped>
-@import '../assets/theme.css';
+<style lang="scss" scoped>
+@import "../assets/base.scss";
 
 .grid {
-  grid-template-columns: repeat(3, 1fr);
-  gap: calc(2 * var(--space-unit))
+  grid-template-columns: 1fr;
+  gap: calc(2 * var(--space-unit));
+  @include lg {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 </style>

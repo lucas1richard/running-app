@@ -6,6 +6,7 @@ import PageWrapper from '../../components/PageWrapper.vue';
 import Tile from '@/components/Activities/Tile.vue';
 import { useTriggerActionIfStatus } from '@/components/hooks/useTriggerActionIfStatus';
 import HeartZonesDisplay from '@/components/HeartZonesDisplay.vue';
+import Container from './HeartZonesChart/Container.vue';
 
 const activitiesStore = useActivitiesStore();
 const route = useRoute();
@@ -27,14 +28,20 @@ activitiesStore
     <div class="grid" v-if="!!activity">
       <Tile :activity="activity" :is-compact="false" />
       <HeartZonesDisplay :activity="activity" />
+      <Container :activity-id="activityId" />
     </div>
   </PageWrapper>
 </template>
 
 <style scoped lang="scss">
+@import "../../assets/base.scss";
+
 .grid {
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: var(--space-unit);
+  @include lg {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 h1 {

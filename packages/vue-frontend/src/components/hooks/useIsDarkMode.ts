@@ -1,10 +1,11 @@
-import { inject, onUnmounted, provide, ref } from 'vue';
+import { inject, onUnmounted, provide, ref, watch, type Ref } from 'vue';
 
 function useIsDarkMode() {
   const isDarkMode = ref<boolean | null>(document.documentElement.getAttribute('data-darkreader-mode') === 'dynamic'
     || window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const handleDarkModeChange = (event: MediaQueryListEvent) => {
+    console.log(isDarkMode, event.matches)
     isDarkMode.value = event.matches;
   };
   
@@ -24,11 +25,8 @@ export const provideIsDarkMode = () => {
   provide('isDarkMode', isDarkMode);
 }
 
-export const injectIsDarkMode = () => {
-  const isDarkMode = ref<boolean | null>(null);
-  const injectedIsDarkMode = inject('isDarkMode', isDarkMode);
-
+export const injectIsDarkMode = (): Ref<boolean> => {
+  const isDarkMode = ref<boolean>(false);
+  const injectedIsDarkMode = inject<Ref<boolean>>('isDarkMode', isDarkMode);
   return injectedIsDarkMode;
 }
-
-export default useIsDarkMode;

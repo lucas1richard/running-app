@@ -12,8 +12,6 @@ const { variant = 'foreground' } = defineProps<SurfaceProps>()
 </template>
 
 <style>
-  @import '../../assets/theme.css';
-
   .base {
     background-color: var(--color-background);
     color: var(--color-text);
