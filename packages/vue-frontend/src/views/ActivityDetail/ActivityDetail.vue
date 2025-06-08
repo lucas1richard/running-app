@@ -1,11 +1,12 @@
 <script lang="ts" setup>
 import { useActivitiesStore } from '@/stores/activities';
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PageWrapper from '../../components/PageWrapper.vue';
 import Tile from '@/components/Activities/Tile.vue';
 import { useTriggerActionIfStatus } from '@/components/hooks/useTriggerActionIfStatus';
 import HeartZonesDisplay from '@/components/HeartZonesDisplay.vue';
+import HRZonesMap from '@/components/HRZonesMap.vue';
 import Container from './HeartZonesChart/Container.vue';
 
 const activitiesStore = useActivitiesStore();
@@ -20,7 +21,8 @@ useTriggerActionIfStatus(
   `activityStreams/${activityId}`,
   activitiesStore.makeFetchActivityStreams(activityId)
 )
-activitiesStore
+const pointer = ref(0);
+const updatePointer = (num: number) => pointer.value = num
 </script>
 
 <template>
@@ -28,7 +30,8 @@ activitiesStore
     <div class="grid" v-if="!!activity">
       <Tile :activity="activity" :is-compact="false" />
       <HeartZonesDisplay :activity="activity" />
-      <Container :activity-id="activityId" />
+      <Container :activity-id="activityId" :updatePointer="updatePointer" />
+      <HRZonesMap :id="activityId" :pointer="pointer" />
     </div>
   </PageWrapper>
 </template>

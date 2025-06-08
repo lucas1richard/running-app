@@ -2,11 +2,12 @@
 import { emptyArray } from '@/constants';
 import { useActivitiesStore } from '@/stores/activities'
 import useHeartZonesStore from '@/stores/heartzones'
-import { computed } from 'vue';
+import { computed, type Ref } from 'vue';
 import ChartDisplay from './ChartDisplay.vue';
 
 const { activityId } = defineProps<{
   activityId: number;
+  updatePointer: (num: number) => void;
 }>()
 const activityStore = useActivitiesStore()
 const hrStore = useHeartZonesStore()
@@ -20,7 +21,7 @@ const timeStream = activityStore.getStreamTypeData(activityId, 'time')
 const gradeStream = activityStore.getStreamTypeData(activityId, 'grade_smooth')
 const latlngStream = activityStore.getStreamTypeData(activityId, 'latlng')
 const zones = hrStore.selectHeartZones(activity?.start_date_local)
-const bestEfforts = computed(() => details.best_efforts || emptyArray)
+const bestEfforts = computed(() => details?.best_efforts || emptyArray)
 const streamPins = computed(() => activity?.stream_pins || emptyArray);
 const laps = computed(() => details?.laps || emptyArray);
 const splitsMi = computed(() => details?.splits_standard || emptyArray);
@@ -31,6 +32,7 @@ const splitsMi = computed(() => details?.splits_standard || emptyArray);
 <div>
   <ChartDisplay
     :id="activityId"
+    :updatePointer="updatePointer"
     :averageSpeed="activity.average_speed"
     :data="heartRateStream"
     :velocity="velocityStream"

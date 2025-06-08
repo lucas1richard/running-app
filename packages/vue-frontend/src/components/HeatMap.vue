@@ -143,7 +143,7 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
 <template>
   <div v-if="!deferRender">
     <!-- we need 2 instances because mgl-map crashes out when the map-style changes -->
-    <Surface :style="`height: ${height}`" v-if="isDarkMode">
+    <Surface :style="`height: ${height}`" v-if="isDarkMode" class="card">
       <mgl-map
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'"
@@ -161,7 +161,7 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
         <mgl-fullscreen-control position="top-right" />
       </mgl-map>
     </Surface>
-    <Surface :style="`height: ${height}`" v-if="!isDarkMode">
+    <Surface :style="`height: ${height}`" v-if="!isDarkMode" class="card">
       <mgl-map
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'"

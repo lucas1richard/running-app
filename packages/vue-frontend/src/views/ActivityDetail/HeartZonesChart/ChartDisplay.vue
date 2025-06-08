@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import { Chart } from 'highcharts-vue';
 import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
-import { computed, onMounted, ref, toValue, useTemplateRef } from 'vue';
+import { computed, onMounted, ref, toValue, useTemplateRef, watch, type Ref } from 'vue';
 import getSmoothVal from '@/utils/getSmoothVal';
 import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
 import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDurationString } from '@/utils';
@@ -45,6 +45,7 @@ const {
   splitsMi,
   zonesBandsDirection,
   streamPins,
+  updatePointer,
 } = defineProps<{
   id: number;
   averageSpeed: number;
@@ -59,12 +60,12 @@ const {
   splitsMi: { average_speed: number; elapsed_time: number; }[];
   zonesBandsDirection: 'xAxis' | 'yAxis' | 'none';
   streamPins: StreamPin[];
+  updatePointer: (num: number) => void;
 }>();
 const activityStore = useActivitiesStore();
 const viewSize = useViewSize();
 const smoothAverageWindow = ref(20);
 const latlngStream = activityStore.getStreamTypeData(id, 'latlng');
-const latlngPointer = ref(0);
 const highlightedSegment = ref(undefined);
 
 // const addPin = useCallback(function(streamKey) {
@@ -159,7 +160,7 @@ onMounted(() => {
   initialMagnificationFactor.value = chartRef.value?.current?.chart.plotWidth || 0;
 });
 
-onMounted(() => {
+watch(() => chartRef.value?.chart, () => {
   const chart = chartRef.value?.chart;
   if (!chart) return;
 
@@ -244,7 +245,7 @@ const options = computed<Highcharts.Options>(() => {
             //   addPin.apply(this, ['heartrate']);
             // },
             mouseOver() {
-              latlngPointer.value = this.index;
+              updatePointer(this.index);
             }
           },
         },
@@ -267,7 +268,7 @@ const options = computed<Highcharts.Options>(() => {
             //   addPin.apply(this, ['velocity_smooth']);
             // },
             mouseOver() {
-              latlngPointer.value = this.index;
+              updatePointer(this.index);
             }
           },
         },
@@ -320,7 +321,7 @@ const options = computed<Highcharts.Options>(() => {
             //   addPin.apply(this, ['altitude']);
             // },
             mouseOver() {
-              latlngPointer.value = this.index;
+              updatePointer(this.index);
             }
           },
         },
@@ -393,7 +394,7 @@ const options = computed<Highcharts.Options>(() => {
               addPin.apply(this, ['efficiency_factor']);
             },
             mouseOver() {
-              latlngPointer.value = this.index;
+              updatePointer(this.index);
             }
           },
         },
