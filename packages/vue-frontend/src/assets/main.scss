@@ -202,7 +202,18 @@ select {
 }
 
 .pad-b {
-  margin-bottom: var(--space-unit);
+  padding-bottom: var(--space-unit);
+}
+
+.pad-l {
+  padding-left: var(--space-unit);
+}
+.pad-r {
+  padding-right: var(--space-unit);
+}
+.pad-lr {
+  padding-left: var(--space-unit);
+  padding-right: var(--space-unit);
 }
 
 .gap {
@@ -396,6 +407,10 @@ input[type="range"]::-webkit-slider-thumb {
 
 .dls-blue {
   color: var(--dls-blue) !important;
+}
+
+.dls-blue-bg {
+  background-color: var(--dls-blue) !important;
 }
 
 .dls-sunshine-bg {

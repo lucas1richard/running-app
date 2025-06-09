@@ -3,7 +3,7 @@ import Highcharts from 'highcharts';
 import { Chart } from 'highcharts-vue';
 import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
-import { computed, onMounted, ref, toValue, useTemplateRef, watch, type Ref } from 'vue';
+import { computed, onMounted, ref, toValue, useTemplateRef, watch, watchEffect, type Ref } from 'vue';
 import getSmoothVal from '@/utils/getSmoothVal';
 import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
 import { condenseZonesFromHeartRate, convertMetricSpeedToMPH, getDurationString } from '@/utils';
@@ -160,7 +160,7 @@ onMounted(() => {
   initialMagnificationFactor.value = chartRef.value?.current?.chart.plotWidth || 0;
 });
 
-watch(() => chartRef.value?.chart, () => {
+const addZoneBands = () => {
   const chart = chartRef.value?.chart;
   if (!chart) return;
 
@@ -172,7 +172,10 @@ watch(() => chartRef.value?.chart, () => {
   } else if (zonesBandsDirection === 'yAxis') {
     yAxisBands.value.forEach(band => chart.yAxis[0].addPlotBand(band));
   }
-});
+};
+
+watchEffect(addZoneBands);
+onMounted(addZoneBands);
 
 // useEffect(() => {
 //   if (chartRef.current?.chart) {

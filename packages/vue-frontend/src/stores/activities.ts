@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import requestor from '@/utils/requestor';
 import { emptyArray } from '@/constants';
 import { computed, reactive, ref } from 'vue';
+import dayjs from 'dayjs';
 
 interface SelectStreamTypeData<Multi = false> {
   (id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream['data'][] : Stream['data'];
@@ -114,6 +115,17 @@ export const useActivitiesStore = defineStore('activities', () => {
     .map((id) => activities[id])
     .sort((a, b) => new Date(b.start_date_local).getTime() - new Date(a.start_date_local).getTime()));
 
+  const dateGroupedActivities = computed(() => {
+    return dateOrderedActivities.value.reduce<Record<string, Activity[]>>((acc, activity) => {
+      const date = dayjs(activity.start_date_local).format('YYYY-MM-DD');
+      if (!acc[date]) {
+        acc[date] = [];
+      }
+      acc[date].push(activity);
+      return acc;
+    }, {});
+  });
+
   return {
     activities,
     activitiesOrder,
@@ -124,6 +136,7 @@ export const useActivitiesStore = defineStore('activities', () => {
     similarWorkoutsMeta,
     heatMap,
     dateOrderedActivities,
+    dateGroupedActivities,
     fetchActivities: makeApiCallback('fetchActivities', fetchActivitiesCb),
     makeFetchHeatMapData: fetchHeatMapDataCb,
     makeFetchActivityDetail,
