@@ -5,6 +5,16 @@ import MileageSummary from '@/components/MileageSummary.vue';
 import AllTimePRs from '@/components/AllTimePRs.vue';
 import MetricsChart from '@/components/MetricsChart.vue';
 import HeatMapContainer from '@/components/HeatMapContainer.vue';
+import { useActivitiesStore } from '@/stores/activities';
+import dayjs from 'dayjs';
+import { computed } from 'vue';
+
+const activitiesStore = useActivitiesStore();
+const oneYearAgo = dayjs().subtract(1, 'year');
+const activities = computed(() => activitiesStore
+  .dateOrderedActivities
+  .filter(({ start_date_local }) => dayjs(start_date_local).isAfter(oneYearAgo))
+  .reverse());
 </script>
 
 <template>
@@ -27,7 +37,7 @@ import HeatMapContainer from '@/components/HeatMapContainer.vue';
       <div class="flex flex-column gap width-50">
         <div>
           <h2 class="text-h2 margin-b">Metrics Over Time</h2>
-          <MetricsChart />
+          <MetricsChart :activities="activities" />
         </div>
         <div>
           <h2 class="text-h2 margin-b">Heat Map - All Time</h2>

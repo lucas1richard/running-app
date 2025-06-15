@@ -47,6 +47,18 @@ export const useActivitiesStore = defineStore('activities', () => {
     };
   }
 
+  function fetchSimilarActivities(id: number) {
+    const key = `fetchSimilarWorkouts/${id}`;
+    return makeApiCallback(key, async () => {
+      const res = await requestor.get(`/activities/${id}/quick-similar`);
+      const sim = await res.json();
+      if (!similarWorkouts[id]) similarWorkouts[id] = [];
+      similarWorkouts[id] = sim.map(({ relatedActivity }: {relatedActivity: number}) => relatedActivity);
+      similarWorkoutsMeta[id] = Object.fromEntries(sim.map(c => [c.relatedActivity, c]));
+    });
+
+  }
+
   function fetchHeatMapDataCb(timeframe?: string, referenceTime?: string) {
     const data: HeatMapData[] = [];
     const queryParam = new URLSearchParams({
@@ -126,6 +138,11 @@ export const useActivitiesStore = defineStore('activities', () => {
     }, {});
   });
 
+  const getSimilarWorkouts = (id: number) => computed(() => (similarWorkouts[id] || [])
+    .filter(Boolean)
+    .sort((a, b) => similarWorkoutsMeta[b]?.longestCommonSegmentSubsequence - similarWorkoutsMeta[a]?.longestCommonSegmentSubsequence)
+    .map((id) => activities[id])
+  );
   return {
     activities,
     activitiesOrder,
@@ -138,11 +155,13 @@ export const useActivitiesStore = defineStore('activities', () => {
     dateOrderedActivities,
     dateGroupedActivities,
     fetchActivities: makeApiCallback('fetchActivities', fetchActivitiesCb),
+    makeSetchSimilarWorkouts: fetchSimilarActivities,
     makeFetchHeatMapData: fetchHeatMapDataCb,
     makeFetchActivityDetail,
     makeFetchActivityStreams,
+    getActivityDetailsMulti,
+    getSimilarWorkouts,
     getStreamTypeData,
     getStreamTypeMulti,
-    getActivityDetailsMulti,
   };
 });

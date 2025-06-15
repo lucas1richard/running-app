@@ -148,33 +148,33 @@ button:active {
 }
 
 .margin-t {
-  margin-top: var(--space-unit);
+  margin-top: var(--space-unit) !important;
 }
 
 .margin-2-t {
-  margin-top: 2rem;
+  margin-top: 2rem !important;
 }
 
 .margin-tb {
-  margin-top: var(--space-unit);
-  margin-bottom: var(--space-unit);
+  margin-top: var(--space-unit) !important;
+  margin-bottom: var(--space-unit) !important;
 }
 
 .margin-b {
-  margin-bottom: var(--space-unit);
+  margin-bottom: var(--space-unit) !important;
 }
 
 .margin-l {
-  margin-left: var(--space-unit);
+  margin-left: var(--space-unit) !important;
 }
 
 .margin-r {
-  margin-right: var(--space-unit);
+  margin-right: var(--space-unit) !important;
 }
 
 .margin-lr {
-  margin-left: var(--space-unit);
-  margin-right: var(--space-unit);
+  margin-left: var(--space-unit) !important;
+  margin-right: var(--space-unit) !important;
 }
 
 .pad {

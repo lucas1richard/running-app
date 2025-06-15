@@ -8,6 +8,7 @@ import { useTriggerActionIfStatus } from '@/components/hooks/useTriggerActionIfS
 import HeartZonesDisplay from '@/components/HeartZonesDisplay.vue';
 import HRZonesMap from '@/components/HRZonesMap.vue';
 import Container from './HeartZonesChart/Container.vue';
+import SimilarWorkouts from './SimilarWorkouts.vue';
 
 const activitiesStore = useActivitiesStore();
 const route = useRoute();
@@ -32,6 +33,10 @@ const updatePointer = (num: number) => pointer.value = num
       <HeartZonesDisplay :activity="activity" />
       <Container :activity-id="activityId" :updatePointer="updatePointer" />
       <HRZonesMap :id="activityId" :pointer="pointer" />
+    </div>
+    <div class="margin-t">
+      <h2 class="text-h2 margin-b">Similar Activities</h2>
+      <SimilarWorkouts :id="activityId"></SimilarWorkouts>
     </div>
   </PageWrapper>
 </template>
