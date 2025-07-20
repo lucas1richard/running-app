@@ -98,9 +98,13 @@ const latlondata = computed(() => ({
         edges.minLng - 0.0006, edges.minLat - 0.0006,
         edges.maxLng + 0.0006, edges.maxLat + 0.0006,
       ]" height="100%" map-style="https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json">
-        <mgl-marker :coordinates="lnglatStream[pointer]" color="#cc0000">
-          <div class="marker"></div>
-        </mgl-marker>
+        <mgl-marker :coordinates="lnglatStream[pointer]" color="#cc0000"></mgl-marker>
+        <mgl-geo-json-source :data="latlondata" :source-id="outlineSourceId">
+          <mgl-line-layer :layer-id="outlineSourceId" id="outline-layer" :paint="{
+            'line-width': 7,
+            'line-color': '#fff',
+          }" />
+        </mgl-geo-json-source>
         <mgl-geo-json-source :data="data" :source-id="hrZonesSourceId">
           <mgl-line-layer :layer-id="hrZonesSourceId" id="hr-zones-layer" :paint="{
             'line-color': ['get', 'color'],
@@ -120,7 +124,7 @@ const latlondata = computed(() => ({
         </mgl-marker>
         <mgl-geo-json-source :data="latlondata" :source-id="outlineSourceId">
           <mgl-line-layer :layer-id="outlineSourceId" id="outline-layer" :paint="{
-            'line-width': 10
+            'line-width': 10,
           }" />
         </mgl-geo-json-source>
         <mgl-geo-json-source :data="data" :source-id="hrZonesSourceId">
@@ -134,12 +138,3 @@ const latlondata = computed(() => ({
     </Surface>
   </div>
 </template>
-
-<style scoped>
-.marker {
-  width: 1.2rem;
-  height: 1.2rem;
-  background-color: gold;
-  border-radius: 50%;
-}
-</style>

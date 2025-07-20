@@ -74,7 +74,11 @@ const options = computed(() => {
     },
     {
       name: 'Average HR',
-      data: activities.value.map(({ start_date, average_heartrate }) => [new Date(start_date).getTime(), average_heartrate]),
+      data: activities.value
+        .map(({ start_date, average_heartrate }) => [
+          new Date(start_date).getTime(),
+          average_heartrate || null
+        ]),
       yAxis: 2,
       color: {
         linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
@@ -84,164 +88,169 @@ const options = computed(() => {
     },
     {
       name: 'Efficiency Factor',
-      data: activities.value.map(({ start_date, average_heartrate, average_speed }) => [new Date(start_date).getTime(), calcEfficiencyFactor(average_speed, average_heartrate)]),
+      data: activities.value
+        .map(({ start_date, average_heartrate, average_speed }) => [
+          new Date(start_date).getTime(),
+          calcEfficiencyFactor(average_speed, average_heartrate) || null
+        ]),
       yAxis: 3,
       color: 'blue',
       ...seriesDefaultConfig,
     },
   ];
   return ({
-  type: 'line',
-    
-  chart: {
     type: 'line',
-    height: 450,
-    backgroundColor: 'transparent',
-    zooming: {
-      type: 'x',
+    chart: {
+      type: 'line',
+      height: 450,
+      backgroundColor: 'transparent',
+      zooming: {
+        type: 'x',
+      },
     },
-  },
-  legend: {
-    enabled: false,
-  },
-  title: {
-    text: '&nbsp;',
-    align: 'left',
-    margin: 20,
-    x: 30
-  },
-  series,
-  xAxis: {
-    crosshair: true,
-    type: 'datetime',
-    gridLineWidth: 1,
-    gridLineColor: gridColor.value,
-    labels: {
-      style: {
-        color: contrastColor.value
+    legend: {
+      enabled: false,
+    },
+    title: {
+      text: '&nbsp;',
+      align: 'left',
+      margin: 20,
+      x: 30
+    },
+    series,
+    xAxis: {
+      crosshair: true,
+      type: 'datetime',
+      gridLineWidth: 1,
+      gridLineColor: gridColor.value,
+      labels: {
+        style: {
+          color: contrastColor.value
+        }
       }
-    }
-  },
-  yAxis: [
-    {
-      ...yAxisDefaultConfig,
-      gridLineColor: gridColor.value,
-      title: {
-        enabled: enableYAxis,
-        text: 'Avg Speed',
-        style: {
-          color: contrastColor.value
-        }
-      },
-      labels: {
-        enabled: enableYAxis,
-        format: '{value} mph',
-        style: {
-          color: contrastColor.value,
+    },
+    yAxis: [
+      {
+        ...yAxisDefaultConfig,
+        gridLineColor: gridColor.value,
+        title: {
+          enabled: enableYAxis,
+          text: 'Avg Speed',
+          style: {
+            color: contrastColor.value
+          }
+        },
+        labels: {
+          enabled: enableYAxis,
+          format: '{value} mph',
+          style: {
+            color: contrastColor.value,
+          },
         },
       },
-    },
-    { // Secondary yAxis
-      ...yAxisDefaultConfig,
-      gridLineColor: gridColor.value,
-      top: '25%',
-      title: {
-        enabled: enableYAxis,
-        text: 'Distance',
-        style: {
-          color: contrastColor.value,
+      { // Secondary yAxis
+        ...yAxisDefaultConfig,
+        gridLineColor: gridColor.value,
+        top: '25%',
+        title: {
+          enabled: enableYAxis,
+          text: 'Distance',
+          style: {
+            color: contrastColor.value,
+          },
+        },
+        labels: {
+          enabled: enableYAxis,
+          format: '{value} mi',
+          style: {
+            color: contrastColor.value,
+          },
+        },
+        opposite: true,
+      },
+      {
+        ...yAxisDefaultConfig,
+        gridLineColor: gridColor.value,
+        top: '50%',
+        title: {
+          enabled: enableYAxis,
+          text: 'Avg HR',
+          style: {
+            color: contrastColor.value
+          }
+        },
+        tickInterval: 10,
+        offset: 0,
+        labels: {
+          enabled: enableYAxis,
+          format: '{value}',
+          style: {
+            color: contrastColor.value,
+          },
         },
       },
-      labels: {
-        enabled: enableYAxis,
-        format: '{value} mi',
-        style: {
-          color: contrastColor.value,
+      {
+        ...yAxisDefaultConfig,
+        gridLineColor: gridColor.value,
+        top: '75%',
+        title: {
+          enabled: enableYAxis,
+          text: 'Efficiency Factor',
+          style: {
+            color: 'blue'
+          }
         },
-      },
-      opposite: true,
-    },
-    {
-      ...yAxisDefaultConfig,
-      gridLineColor: gridColor.value,
-      top: '50%',
-      title: {
-        enabled: enableYAxis,
-        text: 'Avg HR',
-        style: {
-          color: contrastColor.value
-        }
-      },
-      tickInterval: 10,
-      offset: 0,
-      labels: {
-        enabled: enableYAxis,
-        format: '{value}',
-        style: {
-          color: contrastColor.value,
+        tickInterval: 0.1,
+        offset: 0,
+        labels: {
+          enabled: enableYAxis,
+          format: '{value}',
+          style: {
+            color: 'blue',
+          },
         },
+        opposite: true,
       },
-    },
-    {
-      ...yAxisDefaultConfig,
-      gridLineColor: gridColor.value,
-      top: '75%',
-      title: {
-        enabled: enableYAxis,
-        text: 'Efficiency Factor',
-        style: {
-          color: 'blue'
-        }
+    ],
+    tooltip: {
+      useHTML: true,
+      animation: false,
+      positioner: function () {
+        return {
+          // @ts-ignore -- label is indeed there
+          x: this.chart.chartWidth - this.label.width, // right aligned
+          y: 0 // align to title
+        };
       },
-      tickInterval: 0.1,
-      offset: 0,
-      labels: {
-        enabled: enableYAxis,
-        format: '{value}',
-        style: {
-          color: 'blue',
-        },
-      },
-      opposite: true,
-    },
-  ],
-  tooltip: {
-    useHTML: true,
-    animation: false,
-    positioner: function () {
-      return {
-        // @ts-ignore -- label is indeed there
-        x: this.chart.chartWidth - this.label.width, // right aligned
-        y: 0 // align to title
-      };
-    },
-    formatter: function () {
-      const index = this.point.index;
-      const activity = activities.value[index];
-      return `
+      formatter: function () {
+        const index = this.point.index;
+        const activity = activities.value[index];
+        const { average_heartrate, average_speed } = activity;
+        return `
           <div class="text-body foreground text-right card pad border-1">
             <b>${dayjs(activity.start_date).format('DD MMM YYYY')}</b>
             <br />
-            ${activity.name}
-            <br />
-            ${activity.distance_miles.toFixed(2)} miles
-            <br /> 
-            ${convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-            <br />
-            ${activity.average_heartrate} bpm
+            ${[
+              activity.name,
+              `${activity.distance_miles.toFixed(2)} miles`,
+              `${convertMetricSpeedToMPH(average_speed).toFixed(2)} mph`,
+              `${average_heartrate || '--'} bpm`,
+              `${calcEfficiencyFactor(average_speed, average_heartrate).toFixed(2) || '--'} e`,
+            ].join('<br />')}
           </div>
         `;
+      },
+      borderWidth: 0,
+      backgroundColor: 'none',
+      pointFormat: '{point.y}',
+      headerFormat: '',
+      shadow: false,
+      style: {
+        fontSize: '18px'
+      },
     },
-    borderWidth: 0,
-    backgroundColor: 'none',
-    pointFormat: '{point.y}',
-    headerFormat: '',
-    shadow: false,
-    style: {
-      fontSize: '18px'
-    },
-  },
-} satisfies Options)});
+  } satisfies Options);
+});
 </script>
 
 <template>

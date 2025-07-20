@@ -16,16 +16,19 @@ useTriggerActionIfStatus(
 </script>
 
 <template>
-  <div class="grid" v-if="similarWorkouts.length > 0">
-    <MetricsChart
-      :activities="[...similarWorkouts, activitiesStore.activities[id]].filter(Boolean)"
-    />
-    <Tile
-      v-for="activity of similarWorkouts"
-      :key="activity.id"
-      :activity="activity"
-      :isCompact="true"
-    ></Tile>
+  <div>
+    <h2 class="text-h2 margin-b">Similar Activities</h2>
+    <div class="grid" v-if="similarWorkouts.length > 0">
+      <MetricsChart
+        :activities="[...similarWorkouts, activitiesStore.activities[id]].filter(Boolean)"
+      />
+      <Tile
+        v-for="activity of similarWorkouts"
+        :key="activity.id"
+        :activity="activity"
+        :isCompact="true"
+      ></Tile>
+    </div>
   </div>
 </template>
 

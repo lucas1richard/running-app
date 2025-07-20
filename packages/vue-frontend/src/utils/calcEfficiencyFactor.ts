@@ -10,6 +10,7 @@ interface CalcEfficiencyFactor {
 }
 
 const calcEfficiencyFactor: CalcEfficiencyFactor = (speed, heartRate) => {
+  if (!speed || !heartRate) return 0;
   return (convertMetricSpeedToMPH(speed) * YARDS_PER_MILE / 60) / heartRate;
 };
 

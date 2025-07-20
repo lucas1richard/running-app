@@ -2,7 +2,7 @@
 import { useActivitiesStore } from '@/stores/activities';
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import PageWrapper from '../../components/PageWrapper.vue';
+import PageWrapper from '@/components/PageWrapper.vue';
 import Tile from '@/components/Activities/Tile.vue';
 import { useTriggerActionIfStatus } from '@/components/hooks/useTriggerActionIfStatus';
 import HeartZonesDisplay from '@/components/HeartZonesDisplay.vue';
@@ -35,7 +35,6 @@ const updatePointer = (num: number) => pointer.value = num
       <HRZonesMap :id="activityId" :pointer="pointer" />
     </div>
     <div class="margin-t">
-      <h2 class="text-h2 margin-b">Similar Activities</h2>
       <SimilarWorkouts :id="activityId"></SimilarWorkouts>
     </div>
   </PageWrapper>
