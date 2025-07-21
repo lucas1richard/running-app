@@ -53,7 +53,6 @@ const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 <template>
   <PageWrapper>
-    <h1 class="text-h1">Calendar</h1>
     <div class="text-center text-h1">{{ currentMonth.format('MMMM YYYY') }}</div>
     <div class="flex">
       <button class="text-h4 dls-black-bg pad-lr" @click="backOneMonth">&larr;</button>

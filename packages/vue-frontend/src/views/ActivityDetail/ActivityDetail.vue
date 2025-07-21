@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { useActivitiesStore } from '@/stores/activities';
-import { computed, ref } from 'vue'
+import useRecentlyVisited from '@/stores/recentlyVisited';
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import PageWrapper from '@/components/PageWrapper.vue';
 import Tile from '@/components/Activities/Tile.vue';
@@ -24,6 +25,10 @@ useTriggerActionIfStatus(
 )
 const pointer = ref(0);
 const updatePointer = (num: number) => pointer.value = num
+
+const recentlyVisitedStore = useRecentlyVisited();
+
+watch(() => route.params.id, recentlyVisitedStore.addRecentlyVisited, { immediate: true });
 </script>
 
 <template>

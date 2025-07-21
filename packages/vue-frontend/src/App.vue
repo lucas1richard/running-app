@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import { onMounted, provide } from 'vue';
 import { useActivitiesStore } from './stores/activities';
 import SideNav from './SideNav.vue';
 import useHeartZonesStore from './stores/heartzones';
 import { usePRStore } from './stores/prs';
 import { provideIsDarkMode } from './components/hooks/useIsDarkMode';
 import { useTriggerActionIfStatus } from './components/hooks/useTriggerActionIfStatus';
+import TopNav from './TopNav.vue';
 
 provideIsDarkMode()
 
@@ -18,6 +18,7 @@ useTriggerActionIfStatus('fetchPRs', usePRStore().fetchPRs);
 <template>
   <SideNav />
   <div class="app-content">
+    <TopNav />
     <!-- <Container showViewSizeDisplay={true} providesViewSize={true}> -->
       <RouterView />
     <!-- </Container> -->
