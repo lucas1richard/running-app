@@ -8,8 +8,7 @@ import { Chart } from 'highcharts-vue';
 import highcharts, { type Options } from 'highcharts';
 import dayjs from 'dayjs';
 import { injectIsDarkMode } from './hooks/useIsDarkMode';
-
-// const viewSize = useViewSize();
+import { colors } from '@/utils/colors/theme';
 
 const { activities: activitiesProp } = defineProps<{
   activities: Activity[];
@@ -94,7 +93,7 @@ const options = computed(() => {
           calcEfficiencyFactor(average_speed, average_heartrate) || null
         ]),
       yAxis: 3,
-      color: 'blue',
+      color: colors.efficiencyFactorVar,
       ...seriesDefaultConfig,
     },
   ];
@@ -197,7 +196,7 @@ const options = computed(() => {
           enabled: enableYAxis,
           text: 'Efficiency Factor',
           style: {
-            color: 'blue'
+            color: colors.efficiencyFactorVar,
           }
         },
         tickInterval: 0.1,
@@ -206,7 +205,7 @@ const options = computed(() => {
           enabled: enableYAxis,
           format: '{value}',
           style: {
-            color: 'blue',
+            color: colors.efficiencyFactorVar,
           },
         },
         opposite: true,

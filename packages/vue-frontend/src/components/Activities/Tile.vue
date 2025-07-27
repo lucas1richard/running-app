@@ -72,8 +72,8 @@ const hrZones = heartzonesStore.selectHeartZones(activity.start_date);
           </div>
 
           <div>
-            <span :class="`${smallText} dls-blue`">Efficiency Factor</span>
-            <span :class="`margin-l ${largeText} dls-blue`">
+            <span :class="`${smallText} text-efficiencyFactor`">Efficiency Factor</span>
+            <span :class="`margin-l ${largeText} text-efficiencyFactor`">
               {{ calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2) }} y/b
             </span>
           </div>

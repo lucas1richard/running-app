@@ -17,6 +17,7 @@ import useSegments from './useSegments';
 import getGradeColorAbs from './getGradeColorAbs';
 import Surface from '@/components/DLS/Surface.vue';
 import prColors from '@/utils/colors/prColors';
+import { colors } from '@/utils/colors/theme';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -382,7 +383,7 @@ const options = computed<Highcharts.Options>(() => {
         data: efficiencyFactorData.value,
         yAxis: 5,
         fillOpacity: 0.1,
-        color: 'blue',
+        color: colors.efficiencyFactorVar,
         tooltip: {
           valueSuffix: ' yards/beat',
           pointFormatter() {
@@ -481,8 +482,8 @@ const options = computed<Highcharts.Options>(() => {
         top: '35%',
         offset: 0,
         id: 'EfficiencyFactor',
-        title: { enabled: enableYAxisLabels, text: 'Efficiency Factor', style: { color: 'blue', fontSize: '1.25rem' } },
-        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: 'blue' } },
+        title: { enabled: enableYAxisLabels, text: 'Efficiency Factor', style: { color: colors.efficiencyFactorVar, fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: colors.efficiencyFactorVar } },
         opposite: false,
       },
     ]

@@ -17,7 +17,7 @@ import Surface from './components/DLS/Surface.vue';
 </template>
 
 <style lang="scss" scoped>
-  @import "@/assets/theme.scss";
+  @import "@/assets/theme.module.scss";
 
   .side-nav {
     margin: 0;

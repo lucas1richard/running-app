@@ -1,7 +1,6 @@
 import './assets/main.scss';
 import 'primeicons/primeicons.css'
 
-
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import HighchartsVue from 'highcharts-vue'

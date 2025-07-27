@@ -33,8 +33,8 @@ const {
   measure,
   deferRender,
   height = '60rem',
-  minColor = [20, 20, 255, 0.5], // Red with some transparency
-  maxColor = [255, 0, 0, 0.5], // Green with full opacity
+  minColor = [20, 20, 255, 0.25],
+  maxColor = [255, 0, 0, 1],
   floorValue,
   ceilingValue,
   squareSize = 0.0001,
