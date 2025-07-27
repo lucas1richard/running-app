@@ -67,31 +67,36 @@ setupClickOutside();
     <div
       @click="isOpen = !isOpen"
       @keydown="toggleKeydown"
-      class="selecter"
+      class="selecter hover"
       role="button"
       :tabindex="'0'"
     >
-      <slot v-if="!props.data.find((v) => v.key === selected)" name="selecter"></slot>
-      <slot name="row" :row-data="props.data.find((v) => v.key === selected)" :key="selected"></slot>
+      <slot
+        v-if="!props.data.find((v) => v.key === selected)"
+        name="selecter"
+        :isOpen="isOpen"
+      ></slot>
+      <slot :isOpen="isOpen" name="row" :row-data="props.data.find((v) => v.key === selected)" :key="selected"></slot>
     </div>
-    <Surface v-show="isOpen" variant="foreground" class="dropdown-row-container pad full-width">
-      <div class="selecter" role="button" v-for="d in props.data" :key="d.key">
+    <div v-show="isOpen" variant="foreground" class="dropdown-row-container full-width">
+      <div class="selecter hover" role="button" v-for="d in props.data" :key="d.key">
         <div @click="selected = d.key">
-          <slot name="row" :row-data="d"></slot>
+          <slot name="row" :isOpen="isOpen" :row-data="d"></slot>
         </div>
       </div>
-    </Surface>
+    </div>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .dropdown-container {
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .dropdown-row-container {
-  position: absolute;
+  left: 0;
+  top: 0;
   max-height: 800px;
   overflow-y: auto;
   overflow-x: hidden;
@@ -100,5 +105,8 @@ setupClickOutside();
 
 .selecter {
   cursor: pointer;
+  /* :hover {
+    background-color: var(--color-blue-900);
+  } */
 }
 </style>

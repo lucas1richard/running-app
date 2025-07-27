@@ -1,8 +1,5 @@
+@import './base.scss';
 @import './theme.scss';
-
-* {
-  box-sizing: border-box;
-}
 
 body {
   margin: 0;
@@ -12,6 +9,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--color-background);
+  color: var(--color-text);
 }
 
 textarea {
@@ -59,11 +57,20 @@ label {
 }
 
 button {
-  padding: 0.5rem;
+  padding: calc(var(--space-unit) / 2);
   border: 1px solid black;
-  border-radius: 0.5rem;
+  border-radius: calc(var(--space-unit) / 2);
   font-weight: bolder;
   cursor: pointer;
+  background-color: var(--color-neutral-900);
+  color: var(--color-neutral-50);
+}
+
+@media (prefers-color-scheme: dark) {
+  button {
+    background-color: var(--color-neutral-900);
+    color: var(--color-neutral-50);
+  }
 }
 
 .btn {
@@ -797,58 +804,48 @@ input[type="range"]::-webkit-slider-thumb {
 
 .text-body {
   font-size: 1rem;
-  color: var(--color-text);
 }
 
 .text-h1 {
   font-size: 2rem;
   font-weight: bold;
-  color: var(--color-text);
 }
 
 .text-h2 {
   font-size: 1.8rem;
   font-weight: bold;
-  color: var(--color-text);
 }
 
 .text-h3 {
   font-size: 1.6rem;
   font-weight: bold;
-  color: var(--color-text);
 }
 
 .text-h4 {
   font-size: 1.4rem;
   font-weight: bold;
-  color: var(--color-text);
 }
 
 .text-h5 {
   font-size: 1.2rem;
   font-weight: bold;
-  color: var(--color-text);
 }
 
 .text-h6 {
   font-size: 1rem;
   font-weight: bold;
-  color: var(--color-text);
 }
 
 .text-sm {
   font-size: 0.8rem;
-  color: var(--color-text);
 }
 
 .text-xs {
   font-size: 0.6rem;
-  color: var(--color-text);
 }
 
 .text-xxs {
   font-size: 0.4rem;
-  color: var(--color-text);
 }
 
 .text-no-wrap {

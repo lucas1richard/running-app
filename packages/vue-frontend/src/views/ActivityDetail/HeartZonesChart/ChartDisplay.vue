@@ -64,13 +64,14 @@ const {
 }>();
 const activityStore = useActivitiesStore();
 const viewSize = useViewSize();
+const activityId = computed(() => id);
 const smoothAverageWindow = ref(20);
-const latlngStream = activityStore.getStreamTypeData(id, 'latlng');
+const latlngStream = activityStore.getStreamTypeData(activityId.value, 'latlng');
 const highlightedSegment = ref(undefined);
 
 // const addPin = useCallback(function(streamKey) {
-//   dispatch(setStreamPin(id, streamKey, this.index, '', '', latlngStream[this.index]));
-// }, [id, dispatch, latlngStream]);
+//   dispatch(setStreamPin(activityId.value, streamKey, this.index, '', '', latlngStream[this.index]));
+// }, [activityId.value, dispatch, latlngStream]);
 
 const fullTime = computed<(number | null)[]>(() => {
   const maxTime = time[time.length - 1];
@@ -116,7 +117,7 @@ const efficiencyFactorData = computed(
   ])
 );
 const ids = computed(() => [id]);
-const [segments] = useSegments(ids.value).value;
+const segments = useSegments(ids);
 
 const bestEffortsData = computed(
   () => bestEfforts.map((val, ix) => ({
@@ -278,8 +279,8 @@ const options = computed<Highcharts.Options>(() => {
       },
       {
         ...seriesDefaultConfig,
-        name: segments.name,
-        data: segments.data,
+        name: segments.value[0].name,
+        data: segments.value[0].data,
         type: 'variwide',
         yAxis: 2,
         fillOpacity: 0.1,
@@ -448,7 +449,7 @@ const options = computed<Highcharts.Options>(() => {
         top: '10%',
         id: 'laps',
         // min: lapsData.length < 2 ? splitsMin * 0.97 : lapsMin * 0.97,
-        title: { enabled: enableYAxisLabels, text: segments.name, style: { color: contrastLabelColor.value, fontSize: '1.25rem' } },
+        title: { enabled: enableYAxisLabels, text: segments.value[0].name, style: { color: contrastLabelColor.value, fontSize: '1.25rem' } },
         labels: { enabled: enableYAxisLabels, format: '{value} mph', style: { color: contrastLabelColor.value } },
         opposite: true,
       },

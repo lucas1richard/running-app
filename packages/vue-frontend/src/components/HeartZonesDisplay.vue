@@ -2,7 +2,7 @@
 import usePreferencesStore from '@/stores/preferences';
 import Surface from './DLS/Surface.vue';
 import useHeartZonesStore from '@/stores/heartzones';
-import { computed, type Ref } from 'vue';
+import { computed } from 'vue';
 import { useActivitiesStore } from '@/stores/activities';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH, getDurationString } from '@/utils';
 
@@ -10,16 +10,18 @@ const prefStore = usePreferencesStore();
 const hrStore = useHeartZonesStore();
 const activitiesStore = useActivitiesStore();
 
-const { activity } = defineProps<{ activity: Activity; }>();
+const { activity: activityProp } = defineProps<{ activity: Activity; }>();
+
+const activity = computed(() => activityProp);
 
 const allZones = hrStore.record;
 const configZonesId = prefStore.getPreferredHRZoneId();
-const nativeZones = hrStore.selectHeartZones(activity.start_date_local);
-const heartData = activitiesStore.getStreamTypeData(activity.id, 'heartrate')
-const velocityData = activitiesStore.getStreamTypeData(activity.id, 'velocity_smooth')
+const nativeZones = hrStore.selectHeartZones(activity.value.start_date_local);
+const heartData = computed(() => activitiesStore.getStreamTypeData(activity.value.id, 'heartrate'))
+const velocityData = computed(() => activitiesStore.getStreamTypeData(activity.value.id, 'velocity_smooth'))
 
 const zonesId = computed(() => configZonesId === -1 ? nativeZones.value.id : configZonesId);
-const zones = computed(() => allZones.find(({ id }) => id === zonesId) || nativeZones.value);
+const zones = computed(() => allZones.find(({ id }) => id === zonesId.value) || nativeZones.value);
 const totalTimes = computed(() => convertHeartDataToZoneTimes(heartData.value, zones.value));
 const percents = computed(() => totalTimes.value.map((time) => (100 * time / heartData.value.length).toFixed(2)));
 const avg = computed(() => convertHeartDataToZoneSpeeds(zones.value, heartData.value, velocityData.value));

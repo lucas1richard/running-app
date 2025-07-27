@@ -6,7 +6,7 @@ import RecentlyVisitedActivities from './components/RecentlyVisitedActivities.vu
 
 <template>
   <Surface variant="foreground">
-    <div class="text-body pad">
+    <div class="text-body">
       <RecentlyVisitedActivities />
     </div>
   </Surface>

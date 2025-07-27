@@ -108,10 +108,8 @@ export const useActivitiesStore = defineStore('activities', () => {
   }
 
   const getStreamTypeData = <F extends SimpleStreamTypes>(id: number, findType: F) => {
-    return computed(() => {
-      const stream = streams[id]?.stream?.find?.(({ type }) => type === findType);
-      return (stream?.data || emptyArray) as F extends 'latlng' ? LatLng[] : number[];
-    })
+    const stream = streams[id]?.stream?.find?.(({ type }) => type === findType);
+    return (stream?.data || emptyArray) as F extends 'latlng' ? LatLng[] : number[];
   };
 
   const getStreamTypeMulti = <F extends SimpleStreamTypes>(ids: number[], findType: F) => computed(
@@ -138,11 +136,11 @@ export const useActivitiesStore = defineStore('activities', () => {
     }, {});
   });
 
-  const getSimilarWorkouts = (id: number) => computed(() => (similarWorkouts[id] || [])
+  const getSimilarWorkouts = (id: number) => (similarWorkouts[id] || [])
     .filter(Boolean)
     .sort((a, b) => similarWorkoutsMeta[b]?.longestCommonSegmentSubsequence - similarWorkoutsMeta[a]?.longestCommonSegmentSubsequence)
-    .map((id) => activities[id])
-  );
+    .map((id) => activities[id]);
+
   return {
     activities,
     activitiesOrder,

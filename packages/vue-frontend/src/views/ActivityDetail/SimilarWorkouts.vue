@@ -3,15 +3,18 @@ import Tile from '@/components/Activities/Tile.vue';
 import { useTriggerActionIfStatus } from '@/components/hooks/useTriggerActionIfStatus';
 import MetricsChart from '@/components/MetricsChart.vue';
 import { useActivitiesStore } from '@/stores/activities';
+import { computed } from 'vue';
 
 const activitiesStore = useActivitiesStore();
 const { id } = defineProps<{ id: number }>();
 
-const similarWorkouts = activitiesStore.getSimilarWorkouts(id);
+const activityId = computed(() => id);
+
+const similarWorkouts = computed(() => activitiesStore.getSimilarWorkouts(activityId.value));
 
 useTriggerActionIfStatus(
-  `fetchSimilarWorkouts/${id}`,
-  activitiesStore.makeSetchSimilarWorkouts(id)
+  `fetchSimilarWorkouts/${activityId.value}`,
+  activitiesStore.makeSetchSimilarWorkouts(activityId.value)
 )
 </script>
 

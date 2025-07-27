@@ -1,5 +1,5 @@
 <script lang="js" setup>
-import { computed, useId } from 'vue';
+import { computed, unref, useId } from 'vue';
 import {
   MglMap,
   MglGeoJsonSource,
@@ -18,7 +18,7 @@ const { id, animated = false, pointer = 0 } = defineProps({
   id: Number,
   animated: Boolean,
   pointer: Number,
-})
+});
 
 const isDarkReaderMode = injectIsDarkMode();
 const outlineSourceId = useId() || 'outlineSourceId';
@@ -26,11 +26,11 @@ const hrZonesSourceId = useId() || 'hrZonesSourceId';
 const activitiesStore = useActivitiesStore();
 const hrStore = useHeartZonesStore();
 
-const latlngStreamData = activitiesStore.getStreamTypeData(id, 'latlng');
-const heartRateStream = activitiesStore.getStreamTypeData(id, 'heartrate');
-const activity = activitiesStore.activities[id];
+const latlngStreamData = computed(() => activitiesStore.getStreamTypeData(id, 'latlng'));
+const heartRateStream = computed(() => activitiesStore.getStreamTypeData(id, 'heartrate'));
+const activity = computed(() => activitiesStore.activities[id]);
 
-const zones = hrStore.selectHeartZones(activity.start_date_local);
+const zones = hrStore.selectHeartZones(activity.value.start_date_local);
 const lnglatStream = computed(() => latlngStreamData.value.map(([lat, lng]) => [lng, lat]));
 const hrzones = computed(() => condenseZonesFromHeartRate(zones.value, heartRateStream.value));
 

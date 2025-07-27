@@ -4,19 +4,21 @@ import Surface from './components/DLS/Surface.vue';
 </script>
 
 <template>
-  <div class="side-nav">
-    <Surface variant="foreground">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/calendar">Calendar</RouterLink>
-      <RouterLink to="/personal-records">Personal Records</RouterLink>
-      <RouterLink to="/volume">Volume</RouterLink>
-      <RouterLink to="/multi-map">Multi Map</RouterLink>
-      <RouterLink to="/admin">Admin</RouterLink>
+  <div class="side-nav full-height">
+    <Surface variant="foreground" class="full-height">
+      <RouterLink class="text-h6" to="/">Home</RouterLink>
+      <RouterLink class="text-h6" to="/calendar">Calendar</RouterLink>
+      <RouterLink class="text-h6" to="/personal-records">Personal Records</RouterLink>
+      <RouterLink class="text-h6" to="/volume">Volume</RouterLink>
+      <RouterLink class="text-h6" to="/multi-map">Multi Map</RouterLink>
+      <RouterLink class="text-h6" to="/admin">Admin</RouterLink>
     </Surface>
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
+  @import "@/assets/theme.scss";
+
   .side-nav {
     margin: 0;
     padding: 0;
@@ -26,36 +28,17 @@ import Surface from './components/DLS/Surface.vue';
     overflow: auto;
   }
 
-  /* Sidebar links */
   a {
+    color: var(--color-blue-400);
     display: block;
     padding: 0.5rem 0.5rem;
     text-decoration: none;
-    font-weight: bold;
     text-decoration: none;
-    font-size: 15px;
     display: block;
-  }
 
-  /* Active/current link */
-  a:active {
-    background-color: #04AA6D;
-    color: white;
+    @include hover-effect;
+    &.router-link-exact-active {
+      @include hovered();
+    }
   }
-
-  /* Links on mouse-over */
-  a:hover:not(.active) {
-    background-color: #555;
-    color: white;
-  }
-
-  /* ${(props) => props.theme.breakpoints.down('md')} {
-    width: 100%;
-    height: auto;
-    position: relative;
-    a {
-      float: left;
-      text-align: center;
-      float: none;
-    } */
 </style>

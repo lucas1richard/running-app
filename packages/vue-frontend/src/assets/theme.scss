@@ -1,22 +1,134 @@
+@use "sass:map";
+
 :root {
-  --breakpoint-xs: 0px;
-  --breakpoint-sm: 600px;
-  --breakpoint-md: 960px;
-  --breakpoint-lg: 1280px;
-  --breakpoint-xl: 1920px;
-  --space-unit: 1rem;
-  --color-background: #d5dadc;
-  --color-foreground: #fafaf8;
-  --color-text: #333333;
-  --box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
-  --dls-blue: #0000ff;
-  --dls-blue-darker: color-mix(in srgb, var(--dls-blue) 70%, black);
-  --box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
-  --hrZone1: rgba(0, 132, 255, 1);
-  --hrZone2: rgba(0,255,0, 1);
-  --hrZone3: rgba(255, 251, 0, 1);
-  --hrZone4: rgba(255, 115, 0, 1);
-  --hrZone5: rgba(255,0,0, 1);
+  $colors: (
+    neutral: (900: #121212,
+      800: color-mix(in srgb, #121212 90%, white 10%),
+      700: color-mix(in srgb, #121212 80%, white 20%),
+      600: color-mix(in srgb, #121212 70%, white 30%),
+      500: color-mix(in srgb, #121212 60%, white 40%),
+      400: color-mix(in srgb, #121212 50%, white 50%),
+      300: color-mix(in srgb, #121212 40%, white 60%),
+      200: color-mix(in srgb, #121212 30%, white 70%),
+      100: color-mix(in srgb, #121212 20%, white 80%),
+      50: color-mix(in srgb, #121212 10%, white 90%),
+    ),
+    red: (50: #FEF2F2,
+      100: #FEE2E2,
+      200: #FECACA,
+      300: #FCA5A5,
+      400: #F87171,
+      500: #EF4444,
+      600: #DC2626,
+      700: #B91C1C,
+      800: #991B1B,
+      900: #7F1D1D),
+    amber: (50: #FFFBEB,
+      100: #FEF3C7,
+      200: #FDE68A,
+      300: #FCD34D,
+      400: #FBBF24,
+      500: #F59E0B,
+      600: #D97706,
+      700: #B45309,
+      800: #92400E,
+      900: #78350F),
+    emerald: (50: #ECFDF5,
+      100: #D1FAE5,
+      200: #A7F3D0,
+      300: #6EE7B7,
+      400: #34D399,
+      500: #10B981,
+      600: #059669,
+      700: #047857,
+      800: #065F46,
+      900: #064E3B),
+    blue: (50: #EFF6FF,
+      100: #DBEAFE,
+      200: #BFDBFE,
+      300: #93C5FD,
+      400: #60A5FA,
+      500: #3B82F6,
+      600: #2563EB,
+      700: #1D4ED8,
+      800: #1E40AF,
+      900: #1E3A8A),
+    indigo: (50: #EEF2FF,
+      100: #E0E7FF,
+      200: #C7D2FE,
+      300: #A5B4FC,
+      400: #818CF8,
+      500: #6366F1,
+      600: #4F46E5,
+      700: #4338CA,
+      800: #3730A3,
+      900: #312E81),
+    violet: (50: #F5F3FF,
+      100: #EDE9FE,
+      200: #DDD6FE,
+      300: #C4B5FD,
+      400: #A78BFA,
+      500: #8B5CF6,
+      600: #7C3AED,
+      700: #6D28D9,
+      800: #5B21B6,
+      900: #4C1D95),
+    pink: (50: #FDF2F8,
+      100: #FCE7F3,
+      200: #FBCFE8,
+      300: #F9A8D4,
+      400: #F472B6,
+      500: #EC4899,
+      600: #DB2777,
+      700: #BE185D,
+      800: #9D174D,
+      900: #831843)
+  );
+
+@each $color, $shades in $colors {
+  @each $shade, $value in $shades {
+    --color-#{$color}-#{$shade}: #{$value};
+
+    .bg-#{$color}-#{$shade} {
+      background-color: var(--color-#{$color}-#{$shade});
+    }
+
+    .text-#{$color}-#{$shade} {
+      color: var(--color-#{$color}-#{$shade});
+    }
+  }
+}
+
+--breakpoint-xs: 0px;
+--breakpoint-sm: 600px;
+--breakpoint-md: 960px;
+--breakpoint-lg: 1280px;
+--breakpoint-xl: 1920px;
+--space-unit: 1rem;
+--color-background: #d5dadc;
+
+--color-foreground: #fafaf8;
+--color-text: #333333;
+--color-text-contrast: #ffffff;
+--box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+--dls-blue: #0000ff;
+--dls-blue-darker: color-mix(in srgb, var(--dls-blue) 70%, black);
+--box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+--hrZone1: rgba(0, 132, 255, 1);
+--hrZone2: rgba(0, 255, 0, 1);
+--hrZone3: rgba(255, 251, 0, 1);
+--hrZone4: rgba(255, 115, 0, 1);
+--hrZone5: rgba(255, 0, 0, 1);
+
+$sizes: 40px, 50px, 80px;
+
+@each $size in $sizes {
+  .icon-#{$size} {
+    font-size: $size;
+    height: $size;
+    width: $size;
+  }
+}
 }
 
 @media (prefers-color-scheme: dark) {
@@ -25,9 +137,34 @@
     --color-foreground: #0e0e0e;
     --box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.5);
     --color-text: #ffffff;
+    --color-text-contrast: #333333;
     --color-primary: #007acc;
     --color-secondary: #d7ba7d;
     --color-accent: #ffcc00;
     --dls-blue: #29a5f9;
   }
+}
+
+@mixin hovered {
+  background-color: var(--color-blue-900);
+  color: var(--color-text-contrast) !important;
+  box-shadow: var(--box-shadow);
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--color-blue-700);
+    color: var(--color-text) !important;
+    box-shadow: var(--box-shadow);
+  }
+}
+
+@mixin hover-effect {
+
+  &:hover,
+  &:focus {
+    @include hovered();
+  }
+}
+
+.hover {
+  @include hover-effect;
 }

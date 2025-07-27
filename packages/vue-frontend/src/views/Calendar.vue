@@ -55,9 +55,9 @@ const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   <PageWrapper>
     <div class="text-center text-h1">{{ currentMonth.format('MMMM YYYY') }}</div>
     <div class="flex">
-      <button class="text-h4 dls-black-bg pad-lr" @click="backOneMonth">&larr;</button>
-      <button class="text-h4 dls-black-bg pad-lr" @click="snapToCurrent">Snap to Current</button>
-      <button class="text-h4 dls-black-bg pad-lr" @click="forwardOneMonth">&rarr;</button>
+      <button class="text-h4 pad-lr" @click="backOneMonth">&larr;</button>
+      <button class="text-h4 pad-lr" @click="snapToCurrent">Snap to Current</button>
+      <button class="text-h4 pad-lr" @click="forwardOneMonth">&rarr;</button>
     </div>
     <div class="grid margin-t">
       <Surface v-for="label of weekdayLabels" class="card pad dls-blue-bg text-h4">{{ label }}</Surface>
@@ -67,8 +67,12 @@ const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             {{ day.day }}
           </div>
 
-          <Tile v-for="activity of day.activities" :activity="activity" :key="activity.id" :is-compact="true">
-          </Tile>
+          <Tile
+            v-for="activity of day.activities"
+            :activity="activity"
+            :key="activity.id"
+            :is-compact="true"
+          ></Tile>
         </Surface>
 
         <div v-else></div>
@@ -82,13 +86,13 @@ const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   display: flex;
   justify-content: center;
   align-items: end;
-  gap: var(--space-unit);
+  gap: calc(var(--space-unit) * 0.5);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: auto repeat(5, 1fr);
-  gap: 0.5rem;
+  gap: calc(var(--space-unit) * 0.5);
 }
 </style>
