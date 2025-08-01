@@ -59,10 +59,10 @@ const smallestValue = computed(() => Math.min(...data.map((d) => Number(d[measur
 const gradientId = useId();
 
 const edges = computed(() => {
-  const maxLng = data.reduce((max, { lon }) => Math.max(max, Number(lon)), -Infinity);
-  const minLng = data.reduce((min, { lon }) => Math.min(min, Number(lon)), Infinity);
-  const maxLat = data.reduce((max, { lat }) => Math.max(max, Number(lat)), -Infinity);
-  const minLat = data.reduce((min, { lat }) => Math.min(min, Number(lat)), Infinity);
+  const maxLng = data.reduce((max, { lon }) => Math.max(max, Number(lon)), -90);
+  const minLng = data.reduce((min, { lon }) => Math.min(min, Number(lon)), 90);
+  const maxLat = data.reduce((max, { lat }) => Math.max(max, Number(lat)), -90);
+  const minLat = data.reduce((min, { lat }) => Math.min(min, Number(lat)), 90);
 
   return { maxLng, minLng, maxLat, minLat };
 });

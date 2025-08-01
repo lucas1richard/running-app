@@ -18,9 +18,9 @@ const findActivityById = async (id) => {
 
 const findAllActivities = async (rowLimit) => {
   return Activity.findAll({
-    where: {
-      sport_type: 'Run',
-    },
+    // where: {
+    //   sport_type: 'Run',
+    // },
     order: [['start_date', 'DESC']],
     limit: rowLimit,
   })
@@ -111,7 +111,7 @@ const findActivitiesByIdStream = async (idsArray = []) => {
 const findNearbyStartingActivities = async (activity) => {
   Activity.findAll({
     where: {
-      sport_type: 'Run',
+      // sport_type: 'Run',
       isNearby: sequelizeCoordsDistance(activity.start_latlng,
         0.0006,
         'start_latlng'),

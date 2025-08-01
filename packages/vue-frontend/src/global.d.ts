@@ -40,6 +40,7 @@ type StreamPin = {
 type HeatMapData = {
   lat: string;
   lon: string;
+  sportType: string;
   total_seconds: number;
 };
 

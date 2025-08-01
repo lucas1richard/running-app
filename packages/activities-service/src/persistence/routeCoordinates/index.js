@@ -30,7 +30,7 @@ const { getHeatMapByTimeframeSql, getHeatMapSql } = require('../sql-queries');
 //   }
 // }
 
-const getAllCoordinatesStream = async (referenceTime, timeframe) => {
+const getAllCoordinatesStream = async (referenceTime, timeframe, sportType = '%') => {
   if (timeframe) {
     assert(
       timeframe.toLowerCase().match(/^\d{1,2}\s*(day|week|month|year)?$/i),
@@ -45,7 +45,7 @@ const getAllCoordinatesStream = async (referenceTime, timeframe) => {
   }
   const sql = timeframe ? getHeatMapByTimeframeSql : getHeatMapSql;
   const readable = await queryStream({
-    sql: sql.replace(/_timeframe/g, timeframe),
+    sql: sql.replace(/_timeframe/g, timeframe).replace(/_sportType/g, `"${sportType}"`),
     queryOptions: { values: [referenceTime, timeframe] },
     streamOptions: { highWaterMark: 500 },
 });

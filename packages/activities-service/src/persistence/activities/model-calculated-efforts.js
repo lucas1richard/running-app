@@ -19,7 +19,7 @@ class CalculatedBestEfforts extends Model {
     await this.sync({ force: true });
     const activities = await Activity.findAll({
       where: {
-        sport_type: 'Run',
+        // sport_type: 'Run',
       },
       order: [
         ['start_date_local', 'asc'],

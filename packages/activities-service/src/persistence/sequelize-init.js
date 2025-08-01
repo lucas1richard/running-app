@@ -55,7 +55,7 @@ const initSequelize = async () => {
 
     await Activity.addScope('defaultScope', {
       where: {
-        sport_type: 'Run',
+        // sport_type: 'Run',
         [Sequelize.Op.or]: [
           { hidden: false },
           { hidden: null },

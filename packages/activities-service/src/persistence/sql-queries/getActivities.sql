@@ -98,7 +98,7 @@ FROM
   LEFT OUTER JOIN `calculated_best_efforts` AS `calculatedBestEffortsA` ON `activities`.`id` = `calculatedBestEffortsA`.`activityId`
 WHERE
   (`activities`.`hidden` = false OR `activities`.`hidden` IS NULL)
-  AND `activities`.`sport_type` = 'Run'
+  -- AND `activities`.`sport_type` = 'Run'
 GROUP BY
   `activities`.`id`, `zonesCachesA`.`activityId`, `weather`.`id`, `calculatedBestEffortsA`.`activityId`
 ORDER BY

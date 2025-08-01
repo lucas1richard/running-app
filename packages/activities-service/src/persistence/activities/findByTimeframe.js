@@ -9,7 +9,7 @@ const Activity = require('./model-activities');
 const findByTimeframe = async (msOffset = 365 * 24 * 60 * 60 * 1000, rowLimit = 200) => {
   return Activity.findAll({
     where: {
-      sport_type: 'Run',
+      // sport_type: 'Run',
       start_date: {
         // within the past year
         [Sequelize.Op.gte]: new Date().getTime() - msOffset,

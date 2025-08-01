@@ -47,7 +47,7 @@ ActivitySegment.init(
       allowNull: false,
     },
     activity_type: {
-      type: DataTypes.ENUM('Run', 'Ride'),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     distance: {
