@@ -10,6 +10,7 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import './index.css';
+import './assets/main.scss';
 import App from './App';
 import { enableMapSet } from 'immer';
 import { styledComponentsTheme } from './DLS/theme';

@@ -114,8 +114,8 @@ const Tile: React.FC<Props> = ({
             </div>
 
             <div>
-              <span className={`${smallText} dls-blue`}>Efficiency Factor</span>
-              <span className={`margin-l ${largeText} dls-blue`}>
+              <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span>
+              <span className={`margin-l ${largeText} text-efficiencyFactor`}>
                 {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
               </span>
             </div>

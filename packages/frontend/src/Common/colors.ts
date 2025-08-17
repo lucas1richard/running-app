@@ -1,3 +1,7 @@
+import themeColors from '../assets/theme.module.scss';
+
+export const colors = themeColors as unknown as Record<string, string>;
+
 export const prColors = {
   gold: {
     fill: 'rgba(255, 215, 0, 0.9)',

@@ -1,5 +1,5 @@
 import React, { useState, useId } from 'react';
-import { Basic, Button, Flex } from '../DLS';
+import { Button, Flex } from '../DLS';
 
 type TabProps = {
   children: React.ReactNode;

@@ -8,6 +8,7 @@ import useViewSize from '../hooks/useViewSize';
 import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
 import Surface from '../DLS/Surface';
 import useDarkReaderMode from '../hooks/useDarkReaderMode';
+import { colors } from './colors';
 
 const seriesDefaultConfig = {
   type: 'line',
@@ -106,7 +107,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
         name: 'Efficiency Factor',
         data: activities.map(({ start_date, average_heartrate, average_speed }) => [new Date(start_date).getTime(), calcEfficiencyFactor(average_speed, average_heartrate)]),
         yAxis: 3,
-        color: 'blue',
+        color: colors.efficiencyFactorVar,
         ...seriesDefaultConfig,
       },
     ],
@@ -189,7 +190,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
           enabled: enableYAxis,
           text: 'Efficiency Factor',
           style: {
-            color: 'blue'
+            color: colors.efficiencyFactorVar
           }
         },
         tickInterval: 0.1,
@@ -198,7 +199,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
           enabled: enableYAxis,
           format: '{value}',
           style: {
-            color: 'blue',
+            color: colors.efficiencyFactorVar,
           },
         },
         opposite: true,
