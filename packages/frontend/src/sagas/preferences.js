@@ -29,9 +29,9 @@ function* fetchActivityPreferencesSaga({ payload, key }) {
 }
 
 function* setUserPreferencesSaga({ payload }) { // everything except the individual activity preferences
-  const existingListPref = yield(select(selectListPrerences));
-  const existingGlobalPref = yield(select(selectGlobalPrerences));
-  const defaultActivityPref = yield(select((state) => selectActivityPreferences(state, 'default')));
+  const existingListPref = yield select(selectListPrerences);
+  const existingGlobalPref = yield select(selectGlobalPrerences);
+  const defaultActivityPref = yield select((state) => selectActivityPreferences(state, 'default'));
   const preferences = {
     list: existingListPref,
     global: existingGlobalPref,
@@ -42,7 +42,7 @@ function* setUserPreferencesSaga({ payload }) { // everything except the individ
 }
 
 function* setActivityPreferencesSaga({ payload }) {
-  const preferences = yield(select((state) => selectActivityPreferences(state, payload.activityId)));
+  const preferences = yield select((state) => selectActivityPreferences(state, payload.activityId));
   yield call(requestor.put, `/activities/${payload.activityId}/preferences`, preferences);
 }
 

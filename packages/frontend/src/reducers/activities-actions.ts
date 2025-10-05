@@ -1,5 +1,6 @@
 import { hash } from 'ohash';
 import { AsyncAction } from '../types';
+import { ActivitiesState } from './activities';
 
 // SAGA TRIGGERS
 export const FETCH_ACTIVITIES = 'activities/FETCH_ACTIVITIES';
@@ -75,6 +76,9 @@ export const setActivitiesAct = (activities: Activity[]) => ({ type: SET_ACTIVIT
 
 export const SET_ACTIVITIES_STREAM = 'activitiesReducer/SET_ACTIVITIES_STREAM';
 export const setActivitiesStreamAct = (activities: Activity[]) => ({ type: SET_ACTIVITIES_STREAM, payload: activities });
+
+export const SET_ACTIVITIES_DISPLAY_TYPES = 'activitiesReducer/SET_ACTIVITIES_DISPLAY_TYPES';
+export const setActivitiesDisplayTypesAct = (types: ActivitiesState['displayTypes']) => ({ type: SET_ACTIVITIES_DISPLAY_TYPES, payload: types });
 
 export const SET_ACTIVITIES_SUMMARY = 'activitiesReducer/SET_ACTIVITIES_SUMMARY';
 export const setActivitiesSummaryAct = (summary) => ({ type: SET_ACTIVITIES_SUMMARY, payload: summary });

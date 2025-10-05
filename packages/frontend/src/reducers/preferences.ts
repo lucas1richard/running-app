@@ -137,9 +137,16 @@ const getActivityPreferences = (preferencesState: PreferencesState, id: number) 
 };
 
 export const selectActivityPreferences = createDeepEqualSelector([
-  getActivityPreferences,
+  getPreferencesState,
   makeGet2ndArg<number>(),
 ], getActivityPreferences);
+
+export const selectSportTypePreferences = createDeepEqualSelector([
+  getPreferencesState,
+], (prefState) => {
+  const sportTypePref = prefState.global.defined.activityDisplayTypes;
+  return sportTypePref;
+});
 
 export const getPreferenceFree = (preferencesState: PreferencesState, keyPath: PreferencesKeyPath) => {
   const copyPath = [...keyPath];

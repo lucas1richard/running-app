@@ -84,7 +84,7 @@ const CumulativeByRun = ({data, greatestTotal, groupedData }) => {
       }
     )
     }),
-  }), [data, isSmall, isDarkMode]);
+  }), [groupedData, greatestTotal, isSmall, isDarkMode]);
 
   return (
     <Surface>

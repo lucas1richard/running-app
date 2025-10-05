@@ -10,14 +10,21 @@ const distances = [
   { name: '2 mile', distance: 3219 },
   { name: '5K', distance: 5e3 },
   { name: '10K', distance: 10e3 },
+  { name: '10 mile', distance: 16090 },
+  { name: '15 mile', distance: 24140 },
+  { name: '15K', distance: 15e3 },
   { name: '20K', distance: 20e3 },
   { name: '1/2 Marathon', distance: 21097.5 },
+  { name: '25K', distance: 25e3 },
   { name: '30K', distance: 30e3 },
+  { name: '20 mile', distance: 32180 },
   { name: '40K', distance: 40e3 },
   { name: 'Marathon', distance: 42195 },
   { name: '50K', distance: 50e3 },
   { name: '100K', distance: 100e3 },
 ];
+
+distances.sort((a, b) => a.distance - b.distance);
 
 const calculateActivityBestEfforts = async (activityId, meterDistances = distances) => {
   const streams = await ingestActivityStreams(activityId, ['distance', 'time']);

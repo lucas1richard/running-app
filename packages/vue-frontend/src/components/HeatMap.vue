@@ -148,6 +148,7 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'"
         :bounds="initialViewState.bounds"
+        @map:zoomend="console.log"
       >
         <mgl-geo-json-source
           :source-id="heatmapSource"

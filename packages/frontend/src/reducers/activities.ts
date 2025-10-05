@@ -4,7 +4,7 @@ import dayjs, { type Dayjs, type ManipulateType } from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 
 import { createDeepEqualSelector } from '../utils';
-import { selectListPrerences, selectPreferencesZonesId } from './preferences';
+import { getPreferencesState, selectListPrerences, selectPreferencesZonesId, selectSportTypePreferences } from './preferences';
 import {
   SET_ACTIVITIES,
   SET_ACTIVITIES_STREAM,
@@ -17,6 +17,7 @@ import {
   SET_WEATHER_DATA,
   SET_STREAM_PINS,
   SET_HEATMAP_DATA,
+  SET_ACTIVITIES_DISPLAY_TYPES,
 } from './activities-actions';
 import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from './heartzones';
 import { emptyArray, emptyObject } from '../constants';
@@ -25,7 +26,9 @@ import { makeGet2ndArg, makeGet3rdArg } from '../utils/selectorUtils';
 
 dayjs.extend(weekday);
 
-type ActivitiesState = {
+export type ActivitiesState = {
+  /** Activity types to display or not */
+  displayTypes: Record<string, boolean>;
   activities: Record<number, Activity>;
   activitiesOrder: number[];
   details: Record<number, ActivityDetails>;
@@ -39,6 +42,7 @@ type ActivitiesState = {
 };
 
 const activitiesInitialState: ActivitiesState = {
+  displayTypes: {},
   activities: {},
   activitiesOrder: [],
   details: {},
@@ -58,6 +62,11 @@ interface Action {
 
 const activitiesReducer = (state = activitiesInitialState, action: Action = { type: '' }) => {
   switch (action.type) {
+    case SET_ACTIVITIES_DISPLAY_TYPES: {
+      return produce(state, (nextState) => {
+        nextState.displayTypes = { ...state.displayTypes, ...action.payload };
+      });
+    }
     case SET_ACTIVITIES: {
       const activitiesOrder = action.payload.map(({ id }) => id);
       return produce(state, (nextState) => {
@@ -68,6 +77,9 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
             )
           }])
         );
+        action.payload.forEach((activity) => {
+          nextState.displayTypes[activity.sport_type] = true;
+        });
         nextState.activitiesOrder = activitiesOrder;
         nextState.loading = false;
         nextState.error = undefined;
@@ -85,6 +97,9 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
           }])
         ));
         nextState.activitiesOrder = [...state.activitiesOrder, ...activitiesOrder];
+        action.payload.forEach((activity) => {
+          nextState.displayTypes[activity.sport_type] = true;
+        });
         nextState.loading = false;
         nextState.error = undefined;
       });
@@ -175,8 +190,8 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
 const getActivitiesState = (state: RootState) => state.activities;
 
 export const selectActivities = createDeepEqualSelector(
-  [getActivitiesState],
-  (activities) => {
+  [getActivitiesState, selectSportTypePreferences],
+  (activities, displayPrefs) => {
     const order = [...activities.activitiesOrder];
 
     order.sort((a, b) => {
@@ -185,11 +200,11 @@ export const selectActivities = createDeepEqualSelector(
       return sStart - sEnd;
     });
 
-    return order.map((id) => activities.activities[id]);
+    return order.map((id) => activities.activities[id]).filter(({ sport_type }) => displayPrefs[sport_type]);
   }
 );
 
-const getListActivities = (activities, { sortBy, sortOrder}, fromIx: number, toIx: number) => {
+const getListActivities = (activities, { sortBy, sortOrder}, displayTypePrefs, fromIx: number, toIx: number) => {
   const order = [...activities.activitiesOrder].slice(fromIx, toIx);
 
     order.sort((a, b) => {
@@ -205,11 +220,12 @@ const getListActivities = (activities, { sortBy, sortOrder}, fromIx: number, toI
       return (activities.activities[first][sortBy]) - (activities.activities[second][sortBy]);
     });
 
-    return order.map((id) => activities.activities[id]);
+    return order.map((id) => activities.activities[id]).filter(({ sport_type }) => displayTypePrefs[sport_type]);
 };
 export const selectListActivities = createDeepEqualSelector([
   getActivitiesState,
   selectListPrerences,
+  selectSportTypePreferences,
   makeGet2ndArg<number>(),
   makeGet3rdArg<number>(),
 ], getListActivities);
@@ -351,7 +367,7 @@ const getTimeGroupedRuns = (preferenceZoneId, allheartzones, activities: Activit
   return boxes;
 };
 export const selectTimeGroupedRuns = createDeepEqualSelector(
-  [selectPreferencesZonesId, selectAllHeartZones, selectActivities, getTimeGroup],
+  selectPreferencesZonesId, selectAllHeartZones, selectActivities, getTimeGroup,
   getTimeGroupedRuns
 );
 
@@ -368,5 +384,14 @@ export const selectActivitiesByDate = createDeepEqualSelector(
     }
     , {});
   });
+
+export const selectActivitiesDisplayTypes = createDeepEqualSelector(
+  getActivitiesState,
+  getPreferencesState,
+  (state, prefsState) => ({
+    ...state.displayTypes,
+    ...prefsState.global.defined.activityDisplayTypes,
+  }),
+);
 
 export default activitiesReducer;

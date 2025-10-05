@@ -29,6 +29,7 @@ import { Container } from './DLS';
 import CalendarView from './Calendar';
 import roundToNearest from './utils/roundToNearest';
 import Surface from './DLS/Surface';
+import TopNav from './TopNav';
 
 enableMapSet();
 
@@ -42,23 +43,17 @@ const AppContent = styled.div`
 `;
 
 const AppLayout = () => (
-  <Profiler
-    id="App"
-    onRender={(id, phase, aD, bD) => {
-      console.log({ id, phase, actualDuration: roundToNearest(aD, 10), unMemodDuration: roundToNearest(bD, 10) });
-    }}
-  >
-    <Surface variant="base">
-      <Container providesViewSize={true}>
-        <SideNav />
-        <AppContent>
-          <Container showViewSizeDisplay={true} providesViewSize={true}>
-            <Outlet />
-          </Container>
-        </AppContent>
-      </Container>
-    </Surface>
-  </Profiler>
+  <Surface variant="base">
+    <Container providesViewSize={true}>
+      <SideNav />
+      <AppContent>
+        <Container showViewSizeDisplay={true} providesViewSize={true}>
+          <TopNav />
+          <Outlet />
+        </Container>
+      </AppContent>
+    </Container>
+  </Surface>
 );
 
 // create the saga middleware

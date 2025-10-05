@@ -39,7 +39,7 @@ const Volume = () => {
     }
 
     return { groupedData, greatestTotal };
-  }, [activities]);
+  }, [activities, activities.length]);
   return (
     <Basic.Div $margin={2}>
       {showChart && <CumulativeByRun

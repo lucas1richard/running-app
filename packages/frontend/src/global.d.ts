@@ -44,11 +44,13 @@ type HeatMapData = {
   lat: string;
   lon: string;
   total_seconds: number;
+  sportType: string;
 };
 
 interface Activity {
   id: number;
   name: string;
+  sport_type: string;
   start_date: string;
   start_date_local: string;
   description?: string;

@@ -93,6 +93,9 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
   }
 };
 
+// calculateActivityBestEfforts(15320349903)
+
 module.exports = {
   calculateBestEffortsForNewActivities,
 };
+
