@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import TileList from '@/components/Activities/TileList.vue'
 import PageWrapper from '@/components/PageWrapper.vue'
-import MileageSummary from '@/components/MileageSummary.vue';
-import AllTimePRs from '@/components/AllTimePRs.vue';
-import MetricsChart from '@/components/MetricsChart.vue';
-import HeatMapContainer from '@/components/HeatMapContainer.vue';
 import { useActivitiesStore } from '@/stores/activities';
 import dayjs from 'dayjs';
-import { computed } from 'vue';
+import { computed, defineAsyncComponent } from 'vue';
+
+const AllTimePRs = defineAsyncComponent(() => import('@/components/AllTimePRs.vue'));
+const MileageSummary = defineAsyncComponent(() => import('@/components/MileageSummary.vue'));
+const MetricsChart = defineAsyncComponent(() => import('@/components/MetricsChart.vue'));
+const HeatMapContainer = defineAsyncComponent(() => import('@/components/HeatMapContainer.vue'));
 
 const activitiesStore = useActivitiesStore();
 const oneYearAgo = dayjs().subtract(1, 'year');

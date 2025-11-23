@@ -32,8 +32,6 @@ export const useActivitiesStore = defineStore('activities', () => {
 
   function setActivitiesAction(payload: TODO[]) {
     const newActivitiesOrder = payload.map(({ id }) => id).filter(id => !activities[id]);
-
-    activitiesOrder.value = activitiesOrder.value.concat(newActivitiesOrder);
     const types = displayTypes.value;
 
     for (let i = 0; i < payload.length; i++) {
@@ -43,15 +41,26 @@ export const useActivitiesStore = defineStore('activities', () => {
       activity.zonesCaches = Object.fromEntries(zonesCaches);
       activities[activity.id] = activity;
     }
+
+    activitiesOrder.value = activitiesOrder.value.concat(newActivitiesOrder);
     displayTypes.value = types;
   }
 
   async function fetchActivitiesCb() {
     const eventSource = requestor.stream('/activities/listStream');
+    let calledBefore = 0;
+    let bankedData = [];
     eventSource.onmessage = (event) => {
       const data = JSON.parse(event.data);
-      setActivitiesAction(data);
+      if (!calledBefore++) {
+        setActivitiesAction(data);
+      } else {
+        bankedData = bankedData.concat(data);
+      }
     };
+    eventSource.addEventListener('close', () => {
+      setActivitiesAction(bankedData);
+    });
   }
 
   function fetchSimilarActivities(id: number) {
@@ -102,7 +111,7 @@ export const useActivitiesStore = defineStore('activities', () => {
       'heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time', 'grade_smooth', 'distance'
     ];
     return makeApiCallback(`activityStreams/${id}`, async () => {
-      const typesQuery = new URLSearchParams({ keys: streamTypes });
+      const typesQuery = new URLSearchParams({ keys: streamTypes.join(',') });
       const res = await requestor.get(`/activities/${id}/streams?${typesQuery}`);
       if (res.status === 200) {
         const stream = await res.json();
@@ -135,9 +144,7 @@ export const useActivitiesStore = defineStore('activities', () => {
   const dateGroupedActivities = computed(() => {
     return dateOrderedActivities.value.reduce<Record<string, Activity[]>>((acc, activity) => {
       const date = dayjs(activity.start_date_local).format('YYYY-MM-DD');
-      if (!acc[date]) {
-        acc[date] = [];
-      }
+      if (!acc[date]) acc[date] = [];
       acc[date].push(activity);
       return acc;
     }, {});
