@@ -24,7 +24,7 @@ const activities = computed(() => activitiesStore
       <div class="flex flex-column gap width-50">
         <div>
           <h2 class="text-h2 margin-b">All Time PRs</h2>
-            <AllTimePRs />
+          <AllTimePRs />
         </div>
         <div>
           <h2 class="text-h2 margin-b">Mileage</h2>

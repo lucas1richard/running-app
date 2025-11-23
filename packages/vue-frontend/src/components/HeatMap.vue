@@ -20,6 +20,7 @@ type HeatMapProps = {
   title?: string;
   data: Array<DataPoint>;
   measure: keyof DataPoint;
+  localStorageKey?: string;
   deferRender?: boolean;
   minColor?: RGBATuple; // RGBA
   maxColor?: RGBATuple; // RGBA
@@ -29,6 +30,7 @@ type HeatMapProps = {
   squareSize?: number;
 };
 const {
+  localStorageKey,
   data,
   measure,
   deferRender,
@@ -67,13 +69,26 @@ const edges = computed(() => {
   return { maxLng, minLng, maxLat, minLat };
 });
 
+const persistBounds = (ev) => {
+  if (!localStorageKey) return;
+  const ne = ev.map.getBounds().getNorthEast();
+  const sw = ev.map.getBounds().getSouthWest();
+  localStorage.setItem(localStorageKey, JSON.stringify([sw.lng, sw.lat, ne.lng, ne.lat]));
+};
+
 const initialViewState = computed(() => {
   const deltaLng = edges.value.maxLng - edges.value.minLng;
   const deltaLat = edges.value.maxLat - edges.value.minLat;
-  const bounds = [
+  let bounds = [
     edges.value.minLng - deltaLng * 0.1, edges.value.minLat - deltaLat * 0.1,
     edges.value.maxLng + deltaLng * 0.1, edges.value.maxLat + deltaLat * 0.1,
   ] as [number, number, number, number];
+  if (localStorageKey) {
+    const localBoundsStr = localStorage.getItem(localStorageKey);
+    if (localBoundsStr) {
+      bounds = JSON.parse(localBoundsStr);
+    }
+  }
   return ({
     bounds,
     pitch: 0,
@@ -101,7 +116,7 @@ const makeColor = (minColor: RGBATuple, maxColor: RGBATuple, percent: number) =>
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 const pointSize = ref(squareSize);
-const zoomHandler = (ar: any) => {
+const zoomHandler = (ar: TODO) => {
   const zoom = ar.map.transform.zoom;
   switch (true) {
     case zoom < 1: return pointSize.value = 0.8;
@@ -148,11 +163,13 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json'"
         :bounds="initialViewState.bounds"
-        @map:zoomend="console.log"
+        @map:zoomend="persistBounds"
+        @map:drag="persistBounds"
       >
         <mgl-geo-json-source
           :source-id="heatmapSource"
           :data="mapData"
+          :minzoom="4"
         >
           <mgl-fill-layer
             :layer-id="heatmapSource"
@@ -167,6 +184,8 @@ const mapData = computed<GeoJSON.FeatureCollection>(() => {
         @map:zoom="zoomHandler"
         :map-style="'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json'"
         :bounds="initialViewState.bounds"
+        @map:zoomend="persistBounds"
+        @map:drag="persistBounds"
       >
         <mgl-geo-json-source
           :source-id="heatmapSourceLight"

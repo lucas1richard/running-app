@@ -24,6 +24,11 @@ const data = computed(() => {
 
 <template>
   <div>
-    <HeatMap :data="data" measure="total_seconds" :deferRender="data.length === 0" />
+    <HeatMap
+      :data="data"
+      localStorageKey="homepage:heatmap:bounds"
+      measure="total_seconds"
+      :deferRender="data.length === 0"
+    />
   </div>
 </template>
