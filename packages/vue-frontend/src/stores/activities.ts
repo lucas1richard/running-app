@@ -4,39 +4,46 @@ import requestor from '@/utils/requestor';
 import { emptyArray } from '@/constants';
 import { computed, reactive, ref } from 'vue';
 import dayjs from 'dayjs';
+import usePreferencesStore from './preferences';
 
-interface SelectStreamTypeData<Multi = false> {
-  (id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream['data'][] : Stream['data'];
-  (id: Multi extends true ? number[] : number, findType: 'heartrate'): Multi extends true ? Stream['data'][] : Stream['data'];
-  (id: Multi extends true ? number[] : number, findType: 'distance'): Multi extends true ? Stream['data'][] : Stream['data'];
-  (id: Multi extends true ? number[] : number, findType: 'altitude'): Multi extends true ? Stream['data'][] : Stream['data'];
-  (id: Multi extends true ? number[] : number, findType: 'velocity_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
-  (id: Multi extends true ? number[] : number, findType: 'grade_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
-  (id: Multi extends true ? number[] : number, findType: 'latlng'): Multi extends true ? LatLngStream['data'][] : LatLngStream['data'];
-}
+// interface SelectStreamTypeData<Multi = false> {
+//   (id: Multi extends true ? number[] : number, findType: 'time'): Multi extends true ? Stream['data'][] : Stream['data'];
+//   (id: Multi extends true ? number[] : number, findType: 'heartrate'): Multi extends true ? Stream['data'][] : Stream['data'];
+//   (id: Multi extends true ? number[] : number, findType: 'distance'): Multi extends true ? Stream['data'][] : Stream['data'];
+//   (id: Multi extends true ? number[] : number, findType: 'altitude'): Multi extends true ? Stream['data'][] : Stream['data'];
+//   (id: Multi extends true ? number[] : number, findType: 'velocity_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
+//   (id: Multi extends true ? number[] : number, findType: 'grade_smooth'): Multi extends true ? Stream['data'][] : Stream['data'];
+//   (id: Multi extends true ? number[] : number, findType: 'latlng'): Multi extends true ? LatLngStream['data'][] : LatLngStream['data'];
+// }
 
 export const useActivitiesStore = defineStore('activities', () => {
   const makeApiCallback = useApiCallback();
+  const prefsState = usePreferencesStore();
 
+  const displayTypes = ref<Record<string, boolean>>({});
   const activities = reactive<Record<number, Activity>>({});
   const activitiesOrder = ref<number[]>([]);
   const details = reactive<Record<number, ActivityDetails>>({});
-  const summary = reactive<any>({});
+  const summary = reactive<TODO>({});
   const streams = reactive<Record<number, { stream: (Stream | LatLngStream)[] }>>({});
   const similarWorkouts = reactive<Record<number, number[]>>({});
   const similarWorkoutsMeta = reactive<Record<number, TODO>>({});
   const heatMap = reactive<Record<string, Array<HeatMapData>>>({});
 
-  function setActivitiesAction(payload: any[]) {
+  function setActivitiesAction(payload: TODO[]) {
     const newActivitiesOrder = payload.map(({ id }) => id).filter(id => !activities[id]);
 
     activitiesOrder.value = activitiesOrder.value.concat(newActivitiesOrder);
+    const types = displayTypes.value;
+
     for (let i = 0; i < payload.length; i++) {
       const activity = payload[i];
+      types[activity.type] = true;
       const zonesCaches = activity.zonesCaches?.map((zoneCache: HeartZoneCache) => [zoneCache.heartZoneId, zoneCache]) || emptyArray;
       activity.zonesCaches = Object.fromEntries(zonesCaches);
       activities[activity.id] = activity;
     }
+    displayTypes.value = types;
   }
 
   async function fetchActivitiesCb() {
@@ -54,9 +61,8 @@ export const useActivitiesStore = defineStore('activities', () => {
       const sim = await res.json();
       if (!similarWorkouts[id]) similarWorkouts[id] = [];
       similarWorkouts[id] = sim.map(({ relatedActivity }: {relatedActivity: number}) => relatedActivity);
-      similarWorkoutsMeta[id] = Object.fromEntries(sim.map(c => [c.relatedActivity, c]));
+      similarWorkoutsMeta[id] = Object.fromEntries(sim.map((c: TODO) => [c.relatedActivity, c]));
     });
-
   }
 
   function fetchHeatMapDataCb(timeframe?: string, referenceTime?: string) {
@@ -123,6 +129,7 @@ export const useActivitiesStore = defineStore('activities', () => {
 
   const dateOrderedActivities = computed(() => activitiesOrder.value
     .map((id) => activities[id])
+    .filter(({ type }) => prefsState.global.defined.activityDisplayTypes[type])
     .sort((a, b) => new Date(b.start_date_local).getTime() - new Date(a.start_date_local).getTime()));
 
   const dateGroupedActivities = computed(() => {
@@ -141,10 +148,22 @@ export const useActivitiesStore = defineStore('activities', () => {
     .sort((a, b) => similarWorkoutsMeta[b]?.longestCommonSegmentSubsequence - similarWorkoutsMeta[a]?.longestCommonSegmentSubsequence)
     .map((id) => activities[id]);
 
+  const activitiesDisplayTypes = computed<Record<string, boolean>>(() => {
+    return Object.assign({}, displayTypes.value, prefsState.global.defined.activityDisplayTypes || {});
+  });
+
   return {
     activities,
+    activitiesDisplayTypes,
     activitiesOrder,
     details,
+    displayTypes,
+    setDisplayTypes: (selected: (string|number)[]) => {
+      displayTypes.value = Object.fromEntries(
+        Object.entries(displayTypes.value).map(([key]) => [key, selected.includes(key)])
+      )
+      prefsState.global.defined.activityDisplayTypes = displayTypes.value;
+    },
     summary,
     streams,
     similarWorkouts,

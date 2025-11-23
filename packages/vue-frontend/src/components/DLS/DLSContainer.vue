@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { computed, provide, ref, useTemplateRef, watch } from 'vue';
+import { provide, ref, useTemplateRef, watch } from 'vue';
 import { defaultBreakpoints, type BreakPoint } from './createBreakpoints';
 import useResizeObserver from '../hooks/useResizeObserver';
 import ViewSizeDisplay from './ViewSizeDisplay.vue';

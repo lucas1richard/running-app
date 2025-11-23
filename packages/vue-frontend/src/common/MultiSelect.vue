@@ -67,17 +67,20 @@ const isSelected = (value: string | number): boolean => {
         :class="{ selected: isSelected(option.value) }"
         @click="toggleOption(option.value)"
       >
+      <label>
         <input
           type="checkbox"
           :checked="isSelected(option.value)"
-        />
-        <span>{{ option.label }}</span>
+        /> {{ option.label }}
+      </label>
       </div>
     </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
+@import "@/assets/theme.module.scss";
+
 .multi-select {
   position: relative;
   width: 100%;
@@ -89,6 +92,10 @@ const isSelected = (value: string | number): boolean => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  @include hover-effect;
+  &:hover {
+    @include hovered();
+  }
 }
 
 .placeholder {

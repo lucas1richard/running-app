@@ -5,13 +5,13 @@ import Surface from './components/DLS/Surface.vue';
 
 <template>
   <div class="side-nav full-height">
-    <Surface variant="foreground" class="full-height">
-      <RouterLink class="text-h6" to="/">Home</RouterLink>
-      <RouterLink class="text-h6" to="/calendar">Calendar</RouterLink>
-      <RouterLink class="text-h6" to="/personal-records">Personal Records</RouterLink>
-      <RouterLink class="text-h6" to="/volume">Volume</RouterLink>
-      <RouterLink class="text-h6" to="/multi-map">Multi Map</RouterLink>
-      <RouterLink class="text-h6" to="/admin">Admin</RouterLink>
+    <Surface variant="base" class="full-height">
+      <RouterLink class="text text-h6" to="/">Home</RouterLink>
+      <RouterLink class="text text-h6" to="/calendar">Calendar</RouterLink>
+      <RouterLink class="text text-h6" to="/personal-records">Personal Records</RouterLink>
+      <RouterLink class="text text-h6" to="/volume">Volume</RouterLink>
+      <RouterLink class="text text-h6" to="/multi-map">Multi Map</RouterLink>
+      <RouterLink class="text text-h6" to="/admin">Admin</RouterLink>
     </Surface>
   </div>
 </template>
@@ -29,7 +29,7 @@ import Surface from './components/DLS/Surface.vue';
   }
 
   a {
-    color: var(--color-blue-400);
+    color: var(--color-text);
     display: block;
     padding: 0.5rem 0.5rem;
     text-decoration: none;

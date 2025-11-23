@@ -54,6 +54,7 @@ interface Activity {
   distance_miles: number;
   calculatedBestEfforts: BestEffort[];
   weather: Weather;
+  type: string;
   zonesCaches: Record<string, HeartZoneCache>;
   elapsed_time: number;
   average_seconds_per_mile: number;
