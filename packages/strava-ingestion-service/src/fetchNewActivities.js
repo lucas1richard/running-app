@@ -10,6 +10,7 @@ const { imageService } = channelConfigs;
 const fetchWorker = async (perPage, page) => {
   try {
     const token = await redisRateLimiter.consumeToken();
+    console.log('Fetched token:', token);
     if (!token) {
       await Promise.race([
         new Promise((resolve) => {
@@ -21,6 +22,7 @@ const fetchWorker = async (perPage, page) => {
       ]);
     }
     const activitiesList = await fetchStrava(`/athlete/activities?per_page=${perPage}&page=${page}`);
+    console.log(activitiesList);
     await bulkAddActivities(activitiesList); // couchdb
     const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
 

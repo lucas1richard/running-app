@@ -5,6 +5,7 @@ import useHeartZonesStore from '@/stores/heartzones';
 import { computed } from 'vue';
 import { useActivitiesStore } from '@/stores/activities';
 import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH, getDurationString } from '@/utils';
+import SurfaceCrease from './DLS/SurfaceCrease.vue';
 
 const prefStore = usePreferencesStore();
 const hrStore = useHeartZonesStore();
@@ -23,7 +24,7 @@ const velocityData = computed(() => activitiesStore.getStreamTypeData(activity.v
 const zonesId = computed(() => configZonesId === -1 ? nativeZones.value.id : configZonesId);
 const zones = computed(() => allZones.find(({ id }) => id === zonesId.value) || nativeZones.value);
 const totalTimes = computed(() => convertHeartDataToZoneTimes(heartData.value, zones.value));
-const percents = computed(() => totalTimes.value.map((time) => (100 * time / heartData.value.length).toFixed(2)));
+const percents = computed(() => totalTimes.value.map((time) => (100 * time / heartData.value.length)));
 const avg = computed(() => convertHeartDataToZoneSpeeds(zones.value, heartData.value, velocityData.value));
 
 const isUsingNonNativeZones = computed(() => nativeZones.value.id !== zones.value.id);
@@ -44,6 +45,9 @@ const data = computed(() => {
     max: getDurationString(Math.floor((3660 / convertMetricSpeedToMPH(avg.value[i].max)))),
   }))
 });
+
+const maxPercent = computed(() => Math.max(...percents.value));
+const minPercent = computed(() => Math.min(...percents.value));
 </script>
 
 <template>
@@ -53,37 +57,42 @@ const data = computed(() => {
     </div>
     <div class="grid full-height">
       <div v-for="(d, ix) in data" class="full-height">
-      <div
-        :class="`text-center text-body hr-zone-${ix + 1}-bg-light pad full-height`"
-      >
-        <h3 class="text-h4">{{ d.title }}</h3>
-        <div>({{ d.range[0] }} - {{ d.range[1] }})</div>
-        <div class="margin-t text-no-wrap">
-          <b>Time in Zone:</b>
-          <div>
-            <span v-if="d.timeInZone">{{ d.timeInZone }}</span>
-            <span v-else>--</span>
-          </div>
-          <div class="text-h5 margin-t">
-            ({{ d.percent }}%)
+        <div
+          :class="[
+            `text-center text-body hr-zone-${ix + 1}-bg-light pad full-height`,
+            
+          ]"
+        >
+        <div :class="['pad', { 'raised-2 elevation-4': d.percent === maxPercent, 'sunken-1': d.percent === minPercent }]">
+          <h3 class="text-h4">{{ d.title }}</h3>
+          <div>({{ d.range[0] }} - {{ d.range[1] }})</div>
+            <div class="margin-t text-no-wrap">
+              <b>Time in Zone:</b>
+              <div>
+                <span v-if="d.timeInZone">{{ d.timeInZone }}</span>
+                <span v-else>--</span>
+              </div>
+              <div class="text-h5 margin-t">
+                ({{ d.percent.toFixed(2) }}%)
+              </div>
+            </div>
+            <SurfaceCrease />
+            <div class="margin-t">
+              <b>Average Pace:</b>
+              <div>
+                <span v-if="d.avg">{{ d.avg }}</span>
+                <span v-else>--</span>
+              </div>
+            </div>
+            <div class="margin-t">
+              <b>Fastest Pace:</b>
+              <div>
+                <span v-if="d.max">{{ d.max }}</span>
+                <span v-else>--</span>
+              </div>
+            </div>
           </div>
         </div>
-        <hr />
-        <div class="margin-t">
-          <b>Average Pace:</b>
-          <div>
-            <span v-if="d.avg">{{ d.avg }}</span>
-            <span v-else>--</span>
-          </div>
-        </div>
-        <div class="margin-t">
-          <b>Fastest Pace:</b>
-          <div>
-            <span v-if="d.max">{{ d.max }}</span>
-            <span v-else>--</span>
-          </div>
-        </div>
-      </div>
       </div>
     </div>
   </Surface>

@@ -491,41 +491,51 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* HEART RATE ZONE CLASSES */
 .hr-zone-1-bg {
+  --bgColor: var(--hrZone1);
   background-color: color-mix(in srgb, var(--hrZone1) 90%, black 10%) !important;
 }
 
 .hr-zone-2-bg {
+  --bgColor: var(--hrZone2);
   background-color: color-mix(in srgb, var(--hrZone2) 90%, black 10%) !important;
 }
 
 .hr-zone-3-bg {
+  --bgColor: var(--hrZone3);
   background-color: color-mix(in srgb, var(--hrZone3) 90%, black 10%) !important;
 }
 
 .hr-zone-4-bg {
+  --bgColor: var(--hrZone4);
   background-color: color-mix(in srgb, var(--hrZone4) 90%, black 10%) !important;
 }
 
 .hr-zone-5-bg {
+  --bgColor: var(--hrZone5);
   background-color: color-mix(in srgb, var(--hrZone5) 90%, black 10%) !important;
 }
 .hr-zone-1-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone1) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone1) 30%, transparent 70%) !important;
 }
 
 .hr-zone-2-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone2) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone2) 30%, transparent 70%) !important;
 }
 
 .hr-zone-3-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone3) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone3) 30%, transparent 70%) !important;
 }
 
 .hr-zone-4-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone4) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone4) 30%, transparent 70%) !important;
 }
 
 .hr-zone-5-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone5) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone5) 30%, transparent 70%) !important;
 }
 
@@ -740,6 +750,7 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .bg-foreground {
+  --bgColor: var(--color-foreground);
   background-color: var(--color-foreground);
 }
 .bg-base {
@@ -863,8 +874,83 @@ input[type="range"]::-webkit-slider-thumb {
 
 .card {
   border-radius: var(--space-unit);
-  box-shadow: var(--box-shadow);
+  // box-shadow: var(--box-shadow);
   overflow: hidden;
+}
+
+.elevation-1 {
+  box-shadow: 0rem 1px 3px rgba(0, 0, 0, 0.12), 0rem 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.elevation-2 {
+  box-shadow: 0rem 3px 6px rgba(0, 0, 0, 0.15), 0rem 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.elevation-3 {
+  box-shadow: 0rem 10px 20px rgba(0, 0, 0, 0.15), 0rem 3px 6px rgba(0, 0, 0, 0.10);
+}
+
+.elevation-4 {
+  box-shadow: 0rem 15px 25px rgba(0, 0, 0, 0.15), 0rem 5px 6px rgba(0, 0, 0, 0.05);
+}
+
+.elevation-5 {
+  box-shadow: 0rem 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.raised-1 {
+  box-shadow: inset 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-2 {
+  box-shadow: inset 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-3 {
+  box-shadow: inset 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-4 {
+  box-shadow: inset 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-5 {
+  box-shadow: inset 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.sunken-1 {
+  box-shadow: inset 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-2 {
+  box-shadow: inset 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-3 {
+  box-shadow: inset 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-4 {
+  box-shadow: inset 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 10%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-5 {
+  box-shadow: inset 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }
 
 a {

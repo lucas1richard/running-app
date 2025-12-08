@@ -6,6 +6,8 @@ const STRAVA_CLIENT_SECRET = process.env.STRAVA_CLIENT_SECRET;
 const getAccessToken = async () => {
   const { access_token, expires } = await getItem(1) || {};
 
+  console.log('Current access token expires at:', new Date(expires * 1000).toISOString());
+
   if (new Date(expires).getTime() < (new Date().getTime() / 1000)) {
     const record = await refreshAccessToken();
     return record.access_token;
@@ -22,18 +24,30 @@ const refreshAccessToken = async () => {
     grant_type: 'refresh_token',
     refresh_token,
   });
-  const res = await fetch(`https://www.strava.com/api/v3/oauth/token?${query}`, {
-    method: 'POST',
-  });
-
-  const body = await res.json();
-
-  await upsertItem(body, 1);
-
-  return body;
+  try {
+    const res = await fetch(`https://www.strava.com/api/v3/oauth/token?${query}`, {
+      method: 'POST',
+      // body: JSON.stringify({
+      //   client_id: STRAVA_CLIENT_ID,
+      //   client_secret: STRAVA_CLIENT_SECRET,
+      //   grant_type: 'refresh_token',
+      //   refresh_token,
+      // }),
+    });
+  
+    const body = await res.json();
+  
+    await upsertItem(body, 1);
+  
+    return body;
+  } catch (error) {
+    console.error('Error refreshing access token:', error);
+    throw error;
+  }
 };
 
 const fetchStrava = async (apiPath, options = { method: 'GET' }) => {
+  console.log('fetchStrava called with:', apiPath, options);
   const accessToken = await getAccessToken();
 
   console.trace('FETCHING STRAVA: ', apiPath);

@@ -226,7 +226,7 @@ const options = computed(() => {
         const activity = activities.value[index];
         const { average_heartrate, average_speed } = activity;
         return `
-          <div class="text-body foreground text-right card pad border-1">
+          <div class="text-body bg-blue-100 text-right card pad border-1">
             <b>${dayjs(activity.start_date).format('DD MMM YYYY')}</b>
             <br />
             ${[

@@ -110,6 +110,7 @@ $namedColors: (
     --color-#{"" + $color}-#{$shade}: #{$value};
 
     .bg-#{"" + $color}-#{$shade} {
+      --bgColor: var(--color-#{$color}-#{$shade});
       background-color: var(--color-#{$color}-#{$shade});
     }
 
@@ -137,9 +138,9 @@ $namedColors: (
 --breakpoint-lg: 1280px;
 --breakpoint-xl: 1920px;
 --space-unit: 1rem;
---color-background: #d5dadc;
+--color-background: hsl(197, 9%, 85%);
 
---color-foreground: #fafaf8;
+--color-foreground: hsl(197, 16%, 95%);
 --color-text: #333333;
 --color-text-contrast: #ffffff;
 --box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
@@ -159,15 +160,15 @@ $namedColors: (
     efficiencyFactor: map.get($colors, violet, 400),
   );
   :root {
-    --color-background: #2e353b;
-    --color-foreground: #0e0e0e;
+    --color-background: hsl(228, 20%, 20%);
+    --color-foreground: hsl(231, 12%, 32%);
     --box-shadow: 0.25rem 0.25rem 0.5rem rgba(0, 0, 0, 0.5);
     --color-text: #ffffff;
     --color-text-contrast: #333333;
     --color-primary: #007acc;
     --color-secondary: #d7ba7d;
     --color-accent: #ffcc00;
-    --dls-blue: #29a5f9;
+    --dls-blue: rgb(112,209,247);
 
     @each $color, $shades in $colors {
       @each $shade, $value in $shades {

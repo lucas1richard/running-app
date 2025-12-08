@@ -32,8 +32,6 @@ const days = computed(() => {
 
   daysArray.forEach(day => {
     const currentDate = currentMonth.value.date(day);
-    const currentDayOfWeek = currentDate.day();
-    const isWeekend = currentDayOfWeek === 0;
     const formattedDate = currentDate.format('YYYY-MM-DD');
 
     const hasActivities = dateActivities[formattedDate]?.length > 0;
@@ -60,9 +58,11 @@ const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       <button class="text-h4 pad-lr" @click="forwardOneMonth">&rarr;</button>
     </div>
     <div class="grid margin-t">
-      <Surface v-for="label of weekdayLabels" class="card pad dls-blue-bg text-h4">{{ label }}</Surface>
+      <Surface v-for="label of weekdayLabels" :key="label" class="card pad dls-blue-bg text-h4">
+        {{ label }}
+      </Surface>
       <div v-for="day of days" :key="`day-${day.day}-${!!day.activities}`">
-        <Surface v-if="day.day > 0" class="card full-height">
+        <Surface v-if="day.day > 0" class="card full-height" :elevation="-1">
           <div v-if="!day.activities" :key="`${day.day}`" class="text-right pad">
             {{ day.day }}
           </div>
@@ -71,7 +71,6 @@ const weekdayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             v-for="activity of day.activities"
             :activity="activity"
             :key="activity.id"
-            :is-compact="true"
           ></Tile>
         </Surface>
 

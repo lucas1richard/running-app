@@ -5,7 +5,7 @@ import Surface from './DLS/Surface.vue';
 
 <template>
   <main class="page-wrapper">
-    <DLSContainer :providesViewSize="true" :showViewSizeDisplay="true">
+    <DLSContainer>
       <Surface variant="base">
         <slot></slot>
       </Surface>

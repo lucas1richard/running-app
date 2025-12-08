@@ -13,7 +13,8 @@ import SimilarWorkouts from './SimilarWorkouts.vue';
 
 const activitiesStore = useActivitiesStore();
 const route = useRoute();
-const activityId = computed(() => Number(route.params.id));
+const activityId = ref(Number(route.params.id));
+watch(() => route.params.id, (newid) => (activityId.value = Number(newid)));
 const activity = computed(() => activitiesStore.activities[activityId.value]);
 useTriggerActionIfStatus(
   `activityDetail/${activityId.value}`,
@@ -21,14 +22,14 @@ useTriggerActionIfStatus(
 )
 useTriggerActionIfStatus(
   `activityStreams/${activityId.value}`,
-  activitiesStore.makeFetchActivityStreams(activityId.value)
+  computed(() => activitiesStore.makeFetchActivityStreams(activityId.value)).value
 )
 const pointer = ref(0);
 const updatePointer = (num: number) => pointer.value = num
 
 const recentlyVisitedStore = useRecentlyVisited();
 
-watch(() => activityId.value, recentlyVisitedStore.addRecentlyVisited, { immediate: true });
+watch(activityId, (newId) => recentlyVisitedStore.addRecentlyVisited(newId.toString()), { immediate: true });
 </script>
 
 <template>

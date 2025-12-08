@@ -19,12 +19,12 @@ useTriggerActionIfStatus(
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <h2 class="text-h2 margin-b">Similar Activities</h2>
-    <div class="grid" v-if="similarWorkouts.length > 0">
-      <MetricsChart
-        :activities="[...similarWorkouts, activitiesStore.activities[id]].filter(Boolean)"
-      />
+    <MetricsChart
+      :activities="[...similarWorkouts, activitiesStore.activities[id]].filter(Boolean)"
+    />
+    <div class="grid margin-t" v-if="similarWorkouts.length > 0">
       <Tile
         v-for="activity of similarWorkouts"
         :key="activity.id"
@@ -35,10 +35,21 @@ useTriggerActionIfStatus(
   </div>
 </template>
 
-<style lang="css" scoped>
+<style lang="scss" scoped>
 .grid {
   display: grid;
   gap: var(--space-unit);
   grid-template-columns: repeat(3, 1fr);
+}
+
+@container (min-width: 1600px) {
+  .grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+@container (min-width: 2400px) {
+  .grid {
+    grid-template-columns: repeat(8, 1fr);
+  }
 }
 </style>

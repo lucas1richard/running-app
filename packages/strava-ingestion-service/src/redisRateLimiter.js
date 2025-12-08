@@ -145,16 +145,17 @@ class TokenBucket extends EventEmitter {
   }
 
   async consumeToken() {
-    console.trace('Attempting to consume token...')
-    console.trace('this:', this.capacity, this.tokens);
-    console.trace('provider:', this.provider.limit, this.provider.count);
-    if (this.hasTokens && this.provider.hasTokens) {
-      this.tokens -= 1;
-      await this.syncToRedis();
-      return true;
-    }
-    this.emit('empty');
-    return false;
+    return true;
+    // console.trace('Attempting to consume token...')
+    // console.trace('this:', this.capacity, this.tokens);
+    // console.trace('provider:', this.provider.limit, this.provider.count);
+    // if (this.hasTokens && this.provider.hasTokens) {
+    //   this.tokens -= 1;
+    //   await this.syncToRedis();
+    //   return true;
+    // }
+    // this.emit('empty');
+    // return false;
   }
 
   async _refillToken() {
@@ -170,12 +171,12 @@ class TokenBucket extends EventEmitter {
 
 const tokenProvider = new FixedWindowCounter({
   windowDuration: 15000,
-  limit: 15,
+  limit: 150,
 });
 
 const redisRateLimiter = new TokenBucket({
   capacity: 10,
-  refillRate: 4000,
+  refillRate: 400,
   tokenProvider,
 });
 

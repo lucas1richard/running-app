@@ -11,12 +11,12 @@ const allTimePRs = computed(() => prsStore.prs);
 </script>
 
 <template>
-  <div>
+  <div class="container">
     <div class="grid">
       <Surface
-        v-for="pr of allTimePRs"
+        v-for="(pr, ix) of allTimePRs"
         :key="pr.distance"
-        class="pad card text-center"
+        class="pad card elevation-1 raised-1 text-center"
       >
         <div class="text-h1">
           <PRMedal type="native" color="gold" />
@@ -27,7 +27,7 @@ const allTimePRs = computed(() => prsStore.prs);
         <div>
           {{ dayjs(pr.start_date_local).format('MMMM DD, YYYY') }}
         </div>
-        <div class="text-h3">
+        <div class="text-h3 elapsed-time">
           {{ getDurationString(pr.elapsed_time) }}
         </div>
       </Surface>
@@ -37,7 +37,25 @@ const allTimePRs = computed(() => prsStore.prs);
 
 <style lang="css" scoped>
 .grid {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: var(--space-unit);
+}
+@container (max-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-unit);
+  }
+  .elapsed-time {
+    font-size: 1.4rem;
+  }
+}
+@container (max-width: 500px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-unit);
+  }
+  .elapsed-time {
+    font-size: 1.2rem;
+  }
 }
 </style>
