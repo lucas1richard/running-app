@@ -12,7 +12,10 @@ const { referenceTime, timeframe } = defineProps<ContainerProps>();
 
 const key = [timeframe, referenceTime].filter(Boolean).join('|') || 'all';
 const activitiesStore = useActivitiesStore();
-useTriggerActionIfStatus(key, activitiesStore.makeFetchHeatMapData(timeframe, referenceTime));
+useTriggerActionIfStatus(
+  computed(() => key),
+  computed(() => activitiesStore.makeFetchHeatMapData(timeframe, referenceTime))
+);
 
 const allData = computed(() => activitiesStore.heatMap[key] || []);
 const uniqueTypes = computed(() => activitiesStore.activitiesDisplayTypes);

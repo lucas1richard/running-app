@@ -8,13 +8,14 @@ import { usePRStore } from './stores/prs';
 import { provideIsDarkMode } from './components/hooks/useIsDarkMode';
 import { useTriggerActionIfStatus } from './components/hooks/useTriggerActionIfStatus';
 import TopNav from './TopNav.vue';
+import { computed } from 'vue';
 
 provideIsDarkMode()
 
 usePreferencesStore().fetchUserPreferences()();
-useTriggerActionIfStatus('fetchActivities', useActivitiesStore().fetchActivities);
-useTriggerActionIfStatus('fetchHeartZones', useHeartZonesStore().fetchHeartZones);
-useTriggerActionIfStatus('fetchPRs', usePRStore().fetchPRs);
+useTriggerActionIfStatus(computed(() => 'fetchActivities'), computed(() => useActivitiesStore().fetchActivities));
+useTriggerActionIfStatus(computed(() => 'fetchHeartZones'), computed(() => useHeartZonesStore().fetchHeartZones));
+useTriggerActionIfStatus(computed(() => 'fetchPRs'), computed(() => usePRStore().fetchPRs));
 </script>
 
 <template>

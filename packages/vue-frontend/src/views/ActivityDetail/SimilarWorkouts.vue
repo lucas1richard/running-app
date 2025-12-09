@@ -13,8 +13,8 @@ const activityId = computed(() => id);
 const similarWorkouts = computed(() => activitiesStore.getSimilarWorkouts(activityId.value));
 
 useTriggerActionIfStatus(
-  `fetchSimilarWorkouts/${activityId.value}`,
-  activitiesStore.makeSetchSimilarWorkouts(activityId.value)
+  computed(() => `fetchSimilarWorkouts/${activityId.value}`),
+  computed(() => activitiesStore.makeSetchSimilarWorkouts(activityId.value))
 )
 </script>
 

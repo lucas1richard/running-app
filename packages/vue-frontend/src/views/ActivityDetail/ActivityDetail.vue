@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useActivitiesStore } from '@/stores/activities';
 import useRecentlyVisited from '@/stores/recentlyVisited';
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import PageWrapper from '@/components/PageWrapper.vue';
 import Tile from '@/components/Activities/Tile.vue';
@@ -14,15 +14,19 @@ import SimilarWorkouts from './SimilarWorkouts.vue';
 const activitiesStore = useActivitiesStore();
 const route = useRoute();
 const activityId = ref(Number(route.params.id));
-watch(() => route.params.id, (newid) => (activityId.value = Number(newid)));
+
+watch(() => route.params.id, (newid) => {
+  activityId.value = Number(newid);
+});
 const activity = computed(() => activitiesStore.activities[activityId.value]);
+
 useTriggerActionIfStatus(
-  `activityDetail/${activityId.value}`,
-  activitiesStore.makeFetchActivityDetail(activityId.value)
+  computed(() => `activityDetail/${activityId.value}`),
+  computed(() => activitiesStore.makeFetchActivityDetail(activityId.value))
 )
 useTriggerActionIfStatus(
-  `activityStreams/${activityId.value}`,
-  computed(() => activitiesStore.makeFetchActivityStreams(activityId.value)).value
+  computed(() => `activityStreams/${activityId.value}`),
+  computed(() => activitiesStore.makeFetchActivityStreams(activityId.value))
 )
 const pointer = ref(0);
 const updatePointer = (num: number) => pointer.value = num

@@ -124,7 +124,7 @@ export const getGradeColor = (dataArr: number[], { relativeMode = false, vertex 
 };
 
 export const convertHeartDataToZoneTimes = (heartData: number[], zones: HeartZone) => {
-  if (!heartData) return [];
+  if (!heartData || !zones) return [];
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
   return heartData.reduce((acc, heartrate) => {
@@ -135,7 +135,7 @@ export const convertHeartDataToZoneTimes = (heartData: number[], zones: HeartZon
   }, new Array(5).fill(0));
 };
 export const convertHeartDataToZoneSpeeds = (zones: HeartZone, heartData: number[], velocityData: number[]) => {
-  if (!heartData || !velocityData) return [];
+  if (!heartData || !velocityData || !zones) return [];
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
   const zoneSpeeds = heartData.reduce((acc, heartrate, index) => {

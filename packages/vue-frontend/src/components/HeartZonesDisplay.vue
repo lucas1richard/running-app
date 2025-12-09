@@ -11,15 +11,13 @@ const prefStore = usePreferencesStore();
 const hrStore = useHeartZonesStore();
 const activitiesStore = useActivitiesStore();
 
-const { activity: activityProp } = defineProps<{ activity: Activity; }>();
-
-const activity = computed(() => activityProp);
+const props = defineProps<{ activity: Activity; }>();
 
 const allZones = hrStore.record;
 const configZonesId = prefStore.getPreferredHRZoneId();
-const nativeZones = hrStore.selectHeartZones(activity.value.start_date_local);
-const heartData = computed(() => activitiesStore.getStreamTypeData(activity.value.id, 'heartrate'))
-const velocityData = computed(() => activitiesStore.getStreamTypeData(activity.value.id, 'velocity_smooth'))
+const nativeZones = hrStore.selectHeartZones(props.activity.start_date_local);
+const heartData = computed(() => activitiesStore.getStreamTypeData(props.activity.id, 'heartrate'))
+const velocityData = computed(() => activitiesStore.getStreamTypeData(props.activity.id, 'velocity_smooth'))
 
 const zonesId = computed(() => configZonesId === -1 ? nativeZones.value.id : configZonesId);
 const zones = computed(() => allZones.find(({ id }) => id === zonesId.value) || nativeZones.value);
@@ -56,7 +54,7 @@ const minPercent = computed(() => Math.min(...percents.value));
       <small>Note: Using Non-native Heart Rate Zones</small>
     </div>
     <div class="grid full-height">
-      <div v-for="(d, ix) in data" class="full-height">
+      <div v-for="(d, ix) in data" :key="d.timeInZone" class="full-height">
         <div
           :class="[
             `text-center text-body hr-zone-${ix + 1}-bg-light pad full-height`,
