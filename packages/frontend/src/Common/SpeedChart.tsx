@@ -219,7 +219,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
         const index = this.point.index;
         const activity = activities[index];
         return `
-          <div class="text-right dls-white-bg pad border-1">
+          <div class="text-body bg-blue-100 text-right card p-2 border-1">
             <b>${dayjs(activity.start_date).format('DD MMM YYYY')}</b>
             <br />
             ${activity.name}

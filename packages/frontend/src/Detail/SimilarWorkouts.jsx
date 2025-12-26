@@ -44,12 +44,12 @@ const SimilarWorkouts = ({ activity, zones }) => {
               activity={activity}
               zones={zones}
             >
-              <Basic.Div $fontSize="sm">
+              <div className="text-sm">
                 Route Score from Base: {meta.routeScoreFromBase}
-              </Basic.Div>
-              <Basic.Div $fontSize="sm">
+              </div>
+              <div className="text-sm">
                 Route score from Related: {meta.routeScoreFromRelated}
-              </Basic.Div>
+              </div>
               <div>
                 Summed Route Score: {(meta.routeScoreFromBase + meta.routeScoreFromRelated).toFixed(6)}
               </div>

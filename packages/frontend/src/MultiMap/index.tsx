@@ -21,7 +21,7 @@ const MultiMapPage = () => {
       <Basic.Div $height="900px" $width="100%">
         <MultiMapMapLibre activityConfigs={compared} />
       </Basic.Div>
-      <Grid className="margin-t gap" $templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
+      <Grid className="mt-4 gap" $templateColumns="repeat(auto-fill, minmax(500px, 1fr))">
         {activities.map((activity) => {
           const isToggled = compared.some(({ id }) => id === activity.id);
 

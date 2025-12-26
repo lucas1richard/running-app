@@ -75,8 +75,8 @@ const WeatherReporter: FC<Props> = ({ id }) => {
         <form onSubmit={handleSubmit}>
           <Flex $wrap="wrap" $gap={1}>
             <Flex $gap={1} $alignItems="center">
-              <Basic.Select
-                $flexGrow="1"
+              <select
+                className="grow-1"
                 id="sky"
                 name="sky"
                 value={sky}
@@ -87,7 +87,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
                 <option value="partly cloudy">Partly Cloudy</option>
                 <option value="mostly cloudy">Mostly Cloudy</option>
                 <option value="overcast">Overcast</option>
-              </Basic.Select>
+              </select>
             </Flex>
 
             <Flex $gap={1} $alignItems="center">

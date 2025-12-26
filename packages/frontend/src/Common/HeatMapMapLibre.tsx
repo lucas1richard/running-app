@@ -180,7 +180,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
               <FullscreenControl position="top-right" />
             </Map>
           )
-          : <Basic.Div $height={`${height}px`}><Shimmer isVisible={true} /></Basic.Div>
+          : <div style={{ height: `${height}px` }}><Shimmer isVisible={true} preset="openBackground" /></div>
       }
       {!deferRender && (
         <div>
@@ -191,10 +191,10 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
             </linearGradient>
             <rect x="0" y="0" width="100%" height="20" fill={`url(#${gradientId})`} />
           </svg>
-          <Basic.Div $display="flex" $flexJustify="space-between" $fontSize="body">
-            <Basic.Div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</Basic.Div>
-            <Basic.Div>Highest ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</Basic.Div>
-          </Basic.Div>
+          <div className="flex justify-between text-body">
+            <div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</div>
+            <div>Highest ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</div>
+          </div>
         </div>
       )}
     </Surface>

@@ -16,7 +16,7 @@ const allTimePRs = computed(() => prsStore.prs);
       <Surface
         v-for="(pr, ix) of allTimePRs"
         :key="pr.distance"
-        class="pad card elevation-1 raised-1 text-center"
+        class="pad card elevation-1 raised-1 text-center bg-gold-500"
       >
         <div class="text-h1">
           <PRMedal type="native" color="gold" />

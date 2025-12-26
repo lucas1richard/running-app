@@ -57,9 +57,9 @@ label {
 }
 
 button {
-  padding: calc(var(--space-unit) / 2);
+  padding: calc(var(--space-unit) * 2);
   border: 1px solid black;
-  border-radius: calc(var(--space-unit) / 2);
+  border-radius: calc(var(--space-unit) * 2);
   font-weight: bolder;
   cursor: pointer;
   background-color: var(--color-neutral-900);
@@ -154,42 +154,68 @@ button:active {
   text-align: left !important;
 }
 
-.margin-t {
-  margin-top: var(--space-unit) !important;
-}
-
-.margin-2-t {
-  margin-top: 2rem !important;
-}
-
-.margin-tb {
-  margin-top: var(--space-unit) !important;
-  margin-bottom: var(--space-unit) !important;
-}
-
-.margin-b {
-  margin-bottom: var(--space-unit) !important;
-}
-
-.margin-l {
-  margin-left: var(--space-unit) !important;
-}
-
-.margin-r {
-  margin-right: var(--space-unit) !important;
-}
-
-.margin-lr {
-  margin-left: var(--space-unit) !important;
-  margin-right: var(--space-unit) !important;
-}
-
-.pad {
-  padding: var(--space-unit);
-}
-
-.pad-compact {
-  padding: calc(0.5 * var(--space-unit));
+@for $i from 0 through 12 {
+  .top-#{$i} {
+    top: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .bottom-#{$i} {
+    bottom: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .left-#{$i} {
+    left: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .right-#{$i} {
+    right: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .m-#{$i} {
+    margin: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .mt-#{$i} {
+    margin-top: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .ml-#{$i} {
+    margin-left: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .mr-#{$i} {
+    margin-right: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .mb-#{$i} {
+    margin-bottom: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .mx-#{$i} {
+    margin-left: calc(var(--space-unit) * #{$i}) !important;
+    margin-right: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .my-#{$i} {
+    margin-top: calc(var(--space-unit) * #{$i}) !important;
+    margin-bottom: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .p-#{$i} {
+    padding: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .pt-#{$i} {
+    padding-top: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .pl-#{$i} {
+    padding-left: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .pr-#{$i} {
+    padding-right: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .pb-#{$i} {
+    padding-bottom: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .px-#{$i} {
+    padding-left: calc(var(--space-unit) * #{$i}) !important;
+    padding-right: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .py-#{$i} {
+    padding-top: calc(var(--space-unit) * #{$i}) !important;
+    padding-bottom: calc(var(--space-unit) * #{$i}) !important;
+  }
+  .gap-#{$i} {
+    gap: calc(var(--space-unit) * #{$i}) !important;
+  }
 }
 
 select {
@@ -199,50 +225,20 @@ select {
   background-image: none;
 }
 
-.pad-t {
-  padding-top: var(--space-unit);
-}
-
-.pad-tb {
-  padding-top: var(--space-unit);
-  padding-bottom: var(--space-unit);
-}
-
-.pad-b {
-  padding-bottom: var(--space-unit);
-}
-
-.pad-l {
-  padding-left: var(--space-unit);
-}
-
-.pad-r {
-  padding-right: var(--space-unit);
-}
-
-.pad-lr {
-  padding-left: var(--space-unit);
-  padding-right: var(--space-unit);
+.sticky {
+  position: sticky;
 }
 
 .gap {
-  gap: var(--space-unit);
+  gap: calc(var(--space-unit) * 4);
 }
 
-.gap-compact {
-  gap: calc(0.5 * var(--space-unit));
-}
-
-.fullwidth {
-  width: 100%;
-}
-
-.full-width {
+.width-full {
   width: 100%;
 }
 
 .full-height {
-  height: 100% !important;
+  height: 100%;
 }
 
 hr {
@@ -270,7 +266,19 @@ hr {
   align-items: center;
 }
 
+.flex-align-end {
+  align-items: flex-end;
+}
+
+.align-end {
+  align-items: flex-end;
+}
+
 .flex-column {
+  flex-direction: column;
+}
+
+.flex-col {
   flex-direction: column;
 }
 
@@ -278,7 +286,15 @@ hr {
   justify-content: space-between;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .flex-justify-center {
+  justify-content: center;
+}
+
+.justify-center {
   justify-content: center;
 }
 
@@ -493,42 +509,51 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* HEART RATE ZONE CLASSES */
 .hr-zone-1-bg {
+  --bgColor: var(--hrZone1);
   background-color: color-mix(in srgb, var(--hrZone1) 90%, black 10%) !important;
 }
 
 .hr-zone-2-bg {
+  --bgColor: var(--hrZone2);
   background-color: color-mix(in srgb, var(--hrZone2) 90%, black 10%) !important;
 }
 
 .hr-zone-3-bg {
+  --bgColor: var(--hrZone3);
   background-color: color-mix(in srgb, var(--hrZone3) 90%, black 10%) !important;
 }
 
 .hr-zone-4-bg {
+  --bgColor: var(--hrZone4);
   background-color: color-mix(in srgb, var(--hrZone4) 90%, black 10%) !important;
 }
 
 .hr-zone-5-bg {
+  --bgColor: var(--hrZone5);
   background-color: color-mix(in srgb, var(--hrZone5) 90%, black 10%) !important;
 }
-
 .hr-zone-1-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone1) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone1) 30%, transparent 70%) !important;
 }
 
 .hr-zone-2-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone2) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone2) 30%, transparent 70%) !important;
 }
 
 .hr-zone-3-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone3) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone3) 30%, transparent 70%) !important;
 }
 
 .hr-zone-4-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone4) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone4) 30%, transparent 70%) !important;
 }
 
 .hr-zone-5-bg-light {
+  --bgColor: color-mix(in srgb, var(--hrZone5) 30%, transparent 70%);
   background-color: color-mix(in srgb, var(--hrZone5) 30%, transparent 70%) !important;
 }
 
@@ -658,18 +683,6 @@ input[type="range"]::-webkit-slider-thumb {
   grid-template-rows: repeat(4, 1fr);
 }
 
-.grid-gap-1 {
-  gap: 1rem;
-}
-
-.grid-gap-2 {
-  gap: 2rem;
-}
-
-.grid-gap-3 {
-  gap: 3rem;
-}
-
 .grid-area-header {
   grid-area: header;
 }
@@ -743,9 +756,9 @@ input[type="range"]::-webkit-slider-thumb {
 }
 
 .bg-foreground {
+  --bgColor: var(--color-foreground);
   background-color: var(--color-foreground);
 }
-
 .bg-base {
   background-color: var(--color-base);
 }
@@ -855,12 +868,10 @@ input[type="range"]::-webkit-slider-thumb {
 .text-no-wrap {
   white-space: nowrap;
 }
-
 .text-ellipsis {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
@@ -869,8 +880,83 @@ input[type="range"]::-webkit-slider-thumb {
 
 .card {
   border-radius: var(--space-unit);
-  box-shadow: var(--box-shadow);
+  // box-shadow: var(--box-shadow);
   overflow: hidden;
+}
+
+.elevation-1 {
+  box-shadow: 0rem 1px 3px rgba(0, 0, 0, 0.12), 0rem 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.elevation-2 {
+  box-shadow: 0rem 3px 6px rgba(0, 0, 0, 0.15), 0rem 2px 4px rgba(0, 0, 0, 0.12);
+}
+
+.elevation-3 {
+  box-shadow: 0rem 10px 20px rgba(0, 0, 0, 0.15), 0rem 3px 6px rgba(0, 0, 0, 0.10);
+}
+
+.elevation-4 {
+  box-shadow: 0rem 15px 25px rgba(0, 0, 0, 0.15), 0rem 5px 6px rgba(0, 0, 0, 0.05);
+}
+
+.elevation-5 {
+  box-shadow: 0rem 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.raised-1 {
+  box-shadow: inset 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-2 {
+  box-shadow: inset 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-3 {
+  box-shadow: inset 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-4 {
+  box-shadow: inset 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.raised-5 {
+  box-shadow: inset 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
+}
+
+.sunken-1 {
+  box-shadow: inset 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-2 {
+  box-shadow: inset 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-3 {
+  box-shadow: inset 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-4 {
+  box-shadow: inset 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 10%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
+}
+
+.sunken-5 {
+  box-shadow: inset 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
+  background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }
 
 a {

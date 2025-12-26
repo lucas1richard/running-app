@@ -28,7 +28,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
   const viewSize = useViewSize();
 
   return (
-    <div key={activity.id} className={className}>
+    <div key={activity.id}>
       <Tile
         isCompact={viewSize.lte('sm')}
         activity={activity}
@@ -36,7 +36,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
       />
 
       {showHideFunction && (
-        <Basic.Div $textAlign="right">
+        <div className="text-right">
           {isLoading
             ? <Spinner />
             : (
@@ -50,7 +50,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
               />
             </label>
             )}
-        </Basic.Div>
+        </div>
       )}
     </div>
   );

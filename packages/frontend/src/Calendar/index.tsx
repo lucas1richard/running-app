@@ -59,15 +59,15 @@ const CalendarView = () => {
             $marginT={5}
           >
             Sunday
-            <Basic.Div $color="blue0" $textAlign="center">
+            <div className="blue-0 text-center">
               {day}
-            </Basic.Div>
+            </div>
           </Basic.Div>
         );
       }
       
       days.push(
-        <Surface className={`${hasActivities ? '' : 'pad-compact'}`} key={`day-${day}`}>
+        <Surface className={`${hasActivities ? '' : 'p-4'}`} key={`day-${day}`}>
           {!hasActivities && <Basic.Div $textAlign="right">{day}</Basic.Div>}
           {dateActivities[formattedDate]?.map((activity) => (
             <Tile key={activity.id} activity={activity} isCompact={true} />
@@ -87,16 +87,12 @@ const CalendarView = () => {
   const snapToCurrent = useCallback(() => setCurrentMonth(dayjs()), []);
 
   return (
-    <Basic.Div $maxWidth="100%" $overflowX="auto" $pad={2}>
-      <Basic.Div
-        $display="flex"
-        $flexJustify="center"
-        $alignItems="end"
-      >
-        <Basic.Div $textAlign='center'>
-          <Basic.Div $fontSize="h1">
+    <div className="max-w-full overflow-x-auto p-2">
+      <div className="flex justify-center align-end">
+        <div className="text-center">
+          <div className="text-h1">
             {currentMonth.format('MMMM YYYY')}
-          </Basic.Div>
+          </div>
           <Button $padL={1} $padR={1} onClick={backOneMonth} $fontSize="h4">
             &larr;
           </Button>
@@ -106,8 +102,8 @@ const CalendarView = () => {
           <Button $padL={1} $padR={1} onClick={forwardOneMonth} $fontSize="h4">
             &rarr;
           </Button>
-        </Basic.Div>
-      </Basic.Div>
+        </div>
+      </div>
 
       <Grid
         $marginT={2}
@@ -118,26 +114,21 @@ const CalendarView = () => {
         $gap={0.5}
       >
         {!isMobile && ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-          <Basic.Div
+          <div
             key={day}
-            $colorBg="blue0"
-            $color="white"
-            $pad={0.5}
-            $fontSize="h4"
-            $position="sticky"
-            $top="0"
+            className="bg-blue-500 p-2 text-white heading-4 sticky top-0"
           >
             {day}
-          </Basic.Div>
+          </div>
         ))}
         {daysUI}
       </Grid>
-      <Basic.Div $marginT={2}>
-        <Basic.Div $fontSize="h4">
+      <div className="mt-8">
+        <div className="text-h4">
           {daysWithActivities} days with activities
-        </Basic.Div>
-      </Basic.Div>
-    </Basic.Div>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -14,46 +14,42 @@ type ZonesHeaderProps = {
 
 const ZonesHeader: React.FC<ZonesHeaderProps> = ({ zones, start, isCompact }) => {
   const establishedText = `Since ${dayjs(start).utc().format(isCompact ? 'MM/DD/YY' : 'MMMM DD, YYYY')}`;
-  const padLevel = propSelector({ 1: !isCompact, 0.5: isCompact });
+  const padLevel = propSelector({ 4: !isCompact, 2: isCompact });
 
   return (
     <div>
       {(start && !isCompact) && (
-        <Basic.Div $fontSize="h2" $pad={padLevel}>
+        <div className={`heading-2 p-${padLevel}`}>
           {establishedText}
-        </Basic.Div>
+        </div>
       )}
       <Flex $direction="column">
         <Flex $directionXs="column" $overflow="hidden">
           {(start && isCompact) && (
-            <Basic.Div
-              $textAlign="center"
-              $flexGrow="1"
-              $pad={padLevel}
-            >
+            <div className={`text-center flex-item-grow p-${padLevel}`}>
               {establishedText}
-            </Basic.Div>
+            </div>
           )}
 
-          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone1" $pad={padLevel}>
+          <div className={`text-center flex-item-grow p-${padLevel}`} style={{ backgroundColor: "var(--hrZone1)" }}>
             <b>Zone 1</b> ({zones.z1} - {zones.z2 - 1})
-          </Basic.Div>
+          </div>
 
-          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone2" $pad={padLevel}>
+          <div className={`text-center flex-item-grow p-${padLevel}`} style={{ backgroundColor: "var(--hrZone2)" }}>
             <b>Zone 2</b> ({zones.z2} - {zones.z3 - 1})
-          </Basic.Div>
+          </div>
 
-          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone3" $pad={padLevel}>
+          <div className={`text-center flex-item-grow p-${padLevel}`} style={{ backgroundColor: "var(--hrZone3)" }}>
             <b>Zone 3</b> ({zones.z3} - {zones.z4 - 1})
-          </Basic.Div>
+          </div>
 
-          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone4" $pad={padLevel}>
+          <div className={`text-center flex-item-grow p-${padLevel}`} style={{ backgroundColor: "var(--hrZone4)" }}>
             <b>Zone 4</b> ({zones.z4} - {zones.z5 - 1})
-          </Basic.Div>
+          </div>
 
-          <Basic.Div $textAlign="center" $flexGrow="1" $colorBg="hrZone5" $pad={padLevel}>
+          <div className={`text-center flex-item-grow p-${padLevel}`} style={{ backgroundColor: "var(--hrZone5)" }}>
             <b>Zone 5</b> (&ge; {zones.z5})
-          </Basic.Div>
+          </div>
         </Flex>
       </Flex>
     </div>

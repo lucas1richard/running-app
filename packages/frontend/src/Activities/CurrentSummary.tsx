@@ -37,20 +37,20 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
         $templateColumnsSmDown="1fr"
         $gapSmDown={2}
       >
-        <Basic.Div $flexGrow="1" $textAlign="center">
-          <Basic.Div $fontSize="h5">Miles in the last {NUMBER_OF_DAYS} days</Basic.Div>
-          <Basic.Div $fontSize="h2">{sumDistance(recentRuns).toFixed(2)}</Basic.Div>
-        </Basic.Div>
+        <div className="flex-grow-1 text-center">
+          <div className="text-h5">Miles in the last {NUMBER_OF_DAYS} days</div>
+          <div className="text-h2">{sumDistance(recentRuns).toFixed(2)}</div>
+        </div>
 
-        <Basic.Div $flexGrow="1" $textAlign="center">
-          <Basic.Div $fontSize="h5">Miles this year</Basic.Div>
-          <Basic.Div $fontSize="h2">{sumDistance(sameYearRuns).toFixed(2)}</Basic.Div>
-        </Basic.Div>
+        <div className="flex-grow-1 text-center">
+          <div className="text-h5">Miles this year</div>
+          <div className="text-h2">{sumDistance(sameYearRuns).toFixed(2)}</div>
+        </div>
 
-        <Basic.Div $flexGrow="1" $textAlign="center">
-          <Basic.Div $fontSize="h5">All time</Basic.Div>
-          <Basic.Div $fontSize="h2">{sumDistance(activities).toFixed(2)}</Basic.Div>
-        </Basic.Div>
+        <div className="flex-grow-1 text-center">
+          <div className="text-h5">All time</div>
+          <div className="text-h2">{sumDistance(activities).toFixed(2)}</div>
+        </div>
       </Grid>
     </Surface>
   );

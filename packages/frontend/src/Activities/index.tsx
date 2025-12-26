@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import fastDeepEqual from 'fast-deep-equal';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectActivities, selectListActivities, selectZoneGroupedRuns } from '../reducers/activities';
+import { selectActivities } from '../reducers/activities';
 import { selectListPrerences } from '../reducers/preferences';
-import { idle, loading, success, useGetApiStatus } from '../reducers/apiStatus';
+import { useGetApiStatus } from '../reducers/apiStatus';
 import { triggerFetchActivities } from '../reducers/activities-actions';
-import ZonesHeader from './ZonesHeader';
 import CurrentSummary from './CurrentSummary';
 import ConfigWidget from '../Config';
 import ListSort from './ListSort';
@@ -13,11 +12,9 @@ import Shimmer from '../Loading/Shimmer';
 import PreferenceControl from '../PreferenceControl';
 import { listDisplayConfigControls, listDisplayHideFunction } from '../PreferenceControl/keyPaths';
 import usePreferenceControl from '../hooks/usePreferenceControl';
-import ActivityTile from './ActivityTile';
 import PRs from './PRs';
-import { Basic, Button, Flex } from '../DLS';
+import { Basic, Button } from '../DLS';
 import useShowAfterMount from '../hooks/useShowAfterMount';
-import { useAppSelector } from '../hooks/redux';
 import dayjs from 'dayjs';
 import SpeedChart from '../Common/SpeedChart';
 import TileList from './TileList';
@@ -72,14 +69,14 @@ const Activities = () => {
           <div>
             <Button onClick={onClickSync}>Sync Strava</Button>
           </div>
-          <Basic.Div $marginT={1}>
+          <div className="mt-4">
             <PRs />
-          </Basic.Div>
-          <Basic.Div $marginT={1} $marginB={1}>
+          </div>
+          <div className="my-4">
             <h2 className="text-h2 pad-b">Mileage</h2>
             <CurrentSummary activities={activities} />
-          </Basic.Div>
-          <div className="margin-b">
+          </div>
+          <div className="mb-4">
             <PreferenceControl
               subject="Display Config"
               keyPath={listDisplayControlsKeypath}

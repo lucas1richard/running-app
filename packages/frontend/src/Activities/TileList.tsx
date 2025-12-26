@@ -34,7 +34,7 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
             //         <ZonesHeader zones={zones} start={start} />
             //       </Basic.Div>
             //     )} */}
-                <div className="flex flex-column gap">
+                <div className="flex flex-column gap-4">
                   {displayActivities.map((activity) => (
                     <ActivityTile
                       key={activity.id}

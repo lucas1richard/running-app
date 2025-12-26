@@ -14,6 +14,8 @@ import { useAppSelector } from '../hooks/redux';
 import ZonesWidth from './ZonesWidth';
 import styles from './Tile.module.css';
 import Surface from '../DLS/Surface';
+import { ReactComponent as HeartRateSvg } from '../assets/heart-rate.svg';
+import { ReactComponent as AveragePaceSvg } from '../assets/avg_pace.svg';
 
 type Props = {
   activity: Activity;
@@ -49,7 +51,7 @@ const Tile: React.FC<Props> = ({
   const smallText = isCompact ? 'text-sm' : 'text-md';
 
   return (
-    <Surface className={`pad-compact ${backgroundColor} ${className}`}>
+    <Surface className={`p-4 raised-1 card ${backgroundColor} ${className}`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
       <div
         className={isCompact ? styles.gridCompact : styles.grid}
@@ -87,35 +89,35 @@ const Tile: React.FC<Props> = ({
               <span className={`${smallText}`}>
                 {duration}
                 </span>
-              <span className={`margin-l ${largeText} dls-dark-gold`}>
+              <span className={`ml-4 ${largeText} dls-dark-gold`}>
                 {activity.distance_miles} <abbr>mi</abbr>
               </span>
             </div>
 
             <div>
-              <span className={`${smallText}`}>Average Speed</span>
-              <span className={`margin-l ${largeText}`}>
+              <span className={`${smallText}`}><AveragePaceSvg /></span>
+              <span className={`ml-2 ${largeText}`}>
                 {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
               </span>
             </div>
 
-            <div>
-              <span className={`${smallText}`}>Average HR</span>
-              <span className={`margin-l ${largeText}`}>
+            <div className="flex align-center">
+              <span className={`${smallText} align-center`}><HeartRateSvg /></span>
+              <span className={`ml-2 ${largeText}`}>
                 {Math.round(activity.average_heartrate)} bpm
               </span>
             </div>
 
             <div>
               <span className={`${smallText}`}>Max HR</span>
-              <span className={`margin-l ${largeText}`}>
+              <span className={`ml-4 ${largeText}`}>
                 {activity.max_heartrate} bpm
               </span>
             </div>
 
             <div>
               <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span>
-              <span className={`margin-l ${largeText} text-efficiencyFactor`}>
+              <span className={`ml-4 ${largeText} text-efficiencyFactor`}>
                 {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
               </span>
             </div>

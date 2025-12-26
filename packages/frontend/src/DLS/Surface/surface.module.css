@@ -1,9 +1,11 @@
 .base {
+  --bgColor: var(--color-background);
   background-color: var(--color-background);
   color: var(--color-text);
 }
 
 .foreground {
+  --bgColor: var(--color-foreground);
   background-color: var(--color-foreground);
 }
 

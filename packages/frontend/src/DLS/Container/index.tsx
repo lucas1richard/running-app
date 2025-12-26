@@ -1,15 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import styled from 'styled-components';
 import ViewSizeDisplay from '../../Common/ViewSizeDisplay';
 import useResizeObserver from '../../hooks/useResizeObserver';
 import { ViewSizeContext } from '../../hooks/useViewSize';
 import { styledComponentsTheme } from '../theme';
 import type { BreakPoint } from '../createBreakpoints';
-
-const ContainerDiv = styled.div`
-  container-type: inline-size;
-  position: relative;
-`;
+import styles from './Container.module.scss';
 
 type ContainerProps = {
   children: React.ReactNode;
@@ -34,13 +29,13 @@ const Container: React.FC<ContainerProps> = ({
   useResizeObserver(ref, trackSize, { defer: !providesViewSize});
 
   return (
-    <ContainerDiv ref={ref}>
+    <div ref={ref} className={styles.container}>
       {providesViewSize
         ? <ViewSizeContext.Provider value={viewSize}>{children}</ViewSizeContext.Provider>
         : children
       }
       {showViewSizeDisplay && <ViewSizeDisplay />}
-    </ContainerDiv>
+    </div>
   );
 };
 

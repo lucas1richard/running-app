@@ -127,7 +127,7 @@ const HeatMap: React.FC<HeatMapProps> = ({
               options={options}
             />
           )
-          : <Basic.Div $height={`${height}px`}><Shimmer isVisible={true} /></Basic.Div>
+          : <div style={{ height: `${height}px` }}><Shimmer isVisible={true} preset="openBackground" /></div>
       }
       <Button
         onClick={() => setSquareSize(Math.min(MAXIMUM_SQUARE_SIZE, roundToNearest(squareSize + MINIMUM_SQUARE_SIZE, MINIMUM_SQUARE_SIZE)))}
@@ -135,22 +135,22 @@ const HeatMap: React.FC<HeatMapProps> = ({
       <Button
         onClick={() => setSquareSize(Math.max(MINIMUM_SQUARE_SIZE, roundToNearest(squareSize - MINIMUM_SQUARE_SIZE, MINIMUM_SQUARE_SIZE)))}
       > Decrease Square Size</Button>
-      <Basic.Div $marginT={1}>
-        <Basic.Div $fontSize="body">
+      <div className="mt-4">
+        <div className="text-body">
           Square Size: {squareSize} | Largest Value: {largestValue}
-        </Basic.Div>
-      </Basic.Div>
+        </div>
+      </div>
       <Button
         onClick={() => setMinimumOpacity(Math.min(MAXIMUM_OPACITY, roundToNearest(minimumOpacity + 0.02, 0.02)))}
       > Increase Min. Opacity</Button>
       <Button
         onClick={() => setMinimumOpacity(Math.max(MINIMUM_OPACITY, roundToNearest(minimumOpacity - 0.02, 0.02)))}
       > Decrease Min. Opacity</Button>
-      <Basic.Div $marginT={1}>
-        <Basic.Div $fontSize="body">
+      <div className="mt-4">
+        <div className="text-body">
           Minimum Opacity: {minimumOpacity} | Largest Value: {largestValue}
-        </Basic.Div>
-      </Basic.Div>
+        </div>
+      </div>
     </Surface>
   );
 };
