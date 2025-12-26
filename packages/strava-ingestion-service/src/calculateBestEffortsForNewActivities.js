@@ -22,7 +22,7 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
 
   const activitiesWithoutBestEfforts = await query(
     selectActivitiesWithoutBestEffortsSql,
-    [activityIds, calculatedBestEffortActivityIds]
+    [activityIds, calculatedBestEffortActivityIds.length > 0 ? calculatedBestEffortActivityIds.map((a) => a.activityId) : [-1]]
   );
 
   if (activitiesWithoutBestEfforts.length === 0) {
@@ -45,7 +45,7 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
     if (!r[e.name]) r[e.name] = [];
     r[e.name].push(e);
     return r;
-  });
+  }, {});
 
   for (let i = 0; i < activitiesWithoutBestEfforts.length; i++) {
     const activity = activitiesWithoutBestEfforts[i];
@@ -93,7 +93,10 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
   }
 };
 
-// calculateActivityBestEfforts(15320349903)
+// query(selectAllActivitiesOfTypeSql, ['Run']).then((activities) => {
+//   const activityIds = activities.map((a) => a.id);
+//   calculateBestEffortsForNewActivities(activityIds);
+// });
 
 module.exports = {
   calculateBestEffortsForNewActivities,

@@ -16,7 +16,8 @@ FROM
       JOIN activities AS a ON activityId = a.id
     WHERE
       hidden IS NOT TRUE
-      AND a.id NOT IN (?)
+      -- AND a.id NOT IN (?)
+      AND a.sport_type = 'Run'
       AND b.start_date_local < ?
   ) subquery
 WHERE

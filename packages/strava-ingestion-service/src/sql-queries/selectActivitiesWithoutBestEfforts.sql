@@ -5,8 +5,8 @@ SELECT
 FROM
   activities
 WHERE
-  (id IN ?)
-  AND NOT ((id IN ?))
-  AND sport_type = 'Run'
+  (id IN (?))
+  AND NOT (id IN (?))
+  AND sport_type = "Run"
 ORDER BY
   start_date_local ASC;

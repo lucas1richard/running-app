@@ -21,6 +21,7 @@ module.exports = {
   insertTokenDataSql: getSqlFile('insertTokenData.sql'),
   selectActivitiesMultiSql: getSqlFile('selectActivitiesMulti.sql'),
   selectActivitiesWithoutBestEffortsSql: getSqlFile('selectActivitiesWithoutBestEfforts.sql'),
+  selectAllActivitiesOfTypeSql: getSqlFile('selectAllActivitiesOfType.sql'),
   selectExistingBestEffortActivityIdsSql: getSqlFile('selectExistingBestEffortActivityIds.sql'),
   selectHeartZonesAtDateSql: getSqlFile('selectHeartZonesAtDate.sql'),
   selectMostRecentBestEffortsSql: getSqlFile('selectMostRecentBestEfforts.sql'),

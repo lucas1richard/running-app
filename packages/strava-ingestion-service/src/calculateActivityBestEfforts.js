@@ -1,4 +1,4 @@
-const { ingestActivityStreams } = require('./ingestActivityStreams');
+const { getActivityStreams } = require('./getActivityStreams');
 
 const distances = [
   { name: '100 yards', distance: 91.44 },
@@ -27,7 +27,7 @@ const distances = [
 distances.sort((a, b) => a.distance - b.distance);
 
 const calculateActivityBestEfforts = async (activityId, meterDistances = distances) => {
-  const streams = await ingestActivityStreams(activityId, ['distance', 'time']);
+  const streams = await getActivityStreams(activityId, ['distance', 'time']);
   const distanceStream = streams?.find(({ type }) => type === 'distance')?.data;
   const timeStream = streams?.find(({ type }) => type === 'time')?.data;
 

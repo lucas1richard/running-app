@@ -69,9 +69,19 @@ const addStream = async (stream, documentId) => {
   return res;
 };
 
+const getStream = async (id) => {
+  try {
+    const stream = await streamsDb.get(`${id}`);
+    return stream;
+  } catch (err) {
+    return undefined;
+  }
+};
+
 module.exports = {
   addActivityDetail,
   addStream,
+  getStream,
   setupCouchDb,
   bulkAddActivities,
   updateActivityDetail,

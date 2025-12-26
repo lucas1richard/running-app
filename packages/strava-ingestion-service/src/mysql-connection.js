@@ -46,7 +46,7 @@ const getMySQLConnection = async () => {
 const query = async (...args) => {
   const connection = await getMySQLConnection();
   const [rows] = await connection.query(...args);
-  return rows;
+  return rows || [];
 };
 
 module.exports = {

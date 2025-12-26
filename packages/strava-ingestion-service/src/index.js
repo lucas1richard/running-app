@@ -12,6 +12,7 @@ const ingestActivityStreams = require('./ingestActivityStreams');
 const receiver = require('./messageQueue/receiver');
 const ingestActivityLaps = require('./ingestActivityLaps');
 const updateActivity = require('./updateActivity');
+const { calculateBestEffortsForNewActivities } = require('./calculateBestEffortsForNewActivities');
 
 const packageDefinition = protoLoader.loadSync(
   path.join(__dirname, '../../protos/strava-ingestion-service.proto'),
@@ -86,6 +87,7 @@ if (require.main === module) {
         }
         if (type === 'streams') {
           await ingestActivityStreams(payload);
+          await calculateBestEffortsForNewActivities([payload]);
           receiver.sendMessage('activitiesService', 'streams-response', payload, correlationId);
         }
         if (type === 'details') {
