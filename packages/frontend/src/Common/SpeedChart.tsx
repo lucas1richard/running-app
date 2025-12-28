@@ -73,7 +73,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
     series: [
       {
         name: 'Speed',
-        data: activities.map(({ start_date, average_speed }) => [new Date(start_date).getTime(), convertMetricSpeedToMPH(average_speed)]),
+        data: activities.map(({ start_date, average_speed }) => [new Date(start_date).getTime(), convertMetricSpeedToMPH(average_speed) || null]),
         yAxis: 0,
         color: {
           linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
@@ -83,7 +83,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       },
       {
         name: 'Distance',
-        data: activities.map(({ start_date, distance_miles }) => [new Date(start_date).getTime(), distance_miles]),
+        data: activities.map(({ start_date, distance_miles }) => [new Date(start_date).getTime(), distance_miles || null]),
         yAxis: 1,
         dateFormat: 'MMM DD',
         // color: {
@@ -95,7 +95,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       },
       {
         name: 'Average HR',
-        data: activities.map(({ start_date, average_heartrate }) => [new Date(start_date).getTime(), average_heartrate]),
+        data: activities.map(({ start_date, average_heartrate }) => [new Date(start_date).getTime(), average_heartrate || null]),
         yAxis: 2,
         color: {
           linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
@@ -105,7 +105,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       },
       {
         name: 'Efficiency Factor',
-        data: activities.map(({ start_date, average_heartrate, average_speed }) => [new Date(start_date).getTime(), calcEfficiencyFactor(average_speed, average_heartrate)]),
+        data: activities.map(({ start_date, average_heartrate, average_speed }) => [new Date(start_date).getTime(), calcEfficiencyFactor(average_speed, average_heartrate) || null]),
         yAxis: 3,
         color: colors.efficiencyFactorVar,
         ...seriesDefaultConfig,

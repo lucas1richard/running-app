@@ -41,8 +41,8 @@ const Activities = () => {
 
   const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
   const recentActivities = useMemo(() => {
-    const oneYearAgo = dayjs().subtract(1, 'year');
-    return activities.filter(({ start_date }) => dayjs(start_date).isAfter(oneYearAgo)).reverse();
+    const earliestDate = dayjs().subtract(3, 'year');
+    return activities.filter(({ start_date }) => dayjs(start_date).isAfter(earliestDate)).reverse();
   }, [activities]);
 
   const onClickSync = useCallback(() => {
