@@ -34,8 +34,6 @@ table,
 td,
 th {
   border-collapse: collapse;
-  border: 1px solid black;
-  border: 1px solid;
 }
 
 td,
@@ -241,6 +239,10 @@ select {
   height: 100%;
 }
 
+.h-full {
+  height: 100%;
+}
+
 hr {
   border: 0;
   border-top: 1px solid var(--color-text);
@@ -251,7 +253,7 @@ hr {
 }
 
 .flex-even>* {
-  flex: 1;
+  flex: 1 1 1fr;
 }
 
 .flex-item-grow {
@@ -263,6 +265,10 @@ hr {
 }
 
 .flex-align-center {
+  align-items: center;
+}
+
+.items-center {
   align-items: center;
 }
 
@@ -400,6 +406,11 @@ input[type="range"]::-webkit-slider-thumb {
 
 .overflow-x-scroll {
   overflow-x: scroll;
+}
+
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 }
 
 .overflow-x-scroll>* {
@@ -904,57 +915,79 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: 0rem 20px 40px rgba(0, 0, 0, 0.2);
 }
 
+@media (prefers-color-scheme: dark) {
+  .elevation-1 {
+    box-shadow: 0rem 1px 3px rgba(0, 0, 0, 0.88), 0rem 1px 2px rgba(0, 0, 0, 1);
+  }
+
+  .elevation-2 {
+    box-shadow: 0rem 3px 6px rgba(0, 0, 0, 0.88), 0rem 2px 4px rgba(0, 0, 0, 1);
+  }
+
+  .elevation-3 {
+    box-shadow: 0rem 10px 20px rgba(0, 0, 0, 0.88), 0rem 3px 6px rgba(0, 0, 0, 1);
+  }
+
+  .elevation-4 {
+    box-shadow: 0rem 15px 25px rgba(0, 0, 0, 0.88), 0rem 5px 6px rgba(0, 0, 0, 1);
+  }
+
+  .elevation-5 {
+    box-shadow: 0rem 20px 40px rgba(0, 0, 0, 0.88);
+  }
+}
+
 .raised-1 {
-  box-shadow: inset 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  box-shadow: inset 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -2px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
 }
 
 .raised-2 {
-  box-shadow: inset 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  box-shadow: inset 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -3px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
 }
 
 .raised-3 {
-  box-shadow: inset 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  box-shadow: inset 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -4px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
 }
 
 .raised-4 {
-  box-shadow: inset 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  box-shadow: inset 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -5px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
 }
 
 .raised-5 {
-  box-shadow: inset 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%), 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
+  box-shadow: inset 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -6px  color-mix(in srgb, var(--bgColor) 50%, black 20%);
   background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
 }
 
 .sunken-1 {
-  box-shadow: inset 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  box-shadow: inset 0 2px  color-mix(in srgb, var(--bgColor) 50%, black 20%), inset 0 -2px color-mix(in srgb, var(--bgColor) 50%, white 30%);
   // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
   background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }
 
 .sunken-2 {
-  box-shadow: inset 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  box-shadow: inset 0 3px  color-mix(in srgb, var(--bgColor) 50%, black 20%), inset 0 -3px color-mix(in srgb, var(--bgColor) 50%, white 30%);
   // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
   background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }
 
 .sunken-3 {
-  box-shadow: inset 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 4px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  box-shadow: inset 0 4px  color-mix(in srgb, var(--bgColor) 50%, black 20%), inset 0 -4px color-mix(in srgb, var(--bgColor) 50%, white 30%);
   // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
   background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }
 
 .sunken-4 {
-  box-shadow: inset 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 5px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  box-shadow: inset 0 5px  color-mix(in srgb, var(--bgColor) 50%, black 20%), inset 0 -5px color-mix(in srgb, var(--bgColor) 50%, white 30%);
   // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 10%));
   background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }
 
 .sunken-5 {
-  box-shadow: inset 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%), 0 6px color-mix(in srgb, var(--bgColor) 50%, white 30%);
+  box-shadow: inset 0 6px  color-mix(in srgb, var(--bgColor) 50%, black 20%), inset 0 -6px color-mix(in srgb, var(--bgColor) 50%, white 30%);
   // background: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, black 10%), color-mix(in srgb, var(--bgColor) 90%, white 5%));
   background: color-mix(in srgb, var(--bgColor) 80%, black 30%) !important;
 }

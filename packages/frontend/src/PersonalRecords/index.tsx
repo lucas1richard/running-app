@@ -4,16 +4,18 @@ import DurationDisplay from '../Common/DurationDisplay';
 import { Link } from 'react-router-dom';
 import PRMedal from '../Common/Icons/PRMedal';
 import { useAppSelector } from '../hooks/redux';
-import { Basic, Card, Flex } from '../DLS';
+import { Basic, Flex } from '../DLS';
 import { useMemo } from 'react';
 import useShowAfterMount from '../hooks/useShowAfterMount';
-import PRChart from './PRChart';
+// import PRChart from './PRChart';
 import { getDurationString } from '../utils';
 import Surface from '../DLS/Surface';
+import PRCalendarChart from './PRCalendarChart';
+import './personalrecords.module.scss';
 
-const ChartLoading = () => (
-  <Basic.Div $height="2200px" />
-);
+// const ChartLoading = () => (
+//   <Basic.Div $height="2200px" />
+// );
 
 const PRs = () => {
   const showChart = useShowAfterMount();
@@ -23,32 +25,16 @@ const PRs = () => {
 
   return (
     <Basic.Div $marginMdUp={2} $marginSm={1}>
-      <h2>All Time PRs</h2>
-      <Flex $wrap="wrap" $gap={1}>
-        {allTimePrs.map((pr) => (
-          <Surface key={pr.distance} className="card text-center flex-item-grow pad">
-            <Basic.Div $fontSize="h1">
-              <PRMedal type="native" color="gold" />
-            </Basic.Div>
-            <Basic.Div $fontSize="h4">
-              <Link className="heading-4" to={`/${pr.activityId}/detail`}>{pr.name}</Link>
-            </Basic.Div>
-            <div>
-              {dayjs(pr.start_date_local).format('MMMM DD, YYYY')}
-            </div>
-            <Basic.Div $fontSize="h3">
-              <DurationDisplay numSeconds={pr.elapsed_time} />
-            </Basic.Div>
-          </Surface>
-        ))}
-      </Flex>
-      <Basic.Div $marginT={1}>
+      <div className="mt-4">
         <h2>PRs By Date</h2>
         <span>Most recent &rarr; least recent</span>
-        <Basic.Div $marginT={1}>
-          {showChart && Object.keys(prsByDate).length > 0
+        <div className="mt-2">
+          <PRCalendarChart records={prsByDate} />
+        </div>
+        <div className="mt-2">
+          {/* {showChart && Object.keys(prsByDate).length > 0
           ? <PRChart records={prsByDate} title="All" />
-          : <ChartLoading />}
+          : <ChartLoading />} */}
 
           <Basic.Div $marginT={1} $display="flex" $directionMdDown="column" $directionLgUp="row" $gap={1}>
             {names.map((name) => name.startsWith('100') ? null : (
@@ -58,13 +44,12 @@ const PRs = () => {
                   $textAlign="center"
                   $position="sticky"
                   $top="0"
-                  $border="1px solid"
                 >
-                  <Surface className="pad-tb">
+                  <Surface>
                     {name}
                   </Surface>
                 </Basic.Div>
-                <Basic.Table className="bg-foreground" $borderT="none" $width="100%" key={name}>
+                <table className="bg-foreground w-full elevation-1" key={name}>
                   <thead>
                     <tr>
                       <th>Date</th>
@@ -73,33 +58,33 @@ const PRs = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {prsByDate[name].map((pr) => {
+                    {prsByDate[name].map((pr, ix) => {
                       let colorBg: 'white' | 'gold' | 'silver' | 'bronze' = 'white';
                       if (pr.pr_rank === 1) colorBg = 'gold';
                       if (pr.pr_rank === 2) colorBg = 'silver';
                       if (pr.pr_rank === 3) colorBg = 'bronze';
                       return (
-                      <tr key={pr.start_date_local}>
+                      <tr key={pr.start_date_local} className={ix % 2 === 0 ? 'sunken-1' : ''}>
                         <td>
                           <Link to={`/${pr.activityId}/detail`}>
-                            {dayjs(pr.start_date_local).format('MMM DD, YYYY')}
+                            {dayjs(pr.start_date_local).format('DD MMM YYYY')}
                           </Link>
                         </td>
                         <td>
                           {pr.pr_rank}
                         </td>
                         <td>
-                          {getDurationString(pr.elapsed_time)}
+                          {getDurationString(pr.elapsed_time, ['s', 'm ', 'h '])}
                         </td>
                       </tr>
                     )})}
                   </tbody>
-                </Basic.Table>
+                </table>
               </div>
             ))}
           </Basic.Div>
-        </Basic.Div>
-      </Basic.Div>
+        </div>
+      </div>
     </Basic.Div>
   );
 };
