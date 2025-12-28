@@ -63,7 +63,7 @@ const calculateBestEffortsForNewActivities = async (activityIds = []) => {
         start_index: e.start,
         end_index: e.end,
       };
-      const ranks = existingRecords[effort.name] || [];
+      const ranks = existingRecords[effort.name] || [{ elapsed_time: Number.MAX_SAFE_INTEGER }];
       const highestRankIndex = ranks.findIndex((v) => !v || v.elapsed_time > effort.elapsed_time);
       if (highestRankIndex > -1) {
         // since ranks is a pointer, this updates `existingRecords`, which keeps it accurate for
