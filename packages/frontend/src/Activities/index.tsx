@@ -62,7 +62,7 @@ const Activities = () => {
           </Basic.Div>
           <React.Suspense fallback={<Basic.Div $height="900px"><Shimmer isVisible={true} /></Basic.Div>}>
             <Basic.Div $fontSize="h2" $marginB={1}>Heat Map - All time</Basic.Div>
-            <HeatMapContainer />
+            <HeatMapContainer localStorageKey="homepage:heatmap:bounds" />
           </React.Suspense>
         </Basic.Div>
         <Basic.Div $widthLgUp="50%">

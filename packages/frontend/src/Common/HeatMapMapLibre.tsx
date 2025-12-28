@@ -39,6 +39,7 @@ type DataPoint = {
 type HeatMapProps = {
   title?: string;
   data: Array<DataPoint>;
+  localStorageKey?: string;
   measure: keyof DataPoint;
   deferRender?: boolean;
   minColor?: RGBATuple; // RGBA
@@ -51,11 +52,12 @@ type HeatMapProps = {
 
 const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   data,
+  localStorageKey,
   measure,
   deferRender,
   height = 900,
   minColor = [20, 20, 255, 0.5], // Red with some transparency
-  maxColor = [255, 0, 0, 0.5], // Green with full opacity
+  maxColor = [255, 0, 0, 1], // Green with full opacity
   floorValue,
   ceilingValue,
   squareSize = 0.0001,
@@ -89,18 +91,39 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
     return { maxLng, minLng, maxLat, minLat };
   }, [deferRender]);
 
+  const persistViewState = (ev) => {
+    if (!localStorageKey) return;
+    const ne = ev.target.getBounds().getNorthEast();
+    const sw = ev.target.getBounds().getSouthWest();
+    localStorage.setItem(localStorageKey, JSON.stringify({
+      bounds: [sw.lng, sw.lat, ne.lng, ne.lat],
+      ...ev.viewState,
+    }));
+  };
+
   const initialViewState = useMemo(() => {
     const deltaLng = edges.maxLng - edges.minLng;
     const deltaLat = edges.maxLat - edges.minLat;
-    const bounds = [
+    let bounds = [
       edges.minLng - deltaLng * 0.1, edges.minLat - deltaLat * 0.1,
       edges.maxLng + deltaLng * 0.1, edges.maxLat + deltaLat * 0.1,
     ] as [number, number, number, number];
-    return ({
+    let pitch = 0;
+    let bearing = 0;
+    let viewState = {
       bounds,
-      pitch: 0,
-      bearing: 0,
-    })
+      pitch,
+      bearing,
+    }
+    if (localStorageKey) {
+      const localBoundsStr = localStorage.getItem(localStorageKey);
+      if (localBoundsStr) {
+        const localView = JSON.parse(localBoundsStr);
+        Object.assign(viewState, localView);
+        delete viewState.bounds;
+      }
+    }
+    return viewState;
   }, [edges]);
 
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -140,7 +163,10 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
               mapLib={maplibregl}
               style={{ height }}
               onZoom={setPointSizeOnZoom}
-              // onRender={() => setPointSizeOnZoom({ viewState: { zoome: mapRef.current.getZoom() } })}
+              onZoomEnd={persistViewState}
+              onDragEnd={persistViewState}
+              onPitchEnd={persistViewState}
+              onRotateEnd={persistViewState}
               mapStyle={isDarkReaderMode
                 ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
                 : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
@@ -171,7 +197,6 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                 <Layer
                   id={heatmapLayer}
                   type="fill"
-                  // source={heatmapSource}
                   paint={{
                     "fill-color": ['get', 'color'],
                   }}

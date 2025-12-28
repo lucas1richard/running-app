@@ -56,6 +56,12 @@ const HeartZonesChartContainer = ({ id }) => {
     'xAxis'
   );
 
+  const getPercentile = (p: number, data: { measure: number }[]) => {
+    data = data.slice().sort((a, b) => a.measure - b.measure);
+    const index = Math.floor(p * data.length);
+    return data[index]?.measure || 0;
+  }
+
   return (
     <div>
       <div>
@@ -124,6 +130,8 @@ const HeartZonesChartContainer = ({ id }) => {
             deferRender={hrHeatMapData.length === 0}
             minColor={[0, 0, 255, 1]}
             maxColor={[255, 0, 0, 1]}
+            floorValue={getPercentile(0.4, hrHeatMapData)}
+            ceilingValue={getPercentile(0.97, hrHeatMapData)}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
@@ -136,7 +144,8 @@ const HeartZonesChartContainer = ({ id }) => {
             deferRender={velocityHeatMapData.length === 0}
             minColor={[255, 0, 0, 1]}
             maxColor={[0, 255, 0, 1]}
-            floorValue={1}
+            floorValue={getPercentile(0.1, velocityHeatMapData)}
+            ceilingValue={getPercentile(0.8, velocityHeatMapData)}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
@@ -149,6 +158,8 @@ const HeartZonesChartContainer = ({ id }) => {
             deferRender={altitudeHeatMapData.length === 0}
             minColor={[0, 0, 255, 1]}
             maxColor={[255, 255, 0, 1]}
+            floorValue={getPercentile(0.4, altitudeHeatMapData)}
+            ceilingValue={getPercentile(0.97, altitudeHeatMapData)}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
@@ -161,6 +172,8 @@ const HeartZonesChartContainer = ({ id }) => {
             deferRender={gradeHeatMapData.length === 0}
             minColor={[0, 255, 0, 1]}
             maxColor={[255, 0, 0, 1]}
+            floorValue={getPercentile(0.2, gradeHeatMapData)}
+            ceilingValue={getPercentile(0.97, gradeHeatMapData)}
           />
         </Basic.Div>
       </Basic.Div>
