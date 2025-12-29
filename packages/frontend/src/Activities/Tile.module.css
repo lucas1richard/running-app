@@ -4,23 +4,12 @@
 
   grid-template-columns: auto 1fr auto;
   grid-template-areas: 
-  "image title stats"
+  "image title title"
+  "stats stats stats"
   "zonesWidth zonesWidth zonesWidth"
   "bestEfforts bestEfforts bestEfforts"
   "children children children";
 }
-
-.gridCompact {
-  display: grid;
-  gap: 0.5rem;
-  
-  grid-template-columns: 1fr auto auto;
-  grid-template-areas: "image title title"
-    "stats stats stats"
-    "zonesWidth zonesWidth zonesWidth"
-    "children children children";
-}
-
 .gridImage {
   grid-area: image;
 }
@@ -29,6 +18,11 @@
 }
 .gridStats {
   grid-area: stats;
+}
+.gridStats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1rem;
 }
 .gridZonesWidth {
   grid-area: zonesWidth;
@@ -42,3 +36,40 @@
 .gridChildren {
   grid-area: children;
 }
+
+@container (max-width: 900px) {
+  .grid {
+    display: grid;
+    gap: 0.5rem;
+    
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "image title title"
+      "stats stats stats"
+      "zonesWidth zonesWidth zonesWidth"
+      "children children children";
+  }
+  .gridStats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    text-align: left;
+  }
+}
+
+@container (max-width: 700px) {
+  .grid {
+    display: grid;
+    gap: 0.5rem;
+    
+    grid-template-columns: 1fr auto auto;
+    grid-template-areas: "image title title"
+      "stats stats stats"
+      "zonesWidth zonesWidth zonesWidth"
+      "children children children";
+  }
+  .gridStats {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0;
+    text-align: right;
+  }
+}
+

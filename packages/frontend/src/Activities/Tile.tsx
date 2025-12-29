@@ -51,10 +51,10 @@ const Tile: React.FC<Props> = ({
   const smallText = isCompact ? 'text-sm' : 'text-md';
 
   return (
-    <Surface className={`p-4 raised-1 card ${backgroundColor} ${className}`}>
+    <Surface className={`p-4 raised-1 card container ${backgroundColor} ${className}`}>
       {hovered && <DetailDataFetcher id={activity.id} />}
       <div
-        className={isCompact ? styles.gridCompact : styles.grid}
+        className={styles.grid}
       >
         <div className={styles.gridImage}>
           <GoogleMapImage
@@ -84,7 +84,6 @@ const Tile: React.FC<Props> = ({
         </div>
 
         <div className={styles.gridStats}>
-          <div className={`text-${isCompact ? 'left' : 'right'}`}>
             <div>
               <span className={`${smallText}`}>
                 {duration}
@@ -101,8 +100,8 @@ const Tile: React.FC<Props> = ({
               </span>
             </div>
 
-            <div className="flex align-center">
-              <span className={`${smallText} align-center`}><HeartRateSvg /></span>
+            <div>
+              <span className={`${smallText}`}><HeartRateSvg /></span>
               <span className={`ml-2 ${largeText}`}>
                 {Math.round(activity.average_heartrate)} bpm
               </span>
@@ -116,12 +115,11 @@ const Tile: React.FC<Props> = ({
             </div>
 
             <div>
-              <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span>
-              <span className={`ml-4 ${largeText} text-efficiencyFactor`}>
+              {/* <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span> */}
+              <span className={`${largeText} text-efficiencyFactor`}>
                 {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
               </span>
             </div>
-          </div>
         </div>
 
         <div  className={styles.gridZonesWidth}>
@@ -141,7 +139,7 @@ const Tile: React.FC<Props> = ({
               <div key={effort.distance} className="flex flex-align-center">
                 <span><PRMedal color={effort.pr_rank || 'black'} type={effort.pr_rank <= 3 ? 'native' : 'svg'} /></span>
                 <small>
-                  {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} />
+                  {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} units={['', ':', ':']} />
                 </small>
               </div>
             ))

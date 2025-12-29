@@ -6,12 +6,12 @@ type SurfaceProps = {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-}
+} & React.HTMLAttributes<HTMLDivElement>
 
 const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
-  ({ variant = 'foreground', children, className, style }, ref) => {
+  ({ variant = 'foreground', children, className, style, ...rest }, ref) => {
     return (
-      <div className={`${styles[variant]} ${className}`} style={style} ref={ref}>
+      <div className={`${styles[variant]} ${className}`} style={style} ref={ref} {...rest}>
         {children}
       </div>
     );

@@ -21,6 +21,11 @@ textarea {
   text-align: left;
 }
 
+.container {
+  container-type: inline-size;
+  position: relative;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
@@ -302,6 +307,10 @@ hr {
 
 .justify-center {
   justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
 }
 
 .flex-wrap {
