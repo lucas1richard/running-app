@@ -62,7 +62,7 @@ function MultiMapMapLibre({
   }, [animate, animating, coordsPure.length]);
 
   const hoverProgress = useMemo(() => (
-    <div className="flex flex-wrap height-4rem full-width border dls-white-bg">
+    <div className="flex flex-wrap height-4rem full-width dls-white-bg sunken-4">
       {new Array(longestStream).fill(0).map((_, ix) => (
         <div
           key={ix}

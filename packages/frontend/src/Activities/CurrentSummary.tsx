@@ -31,7 +31,7 @@ const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
   const sameYearRuns = useMemo(() => findSameYear(activities), [activities]);
 
   return (
-    <Surface className="pad card">
+    <Surface className="p-4 card">
       <Grid
         $templateColumns="repeat(3, 1fr)"
         $templateColumnsSmDown="1fr"

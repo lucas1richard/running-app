@@ -25,6 +25,32 @@ type Props = {
   className?: string;
 }
 
+const prsMap = {
+  1: 'bg-gold-200 text-gold-900 raised-1 elevation-3',
+  2: 'bg-silver-500 text-neutral-100 raised-1 elevation-2',
+  3: 'bg-bronze-500 text-neutral-900 raised-1 elevation-1',
+  4: 'bg-emerald-300 text-neutral-900 raised-1 elevation-1',
+  5: 'bg-emerald-400 text-neutral-900 raised-1 elevation-1',
+  6: 'bg-emerald-500 text-neutral-900 raised-1 elevation-1',
+  7: 'bg-emerald-600 text-neutral-100 raised-1 elevation-1',
+  8: 'bg-emerald-700 text-neutral-100 raised-1 elevation-1',
+  9: 'bg-emerald-800 text-neutral-100 raised-1 elevation-1',
+  10: 'bg-emerald-900 text-neutral-100 raised-1 elevation-1',
+};
+
+const prsRibbonMap = {
+  1: '1',
+  2: '2',
+  3: '3',
+  4: 'var(--color-emerald-900)',
+  5: 'var(--color-emerald-900)',
+  6: 'var(--color-emerald-900)',
+  7: 'var(--color-emerald-100)',
+  8: 'var(--color-emerald-100)',
+  9: 'var(--color-emerald-100)',
+  10: 'var(--color-emerald-100)',
+};
+
 const Tile: React.FC<Props> = ({
   activity,
   backgroundIndicator,
@@ -136,11 +162,11 @@ const Tile: React.FC<Props> = ({
         {!isCompact && (<div className={styles.gridBestEfforts}>
           {bestEfforts.length > 0 && (
             bestEfforts.filter(({ pr_rank }) => pr_rank).map((effort) => (
-              <div key={effort.distance} className="flex flex-align-center">
-                <span><PRMedal color={effort.pr_rank || 'black'} type={effort.pr_rank <= 3 ? 'native' : 'svg'} /></span>
-                <small>
-                  {effort.name} &rarr; <DurationDisplay numSeconds={effort.elapsed_time} units={['', ':', ':']} />
-                </small>
+              <div key={effort.distance} className={`${prsMap[effort.pr_rank]} card flex flex-align-center px-2 py-1`}>
+                <PRMedal color={prsRibbonMap[effort.pr_rank]} rank={effort.pr_rank} type={effort.pr_rank <= 3 ? 'native' : 'svg'} />
+                <span className="ml-1 text-sm">
+                  <span className="text-bold">{effort.name}</span> &rarr; <DurationDisplay numSeconds={effort.elapsed_time} units={['', ':', ':']} />
+                </span>
               </div>
             ))
           )}

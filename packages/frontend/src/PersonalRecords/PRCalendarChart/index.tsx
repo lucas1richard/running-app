@@ -10,6 +10,8 @@ import { Basic } from '../../DLS';
 import PRMedal from '../../Common/Icons/PRMedal';
 import { Link } from 'react-router-dom';
 import DurationDisplay from '../../Common/DurationDisplay';
+import useViewSize from '../../hooks/useViewSize';
+import { selectActivitiesByMonth } from '../../reducers/activities';
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
@@ -25,6 +27,9 @@ const PRCalendarChart = ({ records: recordsProp }) => {
     }))
   }, [recordsProp]);
   const currentMonth = dayjs().subtract(0, 'month');
+  const viewSize = useViewSize();
+  const isMobile = viewSize.lte('sm');
+
   return (
     <div>
       {sets.map(set => (
@@ -45,12 +50,25 @@ const PRCalendarChart = ({ records: recordsProp }) => {
                 <DurationDisplay numSeconds={set.allTimeBest.elapsed_time} />
               </Basic.Div>
             </Surface>
-            {Array.from({ length: 24 }).map((_, idx) => (
-              <Surface key={idx} className="p-4 card raised-2 flex-item-grow" variant="foreground">
-                <h4 className="text-center mb-4">{currentMonth.subtract(idx, 'month').format('MMM YYYY')}</h4>
-                <CalendarUI records={set.data} monthStartDate={currentMonth.subtract(idx, 'month')} />
-              </Surface>
-            ))}
+            {Array.from({ length: 24 }).map((_, idx) => {
+              const hasMonthlyActivities = Object.keys(selectActivitiesByMonth.resultFunc(set.data, currentMonth.subtract(idx, 'month'))).length > 0;
+              return isMobile && !hasMonthlyActivities ? null : (
+                <Surface key={idx} className={`p-4 card ${hasMonthlyActivities ? 'raised-2' : 'sunken-2'} flex-item-grow`} variant="foreground">
+                  {hasMonthlyActivities ? (
+                    <>
+                      <h4 className="text-center mb-4">{currentMonth.subtract(idx, 'month').format('MMM YYYY')}</h4>
+                      <CalendarUI records={set.data} monthStartDate={currentMonth.subtract(idx, 'month')} />
+                    </>
+                  ) : (
+                    <>
+                      <h4 className="text-sm text-center mb-4">{currentMonth.subtract(idx, 'month').format('MMM YYYY')}</h4>
+                      <div className="text-sm flex items-center justify-center flex-grow">None</div>
+                    </>
+                  )
+                  }
+                </Surface>
+              );
+            })}
           </div>
         </div>
       ))}

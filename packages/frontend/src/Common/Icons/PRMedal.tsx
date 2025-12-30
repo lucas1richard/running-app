@@ -3,8 +3,9 @@ import { prColors } from '../colors';
 
 type PRMedalProps = {
   className?: string;
-  color: 'gold' | 'silver' | 'bronze' | 'black' | number;
+  color: any;
   type: 'native' | 'svg';
+  rank?: number;
 };
 export const rankMap = {
   gold: '🥇',
@@ -25,7 +26,7 @@ export const rankMap = {
 /**
  * PR refers to "Personal Record"
  */
-const PRMedal: React.FC<PRMedalProps> = ({ className = '', color = 'black', type }) => 
+const PRMedal: React.FC<PRMedalProps> = ({ className = '', color = 'black', type, rank }) => 
   type === 'native' && !!rankMap[color]
   ? <span className={className}>{rankMap[color]}</span>
   : (
@@ -34,7 +35,7 @@ const PRMedal: React.FC<PRMedalProps> = ({ className = '', color = 'black', type
     viewBox="0 0 24 24"
     width={24}
     fill={prColors[color]?.fill || 'transparent'}
-    stroke={prColors[color]?.stroke || 'black'}
+    stroke={prColors[color]?.stroke || color || 'black'}
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -47,11 +48,11 @@ const PRMedal: React.FC<PRMedalProps> = ({ className = '', color = 'black', type
       y="9"
       textAnchor="middle"
       dominantBaseline="middle"
-      stroke="black"
+      stroke={prColors[color]?.stroke || color || 'black'}
       fontSize="11"
       fontWeight={100}
     >
-      {typeof color === 'number' ? color : color.charAt(0).toUpperCase()}
+      {rank || ''}
     </text>
   </svg>
 );

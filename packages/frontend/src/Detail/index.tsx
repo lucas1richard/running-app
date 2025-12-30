@@ -156,7 +156,6 @@ const ActivityDetailPage = () => {
         </Surface>
       </Grid>
 
-
       <HeartZonesDisplay
         zones={zones}
         nativeZones={nativeZones}

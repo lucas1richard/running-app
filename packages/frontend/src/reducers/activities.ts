@@ -385,6 +385,24 @@ export const selectActivitiesByDate = createDeepEqualSelector(
     , {});
   });
 
+export const selectActivitiesByMonth = createDeepEqualSelector(
+  selectActivities,
+  makeGet2ndArg<string | Dayjs>(),
+  (activities, monthStartDate) => {
+    const month = dayjs(monthStartDate);
+    const firstDayOfMonth = month.startOf('month');
+    const lastDayOfMonth = month.endOf('month');
+    return activities.reduce((acc, pr) => {
+      const prdate = dayjs(pr.start_date_local)
+      if (prdate.isAfter(firstDayOfMonth) && prdate.isBefore(lastDayOfMonth)) {
+        const dateKey = prdate.format('YYYY-MM-DD');
+        acc[dateKey] = acc[dateKey] || [];
+        acc[dateKey].push(pr);
+      }
+      return acc;
+    }, {}) as Record<string, BestEffort[]>;
+  });
+
 export const selectActivitiesDisplayTypes = createDeepEqualSelector(
   getActivitiesState,
   getPreferencesState,

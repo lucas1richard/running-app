@@ -289,13 +289,9 @@ $utilityMap: (
     }
   }
 
-  ;
-
   @each $color, $value in $namedColors {
     #{"" + $color}: $value;
     // css variables respond to changes in the theme
     #{"" + $color}Var: var(--color-#{$color});
   }
-
-  ;
 }

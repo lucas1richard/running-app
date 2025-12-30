@@ -182,7 +182,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                     const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
                     if (Number(point) < floor) point = smallestValue;
                     if (Number(point) > ceiling) point = largestValue;
-                    const percent = (Number(point) - smallestValue) / (largestValue - smallestValue);
+                    const percent = (Number(point) - floor) / (ceiling - floor);
                     return ({
                       type: 'Feature',
                       geometry: {

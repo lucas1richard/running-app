@@ -7,7 +7,7 @@ import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine, { removeXAxisPlotLine } from './addXAxisPlotline';
 import useMinMax from './useMinMax';
-import { prColors } from '../../Common/colors';
+import { colors, prColors } from '../../Common/colors';
 import RouteMap from '../RouteMap';
 import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
 import roundToNearest from '../../utils/roundToNearest';
@@ -36,7 +36,13 @@ const prColorsArr = [
   { value: 0, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
   { value: 1, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
   { value: 2, color: 'rgba(192, 192, 192, 0.9)', borderColor: prColors.silver.stroke },
-  { value: 3, color: 'rgba(205, 127, 50, 0.9)', borderColor: prColors.bronze.stroke },
+  { value: 3, color: 'var(--color-emerald-300)', borderColor: 'var(--color-neutral-100)' },
+  { value: 4, color: 'var(--color-emerald-400)', borderColor: 'var(--color-neutral-100)' },
+  { value: 5, color: 'var(--color-emerald-500)', borderColor: 'var(--color-neutral-100)' },
+  { value: 6, color: 'var(--color-emerald-600)', borderColor: 'var(--color-neutral-100)' },
+  { value: 7, color: 'var(--color-emerald-700)', borderColor: 'var(--color-neutral-100)' },
+  { value: 8, color: 'var(--color-emerald-800)', borderColor: 'var(--color-neutral-100)' },
+  { value: 9, color: 'var(--color-emerald-900)', borderColor: 'var(--color-neutral-100)' },
   { color: 'white', borderColor: 'black' },
 ]
 
@@ -392,7 +398,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         data: efficiencyFactorData,
         yAxis: 5,
         fillOpacity: 0.1,
-        color: 'blue',
+        color: colors.efficiencyFactorVar,
         tooltip: {
           valueSuffix: ' yards/beat',
           pointFormatter() {
@@ -491,8 +497,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         top: '35%',
         offset: 0,
         id: 'EfficiencyFactor',
-        title: { enabled: enableYAxisLabels, text: 'Efficiency Factor', style: { color: 'blue', fontSize: '1.25rem' } },
-        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: 'blue' } },
+        title: { enabled: enableYAxisLabels, text: 'Efficiency Factor', style: { color: colors.efficiencyFactorVar, fontSize: '1.25rem' } },
+        labels: { enabled: enableYAxisLabels, format: '{value}', style: { color: colors.efficiencyFactorVar } },
         opposite: false,
       },
     ]
