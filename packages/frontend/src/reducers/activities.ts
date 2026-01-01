@@ -400,7 +400,7 @@ export const selectActivitiesByMonth = createDeepEqualSelector(
         acc[dateKey].push(pr);
       }
       return acc;
-    }, {}) as Record<string, BestEffort[]>;
+    }, {}) as Record<string, Activity[]>;
   });
 
 export const selectActivitiesDisplayTypes = createDeepEqualSelector(

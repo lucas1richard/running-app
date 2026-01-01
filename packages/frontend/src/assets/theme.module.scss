@@ -118,6 +118,8 @@ $colors: (
 // light theme colors, see dark theme for overrides below
 $namedColors: (
   efficiencyFactor: map.get($colors, violet, 700),
+  white: #fff,
+  black: #000,
 );
 
 $prefixMap: (
@@ -149,17 +151,11 @@ $utilityMap: (
     @each $shade, $value in $shades {
       --color-#{"" + $color}-#{$shade}: #{$value};
 
-      .bg-#{"" + $color}-#{$shade} {
-        --bgColor: var(--color-#{$color}-#{$shade});
-        background-color: var(--color-#{$color}-#{$shade});
-      }
-
-      .text-#{"" + $color}-#{$shade} {
-        color: var(--color-#{$color}-#{$shade});
-      }
-
       @each $prefix, $cssName in $prefixMap {
         .#{$prefix}-#{"" + $color}-#{$shade} {
+          @if $prefix == 'bg' {
+            --bgColor: var(--color-#{$color}-#{$shade});
+          }
           #{$cssName}: var(--color-#{$color}-#{$shade});
         }
         @each $utilPrefix, $util in $utilityMap {
@@ -215,6 +211,8 @@ $utilityMap: (
 @media (prefers-color-scheme: dark) {
   $namedColors: (
     efficiencyFactor: map.get($colors, violet, 400),
+    white: #fff,
+    black: #000,
   );
 
 :root {
@@ -235,6 +233,7 @@ $utilityMap: (
       --color-#{"" + $color}-#{$shade}: #{$value};
 
       .bg-#{"" + $color}-#{$shade} {
+        --bgColor: var(--color-#{$color}-#{$shade});
         background-color: var(--color-#{$color}-#{$shade});
       }
 

@@ -4,7 +4,7 @@ import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { Basic, Button, Grid } from '../DLS';
 import { useAppSelector } from '../hooks/redux';
-import { selectActivitiesByDate } from '../reducers/activities';
+import { selectActivitiesByDate, selectActivitiesByMonth } from '../reducers/activities';
 import Tile from '../Activities/Tile';
 import useViewSize from '../hooks/useViewSize';
 import Surface from '../DLS/Surface';
@@ -15,7 +15,7 @@ dayjs.extend(weekOfYear);
 const CalendarView = () => {
   const viewSize = useViewSize();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
-  const dateActivities = useAppSelector(selectActivitiesByDate);
+  const inMonth = useAppSelector(state => selectActivitiesByMonth(state, currentMonth));
   
   const daysInMonth = currentMonth.daysInMonth();
   const firstDayOfMonth = currentMonth.startOf('month').weekday();
@@ -43,7 +43,7 @@ const CalendarView = () => {
       const isWeekend = currentDayOfWeek === 0;
       const formattedDate = currentDate.format('YYYY-MM-DD');
 
-      const hasActivities = dateActivities[formattedDate]?.length > 0;
+      const hasActivities = inMonth[formattedDate]?.length > 0;
       if (hasActivities) daysWithActivities++;
 
       if (isMobile && isWeekend) {
@@ -69,7 +69,7 @@ const CalendarView = () => {
       days.push(
         <Surface className={`${hasActivities ? '' : 'p-4'}`} key={`day-${day}`}>
           {!hasActivities && <Basic.Div $textAlign="right">{day}</Basic.Div>}
-          {dateActivities[formattedDate]?.map((activity) => (
+          {inMonth[formattedDate]?.map((activity) => (
             <Tile key={activity.id} activity={activity} isCompact={true} />
           ))}
         </Surface>
@@ -80,7 +80,7 @@ const CalendarView = () => {
       daysWithActivities,
       daysUI: days,
     };
-  }, [daysInMonth, firstDayOfMonth, currentMonth, dateActivities, isMobile]);
+  }, [daysInMonth, firstDayOfMonth, currentMonth, inMonth, isMobile]);
 
   const backOneMonth = useCallback(() => navigateMonth(-1), [navigateMonth]);
   const forwardOneMonth = useCallback(() => navigateMonth(1), [navigateMonth]);
@@ -104,12 +104,16 @@ const CalendarView = () => {
           </Button>
         </div>
       </div>
-
+      <div className="mt-8">
+        <div className="text-h4">
+          {daysWithActivities} days with activities
+        </div>
+      </div>
       <Grid
         $marginT={2}
         $templateColumns={`repeat(7, 1fr)`}
         $templateColumnsMdDown={"1fr"}
-        $templateRows={`auto repeat(${Math.round((daysUI.length) / 7)}, minmax(222px, 1fr))`}
+        $templateRows={`auto repeat(6, 1fr)`}
         $templateRowsMdDown="auto"
         $gap={0.5}
       >
@@ -123,11 +127,7 @@ const CalendarView = () => {
         ))}
         {daysUI}
       </Grid>
-      <div className="mt-8">
-        <div className="text-h4">
-          {daysWithActivities} days with activities
-        </div>
-      </div>
+      
     </div>
   );
 };

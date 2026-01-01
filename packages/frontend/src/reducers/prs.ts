@@ -29,6 +29,6 @@ const getPRsState = (state: RootState) => state.prs;
 
 export const getPRs = createSelector(getPRsState, (prs) => prs.prs);
 
-export const getPRsByDate = createSelector(getPRsState, (prs) => prs.byDate);
+export const selectPRsByDate = createSelector(getPRsState, (prs) => prs.byDate);
 
 export default prsReducer;

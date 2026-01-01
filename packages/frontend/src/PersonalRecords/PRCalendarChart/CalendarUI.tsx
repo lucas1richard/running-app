@@ -9,16 +9,16 @@ dayjs.extend(weekday);
 dayjs.extend(weekOfYear);
 
 const prsMap = {
-  1: 'bg-gold-200 hover:bg-gold-300 text-neutral-900 raised-1',
-  2: 'bg-silver-500 hover:bg-silver-600 text-neutral-100 raised-1',
-  3: 'bg-bronze-500 hover:bg-bronze-600 text-neutral-900 raised-1',
-  4: 'bg-emerald-300 hover:bg-emerald-400 text-neutral-900 raised-1',
-  5: 'bg-emerald-400 hover:bg-emerald-500 text-neutral-900 raised-1',
-  6: 'bg-emerald-500 hover:bg-emerald-600 text-neutral-900 raised-1',
-  7: 'bg-emerald-600 hover:bg-emerald-700 text-neutral-100 raised-1',
-  8: 'bg-emerald-700 hover:bg-emerald-800 text-neutral-100 raised-1',
-  9: 'bg-emerald-800 hover:bg-emerald-900 text-neutral-100 raised-1',
-  10: 'bg-emerald-900 hover:bg-emerald-800 text-neutral-100 raised-1',
+  1: 'bg-gold-200 hover:bg-gold-300 text-gold-900 raised-1',
+  2: 'bg-silver-200 hover:bg-silver-300 text-silver-900 raised-1',
+  3: 'bg-bronze-500 hover:bg-bronze-400 text-bronze-900 raised-1',
+  4: 'bg-emerald-300 hover:bg-emerald-400 text-black raised-1',
+  5: 'bg-emerald-400 hover:bg-emerald-500 text-black raised-1',
+  6: 'bg-emerald-500 hover:bg-emerald-600 text-black raised-1',
+  7: 'bg-emerald-600 hover:bg-emerald-700 text-white raised-1',
+  8: 'bg-emerald-700 hover:bg-emerald-800 text-white raised-1',
+  9: 'bg-emerald-800 hover:bg-emerald-900 text-white raised-1',
+  10: 'bg-emerald-900 hover:bg-emerald-800 text-white raised-1',
 };
 
 const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEffort[]; monthStartDate: dayjs.Dayjs }) => {

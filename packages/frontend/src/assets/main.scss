@@ -126,23 +126,23 @@ button:active {
 }
 
 .border {
-  border: 1px solid #ddd;
+  border: 1px solid;
 }
 
 .border-b {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid;
 }
 
 .border-1 {
-  border: 1px solid #ddd;
+  border: 1px solid;
 }
 
 .border-2 {
-  border: 2px solid #ddd;
+  border: 2px solid;
 }
 
 .border-3 {
-  border: 3px solid #ddd;
+  border: 3px solid;
 }
 
 .text-center {
@@ -1024,4 +1024,50 @@ a {
 
 .width-50 {
   width: 50%;
+}
+
+.shine-button {
+  position: relative; /* Needed for absolute positioning of the pseudo-element */
+  overflow: hidden; /* Hides the shine when it's outside the button boundaries */
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  z-index: 1; /* Ensures button content is above the shine pseudo-element */
+}
+
+.shine-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0%; /* Start the shine off-screen to the left */
+  width: 50%; /* Width of the shine itself */
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%, /* The visible part of the shine */
+    rgba(255, 255, 255, 0) 100%
+  );
+  transition: all 0.5s ease; /* Smooth transition for the hover effect */
+  z-index: -1; /* Position behind the button content */
+}
+
+.shine-button:hover::after {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%, /* The visible part of the shine */
+    rgba(255, 255, 255, 0) 100%
+  );
+  left: 50%;
+}
+
+.transition-bg-1s {
+  transition: all 1s ease;
+}
+
+.transition-all-2s {
+  transition: all 20s ease;
 }

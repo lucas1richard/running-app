@@ -28,7 +28,7 @@ const PRs = () => {
             role="button"
             tabIndex={0}
             onClick={() => navigate(`/${pr.activityId}/detail`)}
-            className="card text-center flex-item-grow bg-gold-300 hover:bg-gold-400 text-gold-900 pad raised-3 flex items-center justify-between p-4"
+            className="shine-button card text-center flex-item-grow bg-gold-200 hover:bg-gold-300 text-gold-900 pad raised-3 flex items-center justify-between p-4"
             key={pr.distance}
           >
             <div className="heading-1">

@@ -5,6 +5,7 @@ import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetri
 import styled from 'styled-components';
 import { Basic, Flex } from '../DLS';
 import Surface from '../DLS/Surface';
+import ZonesWidth from '../Activities/ZonesWidth';
 
 type HeartZonesDisplayProps = {
   zones: HeartZone;
@@ -111,6 +112,15 @@ const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZone
       )}
       <Basic.Div>
         <Flex $direction="column" $directionMdUp="row">
+          <ZonesWidth
+            zones={zones}
+            heartData={heartData}
+            id={zones.id}
+            zonesCaches={{}}
+            variant="circular"
+            height="12rem"
+            width="12rem"
+          />
           <Cell
             ix={0}
             title="Zone 1"

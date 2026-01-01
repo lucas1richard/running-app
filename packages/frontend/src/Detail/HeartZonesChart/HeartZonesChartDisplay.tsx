@@ -7,8 +7,7 @@ import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
 import getSmoothVal from './getSmoothVal';
 import addXAxisPlotLine, { removeXAxisPlotLine } from './addXAxisPlotline';
 import useMinMax from './useMinMax';
-import { colors, prColors } from '../../Common/colors';
-import RouteMap from '../RouteMap';
+import { colors } from '../../Common/colors';
 import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
 import roundToNearest from '../../utils/roundToNearest';
 import {
@@ -33,16 +32,16 @@ variwide(Highcharts);
 gantt(Highcharts);
 
 const prColorsArr = [
-  { value: 0, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
-  { value: 1, color: prColors.gold.fill, borderColor: prColors.gold.stroke },
-  { value: 2, color: 'rgba(192, 192, 192, 0.9)', borderColor: prColors.silver.stroke },
-  { value: 3, color: 'var(--color-emerald-300)', borderColor: 'var(--color-neutral-100)' },
-  { value: 4, color: 'var(--color-emerald-400)', borderColor: 'var(--color-neutral-100)' },
-  { value: 5, color: 'var(--color-emerald-500)', borderColor: 'var(--color-neutral-100)' },
-  { value: 6, color: 'var(--color-emerald-600)', borderColor: 'var(--color-neutral-100)' },
-  { value: 7, color: 'var(--color-emerald-700)', borderColor: 'var(--color-neutral-100)' },
-  { value: 8, color: 'var(--color-emerald-800)', borderColor: 'var(--color-neutral-100)' },
-  { value: 9, color: 'var(--color-emerald-900)', borderColor: 'var(--color-neutral-100)' },
+  { value: 0, color: 'transparent', borderColor: 'transparent', textColor: 'transparent' },
+  { value: 1, color: 'var(--color-gold-300)', borderColor: 'var(--color-gold-900)', textColor: 'var(--color-gold-900)' },
+  { value: 2, color: 'var(--color-silver-300)', borderColor: 'var(--color-silver-900)', textColor: 'var(--color-silver-900)' },
+  { value: 3, color: 'var(--color-bronze-500)', borderColor: 'var(--color-bronze-900)', textColor: 'var(--color-bronze-900)' },
+  { value: 4, color: 'var(--color-emerald-400)', borderColor: 'var(--color-emerald-900)', textColor: 'var(--color-emerald-900)' },
+  { value: 5, color: 'var(--color-emerald-500)', borderColor: 'var(--color-emerald-900)', textColor: 'var(--color-emerald-900)' },
+  { value: 6, color: 'var(--color-emerald-600)', borderColor: 'var(--color-emerald-900)', textColor: 'var(--color-emerald-900)' },
+  { value: 7, color: 'var(--color-emerald-700)', borderColor: 'var(--color-emerald-900)', textColor: 'var(--color-emerald-900)' },
+  { value: 8, color: 'var(--color-emerald-800)', borderColor: 'var(--color-emerald-900)', textColor: 'var(--color-emerald-900)' },
+  { value: 9, color: 'var(--color-emerald-900)', borderColor: 'var(--color-emerald-100)', textColor: 'var(--color-emerald-900)' },
   { color: 'white', borderColor: 'black' },
 ]
 
@@ -145,6 +144,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
       end: fullTime[val.start_index] + val.elapsed_time,
       color: (prColorsArr[val.pr_rank] || prColorsArr[prColorsArr.length - 1]).color,
       borderColor: (prColorsArr[val.pr_rank] || prColorsArr[prColorsArr.length - 1]).borderColor,
+      textColor: (prColorsArr[val.pr_rank] || prColorsArr[prColorsArr.length - 1]).textColor,
     })),
     [bestEfforts, fullTime]
   );
@@ -361,7 +361,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           formatter() {
             const effort = bestEfforts[this.point.index];
             return `
-                <span>${effort.name} - ${getDurationString(effort.elapsed_time)}</span>
+                <span style="color:${this.point.textColor};">${effort.name} - ${getDurationString(effort.elapsed_time)}</span>
             `;
           },
         },

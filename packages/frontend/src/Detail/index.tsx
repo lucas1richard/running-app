@@ -138,7 +138,7 @@ const ActivityDetailPage = () => {
                 </B.Div>
               </Flex>
             </B.Div>
-            <B.Div $textAlign="center" className="dls-blue">
+            <div className="text-center text-efficiencyFactor">
               <B.Div $fontSize="h5">
                 Efficiency Factor
               </B.Div>
@@ -148,7 +148,7 @@ const ActivityDetailPage = () => {
               <div>
                 yards per beat
               </div>
-            </B.Div>
+            </div>
             <div>
               <WeatherReporter id={id} />
             </div>

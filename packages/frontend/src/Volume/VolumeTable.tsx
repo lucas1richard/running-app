@@ -16,7 +16,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
   const activities = useAppSelector((state) => selectTimeGroupedRuns(state, tg));
 
   return (
-    <Surface className="card">
+    <div className="card">
       <label htmlFor="timeGroupSelect">Time Group:</label>
       &nbsp;
       <select id="timeGroupSelect" value={tg} onChange={handleChange}>
@@ -34,16 +34,15 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
         ))}
       </div>
 
-      <Basic.Table $width="100%">
-        <tbody>
           {
             activities.map(({ start, sum, runs, zones }) => (
+              <Surface key={start.toString()} className="mb-4 p-4 card raised-2">
+            <Basic.Table key={start.toString()} $width="100%">
+              <tbody>
               <Fragment key={start.toString()}>
                 <Basic.Tr $position="sticky" $top="0" $zIndex="1">
                   <th colSpan={3}>
-                    <Surface>
                       The {tg} starting {start.format('dddd MMMM, DD YYYY')} &darr;
-                    </Surface>
                   </th>
                 </Basic.Tr>
                 <tr>
@@ -68,11 +67,12 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
                   ))
                 }
               </Fragment>
+            </tbody>
+          </Basic.Table>
+                </Surface>
             ))
           }
-        </tbody>
-      </Basic.Table>
-    </Surface>
+    </div>
   );
 };
 
