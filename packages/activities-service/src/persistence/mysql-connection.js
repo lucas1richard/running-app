@@ -1,6 +1,7 @@
 const waitPort = require('wait-port');
 const fs = require('fs');
 const mysql = require('mysql2');
+const mysqlPromise = require('mysql2/promise');
 
 const {
   MYSQL_HOST: HOST,
@@ -15,9 +16,12 @@ const {
 
 /** @type {import('mysql2').Pool} */
 let pool;
+/** @type {import('mysql2/promise').Pool} */
+let promisePool;
 
-const getMySQLConnection = async () => {
-  if (pool) return pool;
+const getMySQLConnection = async (withPromise) => {
+  if (!withPromise && pool) return pool;
+  if (withPromise && promisePool) return promisePool;
 
   const host = HOST_FILE ? fs.readFileSync(HOST_FILE) : HOST;
   const user = USER_FILE ? fs.readFileSync(USER_FILE) : USER;
@@ -31,16 +35,27 @@ const getMySQLConnection = async () => {
     waitForDns: true,
   });
 
-  pool = mysql.createPool({
-    connectionLimit: 5,
-    host,
-    user,
-    password,
-    database,
-    charset: 'utf8mb4',
-  });
-
-  return pool;
+  if (!withPromise) {
+    pool = mysql.createPool({
+      connectionLimit: 5,
+      host,
+      user,
+      password,
+      database,
+      charset: 'utf8mb4',
+    });
+    return pool;
+  } else {
+    promisePool = mysqlPromise.createPool({
+      connectionLimit: 5,
+      host,
+      user,
+      password,
+      database,
+      charset: 'utf8mb4',
+    });
+    return promisePool;
+  }
 };
 
 const queryStream = async ({
@@ -55,9 +70,9 @@ const queryStream = async ({
 };
 
 const query = async (...args) => {
-  const connection = await getMySQLConnection();
-  const [rows] = await connection.query(...args);
-  return rows;
+  const connection = await getMySQLConnection(true);
+  const all = await connection.query(...args);
+  return all[0] || [];
 };
 
 module.exports = {

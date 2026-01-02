@@ -29,7 +29,6 @@ const compress = (route = [], compressionLevel = 0.0001) => {
 const addAllCompressedRoutes = async (compressionLevel = 0.0001) => {
   // get all activities
   const ids = await query(getUnroutedActivitiesSql);
-  console.log(ids)
 
   // get activities that have streams
   const streams = await Promise.all(
@@ -39,8 +38,6 @@ const addAllCompressedRoutes = async (compressionLevel = 0.0001) => {
   );
 
   const streamsToFetch = streams.filter(([, streams]) => !streams);
-
-  console.log('streamsToFetch', streamsToFetch);
 
   streamsToFetch.forEach(([id]) => {
     receiver.sendMessage('stravaIngestionService', 'streams', id);

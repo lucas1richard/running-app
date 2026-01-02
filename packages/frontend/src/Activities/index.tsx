@@ -108,7 +108,6 @@ const Activities = () => {
           || syncActivitiesApiStatus === loading
         )}
       /> */}
-      
     </Basic.Div>
   );
 };

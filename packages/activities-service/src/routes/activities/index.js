@@ -15,6 +15,8 @@ const { findAllActivities } = require('../../persistence/activities');
 const getPRsByDate = require('../../controllers/getPRsByDate');
 const getPRs = require('../../controllers/getPRs');
 const { listStreamRouter } = require('./listStream');
+const { query } = require('../../persistence/mysql-connection');
+const { getActivitiesInBoundsSql } = require('../../persistence/sql-queries');
 
 const router = Router();
 
@@ -77,6 +79,24 @@ router.get('/prs', async (req, res) => {
   try {
     const prs = await getPRs();
     res.json(prs);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+router.get('/in-bounds', async (req, res) => {
+  try {
+    const { north, south, east, west } = req.query;
+    if (!north || !south || !east || !west) {
+      return res.status(400).send('Missing required query parameters: north, south, east, west');
+    }
+    const activities = await query(getActivitiesInBoundsSql, [
+      parseFloat(north),
+      parseFloat(south),
+      parseFloat(east),
+      parseFloat(west),
+    ]);
+    res.json(activities);
   } catch (error) {
     res.status(500).send(error.message);
   }

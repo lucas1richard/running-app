@@ -1,4 +1,4 @@
-import { useId, useMemo, useRef, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { Basic } from '../DLS';
 import Shimmer from '../Loading/Shimmer';
 import { FullscreenControl, Layer, Map, Source } from "@vis.gl/react-maplibre";
@@ -6,6 +6,7 @@ import maplibregl from 'maplibre-gl';
 import "maplibre-gl/dist/maplibre-gl.css"; // Required!
 import useDarkReaderMode from '../hooks/useDarkReaderMode';
 import Surface from '../DLS/Surface';
+import ActivityTile from '../Activities/ActivityTile';
 
 const makeSquare = ({ lat, lon }, size = 0.0001) => {
   const delta = size / 2;
@@ -63,6 +64,8 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   squareSize = 0.0001,
 }) => {
   const isDarkReaderMode = useDarkReaderMode();
+  const [ne, setNE] = useState({ lat: 0, lng: 0 });
+  const [sw, setSW] = useState({ lat: 0, lng: 0 });
 
   let activeMinColor = minColor;
   let activeMaxColor = maxColor;
@@ -81,6 +84,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   }, [deferRender]);
 
   const gradientId = useId();
+  const [activitiesInbounds, setActivitiesInbounds] = useState<Array<Activity>>([]);
 
   const edges = useMemo(() => {
     const maxLng = data.reduce((max, { lon }) => Math.max(max, Number(lon)), -Infinity);
@@ -95,6 +99,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
     if (!localStorageKey) return;
     const ne = ev.target.getBounds().getNorthEast();
     const sw = ev.target.getBounds().getSouthWest();
+    onMapLoad();
     localStorage.setItem(localStorageKey, JSON.stringify({
       bounds: [sw.lng, sw.lat, ne.lng, ne.lat],
       ...ev.viewState,
@@ -128,6 +133,16 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
 
   const mapRef = useRef<maplibregl.Map | null>(null);
 
+  const onMapLoad = () => {
+    if (mapRef.current) {
+      const ne = mapRef.current.getBounds().getNorthEast();
+      const sw = mapRef.current.getBounds().getSouthWest();
+      setNE(ne);
+      setSW(sw);
+      setPointSizeOnZoom({ viewState: { zoom: mapRef.current.getZoom() } });
+    }
+  };
+
   const [pointSize, setPointSize] = useState(squareSize);
 
   const setPointSizeOnZoom = ({ viewState }) => {
@@ -152,77 +167,103 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
   };
 
   return (
-    <Surface>
-      {
-        !deferRender
-          ? (
-            <Map
-              initialViewState={initialViewState}
-              // @ts-expect-error -- ref
-              ref={mapRef}
-              mapLib={maplibregl}
-              style={{ height }}
-              onZoom={setPointSizeOnZoom}
-              onZoomEnd={persistViewState}
-              onDragEnd={persistViewState}
-              onPitchEnd={persistViewState}
-              onRotateEnd={persistViewState}
-              mapStyle={isDarkReaderMode
-                ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
-                : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
-              }
-            >
-              <Source
-                id={heatmapSource}
-                type="geojson"
-                data={{
-                  type: 'FeatureCollection',
-                  features: data.map(({ lat, lon, [measure]: point }) => {
-                    const floor = floorValue !== undefined ? floorValue : smallestValue;
-                    const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
-                    if (Number(point) < floor) point = smallestValue;
-                    if (Number(point) > ceiling) point = largestValue;
-                    const percent = (Number(point) - floor) / (ceiling - floor);
-                    return ({
-                      type: 'Feature',
-                      geometry: {
-                        type: 'Polygon',
-                        coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat) }, pointSize)],
-                      },
-                      properties: { color: makeColor(activeMinColor, activeMaxColor, percent) },
-                    })
-                  }),
-                }}
+    <div>
+      <Surface>
+        {
+          !deferRender
+            ? (
+              <Map
+                initialViewState={initialViewState}
+                // @ts-expect-error -- ref
+                ref={mapRef}
+                mapLib={maplibregl}
+                style={{ height }}
+                onZoom={setPointSizeOnZoom}
+                onZoomEnd={persistViewState}
+                onDragEnd={persistViewState}
+                onPitchEnd={persistViewState}
+                onRotateEnd={persistViewState}
+                onLoad={onMapLoad}
+                mapStyle={isDarkReaderMode
+                  ? "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
+                  : "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json"
+                }
               >
-                <Layer
-                  id={heatmapLayer}
-                  type="fill"
-                  paint={{
-                    "fill-color": ['get', 'color'],
+                <Source
+                  id={heatmapSource}
+                  type="geojson"
+                  data={{
+                    type: 'FeatureCollection',
+                    features: data.map(({ lat, lon, [measure]: point }) => {
+                      const floor = floorValue !== undefined ? floorValue : smallestValue;
+                      const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
+                      if (Number(point) < floor) point = smallestValue;
+                      if (Number(point) > ceiling) point = largestValue;
+                      const percent = (Number(point) - floor) / (ceiling - floor);
+                      return ({
+                        type: 'Feature',
+                        geometry: {
+                          type: 'Polygon',
+                          coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat) }, pointSize)],
+                        },
+                        properties: { color: makeColor(activeMinColor, activeMaxColor, percent) },
+                      })
+                    }),
                   }}
-                />
-              </Source>
-              <FullscreenControl position="top-right" />
-            </Map>
-          )
-          : <div style={{ height: `${height}px` }}><Shimmer isVisible={true} preset="openBackground" /></div>
-      }
-      {!deferRender && (
-        <div>
-          <svg width="100%" height="20">
-            <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: `rgb(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]})`, stopOpacity: activeMinColor[3] }} />
-              <stop offset="100%" style={{ stopColor: `rgb(${activeMaxColor[0]}, ${activeMaxColor[1]}, ${activeMaxColor[2]})`, stopOpacity: activeMaxColor[3] }} />
-            </linearGradient>
-            <rect x="0" y="0" width="100%" height="20" fill={`url(#${gradientId})`} />
-          </svg>
-          <div className="flex justify-between text-body">
-            <div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</div>
-            <div>Highest ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</div>
+                >
+                  <Layer
+                    id={heatmapLayer}
+                    type="fill"
+                    paint={{
+                      "fill-color": ['get', 'color'],
+                    }}
+                  />
+                </Source>
+                <FullscreenControl position="top-right" />
+              </Map>
+            )
+            : <div style={{ height: `${height}px` }}><Shimmer isVisible={true} preset="openBackground" /></div>
+        }
+        {!deferRender && (
+          <div>
+            <svg width="100%" height="20">
+              <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style={{ stopColor: `rgb(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]})`, stopOpacity: activeMinColor[3] }} />
+                <stop offset="100%" style={{ stopColor: `rgb(${activeMaxColor[0]}, ${activeMaxColor[1]}, ${activeMaxColor[2]})`, stopOpacity: activeMaxColor[3] }} />
+              </linearGradient>
+              <rect x="0" y="0" width="100%" height="20" fill={`url(#${gradientId})`} />
+            </svg>
+            <div className="flex justify-between text-body">
+              <div>Lowest ({floorValue !== undefined ? `${floorValue} floor` : smallestValue})</div>
+              <div>Highest ({ceilingValue !== undefined ? `${ceilingValue} ceiling` : largestValue})</div>
+            </div>
           </div>
-        </div>
+        )}
+      </Surface>
+
+      <button onClick={() => (
+        fetch(`http://localhost:3001/activities/in-bounds?north=${ne.lat}&south=${sw.lat}&east=${ne.lng}&west=${sw.lng}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setActivitiesInbounds(data);
+          })
+      )}>Find Activities In View</button>
+      {activitiesInbounds.length > 0 && (
+        <h2 className="text-h2 pad-b">
+          Activities in Viewport ({activitiesInbounds.length})
+        </h2>
       )}
-    </Surface>
+      <div className="grid gap-4 mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+        {activitiesInbounds.map((activity) => (
+          <ActivityTile
+            key={activity.id}
+            activity={activity}
+            backgroundIndicator={'none'}
+            showHideFunction={false}
+          />
+        ))}
+      </div>
+    </div>
   );
 };
 

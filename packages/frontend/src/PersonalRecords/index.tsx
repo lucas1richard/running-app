@@ -11,7 +11,7 @@ import './personalrecords.module.scss';
 
 const prsMap = {
   1: 'shine-button transition-all-2s bg-gold-200 hover:bg-gold-300 text-gold-900 raised-1',
-  2: 'shine-button transition-all-2s bg-silver-200 hover:bg-silver-300 text-silver-900 raised-1 raised-1',
+  2: 'shine-button transition-all-2s bg-silver-200 hover:bg-silver-300 text-silver-900 raised-1',
   3: 'shine-button transition-all-2s bg-bronze-500 hover:bg-bronze-400 text-bronze-900 raised-1',
   4: 'bg-emerald-300 hover:bg-emerald-400 text-black raised-1',
   5: 'bg-emerald-400 hover:bg-emerald-500 text-black raised-1',

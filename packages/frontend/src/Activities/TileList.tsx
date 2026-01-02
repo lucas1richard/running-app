@@ -39,7 +39,6 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
                     <ActivityTile
                       key={activity.id}
                       activity={activity}
-                      className="card"
                       backgroundIndicator={tileBackgroundIndicator}
                       showHideFunction={showHideFunction}
                     />

@@ -30,6 +30,7 @@
 .gridBestEfforts {
   grid-area: bestEfforts;
   display: flex;
+  flex-wrap: wrap;
   align-content: start;
   gap: 1rem;
 }
@@ -46,6 +47,7 @@
     grid-template-areas: "image title title"
       "stats stats stats"
       "zonesWidth zonesWidth zonesWidth"
+      "bestEfforts bestEfforts bestEfforts"
       "children children children";
   }
   .gridStats {
@@ -64,6 +66,7 @@
     grid-template-areas: "image title title"
       "stats stats stats"
       "zonesWidth zonesWidth zonesWidth"
+      "bestEfforts bestEfforts bestEfforts"
       "children children children";
   }
   .gridStats {

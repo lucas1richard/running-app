@@ -80,7 +80,7 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
   ]
 
   return (
-    <>
+    <div>
       {variant === 'linear' && (
         <div
           className="elevation-1"
@@ -105,7 +105,7 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
         />
       )}
       {/* <ZonesWidthPercents id={id} percents={percents} /> */}
-    </>
+    </div>
   );
 };
 

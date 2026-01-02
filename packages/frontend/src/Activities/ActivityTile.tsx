@@ -6,28 +6,29 @@ import Spinner from '../Loading/Spinner';
 import { Basic } from '../DLS';
 import Tile from './Tile';
 import useViewSize from '../hooks/useViewSize';
+import { useAppSelector } from '../hooks/redux';
+import { selectActivity } from '../reducers/activities';
 
 type ActivityTileProps = {
-  className: string;
   activity: Activity;
   backgroundIndicator: string;
   showHideFunction: boolean;
 };
 
 const ActivityTile: React.FC<ActivityTileProps> = ({
-  className,
-  activity,
+  activity: { id, hidden = false },
   backgroundIndicator,
   showHideFunction,
 }) => {
+  const activity = useAppSelector((state) => selectActivity(state, id));
   const dispatch = useDispatch();
-  const isLoading = useGetApiStatus(`${TRIGGER_UPDATE_ACTIVITY}-${activity.id}`) === 'loading';
+  const isLoading = useGetApiStatus(`${TRIGGER_UPDATE_ACTIVITY}-${id}`) === 'loading';
   const hideActivity = useCallback(() => {
-    dispatch(triggerUpdateActivity({ id: activity.id, hidden: !activity.hidden }));
-  }, [activity.hidden, activity.id, dispatch]);
+    dispatch(triggerUpdateActivity({ id: id, hidden: !hidden }));
+  }, [hidden, id, dispatch]);
   const viewSize = useViewSize();
 
-  return (
+  return activity ? (
     <div key={activity.id}>
       <Tile
         isCompact={viewSize.lte('sm')}
@@ -53,7 +54,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
         </div>
       )}
     </div>
-  );
+  ) : null;
 };
 
 export default ActivityTile;
