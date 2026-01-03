@@ -3,13 +3,7 @@ import { useSelector } from '../../../node_modules/react-redux/dist/react-redux'
 import { selectActivityDetails } from '../../reducers/activities';
 import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '../../utils';
 import DurationDisplay from '../../Common/DurationDisplay';
-import styled from 'styled-components';
-import { Basic } from '../../DLS';
 import Surface from '../../DLS/Surface';
-
-const TableWrapper = styled.div`
-  overflow-x: auto;
-`;
 
 const processLaps = (laps) => {
   let timeStart = 0;
@@ -54,27 +48,27 @@ const Laps = ({ id }) => {
   if (!laps) return null;
 
   return (
-    <Surface>
-      <TableWrapper>
+    <div className="mt-4 card">
+      <Surface className="overflow-x-auto">
         <table>
-          <thead>
+          <thead className="">
             <tr>
-              <Basic.Th colSpan="7" $textAlign="center">Laps</Basic.Th>
+              <th colSpan="7" className="raised-1 bg-neutral-800 text-white text-center">Laps</th>
             </tr>
-            <tr>
-              <th>Name</th>
-              <th>Time</th>
-              <th>Distance</th>
-              <th>Pace</th>
-              <th>Heart Rate</th>
-              <th>Max Heart Rate</th>
-              <th>Elevation Gain</th>
+            <tr className="raised-1 bg-neutral-800 text-white">
+              <th className="px-4">Name</th>
+              <th className="px-4">Time</th>
+              <th className="px-4">Distance</th>
+              <th className="px-4">Pace</th>
+              <th className="px-4">Heart Rate</th>
+              <th className="px-4">Max Heart Rate</th>
+              <th className="px-4">Elevation Gain</th>
             </tr>
           </thead>
           <tbody>
-            {processLaps(laps).map((lap) => {
+            {processLaps(laps).map((lap, ix) => {
               return (
-                <Basic.Tr key={lap.name} $textAlign="right">
+                <tr key={lap.name} className={`text-right ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
                   <td>{lap.name}</td>
                   <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
                   <td>{lap.dist} <small>{lap.distUnit}</small></td>
@@ -83,16 +77,16 @@ const Laps = ({ id }) => {
                       numSeconds={Math.floor((1 / convertMetersToMiles(lap.distance)) * lap.elapsed_time)} units={['', ':']}
                     />
                   </td>
-                  <Basic.Td $textAlign="center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></Basic.Td>
-                  <Basic.Td $textAlign="center">{lap.max_heartrate} <abbr>bpm</abbr></Basic.Td>
+                  <td className="text-center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></td>
+                  <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
                   <td>{lap.totalElevationGainFt} <small>ft</small></td>
-                </Basic.Tr>
+                </tr>
               )}
             )}
           </tbody>
         </table>
-      </TableWrapper>
-    </Surface>
+      </Surface>
+    </div>
   );
 };
 

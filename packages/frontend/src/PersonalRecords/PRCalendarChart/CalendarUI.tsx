@@ -59,10 +59,16 @@ const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEff
       };
         
       days.push(
-        <div role={hasActivities ? 'button' : undefined} onClick={onClick} className={`bg-foreground sunken-1`} key={`day-${day}`}>
-          <div className={`${colorBg} text-sm w-full h-full flex items-center justify-center flex-item-grow`}>
-            <span>{bestPR !== Infinity ? bestPR : ''}</span>
-          </div>
+        <div className={`bg-foreground sunken-1`} key={`day-${day}`}>
+          {!!bestPR && (
+            <div
+              role={hasActivities ? 'button' : undefined}
+              onClick={onClick}
+              className={`${colorBg} shine-button w-full h-full flex items-center justify-center flex-item-grow`}
+            >
+              <span>{bestPR}</span>
+            </div>
+          )}
         </div>
       );
     });

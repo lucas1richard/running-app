@@ -69,12 +69,6 @@ button {
   color: var(--color-neutral-50);
 }
 
-@media (prefers-color-scheme: dark) {
-  button {
-    background-color: var(--color-neutral-900);
-    color: var(--color-neutral-50);
-  }
-}
 
 .btn {
   padding: 0.25rem 0.5rem;
@@ -250,6 +244,16 @@ select {
 
 .h-full {
   height: 100%;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.square {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 hr {
@@ -967,6 +971,21 @@ input[type="range"]::-webkit-slider-thumb {
   box-shadow: inset 0 2px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -2px  color-mix(in srgb, var(--bgColor) 50%, black 50%);
   background-color: linear-gradient(to bottom, color-mix(in srgb, var(--bgColor) 90%, white 5%), color-mix(in srgb, var(--bgColor) 90%, black 10%));
 }
+.raised-1.rounded-full {
+  box-shadow: inset 0 3px 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -4px 8px color-mix(in srgb, var(--bgColor) 50%, black 50%);
+}
+.raised-2.rounded-full {
+  box-shadow: inset 0 3px 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -4px 8px color-mix(in srgb, var(--bgColor) 50%, black 50%);
+}
+.raised-3.rounded-full {
+  box-shadow: inset 0 3px 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -4px 8px color-mix(in srgb, var(--bgColor) 50%, black 50%);
+}
+.raised-4.rounded-full {
+  box-shadow: inset 0 3px 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -4px 8px color-mix(in srgb, var(--bgColor) 50%, black 50%);
+}
+.raised-5.rounded-full {
+  box-shadow: inset 0 3px 4px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -4px 8px color-mix(in srgb, var(--bgColor) 50%, black 50%);
+}
 
 .raised-2 {
   box-shadow: inset 0 3px color-mix(in srgb, var(--bgColor) 50%, white 30%), inset 0 -3px  color-mix(in srgb, var(--bgColor) 50%, black 50%);
@@ -1029,11 +1048,6 @@ a {
 .shine-button {
   position: relative; /* Needed for absolute positioning of the pseudo-element */
   overflow: hidden; /* Hides the shine when it's outside the button boundaries */
-  background-color: #007bff;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  cursor: pointer;
   z-index: 1; /* Ensures button content is above the shine pseudo-element */
 }
 
@@ -1062,6 +1076,25 @@ a {
     rgba(255, 255, 255, 0) 100%
   );
   left: 50%;
+}
+
+.shine-button.rounded-full::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0%; /* Start the shine off-screen to the left */
+  width: 150%; /* Width of the shine itself */
+  height: 100%;
+  background: radial-gradient(circle at 75%, transparent 50%, rgba(255,255,255,0.1) 75%, transparent);
+  transition: all 0.5s ease; /* Smooth transition for the hover effect */
+  z-index: -1; /* Position behind the button content */
+}
+
+.shine-button.rounded-full:hover::after {
+  background: radial-gradient(circle at 75%, transparent 50%, rgba(255,255,255,0.1) 75%, transparent);
+  rotate: 30deg;
+  left: 50%;
+  top: 40%;
 }
 
 .transition-bg-1s {
