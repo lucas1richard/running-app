@@ -1,0 +1,11 @@
+@media (prefers-color-scheme: dark) {
+  tbody>tr:has(td).bgCustom {
+      --bgColor: var(--color-neutral-700);
+      background-color: var(--color-neutral-700);
+  }
+
+  thead tr:has(th).bgCustom {
+      --bgColor: var(--color-neutral-800);
+      background-color: var(--color-neutral-800);
+  }
+}

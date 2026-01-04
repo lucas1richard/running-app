@@ -51,7 +51,7 @@ const Laps = ({ id }) => {
     <div className="mt-4 card">
       <Surface className="overflow-x-auto">
         <table>
-          <thead className="">
+          <thead>
             <tr>
               <th colSpan="7" className="raised-1 bg-neutral-800 text-white text-center">Laps</th>
             </tr>
@@ -68,7 +68,7 @@ const Laps = ({ id }) => {
           <tbody>
             {processLaps(laps).map((lap, ix) => {
               return (
-                <tr key={lap.name} className={`text-right ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
+                <tr key={lap.name} className={`text-right text-white bg-neutral-700 ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
                   <td>{lap.name}</td>
                   <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
                   <td>{lap.dist} <small>{lap.distUnit}</small></td>

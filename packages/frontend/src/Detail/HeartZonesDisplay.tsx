@@ -45,21 +45,21 @@ const DataWrapper = styled(Basic.Div)`
 `;
 
 const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg }) => {
+  if (Number(percents[ix]) === 0) {
+    return null;
+  }
   const isMaxPercentage = Number(percents[ix]) === Math.max.apply(null, percents.map(Number));
   return (
     <CellWrapper
       ix={ix}
-      className="flex-item-grow"
+      className="text-white"
       $isMaxPercentage={isMaxPercentage}
     >
       <DataWrapper $textAlign="center" $marginB={1}>
-        <b>{title}</b>
-        <span>({range})</span>
+        <b>{title}</b>&nbsp;<span>({range})</span>
       </DataWrapper>
       <DataWrapper $flexJustify="space-between">
-        <b>
-          Time in Zone:
-        </b>
+        <b>Time in Zone:</b>
         <div>
           <DurationDisplay numSeconds={totalTimes[ix]} /> <span>({percents[ix]}%)</span>
         </div>
@@ -67,17 +67,13 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
       {avg[ix] && (
         <>
           <DataWrapper $flexJustify="space-between">
-            <b>
-              Avg Pace in Zone:
-            </b>
+            <b>Avg Pace in Zone:</b>
             <div>
               <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
             </div>
           </DataWrapper>
           <DataWrapper $flexJustify="space-between">
-            <b>
-              Fastest Pace in Zone:
-            </b>
+            <b>Fastest Pace in Zone:</b>
             <div>
               <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)))} />/mi
             </div>

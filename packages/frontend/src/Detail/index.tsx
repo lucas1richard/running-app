@@ -34,6 +34,8 @@ import { Basic as B, Button, Card, Flex, Grid } from '../DLS';
 import useViewSize from '../hooks/useViewSize';
 import MapLibreHRZones from '../Common/MapLibreHRZones';
 import Surface from '../DLS/Surface';
+import SplitsMi from './Laps/SplitsMi';
+import SplitsKm from './Laps/SplitKm';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();
@@ -170,8 +172,10 @@ const ActivityDetailPage = () => {
         keyPath={activityShouldShowLaps(idString)}
         saveConfig={saveConfig}
       >
-        <Grid $templateColumns='1fr' $gap={1} $templateColumnsLgUp='auto 1fr'>
+        <Grid $templateColumns='1fr' $gap={1} $templateColumnsLgUp='auto auto auto 1fr'>
           <Laps id={id} />
+          <SplitsMi id={id} />
+          <SplitsKm id={id} />
           <BestEfforts bestEfforts={activity.calculatedBestEfforts} />
         </Grid>
       </PreferenceControl>
