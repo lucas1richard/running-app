@@ -18,6 +18,10 @@ type GoogleMapImageProps = {
   alt?: string;
 };
 
+export const getMapImageSrc = (activityId: number, polyline: string, imgWidth?: number, imgHeight?: number) => {
+  return `http://localhost:3002/routes/${activityId}.png?size=${imgWidth || 900}x${imgHeight || 450}&maptype=roadmap&path=enc:${polyline}`;
+};  
+
 const GoogleMapImage: React.FC<GoogleMapImageProps> = ({
   polyline,
   activityId,
@@ -27,8 +31,7 @@ const GoogleMapImage: React.FC<GoogleMapImageProps> = ({
   width,
   ...rest
 }) => {
-  const src = `http://localhost:3002/routes/${activityId}.png?size=${imgWidth || 900}x${imgHeight || 450}&maptype=roadmap&path=enc:${polyline}`;
-
+  const src = getMapImageSrc(activityId, polyline, imgWidth, imgHeight);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 

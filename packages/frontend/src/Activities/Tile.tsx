@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { selectStreamTypeData } from '../reducers/activities';
 import { convertMetricSpeedToMPH, getSummaryPolyline, getWeatherStyles } from '../utils';
-import GoogleMapImage from '../Common/GoogleMapImage';
+import GoogleMapImage, { getMapImageSrc } from '../Common/GoogleMapImage';
 import DurationDisplay from '../Common/DurationDisplay';
 import PRMedal from '../Common/Icons/PRMedal';
 import { selectHeartZones } from '../reducers/heartzones';
@@ -77,13 +77,16 @@ const Tile: React.FC<Props> = ({
   const smallText = isCompact ? 'text-sm' : 'text-md';
 
   return (
-    <Surface className={`p-4 raised-1 card container ${backgroundColor} ${className}`}>
+    <Surface className={`p-4 raised-1 card container ${styles.container} ${backgroundColor} ${className}`} style={{
+      // @ts-ignore
+      '--img-url': `url(${getMapImageSrc(activity.id, getSummaryPolyline(activity), 400, 200)})`,
+    }}>
       {hovered && <DetailDataFetcher id={activity.id} />}
       <div
         className={styles.grid}
       >
         <div className={styles.gridImage}>
-          <GoogleMapImage
+          {/* <GoogleMapImage
             activityId={activity.id}
             polyline={getSummaryPolyline(activity)}
             alt="summary route"
@@ -91,10 +94,10 @@ const Tile: React.FC<Props> = ({
             imgHeight={200}
             width={100}
             height={75}
-          />
+          /> */}
         </div>
 
-        <div className={`${styles.gridTitle} text-${isCompact ? 'right' : 'left'}`}>
+        <div className={`${styles.gridTitle} text-shadow text-right`}>
           <div>
             {dayjs(activity.start_date_local).format('MMMM DD, YYYY')}
           </div>
