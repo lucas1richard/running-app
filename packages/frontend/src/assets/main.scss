@@ -265,6 +265,10 @@ hr {
   display: flex;
 }
 
+.flex-inline {
+  display: inline-flex;
+}
+
 .flex-even>* {
   flex: 1 1 1fr;
 }

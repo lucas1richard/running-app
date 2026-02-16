@@ -12,6 +12,7 @@ const RouteCoordinates = require('./routeCoordinates/model-route-coordinates');
 const { Sequelize } = require('sequelize');
 const StreamPin = require('./streams/model-stream-pins');
 const CalculatedBestEfforts = require('./activities/model-calculated-efforts');
+const HourlyWeather = require('./weather2/weather-model');
 
 const initSequelize = async () => {
   try {
@@ -26,6 +27,8 @@ const initSequelize = async () => {
     ZonesCache.belongsTo(HeartZones);
     Activity.hasOne(Weather);
     Weather.belongsTo(Activity);
+    Activity.hasMany(HourlyWeather);
+    HourlyWeather.belongsTo(Activity);
     Activity.hasMany(RouteCoordinates);
     RouteCoordinates.belongsTo(Activity, { foreignKey: 'activityId' });
 
@@ -51,6 +54,7 @@ const initSequelize = async () => {
     await ZonesCache.sync();
     await HeartZones.sync();
     await Weather.sync({ force: false });
+    await HourlyWeather.sync({ force: false });
     await RouteCoordinates.sync({ force: false });
 
     await Activity.addScope('defaultScope', {
@@ -71,15 +75,21 @@ const initSequelize = async () => {
           'seconds_z5',
           'heartZoneId',
         ],
-      }, {
-        model: Weather,
+      },
+      {
+        model: HourlyWeather,
         attributes: [
-          'sky',
+          'apparent_temperature',
+          'cloud_cover',
+          'dew_point_2m',
           'precipitation',
-          'temperature',
-          'temperature_unit',
-          'humidity',
-          'wind'
+          'precipitation_probability',
+          'relative_humidity_2m',
+          'temperature_2m',
+          'time',
+          'weather_code',
+          'wind_gusts_10m',
+          'wind_speed_10m',
         ],
       }, {
         model: CalculatedBestEfforts,

@@ -3,11 +3,13 @@ import { useDispatch } from 'react-redux';
 import { useGetApiStatus } from '../reducers/apiStatus';
 import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '../reducers/activitydetail-actions';
 import Spinner from '../Loading/Spinner';
-import { Basic } from '../DLS';
 import Tile from './Tile';
 import useViewSize from '../hooks/useViewSize';
 import { useAppSelector } from '../hooks/redux';
 import { selectActivity } from '../reducers/activities';
+import { ReactComponent as SunnySnowingSvg } from '../assets/sunny-snowing.svg';
+import { ReactComponent as HumidityPercentSvg } from '../assets/humudity-percent.svg';
+import { ReactComponent as ThermometerSvg } from '../assets/thermometer.svg';
 
 type ActivityTileProps = {
   activity: Activity;
@@ -34,7 +36,23 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
         isCompact={viewSize.lte('sm')}
         activity={activity}
         backgroundIndicator={backgroundIndicator}
-      />
+      >
+        {activity.hourly_weather?.length > 0 && (
+          <div>
+            <div className="flex gap-2">
+              <span className="sunken-1 py-1 px-2 flex-inline align-center">
+                <SunnySnowingSvg />&nbsp;{activity.weather.overview}
+              </span>
+              <span className="sunken-1 py-1 px-2 flex-inline align-center">
+                <ThermometerSvg /> {activity.weather.temperature_2m_f}°F
+              </span>
+              <span className="sunken-1 py-1 px-2 flex-inline align-center">
+                <HumidityPercentSvg />&nbsp;{activity.weather.relative_humidity_2m}%
+                </span>
+            </div>
+          </div>
+        )}
+      </Tile>
 
       {showHideFunction && (
         <div className="text-right">

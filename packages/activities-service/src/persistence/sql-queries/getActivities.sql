@@ -64,16 +64,28 @@ SELECT
     ) FROM `zones_cache` AS `zonesCachesA`
     WHERE `zonesCachesA`.`activityId` = `activities`.`id`
   ) AS `zonesCaches`,
-  JSON_OBJECT(
-    'id', `weather`.`id`,
-    'sky', `weather`.`sky`,
-    'precipitation', `weather`.`precipitation`,
-    'temperature', `weather`.`temperature`,
-    'temperature_unit', `weather`.`temperature_unit`,
-    'humidity', `weather`.`humidity`,
-    'wind', `weather`.`wind`,
-    'activityId', `weather`.`activityId`
-  ) AS `weather`,
+  (SELECT JSON_ARRAYAGG(
+    JSON_OBJECT(
+      'id', `hourly_weather_sub`.`id`,
+      'apparent_temperature', `hourly_weather_sub`.`apparent_temperature`,
+      'apparent_temperature_f', round(`hourly_weather_sub`.`apparent_temperature` * 9/5 + 32),
+      'cloud_cover', `hourly_weather_sub`.`cloud_cover`,
+      'dew_point_2m', `hourly_weather_sub`.`dew_point_2m`,
+      'precipitation', `hourly_weather_sub`.`precipitation`,
+      'relative_humidity_2m', `hourly_weather_sub`.`relative_humidity_2m`,
+      'temperature_2m', `hourly_weather_sub`.`temperature_2m`,
+      'temperature_2m_f', round(`hourly_weather_sub`.`temperature_2m` * 9/5 + 32),
+      'time', `hourly_weather_sub`.`time`,
+      'weather_code', `hourly_weather_sub`.`weather_code`,
+      'wind_gusts_10m', `hourly_weather_sub`.`wind_gusts_10m`,
+      'wind_speed_10m', `hourly_weather_sub`.`wind_speed_10m`,
+      'activityId', `hourly_weather_sub`.`activityId`
+    )
+  ) FROM `hourly_weather` AS `hourly_weather_sub`
+    WHERE `hourly_weather_sub`.`activityId` = `activities`.`id`
+    GROUP BY `hourly_weather_sub`.`activityId`
+    ORDER BY `hourly_weather_sub`.`time` ASC
+  ) AS `hourly_weather`,
   (SELECT JSON_ARRAYAGG(
     JSON_OBJECT(
       'activityId', `calculatedBestEffortsA`.`activityId`,
@@ -94,13 +106,13 @@ SELECT
 FROM
   `activities` AS `activities`
   LEFT OUTER JOIN `zones_cache` AS `zonesCachesA` ON `activities`.`id` = `zonesCachesA`.`activityId`
-  LEFT OUTER JOIN `weather` AS `weather` ON `activities`.`id` = `weather`.`activityId`
+  LEFT OUTER JOIN `hourly_weather` AS `hourly_weather` ON `activities`.`id` = `hourly_weather`.`activityId`
   LEFT OUTER JOIN `calculated_best_efforts` AS `calculatedBestEffortsA` ON `activities`.`id` = `calculatedBestEffortsA`.`activityId`
 WHERE
   (`activities`.`hidden` = false OR `activities`.`hidden` IS NULL)
   -- AND `activities`.`sport_type` = 'Run'
 GROUP BY
-  `activities`.`id`, `zonesCachesA`.`activityId`, `weather`.`id`, `calculatedBestEffortsA`.`activityId`
+  `activities`.`id`, `zonesCachesA`.`activityId`, `hourly_weather`.`activityId`, `calculatedBestEffortsA`.`activityId`
 ORDER BY
   `activities`.`start_date` DESC
 ;

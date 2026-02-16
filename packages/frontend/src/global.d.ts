@@ -27,11 +27,19 @@ type BestEffort = {
 };
 
 type Weather = {
-  sky: string;
-  temperature: number;
-  humidity: number;
-  wind: string;
+  apparent_temperature: number;
+  cloud_cover: number;
+  dew_point_2m: number;
   precipitation: number;
+  precipitation_probability: number;
+  relative_humidity_2m: number;
+  temperature_2m: number;
+  temperature_2m_f: number;
+  time: string;
+  weather_code: number;
+  wind_gusts_10m: number;
+  wind_speed_10m: number;
+  overview: string;
 };
 
 type ZonesCaches = {};
@@ -59,10 +67,13 @@ interface Activity {
   sport_type: string;
   start_date: string;
   start_date_local: string;
+  start_latlng: { x: number; y: number };
+  end_latlng: { x: number; y: number };
   description?: string;
   distance: number;
   distance_miles: number;
   calculatedBestEfforts: BestEffort[];
+  hourly_weather: Weather[];
   weather: Weather;
   zonesCaches: Record<string, HeartZoneCache>;
   elapsed_time: number;

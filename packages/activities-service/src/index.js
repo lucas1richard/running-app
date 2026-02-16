@@ -19,7 +19,7 @@ const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
 
 const { logger } = require('./utils/logger');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
-const addAllCompressedRoutes = require('./functions/addAllCompressedRoutes');
+// const addAllCompressedRoutes = require('./functions/addAllCompressedRoutes');
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);

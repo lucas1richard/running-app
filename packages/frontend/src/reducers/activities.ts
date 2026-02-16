@@ -23,6 +23,7 @@ import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from './he
 import { emptyArray, emptyObject } from '../constants';
 import type { RootState } from '.';
 import { makeGet2ndArg, makeGet3rdArg } from '../utils/selectorUtils';
+import { WeatherCode, wmoToCondition } from '../Detail/WeatherReporter/utils';
 
 dayjs.extend(weekday);
 
@@ -115,7 +116,8 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
       return produce(state, (nextState) => {
         nextState.details[action.payload.id] = action.payload;
         nextState.activities[action.payload.id] = {
-          ...state.activities[action.payload.id],
+          // ...state.activities[action.payload.id],
+          ...getActivity(state, action.payload.id),
           calculatedBestEfforts: [
             ...action.payload.best_efforts.filter(({ pr_rank }) => !!pr_rank)
           ],
@@ -125,7 +127,7 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
 
     case UPDATE_ACTIVITY: {
       return produce(state, (nextState) => {
-        const activity = state.activities[action.payload.id];
+        const activity = getActivity(state, action.payload.id);
         nextState.activities[activity.id] = { ...activity, ...action.payload };
 
         if (action.payload.description) {
@@ -161,14 +163,16 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
 
     case SET_WEATHER_DATA: {
       return produce(state, (nextState) => {
-        nextState.activities[action.payload.activityId].weather = action.payload;
+        const weather = [...state.activities[action.payload.activityId].hourly_weather];
+        weather.push(action.payload);
+        nextState.activities[action.payload.activityId].hourly_weather = weather;
       });
     }
 
     case SET_STREAM_PINS: {
       return produce(state, (nextState) => {
         const { activityId, pins } = action.payload;
-        const activity = state.activities[activityId];
+        const activity = getActivity(state, activityId);
         nextState.activities[activityId] = { ...activity, stream_pins: pins };
       });
     }
@@ -200,7 +204,9 @@ export const selectActivities = createDeepEqualSelector(
       return sStart - sEnd;
     });
 
-    return order.map((id) => activities.activities[id]).filter(({ sport_type }) => displayPrefs[sport_type]);
+    return order
+      .map((id) => getActivity(activities, id))
+      .filter(({ sport_type }) => displayPrefs[sport_type]);
   }
 );
 
@@ -220,7 +226,10 @@ const getListActivities = (activities, { sortBy, sortOrder}, displayTypePrefs, f
       return (activities.activities[first][sortBy]) - (activities.activities[second][sortBy]);
     });
 
-    return order.map((id) => activities.activities[id]).filter(({ sport_type }) => displayTypePrefs[sport_type]);
+    return order
+      .map((id) => getActivity(activities, id))
+      // .map((id) => activities.activities[id])
+      .filter(({ sport_type }) => displayTypePrefs[sport_type]);
 };
 export const selectListActivities = createDeepEqualSelector([
   getActivitiesState,
@@ -230,11 +239,21 @@ export const selectListActivities = createDeepEqualSelector([
   makeGet3rdArg<number>(),
 ], getListActivities);
 
-const getActivity = (activities: ActivitiesState, id: number) => activities.activities[id];
+const getActivity = (activities: ActivitiesState, id: number) => {
+  const hourly_weather = activities.activities[id].hourly_weather?.map((w) => ({
+    ...w,
+    overview: wmoToCondition(w.weather_code),
+  }));
+  return {
+    ...activities.activities[id],
+    hourly_weather,
+    weather: hourly_weather?.[0] ?? null,
+  };
+};
 export const selectActivity = createDeepEqualSelector([
   getActivitiesState,
   makeGet2ndArg<number>(),
-], getActivity)
+], getActivity);
 
 const getActivityDetails = (activities: ActivitiesState, id: number) => activities.details[id];
 export const selectActivityDetails = createDeepEqualSelector([
@@ -276,7 +295,7 @@ export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti,
 
 const getSimilarWorkouts = (activitiesState: ActivitiesState, id: number) => {
   const similarsIds = activitiesState.similarWorkouts[id] || emptyArray;
-  return similarsIds.map((id) => activitiesState.activities[id]);
+  return similarsIds.map((id) => getActivity(activitiesState, id));
 };
 export const selectSimilarWorkouts = createDeepEqualSelector([
   getActivitiesState,

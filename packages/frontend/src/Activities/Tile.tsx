@@ -72,12 +72,12 @@ const Tile: React.FC<Props> = ({
     [activity.elapsed_time]
   );
 
-  const { backgroundColor } = (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) || { backgroundColor: '' };
+  const { backgroundColor } = /* (backgroundIndicator === 'weather' && getWeatherStyles(activity.weather)) ||  */{ backgroundColor: '' };
   const largeText = isCompact ? 'text-h5' : 'text-h4';
   const smallText = isCompact ? 'text-sm' : 'text-md';
 
   return (
-    <Surface className={`p-4 raised-1 card container ${styles.container} ${backgroundColor} ${className}`} style={{
+    <Surface className={`p-4 raised-1 h-full card container ${styles.container} ${backgroundColor} ${className}`} style={{
       // @ts-ignore
       '--img-url': `url(${getMapImageSrc(activity.id, getSummaryPolyline(activity), 400, 200)})`,
     }}>
@@ -136,12 +136,12 @@ const Tile: React.FC<Props> = ({
               </span>
             </div>
 
-            <div>
+            {/* <div>
               <span className={`${smallText}`}>Max HR</span>
               <span className={`ml-4 ${largeText}`}>
                 {activity.max_heartrate} bpm
               </span>
-            </div>
+            </div> */}
 
             <div>
               {/* <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span> */}

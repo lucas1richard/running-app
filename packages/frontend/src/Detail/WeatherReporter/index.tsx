@@ -13,154 +13,124 @@ import { useGetApiStatus } from '../../reducers/apiStatus';
 import { triggerFetchWeather } from '../../reducers/activities-actions';
 import { useAppSelector } from '../../hooks/redux';
 import Shimmer from '../../Loading/Shimmer';
-import { Basic, Button, Flex } from '../../DLS';
+import dayjs from 'dayjs';
+import { WeatherCondition, wmoToCondition } from './utils';
 
 type Props = {
   id: number;
 };
 
-type SelectChangeHandler = ChangeEventHandler<HTMLSelectElement>;
-type InputChangeHandler = ChangeEventHandler<HTMLInputElement>;
-
 const WeatherReporter: FC<Props> = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
-  const [sky, setSky] = useState(activity?.weather?.sky);
-  const [temperature, setTemperature] = useState(activity?.weather?.temperature);
-  const [humidity, setHumidity] = useState(activity?.weather?.humidity);
-  const [wind, setWind] = useState(activity?.weather?.wind);
-  const [precipitation, setPrecipitation] = useState(activity?.weather?.precipitation);
+  const [startWeather, endWeather] = activity?.hourly_weather || [];
+  const [skyStart, setSkyStart] = useState<WeatherCondition>(wmoToCondition(startWeather?.weather_code));
+  const [skyEnd, setSkyEnd] = useState<WeatherCondition>(wmoToCondition(endWeather?.weather_code));
+  const [tempStart, setTempStart] = useState(startWeather?.temperature_2m);
+  const [tempEnd, setTempEnd] = useState(endWeather?.temperature_2m);
+  const [humidityStart, setHumidityStart] = useState(startWeather?.relative_humidity_2m);
+  const [humidityEnd, setHumidityEnd] = useState(endWeather?.relative_humidity_2m);
+  const [windStart, setWindStart] = useState(startWeather?.wind_speed_10m);
+  const [windEnd, setWindEnd] = useState(endWeather?.wind_speed_10m);
+  const [precipStart, setPrecipStart] = useState(startWeather?.precipitation);
+  const [precipEnd, setPrecipEnd] = useState(endWeather?.precipitation);
   const weatherDataStatus = useGetApiStatus(`weather/FETCH_WEATHER-${id}`);
-
-  useEffect(() => {
-    setSky(activity?.weather?.sky);
-    setTemperature(activity?.weather?.temperature);
-    setHumidity(activity?.weather?.humidity);
-    setWind(activity?.weather?.wind);
-    setPrecipitation(activity?.weather?.precipitation);
-  }, [activity]);
-
+  
   const dispatch = useDispatch();
 
-  const handlePrecipChange = useCallback<SelectChangeHandler>((event) => {
-    setPrecipitation(Number(event.target.value));
-  }, []);
+  useEffect(() => {
+    if (!activity?.start_latlng?.x || !activity?.start_latlng?.y) {
+      return;
+    }
+    if (activity.hourly_weather?.length) return;
+    const weatherArchive = ({ lat, lon, date }) => `https://archive-api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${date}&end_date=${date}&daily=sunset,sunrise&hourly=temperature_2m,wind_speed_10m,weather_code,apparent_temperature,precipitation,wind_gusts_10m,precipitation_probability,relative_humidity_2m,dew_point_2m,cloud_cover&timezone=America%2FNew_York`
+    fetch(weatherArchive({
+      lat: activity.start_latlng.x,
+      lon: activity.start_latlng.y,
+      date: dayjs(activity.start_date_local).format('YYYY-MM-DD'),
+    }))
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('weather data', data);
+        
+        const hourIndex = dayjs(activity.start_date_local).utc().hour();
+        const endHourIndex = dayjs(activity.start_date_local).add(activity.elapsed_time, 'second').utc().hour();
+        const weatherCode = data.hourly.weather_code[hourIndex];
+        let skyCondition: WeatherCondition = 'Unknown';
 
-  const handleSkyChange = useCallback<SelectChangeHandler>((event) => {
-    setSky(event.target.value);
-  }, []);
+        // get WMO code and map to sky condition
+        skyCondition = wmoToCondition(weatherCode);
 
-  const handleTemperatureChange = useCallback<InputChangeHandler>((event) => {
-    setTemperature(Number(event.target.value));
-  }, []);
+        setSkyStart(skyCondition);
+        setTempStart(Math.round(data.hourly.temperature_2m[hourIndex] * 9/5 + 32)); // convert C to F
+        setHumidityStart(data.hourly.relative_humidity_2m[hourIndex]);
+        setWindStart(data.hourly.wind_speed_10m[hourIndex]);
+        setPrecipStart(data.hourly.precipitation[hourIndex]);
+        setSkyEnd(wmoToCondition(data.hourly.weather_code[endHourIndex]));
+        setTempEnd(Math.round(data.hourly.temperature_2m[endHourIndex] * 9/5 + 32)); // convert C to F
+        setHumidityEnd(data.hourly.relative_humidity_2m[endHourIndex]);
+        setWindEnd(data.hourly.wind_speed_10m[endHourIndex]);
+        setPrecipEnd(data.hourly.precipitation[endHourIndex]);
 
-  const handleHumidityChange = useCallback<InputChangeHandler>((event) => {
-    setHumidity(Number(event.target.value));
-  }, []);
+        dispatch(triggerFetchWeather(id,
+        {
+          apparent_temperature: data.hourly.apparent_temperature[hourIndex],
+          cloud_cover: data.hourly.cloud_cover[hourIndex],
+          dew_point_2m: data.hourly.dew_point_2m[hourIndex],
+          precipitation: data.hourly.precipitation[hourIndex],
+          precipitation_probability: data.hourly.precipitation_probability[hourIndex],
+          relative_humidity_2m: data.hourly.relative_humidity_2m[hourIndex],
+          temperature_2m: data.hourly.temperature_2m[hourIndex],
+          time: data.hourly.time[hourIndex],
+          weather_code: data.hourly.weather_code[hourIndex],
+          wind_gusts_10m: data.hourly.wind_gusts_10m[hourIndex],
+          wind_speed_10m: data.hourly.wind_speed_10m[hourIndex],
+        }));
 
-  const handleWindChange = useCallback<SelectChangeHandler>((event) => {
-    setWind(event.target.value);
-  }, []);
-
-  const handleSubmit = useCallback<FormEventHandler<HTMLFormElement>>((event) => {
-    event.preventDefault();
-    dispatch(triggerFetchWeather(id, { sky, temperature, humidity, wind, precipitation }));
-  }, [dispatch, id, sky, temperature, humidity, wind, precipitation]);
+        dispatch(triggerFetchWeather(id,
+        {
+          apparent_temperature: data.hourly.apparent_temperature[endHourIndex],
+          cloud_cover: data.hourly.cloud_cover[endHourIndex],
+          dew_point_2m: data.hourly.dew_point_2m[endHourIndex],
+          precipitation: data.hourly.precipitation[endHourIndex],
+          precipitation_probability: data.hourly.precipitation_probability[endHourIndex],
+          relative_humidity_2m: data.hourly.relative_humidity_2m[endHourIndex],
+          temperature_2m: data.hourly.temperature_2m[endHourIndex],
+          time: data.hourly.time[endHourIndex],
+          weather_code: data.hourly.weather_code[endHourIndex],
+          wind_gusts_10m: data.hourly.wind_gusts_10m[endHourIndex],
+          wind_speed_10m: data.hourly.wind_speed_10m[endHourIndex],
+        }));
+      });
+  }, [activity.id]);
 
   return (
-    <Basic.Div $pad={1} $marginT={1} $border="1px solid #ddd">
+    <div className="p-4">
       <Shimmer
         isVisible={weatherDataStatus === 'loading'}
       />
-      <div>
-        <form onSubmit={handleSubmit}>
-          <Flex $wrap="wrap" $gap={1}>
-            <Flex $gap={1} $alignItems="center">
-              <select
-                className="grow-1"
-                id="sky"
-                name="sky"
-                value={sky}
-                onChange={handleSkyChange}
-              >
-                <option value={undefined}>Weather</option>
-                <option value="sunny">Sunny</option>
-                <option value="partly cloudy">Partly Cloudy</option>
-                <option value="mostly cloudy">Mostly Cloudy</option>
-                <option value="overcast">Overcast</option>
-              </select>
-            </Flex>
-
-            <Flex $gap={1} $alignItems="center">
-              <select
-                id="rain"
-                name="rain"
-                value={precipitation}
-                onChange={handlePrecipChange}
-              >
-                <option value={undefined}>Rain Condition</option>
-                <option value="none">No Rain</option>
-                <option value="light">Light Rain</option>
-                <option value="moderate">Moderate Rain</option>
-                <option value="heavy">Heavy Rain</option>
-                <option value="torrential">Torrential Rain</option>
-              </select>
-            </Flex>
-          </Flex>
-
-          <Flex $gap={1} $wrap="wrap">
-            <Flex $gap={1} $alignItems="center">
-              <Basic.Input
-                type="number"
-                id="temperature" 
-                name="temperature" 
-                value={temperature} 
-                onChange={handleTemperatureChange}
-                $textAlign="right"
-                $padR="30px"
-                min={-100}
-                max={150}
-                placeholder="Temp"
-              />
-              <Basic.Span $marginL="-40px">&deg;F</Basic.Span>
-            </Flex>
-
-            <Flex $gap={1} $alignItems="center">
-              <Basic.Input 
-                type="number" 
-                id="humidity" 
-                name="humidity" 
-                value={humidity} 
-                onChange={handleHumidityChange}
-                $padR="30px"
-                min={0}
-                max={100}
-                $textAlign="right"
-                placeholder="Humidity"
-              />
-              <Basic.Span $marginL="-40px">%</Basic.Span>
-            </Flex>
-          </Flex>
-
-          <Flex $gap={1} $alignItems="center">
-            <Basic.Select
-              $width="100%"
-              id="wind"
-              name="wind"
-              value={wind}
-              onChange={handleWindChange}
-            >
-              <option value={undefined}>Select a wind condition</option>
-              <option value="calm">Calm</option>
-              <option value="moderate">Moderate Breeze</option>
-              <option value="strong">Strong Breeze</option>
-              <option value="gale">Gale</option>
-            </Basic.Select>
-          </Flex>
-
-          <Button type="submit" $width="100%">Submit</Button>
-        </form>
+      <div className="flex justify-center gap-8">
+        <div>
+          <div className="text-h4">
+            Start Conditions:
+          </div>
+          <div>{wmoToCondition(activity.hourly_weather?.[0].weather_code)}</div>
+          <div>{Math.round(activity.hourly_weather?.[0].temperature_2m * 9/5 + 32)} &deg;F</div>
+          <div><small>Relative Humidity:</small> {activity.hourly_weather?.[0].relative_humidity_2m}%</div>
+          <div><small>Wind:</small> {activity.hourly_weather?.[0].wind_speed_10m} mph</div>
+          <div><small>Precipitation:</small> {activity.hourly_weather?.[0].precipitation} mm</div>
+        </div>
+        <div>
+          <div className="text-h4">
+            End Conditions:
+          </div>
+          <div>{wmoToCondition(activity.hourly_weather?.[1]?.weather_code)}</div>
+          <div>{Math.round(activity.hourly_weather?.[1]?.temperature_2m * 9/5 + 32)} &deg;F</div>
+          <div><small>Relative Humidity:</small> {activity.hourly_weather?.[1]?.relative_humidity_2m}%</div>
+          <div><small>Wind:</small> {activity.hourly_weather?.[1]?.wind_speed_10m} mph</div>
+          <div><small>Precipitation:</small> {activity.hourly_weather?.[1]?.precipitation} mm</div>
+        </div>
       </div>
-    </Basic.Div>
+    </div>
   );
 }
 

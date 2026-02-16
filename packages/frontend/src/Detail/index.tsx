@@ -68,7 +68,7 @@ const ActivityDetailPage = () => {
   const details = useAppSelector((state) => selectActivityDetails(state, id));
   const viewSize = useViewSize();
 
-  const { backgroundColor } = getWeatherStyles(activity?.weather);
+  // const { backgroundColor } = getWeatherStyles(activity?.weather);
 
   if (isLoading) {
     return (
@@ -105,7 +105,7 @@ const ActivityDetailPage = () => {
           <B.Div $widthSmDown={2} $height="100%" $colorBg="black" />
         </B.Div>
         <Surface>
-          <div className={`$pad ${tileBgColor === 'weather' && backgroundColor} border-radius-1`}>
+          <div className={`$pad border-radius-1`}>
             <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
             <UpdatableNameDescription
               activity={activity}

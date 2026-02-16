@@ -29,7 +29,7 @@ const yAxisDefaultConfig = {
   // minorTickInterval: 'auto',
   tickInterval: 1,
   minorGridLineColor: 'transparent',
-  height: '25%',
+  height: '20%',
   opposite: false,
 } satisfies Highcharts.YAxisOptions;
 
@@ -110,6 +110,26 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
         color: colors.efficiencyFactorVar,
         ...seriesDefaultConfig,
       },
+      {
+        name: 'Temperature',
+        data: activities.map(({ start_date, weather }) => [new Date(start_date).getTime(), weather?.temperature_2m_f || null]),
+        yAxis: 4,
+        color: {
+          linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+          stops: [[0, '#f00'], [0.5, '#0f0'], [1, '#00f']],
+        },
+        ...seriesDefaultConfig,
+      },
+      {
+        name: 'Humidity',
+        data: activities.map(({ start_date, weather }) => [new Date(start_date).getTime(), weather?.relative_humidity_2m || null]),
+        yAxis: 5,
+        color: {
+          linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
+          stops: [[0, '#f00'], [1, '#0f0']],
+        },
+        ...seriesDefaultConfig,
+      },
     ],
     xAxis: {
       crosshair: true,
@@ -144,7 +164,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       { // Secondary yAxis
         ...yAxisDefaultConfig,
         gridLineColor: gridColor,
-        top: '25%',
+        top: '20%',
         title: {
           enabled: enableYAxis,
           text: 'Distance',
@@ -164,7 +184,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       {
         ...yAxisDefaultConfig,
         gridLineColor: gridColor,
-        top: '50%',
+        top: '40%',
         title: {
           enabled: enableYAxis,
           text: 'Avg HR',
@@ -185,7 +205,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
       {
         ...yAxisDefaultConfig,
         gridLineColor: gridColor,
-        top: '75%',
+        top: '60%',
         title: {
           enabled: enableYAxis,
           text: 'Efficiency Factor',
@@ -200,6 +220,52 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
           format: '{value}',
           style: {
             color: colors.efficiencyFactorVar,
+          },
+        },
+        opposite: true,
+      },
+      {
+        ...yAxisDefaultConfig,
+        height: '10%',
+        gridLineColor: gridColor,
+        top: '80%',
+        title: {
+          enabled: enableYAxis,
+          text: 'Temperature',
+          style: {
+            color: contrastColor,
+          }
+        },
+        tickInterval: 5,
+        offset: 0,
+        labels: {
+          enabled: enableYAxis,
+          format: '{value}',
+          style: {
+            color: contrastColor,
+          },
+        },
+        opposite: false,
+      },
+      {
+        ...yAxisDefaultConfig,
+        height: '10%',
+        gridLineColor: gridColor,
+        top: '90%',
+        title: {
+          enabled: enableYAxis,
+          text: 'Humidity',
+          style: {
+            color: contrastColor,
+          }
+        },
+        tickInterval: 5,
+        offset: 0,
+        labels: {
+          enabled: enableYAxis,
+          format: '{value}',
+          style: {
+            color: contrastColor,
           },
         },
         opposite: true,
@@ -229,6 +295,10 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
             ${convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
             <br />
             ${activity.average_heartrate} bpm
+            ${activity.weather ? `<br />
+            ${activity.weather?.temperature_2m_f} °F` : ''}
+            ${activity.weather ? `<br />
+            ${activity.weather?.relative_humidity_2m}% Humidity` : ''}
           </div>
         `;
       },
