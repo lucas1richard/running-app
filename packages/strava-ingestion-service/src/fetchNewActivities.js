@@ -7,6 +7,14 @@ const { bulkAddActivities } = require('./setupdb-couchbase');
 
 const { imageService } = channelConfigs;
 
+const triggerWeatherFetch = async (activityId) => {
+  try {
+    await fetch(`http://activities-service:3001/activities/${activityId}/weather`);
+  } catch (error) {
+    console.error(`Failed to trigger weather fetch for activity ${activityId}`, error);
+  }
+};
+
 const fetchWorker = async (perPage, page) => {
   try {
     const token = await redisRateLimiter.consumeToken();
@@ -25,6 +33,7 @@ const fetchWorker = async (perPage, page) => {
     console.log(activitiesList);
     await bulkAddActivities(activitiesList); // couchdb
     const addedRecords = await bulkAddActivitiesFromStrava(activitiesList); // mysql
+    await Promise.allSettled(addedRecords.map(({ id }) => triggerWeatherFetch(id)));
 
     const channel = await getChannel(imageService);
     for (const record of addedRecords) {

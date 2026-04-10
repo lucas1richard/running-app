@@ -99,7 +99,7 @@ export const SET_SIMILAR_WORKOUTS = 'activitiesReducer/SET_SIMILAR_WORKOUTS';
 export const setSimilarWorkoutsAct = (id, combo) => ({ type: SET_SIMILAR_WORKOUTS, payload: { id, combo } });
 
 export const SET_WEATHER_DATA = 'activitiesReducer/SET_WEATHER_DATA';
-export const setWeatherDataAct = (data: Weather) => ({ type: SET_WEATHER_DATA, payload: data });
+export const setWeatherDataAct = (data: Weather[]) => ({ type: SET_WEATHER_DATA, payload: data });
 
 export const SET_STREAM_PINS = 'activitiesReducer/SET_STREAM_PINS';
 export const setStreamPinsAct = (activityId: number, pins: StreamPin[]) => ({ type: SET_STREAM_PINS, payload: { activityId, pins } });

@@ -13,7 +13,7 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
   const [showAllActivities, setShowAllActivities] = useState(false);
   const runs = useAppSelector((state) => selectListActivities(state, 0, undefined));
 
-  const displayActivities = useMemo(() => showAllActivities ? runs : runs.slice(0, 10), [runs, showAllActivities]);
+  const displayActivities = useMemo(() => showAllActivities ? runs : runs.slice(0, 12), [runs, showAllActivities]);
 
   return (
     <div>

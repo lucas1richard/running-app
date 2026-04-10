@@ -23,7 +23,7 @@ import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from './he
 import { emptyArray, emptyObject } from '../constants';
 import type { RootState } from '.';
 import { makeGet2ndArg, makeGet3rdArg } from '../utils/selectorUtils';
-import { WeatherCode, wmoToCondition } from '../Detail/WeatherReporter/utils';
+import { wmoToCondition } from '../Detail/WeatherReporter/utils';
 
 dayjs.extend(weekday);
 
@@ -163,9 +163,11 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
 
     case SET_WEATHER_DATA: {
       return produce(state, (nextState) => {
-        const weather = [...state.activities[action.payload.activityId].hourly_weather];
+        const activityId = action.payload[0]?.activityId;
+        if (!activityId) return;
+        const weather = [...state.activities[activityId]?.hourly_weather || []];
         weather.push(action.payload);
-        nextState.activities[action.payload.activityId].hourly_weather = weather;
+        nextState.activities[activityId].hourly_weather = weather;
       });
     }
 
@@ -240,10 +242,11 @@ export const selectListActivities = createDeepEqualSelector([
 ], getListActivities);
 
 const getActivity = (activities: ActivitiesState, id: number) => {
-  const hourly_weather = activities.activities[id].hourly_weather?.map((w) => ({
+
+  const hourly_weather = activities.activities[id]?.hourly_weather?.map((w) => ({
     ...w,
     overview: wmoToCondition(w.weather_code),
-  }));
+  })) || [];
   return {
     ...activities.activities[id],
     hourly_weather,

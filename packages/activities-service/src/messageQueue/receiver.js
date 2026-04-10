@@ -8,7 +8,12 @@ class Receiver extends EventEmitter {
   constructor() {
     super();
     this.channel = null;
-    this.init();
+    this.init().catch((error) => {
+      logger.error('Receiver failed to initialize', {
+        service: 'activities-service',
+        error: error.message,
+      });
+    });
   }
 
   generateCorrelationId() {
@@ -18,6 +23,7 @@ class Receiver extends EventEmitter {
   async init() {
     // the receiver is for this service. it listens for messages from other services
     this.channel = await getChannel(channelConfigs.activitiesService);
+    logger.info('Receiver connected and listening for messages', { service: 'activities-service' });
     this.channel.consume(
       channelConfigs.activitiesService.queueName,
       (msg) => {
@@ -29,11 +35,49 @@ class Receiver extends EventEmitter {
           const correlationId = msg.properties.correlationId;
           const message = correlationId ? `${type}-${correlationId}` : type;
           this.emit(message, content.payload);
+          this.emitActivityIdEvents(type, content.payload, correlationId);
           this.channel.ack(msg);
         }
       },
       { noAck: false }
     );
+  }
+
+  emitActivityIdEvents(type, payload, correlationId) {
+    const activityIds = this.extractActivityIds(payload);
+    for (const activityId of activityIds) {
+      this.emit('activityId', {
+        type,
+        activityId,
+        correlationId,
+        payload,
+      });
+    }
+  }
+
+  extractActivityIds(payload) {
+    if (payload === null || payload === undefined) {
+      return [];
+    }
+
+    if (typeof payload === 'number' || typeof payload === 'string') {
+      return [payload];
+    }
+
+    if (Array.isArray(payload)) {
+      return payload.flatMap((item) => this.extractActivityIds(item));
+    }
+
+    if (typeof payload === 'object' && payload.activityId !== undefined && payload.activityId !== null) {
+      return [payload.activityId];
+    }
+
+    return [];
+  }
+
+  onActivityId(handler) {
+    this.on('activityId', handler);
+    return this;
   }
 
   /**

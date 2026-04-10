@@ -16,10 +16,23 @@ const { userRouter } = require('./routes/user');
 const { segmentsRouter } = require('./routes/segments');
 const { activityRoutesRouter } = require('./routes/activity-routes');
 const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
+const receiver = require('./messageQueue/receiver');
 
 const { logger } = require('./utils/logger');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
 // const addAllCompressedRoutes = require('./functions/addAllCompressedRoutes');
+
+receiver.onActivityId(({ activityId, type, correlationId }) => {
+  logger.info(
+    `Received activityId event: ${activityId} from message type ${type}`,
+    {
+      service: 'activities-service',
+      correlationId,
+      type,
+      activityId,
+    }
+  );
+});
 
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);

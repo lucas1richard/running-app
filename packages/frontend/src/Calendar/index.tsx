@@ -67,10 +67,12 @@ const CalendarView = () => {
       }
       
       days.push(
-        <Surface className={`${hasActivities ? '' : 'p-4'}`} key={`day-${day}`}>
+        <Surface className={`sunken-1 ${hasActivities ? '' : 'p-4'}`} key={`day-${day}`}>
           {!hasActivities && <Basic.Div $textAlign="right">{day}</Basic.Div>}
           {inMonth[formattedDate]?.map((activity) => (
-            <Tile key={activity.id} activity={activity} isCompact={true} />
+            <div key={activity.id}>
+              <Tile key={activity.id} activity={activity} />
+            </div>
           ))}
         </Surface>
       );

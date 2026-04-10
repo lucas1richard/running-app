@@ -2,6 +2,34 @@ const { DataTypes, Model } = require('sequelize');
 const { sequelizeMysql } = require('../sequelize-mysql');
 
 class HourlyWeather extends Model {
+  static async fetchArchiveWeather(lat, lon, date) {
+    const query = new URLSearchParams({
+      latitude: lat,
+      longitude: lon,
+      start_date: date,
+      end_date: date,
+      daily: [
+        'sunset',
+        'sunrise',
+      ].join(','),
+      hourly: [
+        'temperature_2m',
+        'wind_speed_10m',
+        'weather_code',
+        'apparent_temperature',
+        'precipitation',
+        'wind_gusts_10m',
+        'precipitation_probability',
+        'relative_humidity_2m',
+        'dew_point_2m',
+        'cloud_cover',
+      ].join(','),
+      timezone: 'America/New_York',
+    });
+
+    const weatherRes = await fetch(`https://archive-api.open-meteo.com/v1/archive?${query.toString()}`);
+    return weatherRes.json();
+  }
 }
 
 // apparent_temperature
