@@ -9,26 +9,26 @@ import {
   Outlet,
   RouterProvider,
 } from 'react-router-dom';
-import './assets/main.scss';
-import App from './App';
+import '@/assets/main.scss';
+import App from '@/App';
 import { enableMapSet } from 'immer';
-import { styledComponentsTheme } from './DLS/theme';
-import reportWebVitals from './reportWebVitals';
-import reducer from './reducers'
-import mySaga from './sagas'
-import ActivityDetailPage from './Detail';
-import DataLayer from './DataLayer';
-import HeartRateZones from './HeartRateZones';
-import AdminDashboard from './Admin';
-import SideNav from './SideNav';
-import PersonalRecords from './PersonalRecords';
-import Volume from './Volume';
-import MultiMapPage from './MultiMap';
-import { Container } from './DLS';
-import CalendarView from './Calendar';
-import roundToNearest from './utils/roundToNearest';
-import Surface from './DLS/Surface';
-import TopNav from './TopNav';
+import { styledComponentsTheme } from '@/DLS/theme';
+import reportWebVitals from '@/reportWebVitals';
+import reducer from '@/reducers'
+import mySaga from '@/sagas'
+import ActivityDetailPage from '@/Detail';
+import DataLayer from '@/DataLayer';
+import HeartRateZones from '@/HeartRateZones';
+import AdminDashboard from '@/Admin';
+import SideNav from '@/SideNav';
+import PersonalRecords from '@/PersonalRecords';
+import Volume from '@/Volume';
+import MultiMapPage from '@/MultiMap';
+import { Container } from '@/DLS';
+import CalendarView from '@/Calendar';
+import roundToNearest from '@/utils/roundToNearest';
+import Surface from '@/DLS/Surface';
+import TopNav from '@/TopNav';
 
 enableMapSet();
 

@@ -2,6 +2,12 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Absolute imports
+
+Local imports should use the `@/` prefix, which resolves to `src`.
+
+For example, prefer `import SideNav from '@/SideNav';` over `import SideNav from './SideNav';`.
+
 ## Available Scripts
 
 In the project directory, you can run:
