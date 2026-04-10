@@ -3,15 +3,15 @@ import { FullscreenControl, Layer, Map, Marker, Source, Point } from "@vis.gl/re
 import maplibregl from 'maplibre-gl';
 // import "maplibre-gl/dist/maplibre-gl.css";
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
-import { emptyArray, emptyObject } from '../constants';
-import { selectActivity, selectStreamTypeData } from '../reducers/activities';
-import { selectHeartZones } from '../reducers/heartzones';
-import { condenseZonesFromHeartRate } from '../utils';
-import { useAppSelector } from '../hooks/redux';
-import { DeckGlOverlay } from '../ReactMap/deckgl-overlay';
-import { hrZonesGraph } from '../colors/hrZones';
-import { Basic } from '../DLS';
-import useDarkReaderMode from '../hooks/useDarkReaderMode';
+import { emptyArray, emptyObject } from '@/constants';
+import { selectActivity, selectStreamTypeData } from '@/reducers/activities';
+import { selectHeartZones } from '@/reducers/heartzones';
+import { condenseZonesFromHeartRate } from '@/utils';
+import { useAppSelector } from '@/hooks/redux';
+import { DeckGlOverlay } from '@/ReactMap/deckgl-overlay';
+import { hrZonesGraph } from '@/colors/hrZones';
+import { Basic } from '@/DLS';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
 
 function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
   const isDarkReaderMode = useDarkReaderMode();

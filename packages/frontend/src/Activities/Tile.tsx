@@ -1,21 +1,21 @@
 import React, { memo, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import { selectStreamTypeData } from '../reducers/activities';
-import { convertMetricSpeedToMPH, getSummaryPolyline, getWeatherStyles } from '../utils';
-import GoogleMapImage, { getMapImageSrc } from '../Common/GoogleMapImage';
-import DurationDisplay from '../Common/DurationDisplay';
-import PRMedal from '../Common/Icons/PRMedal';
-import { selectHeartZones } from '../reducers/heartzones';
-import DetailDataFetcher from '../Detail/DetailDataFetcher';
-import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
-import { emptyArray } from '../constants';
-import { useAppSelector } from '../hooks/redux';
-import ZonesWidth from './ZonesWidth';
-import styles from './Tile.module.css';
-import Surface from '../DLS/Surface';
-import { ReactComponent as HeartRateSvg } from '../assets/heart-rate.svg';
-import { ReactComponent as AveragePaceSvg } from '../assets/avg_pace.svg';
+import { selectStreamTypeData } from '@/reducers/activities';
+import { convertMetricSpeedToMPH, getSummaryPolyline, getWeatherStyles } from '@/utils';
+import GoogleMapImage, { getMapImageSrc } from '@/Common/GoogleMapImage';
+import DurationDisplay from '@/Common/DurationDisplay';
+import PRMedal from '@/Common/Icons/PRMedal';
+import { selectHeartZones } from '@/reducers/heartzones';
+import DetailDataFetcher from '@/Detail/DetailDataFetcher';
+import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
+import { emptyArray } from '@/constants';
+import { useAppSelector } from '@/hooks/redux';
+import ZonesWidth from '@/Activities/ZonesWidth';
+import styles from '@/Activities/Tile.module.css';
+import Surface from '@/DLS/Surface';
+import { ReactComponent as HeartRateSvg } from '@/assets/heart-rate.svg';
+import { ReactComponent as AveragePaceSvg } from '@/assets/avg_pace.svg';
 
 type Props = {
   activity: Activity;

@@ -1,4 +1,4 @@
-import type { AsyncAction } from '../types';
+import type { AsyncAction } from '@/types';
 
 // SAGA TRIGGERS
 export const FETCH_PRS = 'prs/FETCH_PRS';

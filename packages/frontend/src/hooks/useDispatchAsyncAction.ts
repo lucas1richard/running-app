@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import type { AsyncAction } from '../types';
+import type { AsyncAction } from '@/types';
 
 const useDispatchAsyncAction = () => {
  const dispatch = useDispatch();

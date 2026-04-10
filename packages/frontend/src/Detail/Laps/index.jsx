@@ -1,9 +1,9 @@
 import React from 'react';
-import { useSelector } from '../../../node_modules/react-redux/dist/react-redux';
-import { selectActivityDetails } from '../../reducers/activities';
-import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '../../utils';
-import DurationDisplay from '../../Common/DurationDisplay';
-import Surface from '../../DLS/Surface';
+import { useSelector } from 'react-redux';
+import { selectActivityDetails } from '@/reducers/activities';
+import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '@/utils';
+import DurationDisplay from '@/Common/DurationDisplay';
+import Surface from '@/DLS/Surface';
 
 const processLaps = (laps) => {
   let timeStart = 0;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import HeartZones from './HeartZones';
-import Map from './Map';
-import requestor from '../utils/requestor';
+import HeartZones from '@/Admin/HeartZones';
+import Map from '@/Admin/Map';
+import requestor from '@/utils/requestor';
 
 const AdminDashboard = () => {
   const [constants, setConstants] = useState({

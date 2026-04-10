@@ -1,7 +1,7 @@
 import { produce } from 'immer';
-import { TOGGLE_COMPARED_ACTIVITY } from './multimap-actions';
-import { selectActivity } from './activities';
-import { createDeepEqualSelector } from '../utils';
+import { TOGGLE_COMPARED_ACTIVITY } from '@/reducers/multimap-actions';
+import { selectActivity } from '@/reducers/activities';
+import { createDeepEqualSelector } from '@/utils';
 import type { RootState } from '.';
 
 const initialState = {

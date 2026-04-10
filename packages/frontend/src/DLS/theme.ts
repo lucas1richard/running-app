@@ -1,4 +1,4 @@
-import createBreakpoints from './createBreakpoints';
+import createBreakpoints from '@/DLS/createBreakpoints';
 
 export const styledComponentsTheme = {
   breakpoints: createBreakpoints(),

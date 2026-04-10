@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { keys, type BreakPoint } from './../DLS/createBreakpoints';
+import { keys, type BreakPoint } from '@/DLS/createBreakpoints';
 
 class ViewSize {
   viewSizeStr: BreakPoint | undefined;

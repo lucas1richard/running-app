@@ -1,9 +1,9 @@
 import { memo, useMemo } from 'react';
-import { useAppSelector } from '../hooks/redux';
-import { success, useGetApiStatus, useTriggerActionIfStatus } from '../reducers/apiStatus';
-import { fetchHeatMapDataAct } from '../reducers/activities-actions';
-import HeatMapMapLibre from '../Common/HeatMapMapLibre';
-import { selectSportTypePreferences } from '../reducers/preferences';
+import { useAppSelector } from '@/hooks/redux';
+import { success, useGetApiStatus, useTriggerActionIfStatus } from '@/reducers/apiStatus';
+import { fetchHeatMapDataAct } from '@/reducers/activities-actions';
+import HeatMapMapLibre from '@/Common/HeatMapMapLibre';
+import { selectSportTypePreferences } from '@/reducers/preferences';
 
 const HeatMapContainer: React.FC<any> = ({ referenceTime, timeframe, localStorageKey }) => {
   const key = [timeframe, referenceTime].filter(Boolean).join('|') || 'all';

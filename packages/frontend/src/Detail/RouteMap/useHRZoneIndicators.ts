@@ -1,11 +1,11 @@
-import { selectActivity, selectStreamTypeMulti } from '../../reducers/activities';
+import { selectActivity, selectStreamTypeMulti } from '@/reducers/activities';
 import { useMemo } from 'react';
-import getSmoothVal from '../HeartZonesChart/getSmoothVal';
-import { condenseZonesFromHeartRate } from '../../utils';
-import { selectHeartZones } from '../../reducers/heartzones';
-import { hrZonesText } from '../../colors/hrZones';
-import { emptyArray } from '../../constants';
-import { useAppSelector } from '../../hooks/redux';
+import getSmoothVal from '@/Detail/HeartZonesChart/getSmoothVal';
+import { condenseZonesFromHeartRate } from '@/utils';
+import { selectHeartZones } from '@/reducers/heartzones';
+import { hrZonesText } from '@/colors/hrZones';
+import { emptyArray } from '@/constants';
+import { useAppSelector } from '@/hooks/redux';
 
 const useHRZoneIndicators = (ids: number[], pointer: number, smoothAverageWindow: number) => {
   const activity = useAppSelector((state) => selectActivity(state, ids[0]));

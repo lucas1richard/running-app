@@ -1,5 +1,5 @@
 import { type FC } from 'react';
-import AddZonesForm from './AddZonesForm';
+import AddZonesForm from '@/HeartRateZones/AddZonesForm';
 
 const HeartRateZones: FC = () => {
   return (

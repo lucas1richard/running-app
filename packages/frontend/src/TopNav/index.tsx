@@ -1,6 +1,6 @@
 import React from 'react';
-import Surface from '../DLS/Surface';
-import ActivityTypesDisplay from './ActivityTypesDisplay';
+import Surface from '@/DLS/Surface';
+import ActivityTypesDisplay from '@/TopNav/ActivityTypesDisplay';
 
 const TopNav = () => (
   <Surface variant="foreground">

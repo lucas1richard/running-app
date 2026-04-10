@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
-import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '../utils';
-import { hrZonesText } from '../colors/hrZones';
+import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '@/utils';
+import { hrZonesText } from '@/colors/hrZones';
 
 export const ZonesWidthPercents: React.FC<{ id: string | number, percents: string[] }> = memo(({ id, percents = [] }) => {
   const widthStyles = percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({

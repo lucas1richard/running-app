@@ -1,12 +1,12 @@
 import { memo } from 'react';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import { getPRs } from '../reducers/prs';
-import DurationDisplay from '../Common/DurationDisplay';
-import { useAppSelector } from '../hooks/redux';
-import { Grid } from '../DLS';
-import Surface from '../DLS/Surface';
-import useViewSize from '../hooks/useViewSize';
+import { getPRs } from '@/reducers/prs';
+import DurationDisplay from '@/Common/DurationDisplay';
+import { useAppSelector } from '@/hooks/redux';
+import { Grid } from '@/DLS';
+import Surface from '@/DLS/Surface';
+import useViewSize from '@/hooks/useViewSize';
 
 const PRs = () => {
   const allTimePrs = useAppSelector(getPRs);

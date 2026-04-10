@@ -1,8 +1,8 @@
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import styles from '../Detail.module.css';
-import Surface from '../../DLS/Surface';
-import useDarkReaderMode from '../../hooks/useDarkReaderMode';
+import styles from '@/Detail/Detail.module.css';
+import Surface from '@/DLS/Surface';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
 
 const getPlotbandConfig = ({ ix, text, to, from } = {}, borderColor, color) => {
     return {

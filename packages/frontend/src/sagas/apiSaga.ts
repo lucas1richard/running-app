@@ -4,8 +4,8 @@ import {
   setApiErrorAct,
   setApiLoadingAct,
   setApiSuccessAct,
-} from '../reducers/apiStatus-actions';
-import type { AsyncAction } from '../types';
+} from '@/reducers/apiStatus-actions';
+import type { AsyncAction } from '@/types';
 
 type CB =(...args: any[]) => any;
 

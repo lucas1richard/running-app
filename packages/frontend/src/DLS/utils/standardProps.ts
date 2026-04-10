@@ -1,9 +1,9 @@
 import { css } from 'styled-components';
 import { type CSS } from 'styled-components/dist/types';
-import type { Theme } from './../theme';
-import makeStyledCssRule, { makeStyledThemeRule } from './makeStyledCssRule';
-import makeFontRule, { FontProps } from './makeFontRule';
-import makeSizeProps, { SizeProp } from './makeSizeProps';
+import type { Theme } from '@/DLS/theme';
+import makeStyledCssRule, { makeStyledThemeRule } from '@/DLS/utils/makeStyledCssRule';
+import makeFontRule, { FontProps } from '@/DLS/utils/makeFontRule';
+import makeSizeProps, { SizeProp } from '@/DLS/utils/makeSizeProps';
 
 export interface StandardProps extends FontProps
   , SizeProp<'$textAlign', CSS.Property.TextAlign>

@@ -1,6 +1,6 @@
 import { hash } from 'ohash';
-import { AsyncAction } from '../types';
-import { ActivitiesState } from './activities';
+import { AsyncAction } from '@/types';
+import { ActivitiesState } from '@/reducers/activities';
 
 // SAGA TRIGGERS
 export const FETCH_ACTIVITIES = 'activities/FETCH_ACTIVITIES';

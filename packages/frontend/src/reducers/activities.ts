@@ -3,8 +3,8 @@ import deepmerge from 'deepmerge';
 import dayjs, { type Dayjs, type ManipulateType } from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 
-import { createDeepEqualSelector } from '../utils';
-import { getPreferencesState, selectListPrerences, selectPreferencesZonesId, selectSportTypePreferences } from './preferences';
+import { createDeepEqualSelector } from '@/utils';
+import { getPreferencesState, selectListPrerences, selectPreferencesZonesId, selectSportTypePreferences } from '@/reducers/preferences';
 import {
   SET_ACTIVITIES,
   SET_ACTIVITIES_STREAM,
@@ -18,12 +18,12 @@ import {
   SET_STREAM_PINS,
   SET_HEATMAP_DATA,
   SET_ACTIVITIES_DISPLAY_TYPES,
-} from './activities-actions';
-import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from './heartzones';
-import { emptyArray, emptyObject } from '../constants';
+} from '@/reducers/activities-actions';
+import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from '@/reducers/heartzones';
+import { emptyArray, emptyObject } from '@/constants';
 import type { RootState } from '.';
-import { makeGet2ndArg, makeGet3rdArg } from '../utils/selectorUtils';
-import { wmoToCondition } from '../Detail/WeatherReporter/utils';
+import { makeGet2ndArg, makeGet3rdArg } from '@/utils/selectorUtils';
+import { wmoToCondition } from '@/Detail/WeatherReporter/utils';
 
 dayjs.extend(weekday);
 

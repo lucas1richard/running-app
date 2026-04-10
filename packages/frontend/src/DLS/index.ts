@@ -1,10 +1,10 @@
-import * as Basic from './Basic';
-import Button from './Button';
-import Card from './Card';
-import Container from './Container';
-import Flex from './Flex';
-import Grid from './Grid';
-import GridArea from './Grid/GridArea';
+import * as Basic from '@/DLS/Basic';
+import Button from '@/DLS/Button';
+import Card from '@/DLS/Card';
+import Container from '@/DLS/Container';
+import Flex from '@/DLS/Flex';
+import Grid from '@/DLS/Grid';
+import GridArea from '@/DLS/Grid/GridArea';
 
 export {
   Basic,

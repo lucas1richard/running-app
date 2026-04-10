@@ -1,4 +1,4 @@
-import type { PreferencesKeyPath, ActivityPreferences } from '../reducers/preferences';
+import type { PreferencesKeyPath, ActivityPreferences } from '@/reducers/preferences';
 
 const listState = ['list', 'defined'] as const;
 

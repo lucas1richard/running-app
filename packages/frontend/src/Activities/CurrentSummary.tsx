@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
-import { convertMetersToMiles } from '../utils';
-import { Basic, Grid } from '../DLS';
-import Surface from '../DLS/Surface';
+import { convertMetersToMiles } from '@/utils';
+import { Basic, Grid } from '@/DLS';
+import Surface from '@/DLS/Surface';
 
 const NUMBER_OF_DAYS = 7;
 

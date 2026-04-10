@@ -1,5 +1,5 @@
-import type { AsyncAction } from '../types';
-import { ActivityPreferences, PreferencesKeyPath } from './preferences';
+import type { AsyncAction } from '@/types';
+import { ActivityPreferences, PreferencesKeyPath } from '@/reducers/preferences';
 
 // SAGA TRIGGERS
 export const FETCH_USER_PREFS = 'preferences/FETCH_USER_PREFERENCES';

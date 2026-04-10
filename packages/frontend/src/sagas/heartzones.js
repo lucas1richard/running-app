@@ -1,16 +1,16 @@
 import { call, put } from 'redux-saga/effects';
-import requestor from '../utils/requestor';
-import { takeEveryContext } from './effects';
+import requestor from '@/utils/requestor';
+import { takeEveryContext } from '@/sagas/effects';
 import {
   setApiErrorAct,
   setApiLoadingAct,
   setApiSuccessAct,
-} from '../reducers/apiStatus-actions';
+} from '@/reducers/apiStatus-actions';
 import {
   ADD_HEART_ZONES,
   FETCH_HEART_ZONES,
   setHeartZonesAct,
-} from '../reducers/heartzones-actions';
+} from '@/reducers/heartzones-actions';
 
 function* fetchHeartZonesSaga() {
   const key = this.triggeredBy;

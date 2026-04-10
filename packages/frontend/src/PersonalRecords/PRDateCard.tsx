@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
-import DurationDisplay from '../Common/DurationDisplay';
-import { useAppSelector } from '../hooks/redux';
-import { selectActivity } from '../reducers/activities';
-import { Basic, Card } from '../DLS';
-import propSelector from '../utils/propSelector';
+import DurationDisplay from '@/Common/DurationDisplay';
+import { useAppSelector } from '@/hooks/redux';
+import { selectActivity } from '@/reducers/activities';
+import { Basic, Card } from '@/DLS';
+import propSelector from '@/utils/propSelector';
 
 
 

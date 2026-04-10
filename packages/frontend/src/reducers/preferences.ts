@@ -1,14 +1,14 @@
 import { produce } from 'immer';
-import { createDeepEqualSelector } from '../utils';
+import { createDeepEqualSelector } from '@/utils';
 import deepmerge from 'deepmerge';
 import {
   REDUCER_SET_LIST_PREFS,
   REDUCER_SET_ACTIVITY_PREFS,
   SET_GLOBAL_PREFS,
   SET_PREFS_FREE,
-} from './preferences-actions';
+} from '@/reducers/preferences-actions';
 import type { RootState } from '.';
-import { makeGet2ndArg } from '../utils/selectorUtils';
+import { makeGet2ndArg } from '@/utils/selectorUtils';
 
 export type PreferencesKeyPath = [string, string, ...string[]];
 

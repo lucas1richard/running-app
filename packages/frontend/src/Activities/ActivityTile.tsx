@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useGetApiStatus } from '@/reducers/apiStatus';
 import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '@/reducers/activitydetail-actions';
 import Spinner from '@/Loading/Spinner';
-import Tile from './Tile';
+import Tile from '@/Activities/Tile';
 import useViewSize from '@/hooks/useViewSize';
 import { useAppSelector } from '@/hooks/redux';
 import { selectActivity } from '@/reducers/activities';

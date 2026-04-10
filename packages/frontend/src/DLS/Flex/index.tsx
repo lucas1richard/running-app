@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import makeSizeProps, { type SizeProp } from '../utils/makeSizeProps';
+import makeSizeProps, { type SizeProp } from '@/DLS/utils/makeSizeProps';
 import type { CSS } from 'styled-components/dist/types';
-import standardProps, { StandardProps } from '../utils/standardProps';
+import standardProps, { StandardProps } from '@/DLS/utils/standardProps';
 
 interface FlexProps extends StandardProps
   , SizeProp<'$direction', CSS.Property.FlexDirection>

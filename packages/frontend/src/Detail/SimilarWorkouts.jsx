@@ -1,13 +1,13 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectSimilarWorkouts, selectSimilarWorkoutsMeta } from '../reducers/activities';
-import { idle, useTriggerActionIfStatus } from '../reducers/apiStatus';
-import { triggerFetchSimilarWorkouts } from '../reducers/activitydetail-actions';
-import Tile from '../Activities/Tile';
-import { Basic, Button, Grid } from '../DLS';
-import { selectComparedActivities } from '../reducers/multimap';
-import { toggleComparedActivityAct } from '../reducers/multimap-actions';
-import SpeedChart from '../Common/SpeedChart';
+import { selectSimilarWorkouts, selectSimilarWorkoutsMeta } from '@/reducers/activities';
+import { idle, useTriggerActionIfStatus } from '@/reducers/apiStatus';
+import { triggerFetchSimilarWorkouts } from '@/reducers/activitydetail-actions';
+import Tile from '@/Activities/Tile';
+import { Basic, Button, Grid } from '@/DLS';
+import { selectComparedActivities } from '@/reducers/multimap';
+import { toggleComparedActivityAct } from '@/reducers/multimap-actions';
+import SpeedChart from '@/Common/SpeedChart';
 
 const SimilarWorkouts = ({ activity, zones }) => {
   const id = activity.id;

@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import standardProps, { type StandardProps } from '../utils/standardProps';
+import standardProps, { type StandardProps } from '@/DLS/utils/standardProps';
 
 interface StandardBase<GenElement> extends Omit<React.HTMLAttributes<GenElement>, 'color'>, StandardProps {}
 

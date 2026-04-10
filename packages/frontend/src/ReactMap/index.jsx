@@ -2,12 +2,12 @@ import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import { GeoJsonLayer } from '@deck.gl/layers/typed';
-import { DeckGlOverlay } from './deckgl-overlay';
-import { emptyObject, GOOGLE_API_KEY } from '../constants';
-import { selectActivity, selectStreamTypeData } from '../reducers/activities';
-import { selectHeartZones } from '../reducers/heartzones';
-import { condenseZonesFromHeartRate } from '../utils';
-import { hrZonesGraph } from '../colors/hrZones';
+import { DeckGlOverlay } from '@/ReactMap/deckgl-overlay';
+import { emptyObject, GOOGLE_API_KEY } from '@/constants';
+import { selectActivity, selectStreamTypeData } from '@/reducers/activities';
+import { selectHeartZones } from '@/reducers/heartzones';
+import { condenseZonesFromHeartRate } from '@/utils';
+import { hrZonesGraph } from '@/colors/hrZones';
 
 const ReactMap = ({ id }) => {
   const latlngStreamData = useSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;

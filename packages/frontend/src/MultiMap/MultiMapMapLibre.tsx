@@ -1,12 +1,12 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FullscreenControl, Layer, Map, Marker, Source } from "@vis.gl/react-maplibre";
 import maplibregl from 'maplibre-gl';
-import { emptyArray } from '../constants';
-import { selectStreamTypeMulti } from '../reducers/activities';
-import { useAppSelector } from '../hooks/redux';
-import { Basic, Button } from '../DLS';
-import useDarkReaderMode from '../hooks/useDarkReaderMode';
-import useHRZoneIndicators from '../Detail/RouteMap/useHRZoneIndicators';
+import { emptyArray } from '@/constants';
+import { selectStreamTypeMulti } from '@/reducers/activities';
+import { useAppSelector } from '@/hooks/redux';
+import { Basic, Button } from '@/DLS';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import useHRZoneIndicators from '@/Detail/RouteMap/useHRZoneIndicators';
 
 function MultiMapMapLibre({
   indexPointer = undefined,

@@ -1,8 +1,8 @@
 import { produce } from 'immer';
-import { createDeepEqualSelector } from '../utils';
-import { emptyObject } from '../constants';
-import { selectPreferencesZonesId } from './preferences';
-import { SET_HEART_ZONES } from './heartzones-actions';
+import { createDeepEqualSelector } from '@/utils';
+import { emptyObject } from '@/constants';
+import { selectPreferencesZonesId } from '@/reducers/preferences';
+import { SET_HEART_ZONES } from '@/reducers/heartzones-actions';
 import type { RootState } from '.';
 
 const heartzonesInitialState = {

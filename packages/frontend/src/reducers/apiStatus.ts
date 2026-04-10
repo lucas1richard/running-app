@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import { produce } from 'immer';
 import { shallowEqual, useDispatch } from 'react-redux';
 import { hash } from 'ohash';
-import { useAppSelector } from '../hooks/redux';
-import { createDeepEqualSelector } from '../utils';
-import type { ApiStatusAction, AsyncAction } from '../types';
+import { useAppSelector } from '@/hooks/redux';
+import { createDeepEqualSelector } from '@/utils';
+import type { ApiStatusAction, AsyncAction } from '@/types';
 import {
   loadingSymbol,
   successSymbol,
   errorSymbol,
-} from './apiStatus-actions';
+} from '@/reducers/apiStatus-actions';
 import type { RootState } from '.';
 
 type APIStatusType = 'loading' | 'success' | 'error' | 'idle';

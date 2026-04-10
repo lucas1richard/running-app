@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { Grid } from '../../DLS';
+import { Grid } from '@/DLS';
 import { useNavigate } from 'react-router-dom';
 
 dayjs.extend(weekday);

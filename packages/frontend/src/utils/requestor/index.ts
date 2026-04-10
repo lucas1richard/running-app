@@ -1,4 +1,4 @@
-import timeoutFetch from './timeoutFetch';
+import timeoutFetch from '@/utils/requestor/timeoutFetch';
 
 type RequestorCallOptions = Parameters<typeof timeoutFetch>[1];
 

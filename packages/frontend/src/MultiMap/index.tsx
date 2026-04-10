@@ -1,11 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { selectActivities } from '../reducers/activities';
-import MultiMap from './MultiMap';
-import { toggleComparedActivityAct } from '../reducers/multimap-actions';
-import { selectComparedActivities } from '../reducers/multimap';
-import { Basic, Button, Grid } from '../DLS';
-import Tile from '../Activities/Tile';
-import MultiMapMapLibre from './MultiMapMapLibre';
+import { selectActivities } from '@/reducers/activities';
+import MultiMap from '@/MultiMap/MultiMap';
+import { toggleComparedActivityAct } from '@/reducers/multimap-actions';
+import { selectComparedActivities } from '@/reducers/multimap';
+import { Basic, Button, Grid } from '@/DLS';
+import Tile from '@/Activities/Tile';
+import MultiMapMapLibre from '@/MultiMap/MultiMapMapLibre';
 
 const MultiMapPage = () => {
   const activities = useSelector(selectActivities);

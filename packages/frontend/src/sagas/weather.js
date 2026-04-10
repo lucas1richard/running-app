@@ -1,8 +1,8 @@
 import { call, put } from 'redux-saga/effects';
-import requestor from '../utils/requestor';
-import { takeEveryContext } from './effects';
-import { FETCH_WEATHER, setWeatherDataAct } from '../reducers/activities-actions';
-import makeApiSaga from './apiSaga';
+import requestor from '@/utils/requestor';
+import { takeEveryContext } from '@/sagas/effects';
+import { FETCH_WEATHER, setWeatherDataAct } from '@/reducers/activities-actions';
+import makeApiSaga from '@/sagas/apiSaga';
 
 function* fetchWeatherSaga({ payload }) {
   const { id, ...rest } = payload;

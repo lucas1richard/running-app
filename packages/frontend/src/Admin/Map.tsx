@@ -1,11 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { emptyArray } from '../constants';
-import RouteMap from '../Detail/RouteMap';
-import { useAppSelector } from '../hooks/redux';
-import { selectStreamTypeData } from '../reducers/activities';
-import DetailDataFetcher from '../Detail/DetailDataFetcher';
-import getEdgeCoords from './getEdgeCoords';
-import roundToNearest from '../utils/roundToNearest';
+import { emptyArray } from '@/constants';
+import RouteMap from '@/Detail/RouteMap';
+import { useAppSelector } from '@/hooks/redux';
+import { selectStreamTypeData } from '@/reducers/activities';
+import DetailDataFetcher from '@/Detail/DetailDataFetcher';
+import getEdgeCoords from '@/Admin/getEdgeCoords';
+import roundToNearest from '@/utils/roundToNearest';
 
 const id = 13152121307;
 const degToRad = (deg: number) => deg * Math.PI / 180;

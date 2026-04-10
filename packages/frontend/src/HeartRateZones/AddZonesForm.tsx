@@ -6,8 +6,8 @@ import {
   useState
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { addHeartZonesAct } from '../reducers/heartzones-actions';
-import { Button } from '../DLS';
+import { addHeartZonesAct } from '@/reducers/heartzones-actions';
+import { Button } from '@/DLS';
 
 const AddZonesForm: FC = () => {
   const [z1, setZ1] = useState('');

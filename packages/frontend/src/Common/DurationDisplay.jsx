@@ -1,5 +1,5 @@
 import React from 'react';
-import { getDuration } from '../utils';
+import { getDuration } from '@/utils';
 
 /**
  * 

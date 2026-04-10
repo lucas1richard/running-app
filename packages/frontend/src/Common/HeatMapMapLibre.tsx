@@ -1,12 +1,12 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { Basic } from '../DLS';
-import Shimmer from '../Loading/Shimmer';
+import { Basic } from '@/DLS';
+import Shimmer from '@/Loading/Shimmer';
 import { FullscreenControl, Layer, Map, Source } from "@vis.gl/react-maplibre";
 import maplibregl from 'maplibre-gl';
 import "maplibre-gl/dist/maplibre-gl.css"; // Required!
-import useDarkReaderMode from '../hooks/useDarkReaderMode';
-import Surface from '../DLS/Surface';
-import ActivityTile from '../Activities/ActivityTile';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import Surface from '@/DLS/Surface';
+import ActivityTile from '@/Activities/ActivityTile';
 
 const makeSquare = ({ lat, lon }, size = 0.0001) => {
   const delta = size / 2;

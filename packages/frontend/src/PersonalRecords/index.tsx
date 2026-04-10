@@ -1,13 +1,13 @@
 import dayjs from 'dayjs';
-import { selectPRsByDate } from '../reducers/prs';
+import { selectPRsByDate } from '@/reducers/prs';
 import { useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../hooks/redux';
-import { Basic } from '../DLS';
+import { useAppSelector } from '@/hooks/redux';
+import { Basic } from '@/DLS';
 import { useMemo } from 'react';
-import { getDurationString } from '../utils';
-import Surface from '../DLS/Surface';
-import PRCalendarChart from './PRCalendarChart';
-import './personalrecords.module.scss';
+import { getDurationString } from '@/utils';
+import Surface from '@/DLS/Surface';
+import PRCalendarChart from '@/PersonalRecords/PRCalendarChart';
+import '@/PersonalRecords/personalrecords.module.scss';
 
 const prsMap = {
   1: 'shine-button transition-all-2s bg-gold-200 hover:bg-gold-300 text-gold-900 raised-1',

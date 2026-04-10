@@ -5,11 +5,11 @@ import {
 } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { selectActivity } from '../../reducers/activities';
-import { setWeatherDataAct } from '../../reducers/activities-actions';
-import { useAppSelector } from '../../hooks/redux';
+import { selectActivity } from '@/reducers/activities';
+import { setWeatherDataAct } from '@/reducers/activities-actions';
+import { useAppSelector } from '@/hooks/redux';
 import dayjs from 'dayjs';
-import { WeatherCondition, wmoToCondition } from './utils';
+import { WeatherCondition, wmoToCondition } from '@/Detail/WeatherReporter/utils';
 
 type Props = {
   id: number;

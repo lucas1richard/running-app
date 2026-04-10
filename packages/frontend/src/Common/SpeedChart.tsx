@@ -2,13 +2,13 @@ import React, { memo } from 'react';
 import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { convertMetricSpeedToMPH } from '../utils';
+import { convertMetricSpeedToMPH } from '@/utils';
 import { useMemo } from 'react';
-import useViewSize from '../hooks/useViewSize';
-import calcEfficiencyFactor from '../utils/calcEfficiencyFactor';
-import Surface from '../DLS/Surface';
-import useDarkReaderMode from '../hooks/useDarkReaderMode';
-import { colors } from './colors';
+import useViewSize from '@/hooks/useViewSize';
+import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
+import Surface from '@/DLS/Surface';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import { colors } from '@/Common/colors';
 
 const seriesDefaultConfig = {
   type: 'line',

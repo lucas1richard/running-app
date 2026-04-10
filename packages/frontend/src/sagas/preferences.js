@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
-import requestor from '../utils/requestor';
-import { selectActivityPreferences, selectGlobalPrerences, selectListPrerences } from '../reducers/preferences';
-import { takeEveryContext } from './effects';
+import requestor from '@/utils/requestor';
+import { selectActivityPreferences, selectGlobalPrerences, selectListPrerences } from '@/reducers/preferences';
+import { takeEveryContext } from '@/sagas/effects';
 import {
   FETCH_ACTIVITY_PREFS,
   FETCH_USER_PREFS,
@@ -10,8 +10,8 @@ import {
   setActivityPrefsAct,
   setGlobalPrefsAct,
   setListPrefsAct,
-} from '../reducers/preferences-actions';
-import makeApiSaga from './apiSaga';
+} from '@/reducers/preferences-actions';
+import makeApiSaga from '@/sagas/apiSaga';
 
 function* fetchUserPreferencesSaga({ payload }) {
   const response = yield call(requestor.get, '/user/preferences');

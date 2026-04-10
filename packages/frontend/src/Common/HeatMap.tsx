@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsMap from 'highcharts/modules/map';
 import HighchartsReact from 'highcharts-react-official';
-import roundToNearest from '../utils/roundToNearest';
-import { Basic, Button } from '../DLS';
-import Shimmer from '../Loading/Shimmer';
-import Surface from '../DLS/Surface';
+import roundToNearest from '@/utils/roundToNearest';
+import { Basic, Button } from '@/DLS';
+import Shimmer from '@/Loading/Shimmer';
+import Surface from '@/DLS/Surface';
 
 HighchartsMap(Highcharts);
 

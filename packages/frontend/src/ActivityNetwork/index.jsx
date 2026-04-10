@@ -2,8 +2,8 @@ import React, { useMemo } from 'react';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import networkgraph from 'highcharts/modules/networkgraph';
-import testdata from './testdata.json';
-import Surface from '../DLS/Surface';
+import testdata from '@/ActivityNetwork/testdata.json';
+import Surface from '@/DLS/Surface';
 
 networkgraph(Highcharts);
 

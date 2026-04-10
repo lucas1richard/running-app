@@ -2,12 +2,12 @@ import { useCallback, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import { Basic, Button, Grid } from '../DLS';
-import { useAppSelector } from '../hooks/redux';
-import { selectActivitiesByDate, selectActivitiesByMonth } from '../reducers/activities';
-import Tile from '../Activities/Tile';
-import useViewSize from '../hooks/useViewSize';
-import Surface from '../DLS/Surface';
+import { Basic, Button, Grid } from '@/DLS';
+import { useAppSelector } from '@/hooks/redux';
+import { selectActivitiesByDate, selectActivitiesByMonth } from '@/reducers/activities';
+import Tile from '@/Activities/Tile';
+import useViewSize from '@/hooks/useViewSize';
+import Surface from '@/DLS/Surface';
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);

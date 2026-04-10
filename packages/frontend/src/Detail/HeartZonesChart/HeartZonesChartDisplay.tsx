@@ -3,30 +3,30 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import variwide from 'highcharts/modules/variwide';
 import gantt from 'highcharts/modules/gantt';
-import { hrZonesBg, hrZonesText } from '../../colors/hrZones';
-import getSmoothVal from './getSmoothVal';
-import addXAxisPlotLine, { removeXAxisPlotLine } from './addXAxisPlotline';
-import useMinMax from './useMinMax';
-import { colors } from '../../Common/colors';
-import calcEfficiencyFactor from '../../utils/calcEfficiencyFactor';
-import roundToNearest from '../../utils/roundToNearest';
+import { hrZonesBg, hrZonesText } from '@/colors/hrZones';
+import getSmoothVal from '@/Detail/HeartZonesChart/getSmoothVal';
+import addXAxisPlotLine, { removeXAxisPlotLine } from '@/Detail/HeartZonesChart/addXAxisPlotline';
+import useMinMax from '@/Detail/HeartZonesChart/useMinMax';
+import { colors } from '@/Common/colors';
+import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
+import roundToNearest from '@/utils/roundToNearest';
 import {
   condenseZonesFromHeartRate,
   convertMetricSpeedToMPH,
   getDurationString,
-} from '../../utils';
-import getGradeColorAbs from './getGradeColorAbs';
-import useSegments from './useSegments';
-import { Basic, Button, Flex, Grid } from '../../DLS';
-import useViewSize from '../../hooks/useViewSize';
+} from '@/utils';
+import getGradeColorAbs from '@/Detail/HeartZonesChart/getGradeColorAbs';
+import useSegments from '@/Detail/HeartZonesChart/useSegments';
+import { Basic, Button, Flex, Grid } from '@/DLS';
+import useViewSize from '@/hooks/useViewSize';
 import { useDispatch } from 'react-redux';
-import { deleteStreamPin, setStreamPin } from '../../reducers/activities-actions';
-import StreamPinForm from './StreamPinForm';
-import { useAppSelector } from '../../hooks/redux';
-import { selectStreamTypeData } from '../../reducers/activities';
-import useDarkReaderMode from '../../hooks/useDarkReaderMode';
-import Surface from '../../DLS/Surface';
-import MapLibreHRZones from '../../Common/MapLibreHRZones';
+import { deleteStreamPin, setStreamPin } from '@/reducers/activities-actions';
+import StreamPinForm from '@/Detail/HeartZonesChart/StreamPinForm';
+import { useAppSelector } from '@/hooks/redux';
+import { selectStreamTypeData } from '@/reducers/activities';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import Surface from '@/DLS/Surface';
+import MapLibreHRZones from '@/Common/MapLibreHRZones';
 
 variwide(Highcharts);
 gantt(Highcharts);

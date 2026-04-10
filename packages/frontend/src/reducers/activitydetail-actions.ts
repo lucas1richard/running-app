@@ -1,4 +1,4 @@
-import { AsyncAction } from '../types';
+import { AsyncAction } from '@/types';
 
 export const FETCH_SIMILAR_WORKOUTS = 'activitydetails/FETCH_SIMILAR_WORKOUTS';
 export const triggerFetchSimilarWorkouts = (id: number): AsyncAction => ({

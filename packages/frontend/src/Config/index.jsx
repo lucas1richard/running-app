@@ -1,5 +1,5 @@
 import React from 'react';
-import SetGlobalHeartZones from './SetGlobalHeartZones';
+import SetGlobalHeartZones from '@/Config/SetGlobalHeartZones';
 
 const ConfigWidget = ({}) => {
   return (

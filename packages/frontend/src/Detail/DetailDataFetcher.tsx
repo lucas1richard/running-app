@@ -1,12 +1,12 @@
 import { FC, useEffect } from 'react';
-import requestor from '../utils/requestor/index';
-import { convertHeartDataToZoneTimes } from '../utils';
-import { selectActivity, selectStreamTypeData } from '../reducers/activities';
-import { selectApplicableHeartZone } from '../reducers/heartzones';
-import { success, useTriggerActionIfStatus } from '../reducers/apiStatus';
-import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '../reducers/activities-actions';
-import { triggerFetchActivityPrefs } from '../reducers/preferences-actions';
-import { useAppSelector } from '../hooks/redux';
+import requestor from '@/utils/requestor/index';
+import { convertHeartDataToZoneTimes } from '@/utils';
+import { selectActivity, selectStreamTypeData } from '@/reducers/activities';
+import { selectApplicableHeartZone } from '@/reducers/heartzones';
+import { success, useTriggerActionIfStatus } from '@/reducers/apiStatus';
+import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '@/reducers/activities-actions';
+import { triggerFetchActivityPrefs } from '@/reducers/preferences-actions';
+import { useAppSelector } from '@/hooks/redux';
 
 export const streamTypes: SimpleStreamTypes[] = [
   'heartrate', 'velocity_smooth', 'latlng', 'altitude', 'time', 'grade_smooth', 'distance'

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { createSelectorCreator, weakMapMemoize } from 'reselect';
 import fastDeepEqual from 'fast-deep-equal';
-import gradientScale from './colors/gradient-scale';
+import gradientScale from '@/colors/gradient-scale';
 
 type DurationText = [secondsSuffix: string, minutesSuffix: string, hoursSuffix: string];
 

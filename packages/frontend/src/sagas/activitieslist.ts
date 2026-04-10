@@ -1,5 +1,5 @@
 import { call, put, takeEvery } from 'redux-saga/effects';
-import requestor from '../utils/requestor';
+import requestor from '@/utils/requestor';
 import {
   FETCH_ACTIVITIES,
   FETCH_ACTIVITIES_SUMMARY,
@@ -13,9 +13,9 @@ import {
   setHeatMapDataAct,
   setStreamAct,
   setStreamsAct,
-} from '../reducers/activities-actions';
-import makeApiSaga from './apiSaga';
-import { makeEventStreamSaga } from './eventStreamSaga';
+} from '@/reducers/activities-actions';
+import makeApiSaga from '@/sagas/apiSaga';
+import { makeEventStreamSaga } from '@/sagas/eventStreamSaga';
 
 function* fetchActivitiesSaga({ forceFetch }) {
   const data = [];

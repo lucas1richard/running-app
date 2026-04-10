@@ -1,5 +1,5 @@
-import { YARDS_PER_MILE } from '../constants';
-import { convertMetricSpeedToMPH } from '../utils';
+import { YARDS_PER_MILE } from '@/constants';
+import { convertMetricSpeedToMPH } from '@/utils';
 
 interface CalcEfficiencyFactor {
   /**

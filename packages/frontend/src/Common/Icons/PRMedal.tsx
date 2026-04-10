@@ -1,5 +1,5 @@
 import React from 'react';
-import { prColors } from '../colors';
+import { prColors } from '@/Common/colors';
 
 type PRMedalProps = {
   className?: string;

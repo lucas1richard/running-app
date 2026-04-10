@@ -1,7 +1,7 @@
 import { type FC, useMemo } from 'react';
-import DurationDisplay from '../Common/DurationDisplay';
-import { Basic, Grid } from '../DLS';
-import Surface from '../DLS/Surface';
+import DurationDisplay from '@/Common/DurationDisplay';
+import { Basic, Grid } from '@/DLS';
+import Surface from '@/DLS/Surface';
 
 const rankMap = {
   1: '1st',

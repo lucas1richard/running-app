@@ -1,4 +1,4 @@
-import type { ApiStatusAction } from "../types";
+import type { ApiStatusAction } from "@/types";
 
 export const loadingSymbol = `Symbol('loading')`;
 export const receivingSymbol = `Symbol('receiving')`;
