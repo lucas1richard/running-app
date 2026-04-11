@@ -6,7 +6,7 @@ type SurfaceProps = {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-} & React.HTMLAttributes<HTMLDivElement>
+} & React.HTMLAttributes<HTMLDivElement>;
 
 const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
   ({ variant = 'foreground', children, className, style, ...rest }, ref) => {
@@ -16,6 +16,6 @@ const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
       </div>
     );
   }
-)
+);
 
 export default Surface;

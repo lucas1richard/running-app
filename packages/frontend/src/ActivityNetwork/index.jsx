@@ -52,7 +52,7 @@ const ActivityNetworkChart = () => {
             const chart = this.series[0].chart,
               width = chart.plotWidth,
               height = chart.plotHeight;
-    
+
             this.nodes.forEach(function (node) {
               // If initial positions were set previously, use that
               // positions. Otherwise use random position:

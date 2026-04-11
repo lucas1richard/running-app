@@ -17,7 +17,7 @@ const Map = ({ startDistanceConstraint, compressionLevel }) => {
     return latlngStream.map(([lat, lon]) => ({ lon, lat }));
   }, [latlngStream]);
 
-  const coordsAtAngle = useCallback((coords: { lat: number, lon: number }, deg: number) => ({
+  const coordsAtAngle = useCallback((coords: { lat: number, lon: number; }, deg: number) => ({
     lat: coords.lat + startDistanceConstraint * Math.sin(degToRad(deg)),
     lon: coords.lon + startDistanceConstraint * Math.cos(degToRad(deg)),
   }), [startDistanceConstraint]);

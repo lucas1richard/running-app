@@ -1,7 +1,7 @@
 import standardProps, { type StandardProps } from '@/DLS/utils/standardProps';
 import styled, { css } from 'styled-components';
 
-interface StandardBase<GenElement> extends Omit<React.HTMLAttributes<GenElement>, 'color'>, StandardProps {}
+interface StandardBase<GenElement> extends Omit<React.HTMLAttributes<GenElement>, 'color'>, StandardProps { }
 
 export const cardCss = css`
   background-color: white;
@@ -18,6 +18,6 @@ const Card: React.FC<StandardBase<HTMLDivElement>> = ({ children, ...rest }) => 
   <CardWrapper $pad={1} $borderRadius={0.5} {...rest}>
     {children}
   </CardWrapper>
-)
+);
 
 export default Card;

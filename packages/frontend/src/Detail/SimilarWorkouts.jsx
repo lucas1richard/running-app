@@ -35,7 +35,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
           const toggleCompare = () => {
             dispatch(toggleComparedActivityAct(activity.id));
           };
-          const isToggled = compared.some(({ id }) => id === activity.id );
+          const isToggled = compared.some(({ id }) => id === activity.id);
           return (
             <Tile
               key={activity.id}

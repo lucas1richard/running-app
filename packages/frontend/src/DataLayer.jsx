@@ -10,14 +10,14 @@ import {
 import { triggerFetchPrs, triggerFetchPrsByDate } from '@/reducers/prs-actions';
 
 const DataLayer = ({ children }) => {
-  useTriggerActionIfStatus(triggerFetchUserPrefs());
-  useTriggerActionIfStatus(triggerFetchActivities());
-  useTriggerActionIfStatus(triggerFetchActivitiesSummary());
-  useTriggerActionIfStatus(triggerFetchHeartZones());
-  useTriggerActionIfStatus(triggerFetchPrs());
-  useTriggerActionIfStatus(triggerFetchPrsByDate());
+    useTriggerActionIfStatus(triggerFetchUserPrefs());
+    useTriggerActionIfStatus(triggerFetchActivities());
+    useTriggerActionIfStatus(triggerFetchActivitiesSummary());
+    useTriggerActionIfStatus(triggerFetchHeartZones());
+    useTriggerActionIfStatus(triggerFetchPrs());
+    useTriggerActionIfStatus(triggerFetchPrsByDate());
 
-  return (<>{children}</>);
+    return (<>{children}</>);
 };
 
 export default DataLayer;

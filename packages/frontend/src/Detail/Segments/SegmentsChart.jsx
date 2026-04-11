@@ -5,27 +5,27 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 const getPlotbandConfig = ({ ix, text, to, from } = {}, borderColor, color) => {
-    return {
-      from,
-      to,
-      label: {
-        align: 'left',
-        style: {
-          color: 'contrast',
-          fontWeight: 'bold',
-        },
-        y: 16 * (ix % 18) + 16,
-        useHTML: true,
-        formatter() {
-          return `<div class="${styles.bandLabel}">${text}</div>`
-        },
+  return {
+    from,
+    to,
+    label: {
+      align: 'left',
+      style: {
+        color: 'contrast',
+        fontWeight: 'bold',
       },
-      borderWidth: 1,
-      borderColor,
-      color,
+      y: 16 * (ix % 18) + 16,
       useHTML: true,
-      id: ix
-    };
+      formatter() {
+        return `<div class="${styles.bandLabel}">${text}</div>`
+      },
+    },
+    borderWidth: 1,
+    borderColor,
+    color,
+    useHTML: true,
+    id: ix
+  };
 };
 
 const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
@@ -62,11 +62,11 @@ const SegmentsChart = ({ title, heartData, velocity, width, segments }) => {
     ].filter(Boolean),
     xAxis: {
       plotBands: segments.map((band, ix) => getPlotbandConfig({
-          ix,
-          from: band.start_index,
-          to: band.end_index,
-          text: band.name
-        }, contrastColor, 'rgba(0,0,0,0.05)'),
+        ix,
+        from: band.start_index,
+        to: band.end_index,
+        text: band.name
+      }, contrastColor, 'rgba(0,0,0,0.05)'),
       ),
       gridLineWidth: 0,
       alignTicks: false,

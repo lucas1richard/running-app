@@ -30,11 +30,11 @@ const MultiMapPage = () => {
                 {isToggled ? 'Remove' : 'Compare'}
               </Button>
             </Tile>
-          )
+          );
         })}
       </Grid>
     </div>
   );
-}
+};
 
 export default MultiMapPage;

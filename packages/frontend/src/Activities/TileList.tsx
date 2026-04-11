@@ -34,24 +34,24 @@ const TileList: React.FC<TileListProps> = ({ showHideFunction, tileBackgroundInd
             //         <ZonesHeader zones={zones} start={start} />
             //       </Basic.Div>
             //     )} */}
-                <div className="grid gap-4 mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))' }}>
-                  {displayActivities.map((activity) => (
-                    <ActivityTile
-                      key={activity.id}
-                      activity={activity}
-                      backgroundIndicator={tileBackgroundIndicator}
-                      showHideFunction={showHideFunction}
-                    />
-                  ))}
-                </div>
-              {/* // </Flex>
+        <div className="grid gap-4 mt-4" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(500px, 1fr))' }}>
+          {displayActivities.map((activity) => (
+            <ActivityTile
+              key={activity.id}
+              activity={activity}
+              backgroundIndicator={tileBackgroundIndicator}
+              showHideFunction={showHideFunction}
+            />
+          ))}
+        </div>
+        {/* // </Flex>
             ))
           )
         } */}
       </div>
       <Button $width="100%" onClick={() => setShowAllActivities(true)}>Show All</Button>
     </div>
-  )
+  );
 };
 
 export default memo(TileList);

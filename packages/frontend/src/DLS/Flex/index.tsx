@@ -8,21 +8,20 @@ interface FlexProps extends StandardProps
   , SizeProp<'$alignItems', CSS.Property.AlignItems>
   , SizeProp<'$justify', CSS.Property.JustifyContent>
   , SizeProp<'$wrap', CSS.Property.FlexWrap>
-  , SizeProp<'$gap', number | CSS.Property.Gap>
-  {}
+  , SizeProp<'$gap', number | CSS.Property.Gap> { }
 
 const Flex = styled.div<FlexProps>`
   display: flex;
   ${standardProps}
   ${makeSizeProps(
-    [
-      ['$direction', 'flex-direction'],
-      ['$alignItems', 'align-items'],
-      ['$justify', 'justify-content'],
-      ['$wrap', 'flex-wrap'],
-      ['$gap', 'gap'],
-    ]
-  )}
+  [
+    ['$direction', 'flex-direction'],
+    ['$alignItems', 'align-items'],
+    ['$justify', 'justify-content'],
+    ['$wrap', 'flex-wrap'],
+    ['$gap', 'gap'],
+  ]
+)}
 `;
 
 export default Flex;

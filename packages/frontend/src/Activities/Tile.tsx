@@ -23,7 +23,7 @@ type Props = {
   backgroundIndicator?: string;
   children?: React.ReactNode;
   className?: string;
-}
+};
 
 const prsMap = {
   1: 'bg-gold-200 text-gold-900 raised-1 elevation-3',
@@ -53,14 +53,13 @@ const prsRibbonMap = {
 
 const Tile: React.FC<Props> = ({
   activity,
-  backgroundIndicator,
   isCompact,
   children,
   className = '',
 }) => {
   const [hovered, setHovered] = React.useState(false);
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, activity.id, 'heartrate'));
-  const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date))
+  const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date));
   const bestEfforts = activity?.calculatedBestEfforts || emptyArray;
 
   const onMouseEnter = useCallback(() => {
@@ -113,45 +112,45 @@ const Tile: React.FC<Props> = ({
         </div>
 
         <div className={styles.gridStats}>
-            <div>
-              <span className={`${smallText}`}>
-                {duration}
-                </span>
-              <span className={`ml-4 ${largeText} dls-dark-gold`}>
-                {activity.distance_miles} <abbr>mi</abbr>
-              </span>
-            </div>
+          <div>
+            <span className={`${smallText}`}>
+              {duration}
+            </span>
+            <span className={`ml-4 ${largeText} dls-dark-gold`}>
+              {activity.distance_miles} <abbr>mi</abbr>
+            </span>
+          </div>
 
-            <div>
-              <span className={`${smallText}`}><AveragePaceSvg /></span>
-              <span className={`ml-2 ${largeText}`}>
-                {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
-              </span>
-            </div>
+          <div>
+            <span className={`${smallText}`}><AveragePaceSvg /></span>
+            <span className={`ml-2 ${largeText}`}>
+              {convertMetricSpeedToMPH(activity.average_speed).toFixed(2)} mph
+            </span>
+          </div>
 
-            <div>
-              <span className={`${smallText}`}><HeartRateSvg /></span>
-              <span className={`ml-2 ${largeText}`}>
-                {Math.round(activity.average_heartrate)} bpm
-              </span>
-            </div>
+          <div>
+            <span className={`${smallText}`}><HeartRateSvg /></span>
+            <span className={`ml-2 ${largeText}`}>
+              {Math.round(activity.average_heartrate)} bpm
+            </span>
+          </div>
 
-            {/* <div>
+          {/* <div>
               <span className={`${smallText}`}>Max HR</span>
               <span className={`ml-4 ${largeText}`}>
                 {activity.max_heartrate} bpm
               </span>
             </div> */}
 
-            <div>
-              {/* <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span> */}
-              <span className={`${largeText} text-efficiencyFactor`}>
-                {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
-              </span>
-            </div>
+          <div>
+            {/* <span className={`${smallText} text-efficiencyFactor`}>Efficiency Factor</span> */}
+            <span className={`${largeText} text-efficiencyFactor`}>
+              {calcEfficiencyFactor(activity.average_speed, activity.average_heartrate).toFixed(2)} y/b
+            </span>
+          </div>
         </div>
 
-        <div  className={styles.gridZonesWidth}>
+        <div className={styles.gridZonesWidth}>
           {(heartRateStream || activity.zonesCaches[zones.id]) && (
             <ZonesWidth
               id={activity.id}
@@ -180,7 +179,7 @@ const Tile: React.FC<Props> = ({
         </div>
       </div>
     </Surface>
-  )
+  );
 };
 
 export default memo(Tile);

@@ -31,7 +31,7 @@ export const getDuration = (
       if (ix > 0 && stringVal.length < 2) { // let hours be single digit, but not minutes or seconds
         return [`0${val}`, text];
       }
-      return [stringVal, text]
+      return [stringVal, text];
     })
     .slice(firstNonZeroIx);
 };
@@ -155,7 +155,7 @@ export const convertHeartDataToZoneSpeeds = (zones: HeartZone, heartData: number
     return {
       avg: count ? mps / count : 0,
       ...rest,
-    }
+    };
   });
 };
 
@@ -174,7 +174,7 @@ export const convertZonesCacheToPercents = (caches: HeartZoneCache) => {
   ];
   const total = arr.reduce((accum, num) => accum + num, 0);
 
-  return arr.map((time) => (100 * time / total).toFixed(2))
+  return arr.map((time) => (100 * time / total).toFixed(2));
 };
 
 export const convertMetersToMiles = (distance: number) => Math.round((distance * 0.000621371) * 100) / 100;
@@ -204,13 +204,13 @@ export const longestCommonSubString = <ResultType = any>(
       else if (getXVal(x[i - 1]) === getYVal(y[j - 1])) {
         cache[i][j] = cache[i - 1][j - 1] + 1;
         result = Math.max(result, cache[i][j]);
-        matchingSegments.push(i - 1)
+        matchingSegments.push(i - 1);
       } else
         cache[i][j] = 0;
     }
   }
   return matchingSegments as ResultType[];
-}
+};
 
 export const getDateString = (date: string) => dayjs(date).format('MMMM DD, YYYY');
 export const getActivityStartDate = (activity: Activity) => getDateString(activity.start_date_local);
@@ -252,5 +252,5 @@ export const getWeatherStyles = (weather: Weather) => {
 
   return {
     backgroundColor,
-  }
+  };
 };

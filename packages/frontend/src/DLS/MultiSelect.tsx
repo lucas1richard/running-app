@@ -26,7 +26,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
     const newSelectedValues = selectedValues.includes(value)
       ? selectedValues.filter(v => v !== value)
       : [...selectedValues, value];
-    
+
     onChange(newSelectedValues);
   };
 
@@ -48,15 +48,14 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
         </span>
         <span className="arrow">{isOpen ? '▲' : '▼'}</span>
       </div>
-      
+
       {isOpen && !disabled && (
         <div className="multiselect-dropdown">
           {options.map(option => (
             <button
               key={option.value}
-              className={`multiselect-option ${
-                selectedValues.includes(option.value) ? 'selected' : ''
-              }`}
+              className={`multiselect-option ${selectedValues.includes(option.value) ? 'selected' : ''
+                }`}
               onClick={() => handleToggleOption(option.value)}
             >
               <span className="text-emerald-600">{selectedValues.includes(option.value) ? '✓' : ''}</span>

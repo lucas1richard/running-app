@@ -56,11 +56,11 @@ const HeartZonesChartContainer = ({ id }) => {
     'xAxis'
   );
 
-  const getPercentile = (p: number, data: { measure: number }[]) => {
+  const getPercentile = (p: number, data: { measure: number; }[]) => {
     data = data.slice().sort((a, b) => a.measure - b.measure);
     const index = Math.floor(p * data.length);
     return data[index]?.measure || 0;
-  }
+  };
 
   return (
     <div>

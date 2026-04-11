@@ -1,16 +1,16 @@
 import {
-    FETCH_ACTIVITIES,
-    FETCH_ACTIVITIES_SUMMARY,
-    FETCH_ACTIVITY_DETAIL,
-    FETCH_ACTIVITY_STREAM_DATA,
-    FETCH_ALL_STREAMS,
-    FETCH_HEATMAP_DATA,
-    setActivitiesStreamAct,
-    setActivitiesSummaryAct,
-    setActivityDetailAct,
-    setHeatMapDataAct,
-    setStreamAct,
-    setStreamsAct,
+  FETCH_ACTIVITIES,
+  FETCH_ACTIVITIES_SUMMARY,
+  FETCH_ACTIVITY_DETAIL,
+  FETCH_ACTIVITY_STREAM_DATA,
+  FETCH_ALL_STREAMS,
+  FETCH_HEATMAP_DATA,
+  setActivitiesStreamAct,
+  setActivitiesSummaryAct,
+  setActivityDetailAct,
+  setHeatMapDataAct,
+  setStreamAct,
+  setStreamsAct,
 } from '@/reducers/activities-actions';
 import makeApiSaga from '@/sagas/apiSaga';
 import { makeEventStreamSaga } from '@/sagas/eventStreamSaga';
@@ -31,7 +31,7 @@ function* fetchActivitiesSaga({ forceFetch }) {
       } else if (type === 'CLOSE') {
         yield put(setActivitiesStreamAct(data.flat()));
       }
-  });
+    });
 
   yield call(eventStreamSaga);
 }
@@ -39,10 +39,10 @@ function* fetchActivitiesSaga({ forceFetch }) {
 function* fetchHeatMapSaga({ timeframe, referenceTime }) {
   const data = [];
   const queryParam = new URLSearchParams({
-    ...timeframe ? {timeframe} : {},
-    ...referenceTime ? {referenceTime} : {},
+    ...timeframe ? { timeframe } : {},
+    ...referenceTime ? { referenceTime } : {},
   });
-  
+
   const eventStream = makeEventStreamSaga(`/routeCoordinates/heatmap${queryParam ? '?' + queryParam : ''}`, function* ({ type, data: res }) {
     if (type === 'DATA') {
       data.push(res);
@@ -60,7 +60,7 @@ function* fetchAcivitySummarySaga() {
   yield put(setActivitiesSummaryAct(summary));
 };
 
-function* fetchActivityDetailSaga ({ payload }) {
+function* fetchActivityDetailSaga({ payload }) {
   const res = yield call(requestor.get, `/activities/${payload}/detail`);
   const detail = yield res.json();
   yield put(setActivityDetailAct(detail));

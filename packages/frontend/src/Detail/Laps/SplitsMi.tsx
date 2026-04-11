@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 
 const SplitsMi = ({ id }) => {
   const details = useSelector((state) => selectActivityDetails(state, id));
-  
+
   return (
     <div className="mt-4 card">
       <Surface className="overflow-x-auto">
@@ -39,7 +39,8 @@ const SplitsMi = ({ id }) => {
                   <td className="text-center">{Math.round(split.average_heartrate)} <abbr>bpm</abbr></td>
                   <td>{convertMetersToFt(split.elevation_difference)} <small>ft</small></td>
                 </tr>
-              )}
+              );
+            }
             )}
           </tbody>
         </table>

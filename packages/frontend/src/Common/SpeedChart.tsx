@@ -34,13 +34,13 @@ const yAxisDefaultConfig = {
 
 type SpeedChartProps = {
   activities: Activity[];
-}
+};
 
 const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) => {
   const viewSize = useViewSize();
 
   const activities = useMemo(() => {
-    const s = [...activitiesProp]
+    const s = [...activitiesProp];
     s.sort(((a, b) => new Date(a.start_date_local).getTime() - new Date(b.start_date_local).getTime()));
     return s;
   }, [activitiesProp]);
@@ -51,7 +51,7 @@ const SpeedChart: React.FC<SpeedChartProps> = ({ activities: activitiesProp }) =
   const gridColor = isDarkMode ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.4)';
 
   const options = useMemo<Highcharts.Options>(() =>
-    ({
+  ({
     chart: {
       type: 'line',
       height: 450,

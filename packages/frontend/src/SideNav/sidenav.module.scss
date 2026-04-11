@@ -18,6 +18,7 @@
     display: block;
 
     @include hover-effect;
+
     &.router-link-exact-active {
       @include hovered();
     }

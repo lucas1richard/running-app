@@ -2,9 +2,9 @@ import { useAppSelector } from '@/hooks/redux';
 import useDispatchAsyncAction from '@/hooks/useDispatchAsyncAction';
 import { type PreferencesKeyPath, selectPreferenceFree } from '@/reducers/preferences';
 import {
-    setPrefsFreeAct,
-    triggerSetActivityPrefs,
-    triggerSetUserPrefs,
+  setPrefsFreeAct,
+  triggerSetActivityPrefs,
+  triggerSetUserPrefs,
 } from '@/reducers/preferences-actions';
 import fastDeepEqual from 'fast-deep-equal';
 import { useCallback } from 'react';
@@ -23,7 +23,7 @@ const usePreferenceControl = <T = any>(
     [dispatch, keyPath]
   );
 
-  const savePreferences = useCallback(({ activityId }: any & { activityId: number } = {}) => {
+  const savePreferences = useCallback(({ activityId }: any & { activityId: number; } = {}) => {
     if (activityId) {
       return dispatchAsync(triggerSetActivityPrefs(activityId));
     };

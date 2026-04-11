@@ -21,9 +21,9 @@ import { enableMapSet } from 'immer';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import {
-    createBrowserRouter,
-    Outlet,
-    RouterProvider,
+  createBrowserRouter,
+  Outlet,
+  RouterProvider,
 } from 'react-router-dom';
 import createSagaMiddleware from 'redux-saga';
 import styled, { ThemeProvider } from 'styled-components';
@@ -57,7 +57,7 @@ const AppLayout = () => (
 const sagaMiddleware = createSagaMiddleware()
 // mount it on the Store
 const store = configureStore({
-  reducer, 
+  reducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(sagaMiddleware),
 })
 

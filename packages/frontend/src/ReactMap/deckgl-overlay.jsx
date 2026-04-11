@@ -22,7 +22,7 @@ export const DeckGlOverlay = ({ layers }) => {
 
   // whenever the rendered data changes, the layers will be updated
   useEffect(() => {
-    deck.setProps({layers});
+    deck.setProps({ layers });
   }, [deck, layers]);
 
   // no dom rendered by this component

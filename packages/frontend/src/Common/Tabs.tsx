@@ -63,7 +63,7 @@ export const TabHeader: React.FC<TabHeaderProps> = ({ children, onTabClick, acti
     {React.Children.toArray(children).map((child: React.ReactElement, ix) => {
       return (
         React.cloneElement(child, { onClick: () => onTabClick(ix), isActive: activeTab === ix })
-      )
+      );
     })}
   </Flex>
 );
@@ -80,7 +80,7 @@ const Tabs: React.FC<TabsProps> = ({ children }) => {
       {React.cloneElement(children[1], { dynamicId: `${id}-panel-container`, activeTab: active })}
     </div>
   );
-}
+};
 
 // Usage
 

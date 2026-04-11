@@ -21,7 +21,7 @@ const prsMap = {
   10: 'bg-emerald-900 hover:bg-emerald-800 text-white raised-1',
 };
 
-const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEffort[]; monthStartDate: dayjs.Dayjs }) => {
+const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEffort[]; monthStartDate: dayjs.Dayjs; }) => {
   const navigate = useNavigate();
   const currentMonth = dayjs(monthStartDate);
   const dateActivities = recordsProp.reduce((acc, pr) => {
@@ -33,15 +33,15 @@ const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEff
 
   const daysInMonth = currentMonth.daysInMonth();
   const firstDayOfMonth = currentMonth.startOf('month').weekday();
-  
+
   const daysUI = useMemo(() => {
     const days = [];
     const daysArray = [...Array(daysInMonth)].map((_, i) => i + 1);
-    
+
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(<div key={`empty-${i}`}></div>);
     }
-    
+
     daysArray.forEach((day) => {
       const currentDate = currentMonth.date(day);
       const formattedDate = currentDate.format('YYYY-MM-DD');
@@ -51,13 +51,13 @@ const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEff
       const colorBg = hasActivities
         ? (prsMap[bestPR])
         : 'bg-foreground sunken-1';
-      
+
       const onClick = () => {
-        if (hasActivities) {  
+        if (hasActivities) {
           navigate(`/${dateActivities[formattedDate][0].activityId}/detail`);
         }
       };
-        
+
       days.push(
         <div className={`bg-foreground sunken-1`} key={`day-${day}`}>
           {!!bestPR && (
@@ -72,7 +72,7 @@ const CalendarUI = ({ records: recordsProp, monthStartDate }: { records: BestEff
         </div>
       );
     });
-    
+
     return days;
   }, [daysInMonth, firstDayOfMonth, currentMonth, dateActivities]);
 

@@ -15,9 +15,9 @@ import useViewSize from '@/hooks/useViewSize';
 import { selectStreamTypeData } from '@/reducers/activities';
 import { deleteStreamPin, setStreamPin } from '@/reducers/activities-actions';
 import {
-    condenseZonesFromHeartRate,
-    convertMetricSpeedToMPH,
-    getDurationString,
+  condenseZonesFromHeartRate,
+  convertMetricSpeedToMPH,
+  getDurationString,
 } from '@/utils';
 import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
 import roundToNearest from '@/utils/roundToNearest';
@@ -43,7 +43,7 @@ const prColorsArr = [
   { value: 8, color: 'var(--color-emerald-800)', borderColor: 'var(--color-emerald-900)', textColor: 'var(--color-emerald-900)' },
   { value: 9, color: 'var(--color-emerald-900)', borderColor: 'var(--color-emerald-100)', textColor: 'var(--color-emerald-900)' },
   { color: 'white', borderColor: 'black' },
-]
+];
 
 const chartHeight = 900;
 
@@ -51,17 +51,17 @@ type Props = {
   id: number;
   averageSpeed: number;
   altitude: number[];
-  bestEfforts: { start_index: number; elapsed_time: number; pr_rank: number; name: string }[];
+  bestEfforts: { start_index: number; elapsed_time: number; pr_rank: number; name: string; }[];
   data: number[];
   velocity: number[];
   grade: number[];
   time: number[];
   zones: HeartZone;
-  laps: { average_speed: number; elapsed_time: number }[];
-  splitsMi: { average_speed: number; elapsed_time: number }[];
+  laps: { average_speed: number; elapsed_time: number; }[];
+  splitsMi: { average_speed: number; elapsed_time: number; }[];
   zonesBandsDirection: 'xAxis' | 'yAxis' | 'none';
   streamPins: StreamPin[];
-}
+};
 
 const HeartZonesChartDisplay: React.FC<Props> = ({
   id,
@@ -83,7 +83,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   const [latlngPointer, setLatlngPointer] = useState(0);
   const [highlightedSegment, setHighlightedSegment] = useState(undefined);
 
-  const addPin = useCallback(function(streamKey) {
+  const addPin = useCallback(function (streamKey) {
     dispatch(setStreamPin(id, streamKey, this.index, '', '', latlngStream[this.index]));
   }, [id, dispatch, latlngStream]);
 
@@ -97,7 +97,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     return timeArr;
   }, [time]);
 
-  const yAxisBands = useMemo(() => [1,2,3,4,5].map((z, ix) => ({
+  const yAxisBands = useMemo(() => [1, 2, 3, 4, 5].map((z, ix) => ({
     from: zones[`z${z}`],
     to: (zones[`z${z + 1}`] - 1) || 220,
     color: hrZonesBg[z],
@@ -148,13 +148,13 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     })),
     [bestEfforts, fullTime]
   );
-  
+
   const hrzones = useMemo(
     () => condenseZonesFromHeartRate(zones, smoothHeartRate),
     [zones, smoothHeartRate]
   );
 
-  const chartRef = useRef<{ chart: Highcharts.Chart; container: React.RefObject<HTMLDivElement> }>();
+  const chartRef = useRef<{ chart: Highcharts.Chart; container: React.RefObject<HTMLDivElement>; }>();
 
   const xAxisBands = useMemo(() => hrzones.map((band, ix) => ({
     color: hrZonesBg[band.zone],
@@ -204,7 +204,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     }
     // setPins(streamPins);
   }, [streamPins]);
-  
+
   const [hrMin, hrMax] = useMinMax(heartRateData);
   const [velMin, velMax] = useMinMax(velocityData);
   const [altMin, altMax] = useMinMax(altitudeData);
@@ -230,9 +230,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   const isDarkMode = useDarkReaderMode();
   const contractLabelColor = isDarkMode ? 'white' : 'black';
 
-  const options = useMemo(() => 
-    /** @type {Highcharts.Options} */
-    ({
+  const options = useMemo(() =>
+  /** @type {Highcharts.Options} */
+  ({
     chart: {
       type: 'spline',
       height: chartHeight,
@@ -322,7 +322,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
           stops: getGradeColorAbs(grade, 0, 0, { lowestValueRgb: [0, 132, 255], midValueRgb: [0, 0, 0], highestValueRgb: [255, 0, 0] }),
         },
         tooltip: {
-          pointFormatter: function() {
+          pointFormatter: function () {
             const point = this;
             const series = this.series;
             return `
@@ -560,7 +560,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
                   about='Magnification factor for the chart'
                 />
                 <Flex $justify="space-between">
-                  {[1,2,3,4,5,6,7,8,9,10].map((val) => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => (
                     <Button key={val} onClick={() => setMagnificationFactor(initialMagnificationFactor * val)}>
                       {val}x
                     </Button>
@@ -571,7 +571,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
             {!enableYAxisLabels && (
               <div>
                 <select onChange={(ev) => setMagnificationFactor(initialMagnificationFactor * Number(ev.target.value))}>
-                  {[1,2,3,4,5,6,7,8,9,10].map((val) => (
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((val) => (
                     <option key={val} value={val}>
                       {val}x
                     </option>
@@ -601,12 +601,12 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         <MapLibreHRZones
           id={id}
           pointer={latlngPointer}
-          // segments={segments.data}
-          // velocity={smoothVelocity}
-          // pins={streamPins}
-          // highlightedSegment={highlightedSegment}
-          // smoothAverageWindow={smoothAverageWindow}
-          // averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
+        // segments={segments.data}
+        // velocity={smoothVelocity}
+        // pins={streamPins}
+        // highlightedSegment={highlightedSegment}
+        // smoothAverageWindow={smoothAverageWindow}
+        // averageSpeed={convertMetricSpeedToMPH(averageSpeed)}
         />
       </Basic.Div>
     </Grid>

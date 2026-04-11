@@ -1,8 +1,8 @@
 import {
-    REDUCER_SET_ACTIVITY_PREFS,
-    REDUCER_SET_LIST_PREFS,
-    SET_GLOBAL_PREFS,
-    SET_PREFS_FREE,
+  REDUCER_SET_ACTIVITY_PREFS,
+  REDUCER_SET_LIST_PREFS,
+  SET_GLOBAL_PREFS,
+  SET_PREFS_FREE,
 } from '@/reducers/preferences-actions';
 import { createDeepEqualSelector } from '@/utils';
 import { makeGet2ndArg } from '@/utils/selectorUtils';
@@ -74,7 +74,7 @@ const preferencesReducer = (state = initialState, action) => {
         draft.activities[activityId] = deepmerge(state.activities.default, preferences);
       });
 
-    case SET_GLOBAL_PREFS: 
+    case SET_GLOBAL_PREFS:
       return produce(state, (draft) => {
         draft.global.defined = Object.fromEntries(
           Object.entries({ ...state.global.defined, ...action.payload })
@@ -82,20 +82,20 @@ const preferencesReducer = (state = initialState, action) => {
         );
       });
 
-  case SET_PREFS_FREE: {
-    const { keyPath, value } = action.payload;
-    return produce(state, (draft) => {
-      let pointer = draft;
-      keyPath.forEach((key, index) => {
-        if (index === keyPath.length - 1) {
-          pointer[key] = value;
-        } else {
-          if (pointer[key] === undefined) pointer[key] = {};
-          pointer = pointer[key];
-        }
+    case SET_PREFS_FREE: {
+      const { keyPath, value } = action.payload;
+      return produce(state, (draft) => {
+        let pointer = draft;
+        keyPath.forEach((key, index) => {
+          if (index === keyPath.length - 1) {
+            pointer[key] = value;
+          } else {
+            if (pointer[key] === undefined) pointer[key] = {};
+            pointer = pointer[key];
+          }
+        });
       });
-    });
-  }
+    }
 
     default:
       return state;
@@ -160,7 +160,7 @@ export const getPreferenceFree = (preferencesState: PreferencesState, keyPath: P
   const lastObj = copyPath.reduce((acc, key) => acc[key] || {}, combined);
   if (lastKey) return lastObj[lastKey];
   return lastObj;
-}
+};
 
 export const selectPreferenceFree = createDeepEqualSelector([
   getPreferencesState,

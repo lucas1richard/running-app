@@ -21,40 +21,40 @@ export const rankMap = {
   8: '8th',
   9: '9th',
   10: '10th',
-}
+};
 
 /**
  * PR refers to "Personal Record"
  */
-const PRMedal: React.FC<PRMedalProps> = ({ className = '', color = 'black', type, rank }) => 
+const PRMedal: React.FC<PRMedalProps> = ({ className = '', color = 'black', type, rank }) =>
   type === 'native' && !!rankMap[color]
-  ? <span className={className}>{rankMap[color]}</span>
-  : (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    width={24}
-    fill={prColors[color]?.fill || 'transparent'}
-    stroke={prColors[color]?.stroke || color || 'black'}
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={`${className}`}
-  >
-    <circle cx="12" cy="8" r="7" />
-    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"     />
-    <text
-      x="12"
-      y="9"
-      textAnchor="middle"
-      dominantBaseline="middle"
-      stroke={prColors[color]?.stroke || color || 'black'}
-      fontSize="11"
-      fontWeight={100}
-    >
-      {rank || ''}
-    </text>
-  </svg>
-);
+    ? <span className={className}>{rankMap[color]}</span>
+    : (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        width={24}
+        fill={prColors[color]?.fill || 'transparent'}
+        stroke={prColors[color]?.stroke || color || 'black'}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={`${className}`}
+      >
+        <circle cx="12" cy="8" r="7" />
+        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
+        <text
+          x="12"
+          y="9"
+          textAnchor="middle"
+          dominantBaseline="middle"
+          stroke={prColors[color]?.stroke || color || 'black'}
+          fontSize="11"
+          fontWeight={100}
+        >
+          {rank || ''}
+        </text>
+      </svg>
+    );
 
 export default PRMedal;

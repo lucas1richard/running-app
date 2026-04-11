@@ -32,17 +32,17 @@ const ReactMap = ({ id }) => {
     type: 'FeatureCollection',
     features: hrzones.map(({ from, to, zone }, ix) => {
       return {
-          type: 'Feature',
-          properties: {
-            name: 'Heart Rate Zones' + from,
-            color: '#00aeef',
-            zone,
-          },
-          geometry: {
-            type: 'LineString',
-            coordinates: lnglatStream.slice(ix > 1 ? from - 1 : from, to)
-          }
+        type: 'Feature',
+        properties: {
+          name: 'Heart Rate Zones' + from,
+          color: '#00aeef',
+          zone,
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: lnglatStream.slice(ix > 1 ? from - 1 : from, to)
         }
+      }
     })
   };
 
@@ -53,7 +53,7 @@ const ReactMap = ({ id }) => {
         defaultZoom={14}
         mapId={'16b97c7bec9e1cd3'}
         gestureHandling={'greedy'}
-        // disableDefaultUI={true}
+      // disableDefaultUI={true}
       >
         <DeckGlOverlay
           layers={getDeckGlLayers(data)}

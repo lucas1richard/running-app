@@ -1,11 +1,11 @@
 import { Button } from '@/DLS';
 import { addHeartZonesAct } from '@/reducers/heartzones-actions';
 import {
-    type ChangeEventHandler,
-    type FC,
-    type FormEventHandler,
-    useCallback,
-    useState
+  type ChangeEventHandler,
+  type FC,
+  type FormEventHandler,
+  useCallback,
+  useState
 } from 'react';
 import { useDispatch } from 'react-redux';
 

@@ -34,12 +34,12 @@ export type ActivitiesState = {
   activitiesOrder: number[];
   details: Record<number, ActivityDetails>;
   summary: any;
-  streams: Record<number, { stream: (Stream | LatLngStream)[] }>;
+  streams: Record<number, { stream: (Stream | LatLngStream)[]; }>;
   similarWorkouts: Record<number, number[]>;
   similarWorkoutsMeta: Record<number, TODO>;
   loading: boolean;
   error: any;
-  heatMap: Record<string, Array<HeatMapData>>
+  heatMap: Record<string, Array<HeatMapData>>;
 };
 
 const activitiesInitialState: ActivitiesState = {
@@ -212,26 +212,26 @@ export const selectActivities = createDeepEqualSelector(
   }
 );
 
-const getListActivities = (activities, { sortBy, sortOrder}, displayTypePrefs, fromIx: number, toIx: number) => {
+const getListActivities = (activities, { sortBy, sortOrder }, displayTypePrefs, fromIx: number, toIx: number) => {
   const order = [...activities.activitiesOrder].slice(fromIx, toIx);
 
-    order.sort((a, b) => {
-      const first = sortOrder === 'asc' ? a : b;
-      const second = sortOrder === 'asc' ? b : a;
+  order.sort((a, b) => {
+    const first = sortOrder === 'asc' ? a : b;
+    const second = sortOrder === 'asc' ? b : a;
 
-      if (sortBy === 'start_date') {
-        const sStart = new Date(activities.activities[first].start_date_local).getTime();
-        const sEnd = new Date(activities.activities[second].start_date_local).getTime();
-        return sStart - sEnd;
-      }
+    if (sortBy === 'start_date') {
+      const sStart = new Date(activities.activities[first].start_date_local).getTime();
+      const sEnd = new Date(activities.activities[second].start_date_local).getTime();
+      return sStart - sEnd;
+    }
 
-      return (activities.activities[first][sortBy]) - (activities.activities[second][sortBy]);
-    });
+    return (activities.activities[first][sortBy]) - (activities.activities[second][sortBy]);
+  });
 
-    return order
-      .map((id) => getActivity(activities, id))
-      // .map((id) => activities.activities[id])
-      .filter(({ sport_type }) => displayTypePrefs?.[sport_type]);
+  return order
+    .map((id) => getActivity(activities, id))
+    // .map((id) => activities.activities[id])
+    .filter(({ sport_type }) => displayTypePrefs?.[sport_type]);
 };
 export const selectListActivities = createDeepEqualSelector([
   getActivitiesState,
@@ -265,7 +265,7 @@ export const selectActivityDetails = createDeepEqualSelector([
 ], getActivityDetails);
 
 const getActivityDetailsMulti = (activities: ActivitiesState, ids: number[]) => {
-  return ids?.map((id) => activities.details[id])
+  return ids?.map((id) => activities.details[id]);
 };
 export const selectActivityDetailsMulti = createDeepEqualSelector([
   getActivitiesState,
@@ -293,7 +293,7 @@ export const selectStreamTypeData = createDeepEqualSelector(getStreamTypeData, (
 const getStreamTypeMulti = (state: RootState, ids: number[], findType: string) => {
   const activities = getActivitiesState(state);
   return ids?.map((id) => activities?.streams?.[id]?.stream?.find?.(({ type }) => type === findType)?.data);
-}
+};
 export const selectStreamTypeMulti = createDeepEqualSelector(getStreamTypeMulti, (res) => res) as SelectStreamTypeData<true>;
 
 const getSimilarWorkouts = (activitiesState: ActivitiesState, id: number) => {
@@ -313,7 +313,7 @@ export const selectSimilarWorkoutsMeta = createDeepEqualSelector([
   makeGet2ndArg<number>(),
 ], getSimilarWorkoutsMeta);
 
-const getZoneGroupedRuns = (activities: any[], {isGroupByZonesSet}, allzones, fromIx = undefined, toIx = undefined) => {
+const getZoneGroupedRuns = (activities: any[], { isGroupByZonesSet }, allzones, _fromIx = undefined, _toIx = undefined) => {
   if (!isGroupByZonesSet) {
     return [{ runs: activities, zones: {}, start: '' }];
   }
@@ -332,7 +332,7 @@ const getZoneGroupedRuns = (activities: any[], {isGroupByZonesSet}, allzones, fr
   vals.sort((a, b) => new Date(b.start).getTime() - new Date(a.start).getTime());
 
   return vals;
-}
+};
 export const selectZoneGroupedRuns = createDeepEqualSelector([
   selectListActivities,
   selectListPrerences,
@@ -343,7 +343,7 @@ export const selectZoneGroupedRuns = createDeepEqualSelector([
 const getTimeGroup = (_: RootState, timeGroup: ManipulateType = 'week') => timeGroup;
 const getTimeGroupedRuns = (preferenceZoneId, allheartzones, activities: Activity[], timeGroup: ManipulateType) => {
   const nextCycleStart = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
-  const boxes: { start: Dayjs, sum: number, runs: Activity[], zones: HeartZoneCache }[] = [];
+  const boxes: { start: Dayjs, sum: number, runs: Activity[], zones: HeartZoneCache; }[] = [];
   let curr = nextCycleStart;
   let next = curr.subtract(1, timeGroup);
   let runs = [];
@@ -383,7 +383,7 @@ const getTimeGroupedRuns = (preferenceZoneId, allheartzones, activities: Activit
     Object.entries(run.zonesCaches[heartRateZones.id] || {}).forEach(([key, value]) => {
       if (!zones[key]) zones[key] = 0;
       zones[key] += value;
-    })
+    });
   }
 
   return boxes;
@@ -400,7 +400,7 @@ const getActivitiesByTimeGroup = (preferenceZoneId, allheartzones, activities: A
   if (!activities?.length) return [];
   const oldestToNewestActs = [...activities].reverse();
   const currCycleStart = dayjs(oldestToNewestActs[1].start_date_local).startOf(timeGroup).startOf('day');
-  const boxes: { start: Dayjs, sum: number, runs: Activity[], zones: HeartZoneCache }[] = [];
+  const boxes: { start: Dayjs, sum: number, runs: Activity[], zones: HeartZoneCache; }[] = [];
   let curr = currCycleStart;
   let next = curr.add(1, timeGroup);
   let runs = [];
@@ -465,7 +465,7 @@ export const selectActivitiesByDate = createDeepEqualSelector(
       acc[date].push(activity);
       return acc;
     }
-    , {});
+      , {});
   });
 
 export const selectActivitiesByMonth = createDeepEqualSelector(
@@ -476,7 +476,7 @@ export const selectActivitiesByMonth = createDeepEqualSelector(
     const firstDayOfMonth = month.startOf('month');
     const lastDayOfMonth = month.endOf('month');
     return activities.reduce((acc, pr) => {
-      const prdate = dayjs(pr.start_date_local)
+      const prdate = dayjs(pr.start_date_local);
       if (prdate.isAfter(firstDayOfMonth) && prdate.isBefore(lastDayOfMonth)) {
         const dateKey = prdate.format('YYYY-MM-DD');
         acc[dateKey] = acc[dateKey] || [];

@@ -19,8 +19,7 @@ export interface StandardProps extends FontProps
   , SizeProp<'$padT', number | CSS.Property.Padding>
   , SizeProp<'$padL', number | CSS.Property.Padding>
   , SizeProp<'$padR', number | CSS.Property.Padding>
-  , SizeProp<'$padB', number | CSS.Property.Padding>
-  {
+  , SizeProp<'$padB', number | CSS.Property.Padding> {
   $gridArea?: CSS.Property.GridArea;
   $gap?: number | CSS.Property.Gap;
   $wrap?: CSS.Property.FlexWrap;
@@ -40,7 +39,7 @@ export interface StandardProps extends FontProps
   $maxHeight?: number | CSS.Property.MaxHeight;
   // don't include CSS.Property.Color because name clashes with color prop. Also we want to allow
   // theme colors only
-  $color?: keyof Theme['$color']
+  $color?: keyof Theme['$color'];
   $colorBg?: keyof Theme['$colorBg'];
   $overflowX?: CSS.Property.OverflowX;
   $overflowY?: CSS.Property.OverflowY;

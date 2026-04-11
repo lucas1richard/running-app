@@ -23,7 +23,7 @@ type Props = {
   segments: Array<[start: number, mphSpeed: number, end: number]>;
   velocity: number[];
   smoothAverageWindow: number;
-  highlightedSegment?: { start: number; end: number; color: string };
+  highlightedSegment?: { start: number; end: number; color: string; };
   width?: number | string;
   height?: number;
   series?: Highcharts.SeriesOptionsType[];
@@ -120,33 +120,33 @@ const RouteMap: React.FC<Props> = ({
         borderColor: 'blue',
       }],
       animation: false,
-      lineWidth: isSmall ? 8: 12,
+      lineWidth: isSmall ? 8 : 12,
       showInLegend: false,
       enableMouseTracking: false,
     };
   }, [coordsPure, highlightedSegment.color, highlightedSegment.end, highlightedSegment.start, isSmall]);
 
   const memoPins = useMemo(() => ({
-      type: 'mappoint',
-      name: 'pins',
-      id: 'pins',
-      key: 'pins',
-      data: pins.map((pin) => ({
-        ...coordsPure[pin.index],
-        id: pin.index,
-        key: pin.index,
-        marker: {
-          symbol: 'diamond',
-          radius: 12,
-          lineColor: 'black',
-          lineWidth: 1,
-        },
-        color: 'magenta',
-      })),
-      showInLegend: false,
-      animation: false,
-    }), [pins, coordsPure]);
-  
+    type: 'mappoint',
+    name: 'pins',
+    id: 'pins',
+    key: 'pins',
+    data: pins.map((pin) => ({
+      ...coordsPure[pin.index],
+      id: pin.index,
+      key: pin.index,
+      marker: {
+        symbol: 'diamond',
+        radius: 12,
+        lineColor: 'black',
+        lineWidth: 1,
+      },
+      color: 'magenta',
+    })),
+    showInLegend: false,
+    animation: false,
+  }), [pins, coordsPure]);
+
   const memoPointer = useMemo(() => ({
     type: 'mappoint',
     id: 'Location',
@@ -178,9 +178,9 @@ const RouteMap: React.FC<Props> = ({
     };
   }, [animate, animating, coordsPure.length]);
 
-  const options = useMemo(() => 
-    /** @type {Highcharts.Options} */
-    ({
+  const options = useMemo(() =>
+  /** @type {Highcharts.Options} */
+  ({
     chart: {
       map: 'custom/world',
       height,

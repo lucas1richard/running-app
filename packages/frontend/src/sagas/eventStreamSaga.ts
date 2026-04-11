@@ -12,7 +12,7 @@ function sseStream(path: string) {
     };
     eventSource.onopen = () => {
       console.log(`EventSource (${path}) connection opened`);
-    }
+    };
     eventSource.addEventListener('close', (event) => {
       console.log(`EventSource (${path}) connection closed by server`);
       emit(END);
@@ -21,7 +21,7 @@ function sseStream(path: string) {
     // Different approach to error handling
     eventSource.onerror = (error) => {
       console.warn(`EventSource (${path}) error:`, error);
-      
+
       // Check the readyState to determine if connection is closed
       if (eventSource.readyState === EventSource.CLOSED) {
         console.error(`EventSource (${path}) connection closed permanently`);
@@ -35,7 +35,7 @@ function sseStream(path: string) {
     return () => {
       eventSource.close();
     };
-  })
+  });
 }
 
 type CB = (...args: any[]) => any;
@@ -56,14 +56,14 @@ export const makeEventStreamSaga = (path: string, cb: CB) => function* eventStre
     }
     yield call(cb, { type: 'CLOSE' }); // Optionally notify the callback of closure
   }
-}
+};
 
 export function* eventStreamSaga({ path, onData }) {
   const eventStreamSaga = makeEventStreamSaga(path, function* ({ type, data }) {
-      if (type === 'DATA' && onData) {
-        yield put({ type: onData, payload: data });
-      }
+    if (type === 'DATA' && onData) {
+      yield put({ type: onData, payload: data });
     }
+  }
   );
 
   yield call(eventStreamSaga);

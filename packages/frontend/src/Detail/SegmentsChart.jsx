@@ -27,8 +27,8 @@ const getPlotbandConfig = ({ ix, text, to, from } = {}) => ({
 });
 
 const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
-  const options = useMemo(() => 
-    /** @type {Highcharts.Options} */
+  const options = useMemo(() =>
+  /** @type {Highcharts.Options} */
   ({
     chart: {
       type: 'line',
@@ -61,11 +61,11 @@ const SegmentsChart = ({ title, data, velocity, zones, width, segments }) => {
     ].filter(Boolean),
     xAxis: {
       plotBands: segments.map((band, ix) => getPlotbandConfig({
-          ix,
-          from: band.start_index,
-          to: band.end_index,
-          text: band.name
-        }),
+        ix,
+        from: band.start_index,
+        to: band.end_index,
+        text: band.name
+      }),
       ),
       gridLineWidth: 0,
       alignTicks: false,

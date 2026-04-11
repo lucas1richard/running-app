@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux';
 
 type UpdatableNameDescriptionProps = {
   activity: Activity;
-  details: { description: string };
+  details: { description: string; };
 };
 
 const UpdatableNameDescription: React.FC<UpdatableNameDescriptionProps> = ({

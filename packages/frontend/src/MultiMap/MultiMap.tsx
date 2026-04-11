@@ -132,14 +132,14 @@ const MultiMap = ({
 
   const hoverProgress = useMemo(() => (
     <div className="flex flex-wrap height-4rem full-width border dls-white-bg">
-    {new Array(longestStream).fill(0).map((_, ix) => (
-      <div
-        key={ix}
-        className="flex-item-grow flex-item-shrink"
-        onMouseOver={() => setProgress(ix)}
-      />
-    ))}
-  </div>), [longestStream]);
+      {new Array(longestStream).fill(0).map((_, ix) => (
+        <div
+          key={ix}
+          className="flex-item-grow flex-item-shrink"
+          onMouseOver={() => setProgress(ix)}
+        />
+      ))}
+    </div>), [longestStream]);
 
   const options = useMemo(() =>
   /** @type {Highcharts.Options} */

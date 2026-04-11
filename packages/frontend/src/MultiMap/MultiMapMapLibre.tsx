@@ -80,22 +80,22 @@ function MultiMapMapLibre({
     const minLat = coords.reduce((min, [lat]) => Math.min(min, lat), Infinity);
 
     return { maxLng, minLng, maxLat, minLat };
-  }, [coordsPure])
+  }, [coordsPure]);
 
   const data = useMemo(() => ({
     type: 'FeatureCollection',
     features: coordsPure.map((lnglatStream, ix) => ({
-        type: 'Feature',
-        properties: {
-          color: [255,255,255]
-        },
-        geometry: {
-          type: 'LineString',
-          coordinates: lnglatStream.map(([lat, lng]) => [lng, lat]),
-        }
+      type: 'Feature',
+      properties: {
+        color: [255, 255, 255]
+      },
+      geometry: {
+        type: 'LineString',
+        coordinates: lnglatStream.map(([lat, lng]) => [lng, lat]),
+      }
     }))
   }), [coordsPure]);
-  
+
   const mapRef = useRef(null);
   if (coordsPure.length === 0) return null;
 
@@ -125,10 +125,10 @@ function MultiMapMapLibre({
                   latitude={lnglatStream[pointer][0]}
                   longitude={lnglatStream[pointer][1]}
                 >
-                  <Basic.Div $width={1} $height={1} style={{ background: indicatorColors[ix].fill}} $borderRadius="50%" />
+                  <Basic.Div $width={1} $height={1} style={{ background: indicatorColors[ix].fill }} $borderRadius="50%" />
                 </Marker>
               </Fragment>
-            )
+            );
           })
         }
         {/* @ts-expect-error -- deck.gl */}

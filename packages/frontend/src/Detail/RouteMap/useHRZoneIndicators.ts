@@ -42,7 +42,7 @@ const useHRZoneIndicators = (ids: number[], pointer: number, smoothAverageWindow
   const indicatorColors = useMemo(() => {
     return ids.map((id, ix) => {
       const hrzones = hrzonesArray[ix];
-      if (!hrzones) return { fill: 'black', stroke: 'black'};
+      if (!hrzones) return { fill: 'black', stroke: 'black' };
       const { zone } = hrzones.find(
         ({ from }, ix) => from <= pointer && hrzones[ix + 1]?.from > pointer
       ) || hrzones[hrzones.length - 1];

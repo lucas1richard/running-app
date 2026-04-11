@@ -107,6 +107,6 @@ const ListSort: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default ListSort;

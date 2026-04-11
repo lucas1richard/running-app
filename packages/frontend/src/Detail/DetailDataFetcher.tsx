@@ -14,7 +14,7 @@ export const streamTypes: SimpleStreamTypes[] = [
 
 type Props = {
   id: number;
-}
+};
 
 const DetailDataFetcher: FC<Props> = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));

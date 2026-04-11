@@ -1,12 +1,12 @@
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '@/utils';
 import React, { memo, useMemo } from 'react';
 
-export const ZonesWidthPercents: React.FC<{ id: string | number, percents: string[], height?: string }> = memo(({ id, percents = [], height = '1rem' }) => {
-  const widthStyles = percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({
-      width: `${percent}%`,
-      height: '100%',
-      overflow: 'hidden',
-    }));
+export const ZonesWidthPercents: React.FC<{ id: string | number, percents: string[], height?: string; }> = memo(({ id, percents = [], height = '1rem' }) => {
+  const widthStyles = percents.filter((n) => Boolean(Number(n))).map((percent) => ({
+    width: `${percent}%`,
+    height: '100%',
+    overflow: 'hidden',
+  }));
 
   return (
     <div className="flex bg-neutral-200" style={{ height }}>
@@ -20,7 +20,7 @@ export const ZonesWidthPercents: React.FC<{ id: string | number, percents: strin
       ))}
     </div>
   );
-})
+});
 
 type ZonesWidthProps = {
   zones: HeartZone;
@@ -32,10 +32,10 @@ type ZonesWidthProps = {
   width?: CSSStyleDeclaration['width'];
 };
 
-const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCaches, variant = 'linear', height, width }) => {
+const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, zonesCaches, variant = 'linear', height, width }) => {
   const percents = useMemo(() => {
     if (zonesCaches?.[zones.id]) return convertZonesCacheToPercents(zonesCaches[zones.id]);
-    return convertHeartDataToZonePercents(heartData, zones)
+    return convertHeartDataToZonePercents(heartData, zones);
   }, [heartData, zones, zonesCaches]);
 
   if (!zones && !heartData) return null;
@@ -63,7 +63,7 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
     numPercents[0] + numPercents[1] + numPercents[2] + numPercents[3],
     numPercents[0] + numPercents[1] + numPercents[2] + numPercents[3] + numPercents[4],
   ];
-  
+
   const cssGradient = (colors: string[]) => [
     `${colors[0]} ${stops[0]}%`,
     `${colors[1]} ${stops[0]}%`,
@@ -74,7 +74,7 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
     `${colors[3]} ${stops[3]}%`,
     `${colors[4]} ${stops[3]}%`,
     `${colors[4]} 100%`
-  ]
+  ];
 
   return (
     <div style={{ height: height || '1rem' }}>
@@ -82,20 +82,20 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
         <div
           className="elevation-1"
           style={{
-            background: `linear-gradient(to right, ${cssGradient(bgColors).join(', ')})`, 
-            border: `2px solid transparent`, 
-            borderImage: `linear-gradient(to right, ${cssGradient(borderColors).join(', ')})`, 
-          borderImageSlice: 1,
-          height: height || '1rem'
-        }}
-      ></div>
+            background: `linear-gradient(to right, ${cssGradient(bgColors).join(', ')})`,
+            border: `2px solid transparent`,
+            borderImage: `linear-gradient(to right, ${cssGradient(borderColors).join(', ')})`,
+            borderImageSlice: 1,
+            height: height || '1rem'
+          }}
+        ></div>
       )}
       {variant === 'circular' && (
         <div
           className="border-neutral-900 border-1 elevation-4"
           style={{
             background: `conic-gradient(${cssGradient(bgColors).join(', ')})`,
-            height: height  || '10rem',
+            height: height || '10rem',
             width: width || '10rem',
             borderRadius: '50%'
           }}

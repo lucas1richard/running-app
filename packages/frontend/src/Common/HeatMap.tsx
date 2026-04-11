@@ -34,7 +34,7 @@ const makeColor = (minColor: RGBATuple, maxColor: RGBATuple, percent: number) =>
     ${Math.round(minColor[2] + (maxColor[2] - minColor[2]) * percent)},
     ${Math.max(minColor[3], Math.min(maxColor[3], percent))}
   )`;
-}
+};
 
 const MINIMUM_SQUARE_SIZE = 0.0001;
 const MAXIMUM_SQUARE_SIZE = 0.0004;
@@ -90,7 +90,7 @@ const HeatMap: React.FC<HeatMapProps> = ({
         },
         // color: `rgba(${255}, ${255 * (1 - percent)}, 0, ${Math.max(percent, minimumOpacity)})`,
         color: makeColor(minColor, maxColor, Math.max(percent, minimumOpacity)),
-      })
+      });
     }),
     showInLegend: false,
     enableMouseTracking: false,

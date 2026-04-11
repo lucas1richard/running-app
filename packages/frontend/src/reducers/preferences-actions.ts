@@ -5,7 +5,7 @@ import type { AsyncAction } from '@/types';
 export const FETCH_USER_PREFS = 'preferences/FETCH_USER_PREFERENCES';
 export const triggerFetchUserPrefs = (): AsyncAction => ({
   type: FETCH_USER_PREFS,
-  key: FETCH_USER_PREFS, 
+  key: FETCH_USER_PREFS,
 });
 
 export const FETCH_ACTIVITY_PREFS = 'preferences/FETCH_ACTIVITY_PREFERENCES';

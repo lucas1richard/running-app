@@ -17,7 +17,7 @@ const useResizeObserver = <T extends (dims: DOMRectReadOnly) => void>(
       cb(ref.current.getBoundingClientRect());
     }
   }, [cb, ref]);
-  useRunOnce(runCb, ref.current?.offsetWidth > 0  || ref.current?.offsetHeight > 0);
+  useRunOnce(runCb, ref.current?.offsetWidth > 0 || ref.current?.offsetHeight > 0);
 
   useEffect(() => {
     if (!observerRef.current) {

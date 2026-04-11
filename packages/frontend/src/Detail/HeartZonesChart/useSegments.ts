@@ -25,7 +25,8 @@ const useSegments = (ids: number[] = emptyArray) => {
         ];
         offset += val.elapsed_time;
         return datum;
-      }))},
+      }));
+    },
     [lapsMulti]
   );
   const splitsMiData = useMemo(
@@ -40,24 +41,24 @@ const useSegments = (ids: number[] = emptyArray) => {
           ];
           offset += val.elapsed_time;
           return datum;
-        })
+        });
       });
     },
     [splitsMiMulti]
-    );
+  );
 
-    const segments = useMemo(() => ids.map((_, ix) => lapsData[ix]?.length > 1
-      ? {
-        name: 'Laps',
-        data: lapsData[ix],
-      }
-      : {
-        name: 'Mile Splits',
-        data: splitsMiData[ix],
-      }
-    ), [ids, lapsData, splitsMiData]);
-    
-    return segments;
+  const segments = useMemo(() => ids.map((_, ix) => lapsData[ix]?.length > 1
+    ? {
+      name: 'Laps',
+      data: lapsData[ix],
+    }
+    : {
+      name: 'Mile Splits',
+      data: splitsMiData[ix],
+    }
+  ), [ids, lapsData, splitsMiData]);
+
+  return segments;
 };
 
 export default useSegments;

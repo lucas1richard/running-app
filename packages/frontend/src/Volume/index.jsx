@@ -17,7 +17,7 @@ const Volume = () => {
   const { groupedData, greatestTotal } = useMemo(() => {
     const groupedData = {};
     let totalDistance = 0;
-    
+
     const orderedActivities = [...activities].reverse();
     let greatestTotal = 0;
 
@@ -69,7 +69,7 @@ const Volume = () => {
           // $templateColumnsMdUp="repeat(2, 1fr)"
           // $templateColumnsXl="repeat(4, 1fr) !important"
           $marginT={2}
-          // $gap={1}
+        // $gap={1}
         >
           <div>
             <Basic.Div $fontSize="h2" $marginB={1}>Past 7 Days</Basic.Div>
@@ -88,8 +88,8 @@ const Volume = () => {
             <HeatMapContainer timeframe="1 year" />
           </div>
         </Basic.Div>
-        </Basic.Div>
       </Basic.Div>
+    </Basic.Div>
 
   );
 };

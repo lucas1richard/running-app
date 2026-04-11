@@ -24,7 +24,7 @@ const PRCalendarChart = ({ records: recordsProp }) => {
       name,
       allTimeBest: allTimePrs.find(pr => pr.name === name),
       data: recordsProp[name].filter(({ start_date_local }) => dayjs(start_date_local)).reverse()
-    }))
+    }));
   }, [recordsProp]);
   const currentMonth = dayjs().subtract(0, 'month');
   const viewSize = useViewSize();
@@ -36,7 +36,7 @@ const PRCalendarChart = ({ records: recordsProp }) => {
         <div key={set.name} className="card mb-4">
           <h3>{set.name}</h3>
           <div className="flex overflow-x-scroll hide-scrollbar gap-2">
-            <Surface key={set.allTimeBest.distance} style={{ width: '280px'}} className="flex flex-col flex-item-grow justify-center p-4 card text-center raised-2">
+            <Surface key={set.allTimeBest.distance} style={{ width: '280px' }} className="flex flex-col flex-item-grow justify-center p-4 card text-center raised-2">
               <Basic.Div $fontSize="h1">
                 <PRMedal type="native" color="gold" />
               </Basic.Div>

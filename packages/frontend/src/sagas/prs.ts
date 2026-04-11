@@ -1,8 +1,8 @@
 import {
-    FETCH_PRS,
-    FETCH_PRS_BY_DATE,
-    setPrsAct,
-    setPrsByDateAct,
+  FETCH_PRS,
+  FETCH_PRS_BY_DATE,
+  setPrsAct,
+  setPrsByDateAct,
 } from '@/reducers/prs-actions';
 import makeApiSaga from '@/sagas/apiSaga';
 import requestor from '@/utils/requestor';

@@ -24,7 +24,7 @@ const sumDistance = (activities: Activity[]) => {
   return convertMetersToMiles(meters);
 };
 
-const CurrentSummary: React.FC<{ activities: Activity[] }> = ({
+const CurrentSummary: React.FC<{ activities: Activity[]; }> = ({
   activities,
 }) => {
   const recentRuns = useMemo(() => findRecent(activities, NUMBER_OF_DAYS), [activities]);

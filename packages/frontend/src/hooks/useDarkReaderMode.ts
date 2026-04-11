@@ -6,13 +6,13 @@ function useDarkReaderMode() {
     // Initial state check
     return document.documentElement.getAttribute('data-darkreader-mode') === 'dynamic' || window.matchMedia('(prefers-color-scheme: dark)').matches;
   });
-  
+
   useEffect(() => {
     // Create mutation observer to watch for Dark Reader changes
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (
-          mutation.type === 'attributes' && 
+          mutation.type === 'attributes' &&
           mutation.attributeName === 'data-darkreader-mode'
         ) {
           const darkReaderMode = document.documentElement.getAttribute('data-darkreader-mode');
@@ -20,13 +20,13 @@ function useDarkReaderMode() {
         }
       });
     });
-    
+
     // Start observing the HTML element for attribute changes
     observer.observe(document.documentElement, { attributes: true });
-    
+
     // 2. Observe system dark mode preference changes
     const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     // Modern approach using addEventListener
     const handleDarkModeChange = (event: MediaQueryListEvent) => {
       // Only update if Dark Reader isn't active
@@ -34,18 +34,18 @@ function useDarkReaderMode() {
         setIsDarkMode(event.matches);
       }
     };
-    
+
     // Add the listener
     darkModeMediaQuery.addEventListener('change', handleDarkModeChange);
-    
+
     // Cleanup observer on component unmount
     return () => {
       observer.disconnect();
       darkModeMediaQuery.removeEventListener('change', handleDarkModeChange);
-    }
+    };
   }, []);
-  
-  
+
+
   return isDarkMode;
 }
 

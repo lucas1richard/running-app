@@ -22,7 +22,7 @@ const prColorsArr = [
   { value: 9, color: 'rgba(200,200,200,0.2)', borderColor: 'rgba(0, 0, 250, 0.2)' },
   { value: 10, color: 'rgba(200,200,200,0.1)', borderColor: 'rgba(0, 0, 250, 0.1)' },
   { color: 'white', borderColor: 'black' },
-]
+];
 
 const seriesDefaultConfig = {
   states: {
@@ -40,7 +40,7 @@ const seriesDefaultConfig = {
 
 const yAxisDefaultConfig = {
   opposite: false,
-}
+};
 
 const PRChart = ({ records: recordsProp, title }) => {
   const isSmall = useViewSize().lte('sm');
@@ -49,7 +49,7 @@ const PRChart = ({ records: recordsProp, title }) => {
     return names.map((name) => ({
       name,
       data: recordsProp[name].filter(({ start_date_local }) => dayjs(start_date_local).isAfter(dayjs().subtract(1, 'year'))).reverse()
-    }))
+    }));
   }, []);
   const isDarkMode = useDarkReaderMode();
   const contrastColor = isDarkMode ? 'white' : 'black';

@@ -15,8 +15,8 @@ export const Div = styled.div<StandardBase<HTMLDivElement>>`${standardProps}`;
 export const Span = styled.span<StandardBase<HTMLSpanElement>>`${standardProps}`;
 
 type InputShim<El = HTMLInputElement> = {
-  onChange: React.ChangeEventHandler<El>
-}
+  onChange: React.ChangeEventHandler<El>;
+};
 export const Input = styled.input<StandardBase<HTMLInputElement> & InputShim>`${standardProps}`;
 export const Textarea = styled.input<StandardBase<HTMLTextAreaElement> & InputShim<HTMLTextAreaElement>>`${standardProps}`;
 export const Select = styled.select<StandardBase<HTMLSelectElement>>`${standardProps}`;

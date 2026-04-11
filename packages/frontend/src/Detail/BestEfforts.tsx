@@ -44,19 +44,19 @@ const BestEfforts: FC<Props> = ({ bestEfforts }) => {
     <div className="mt-4 card">
       <div className="flex flex-wrap gap-4 mt-4">
         {bestEffortsList.map(({ pr_rank, name, elapsed_time }) => (
-            <div
-              key={name}
-              className={[
-                `shine-button rounded-full square flex flex-col justify-center p-4`,
-                styles['width-150'],
-                prsMap[pr_rank],
-              ].join(' ')}
-            >
-              <div className={`text-center text-h5`}>{rankMap[pr_rank]}</div>
-              <div className="text-center text-h4">{name}</div>
-              <div className="text-center"><DurationDisplay numSeconds={elapsed_time} units={['', ':', ':']} /></div>
-            </div>
-          ))}
+          <div
+            key={name}
+            className={[
+              `shine-button rounded-full square flex flex-col justify-center p-4`,
+              styles['width-150'],
+              prsMap[pr_rank],
+            ].join(' ')}
+          >
+            <div className={`text-center text-h5`}>{rankMap[pr_rank]}</div>
+            <div className="text-center text-h4">{name}</div>
+            <div className="text-center"><DurationDisplay numSeconds={elapsed_time} units={['', ':', ':']} /></div>
+          </div>
+        ))}
       </div>
     </div>
   );

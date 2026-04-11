@@ -1,7 +1,7 @@
 import standardProps, { type StandardProps } from '@/DLS/utils/standardProps';
 import styled from 'styled-components';
 
-interface ButtonProps extends StandardProps {}
+interface ButtonProps extends StandardProps { }
 
 const Button = styled.button<ButtonProps>`
   /* padding: ${(props) => props.theme.getStandardUnit(0.5)};

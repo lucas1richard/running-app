@@ -26,7 +26,7 @@ const Container: React.FC<ContainerProps> = ({
     setViewSize(size);
   }, []);
 
-  useResizeObserver(ref, trackSize, { defer: !providesViewSize});
+  useResizeObserver(ref, trackSize, { defer: !providesViewSize });
 
   return (
     <div ref={ref} className={styles.container}>

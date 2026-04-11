@@ -13,7 +13,6 @@ import usePreferenceControl from '@/hooks/usePreferenceControl';
 import useShowAfterMount from '@/hooks/useShowAfterMount';
 import { selectActivities } from '@/reducers/activities';
 import { triggerFetchActivities } from '@/reducers/activities-actions';
-import { useGetApiStatus } from '@/reducers/apiStatus';
 import { selectListPrerences } from '@/reducers/preferences';
 
 import dayjs from 'dayjs';
@@ -31,8 +30,6 @@ const Activities = () => {
   const dispatch = useDispatch();
   const activities = useSelector(selectActivities, fastDeepEqual);
   const listPreferences = useSelector(selectListPrerences);
-  const activitiesApiStatus = useGetApiStatus(triggerFetchActivities());
-  const syncActivitiesApiStatus = useGetApiStatus(triggerFetchActivities(true));
 
   const [showHideFunction, setShowHideFunction] = usePreferenceControl(hideFunctionKeypath, false);
   const hideFn = useCallback(
@@ -40,7 +37,7 @@ const Activities = () => {
     [setShowHideFunction, showHideFunction]
   );
 
-  const { isGroupByZonesSet, tileBackgroundIndicator } = listPreferences;
+  const { tileBackgroundIndicator } = listPreferences;
   const recentActivities = useMemo(() => {
     const earliestDate = dayjs().subtract(3, 'year');
     return activities.filter(({ start_date }) => dayjs(start_date).isAfter(earliestDate)).reverse();
@@ -99,7 +96,7 @@ const Activities = () => {
             showHideFunction={showHideFunction}
             tileBackgroundIndicator={tileBackgroundIndicator}
           />
-          
+
         </Basic.Div>
       </Basic.Div>
       {/* <Shimmer

@@ -28,7 +28,7 @@ const makeColor = (minColor: RGBATuple, maxColor: RGBATuple, percent: number) =>
   const b = Math.round(minColor[2] + (maxColor[2] - minColor[2]) * percent);
   const a = Math.max(minColor[3], Math.min(maxColor[3], percent));
   return `rgba(${r}, ${g}, ${b}, ${a})`;
-}
+};
 
 type DataPoint = {
   lat: number | string;
@@ -72,7 +72,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
     activeMinColor = [255 - minColor[0], 255 - minColor[1], 255 - minColor[2], minColor[3]];
     activeMaxColor = [255 - maxColor[0], 255 - maxColor[1], 255 - maxColor[2], maxColor[3]];
   }
-  
+
   const heatmapSource = useId();
   const heatmapLayer = useId();
   const largestValue = useMemo(() => {
@@ -118,7 +118,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
       bounds,
       pitch,
       bearing,
-    }
+    };
     if (localStorageKey) {
       const localBoundsStr = localStorage.getItem(localStorageKey);
       if (localBoundsStr) {
@@ -206,7 +206,7 @@ const HeatMapMapLibre: React.FC<HeatMapProps> = ({
                           coordinates: [makeSquare({ lon: Number(lon), lat: Number(lat) }, pointSize)],
                         },
                         properties: { color: makeColor(activeMinColor, activeMaxColor, percent) },
-                      })
+                      });
                     }),
                   }}
                 >

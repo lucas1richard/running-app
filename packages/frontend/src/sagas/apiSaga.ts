@@ -1,13 +1,13 @@
 import {
-    setApiErrorAct,
-    setApiLoadingAct,
-    setApiSuccessAct,
+  setApiErrorAct,
+  setApiLoadingAct,
+  setApiSuccessAct,
 } from '@/reducers/apiStatus-actions';
 import type { AsyncAction } from '@/types';
 import { hash } from 'ohash';
 import { call, put } from 'redux-saga/effects';
 
-type CB =(...args: any[]) => any;
+type CB = (...args: any[]) => any;
 
 const makeApiSaga = (cb: CB) => function* apiSaga(action: AsyncAction) {
   const loadingKey = action.key || hash(action);
@@ -18,6 +18,6 @@ const makeApiSaga = (cb: CB) => function* apiSaga(action: AsyncAction) {
   } catch (err) {
     yield put(setApiErrorAct(loadingKey));
   }
-}
+};
 
 export default makeApiSaga;

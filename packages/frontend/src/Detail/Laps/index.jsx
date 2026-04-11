@@ -31,7 +31,7 @@ const processLaps = (laps) => {
       secondsPerMile: Math.floor((3660 / convertMetricSpeedToMPH(average_speed))),
       totalElevationGainFt: convertMetersToFt(total_elevation_gain),
     };
-    
+
     timeStart += elapsed_time;
 
     return processedLap
@@ -80,7 +80,8 @@ const Laps = ({ id }) => {
                   <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
                   <td>{lap.totalElevationGainFt} <small>ft</small></td>
                 </tr>
-              )}
+              )
+            }
             )}
           </tbody>
         </table>

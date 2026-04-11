@@ -10,9 +10,9 @@ type PreferenceControlProps = {
   keyPath: PreferencesKeyPath,
   showSaveButton?: boolean,
   defaultValue?: boolean,
-  saveConfig?: any & { activityId: string },
+  saveConfig?: any & { activityId: string; },
   children: React.ReactNode,
-}
+};
 
 const PreferenceControl: React.FC<PreferenceControlProps> = ({
   subject = '',
@@ -64,6 +64,6 @@ const PreferenceControl: React.FC<PreferenceControlProps> = ({
       </Basic.Div>
     </div>
   );
-}
+};
 
 export default PreferenceControl;

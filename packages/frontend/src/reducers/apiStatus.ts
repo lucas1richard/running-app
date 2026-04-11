@@ -1,8 +1,8 @@
 import { useAppSelector } from '@/hooks/redux';
 import {
-    errorSymbol,
-    loadingSymbol,
-    successSymbol,
+  errorSymbol,
+  loadingSymbol,
+  successSymbol,
 } from '@/reducers/apiStatus-actions';
 import type { ApiStatusAction, AsyncAction } from '@/types';
 import { createDeepEqualSelector } from '@/utils';

@@ -1,6 +1,6 @@
 import SetGlobalHeartZones from '@/Config/SetGlobalHeartZones';
 
-const ConfigWidget = ({}) => {
+const ConfigWidget = ({ }) => {
   return (
     <div>
       <SetGlobalHeartZones />

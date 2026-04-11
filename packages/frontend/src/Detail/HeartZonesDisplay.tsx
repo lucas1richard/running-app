@@ -20,15 +20,15 @@ type CellProps = {
   range: string | JSX.Element;
   percents: string[];
   totalTimes: number[];
-  avg: { avg: number; max: number }[];
+  avg: { avg: number; max: number; }[];
 };
 
-const CellWrapper = styled.div<{ ix: number, $isMaxPercentage?: boolean }>`
+const CellWrapper = styled.div<{ ix: number, $isMaxPercentage?: boolean; }>`
   padding: ${(props) => props.theme.getStandardUnit(1)};
   background: ${(props) => hrZonesBg[props.ix + 1]};
   border: 1px solid ${(props) => hrZonesBg[props.ix + 1]};
   ${(props) => props.$isMaxPercentage
-    ?`box-shadow: inset 0 0 ${(props) => props.theme.getStandardUnit(1)}; ${hrZonesText[props.ix + 1]};`
+    ? `box-shadow: inset 0 0 ${(props) => props.theme.getStandardUnit(1)}; ${hrZonesText[props.ix + 1]};`
     : ''
   }
 `;
@@ -91,7 +91,7 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
 const HeartZonesDisplay: React.FC<HeartZonesDisplayProps> = ({ zones, nativeZones, heartData, velocityData }) => {
   const totalTimes = useMemo(() => {
     return convertHeartDataToZoneTimes(heartData, zones);
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- we have the sub-array in the dependency array
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- we have the sub-array in the dependency array
   }, [heartData, zones.z1, zones.z2, zones.z3, zones.z4, zones.z5]);
 
   const percents = useMemo(

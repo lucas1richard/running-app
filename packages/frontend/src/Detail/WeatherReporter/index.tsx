@@ -1,7 +1,7 @@
 import {
-    type FC,
-    useEffect,
-    useState,
+  type FC,
+  useEffect,
+  useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -70,13 +70,13 @@ const WeatherReporter: FC<Props> = ({ id }) => {
         dispatch(setWeatherDataAct([startRecord, endRecord]));
 
         setSkyStart(wmoToCondition(startRecord.weather_code));
-        setTempStart(Math.round(startRecord.temperature_2m * 9/5 + 32));
+        setTempStart(Math.round(startRecord.temperature_2m * 9 / 5 + 32));
         setHumidityStart(startRecord.relative_humidity_2m);
         setWindStart(startRecord.wind_speed_10m);
         setPrecipStart(startRecord.precipitation);
 
         setSkyEnd(wmoToCondition(endRecord.weather_code));
-        setTempEnd(Math.round(endRecord.temperature_2m * 9/5 + 32));
+        setTempEnd(Math.round(endRecord.temperature_2m * 9 / 5 + 32));
         setHumidityEnd(endRecord.relative_humidity_2m);
         setWindEnd(endRecord.wind_speed_10m);
         setPrecipEnd(endRecord.precipitation);
@@ -109,6 +109,6 @@ const WeatherReporter: FC<Props> = ({ id }) => {
       </div>
     </div>
   );
-}
+};
 
 export default WeatherReporter;

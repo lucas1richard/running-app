@@ -64,23 +64,24 @@ const PRs = () => {
                       if (pr.pr_rank === 2) colorBg = 'silver';
                       if (pr.pr_rank === 3) colorBg = 'bronze';
                       return (
-                      <tr
-                        role="button"
-                        key={pr.start_date_local}
-                        className={prsMap[pr.pr_rank as keyof typeof prsMap]}
-                        onClick={() => navigate(`/${pr.activityId}/detail`)}
-                      >
-                        <td>
-                          {dayjs(pr.start_date_local).format('DD MMM YYYY')}
-                        </td>
-                        <td className="text-center">
-                          {pr.pr_rank}
-                        </td>
-                        <td>
-                          {getDurationString(pr.elapsed_time, ['s', 'm ', 'h '])}
-                        </td>
-                      </tr>
-                    )})}
+                        <tr
+                          role="button"
+                          key={pr.start_date_local}
+                          className={prsMap[pr.pr_rank as keyof typeof prsMap]}
+                          onClick={() => navigate(`/${pr.activityId}/detail`)}
+                        >
+                          <td>
+                            {dayjs(pr.start_date_local).format('DD MMM YYYY')}
+                          </td>
+                          <td className="text-center">
+                            {pr.pr_rank}
+                          </td>
+                          <td>
+                            {getDurationString(pr.elapsed_time, ['s', 'm ', 'h '])}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

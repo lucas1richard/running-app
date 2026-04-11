@@ -16,27 +16,27 @@ const CalendarView = () => {
   const viewSize = useViewSize();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const inMonth = useAppSelector(state => selectActivitiesByMonth(state, currentMonth));
-  
+
   const daysInMonth = currentMonth.daysInMonth();
   const firstDayOfMonth = currentMonth.startOf('month').weekday();
-  
+
   const navigateMonth = useCallback((direction: number) => {
     setCurrentMonth(currentMonth.add(direction, 'month'));
   }, [currentMonth]);
-  
+
   const isMobile = viewSize.lte('md');
 
   const { daysUI, daysWithActivities } = useMemo(() => {
     const days = [];
     let daysWithActivities = 0;
     const daysArray = [...Array(daysInMonth)].map((_, i) => i + 1);
-    
+
     if (!isMobile) {
       for (let i = 0; i < firstDayOfMonth; i++) {
         days.push(<Basic.Div $colorBg="transparent" key={`empty-${i}`} $pad={1}></Basic.Div>);
       }
     }
-    
+
     daysArray.forEach(day => {
       const currentDate = currentMonth.date(day);
       const currentDayOfWeek = currentDate.day();
@@ -65,7 +65,7 @@ const CalendarView = () => {
           </Basic.Div>
         );
       }
-      
+
       days.push(
         <Surface className={`sunken-1 ${hasActivities ? '' : 'p-4'}`} key={`day-${day}`}>
           {!hasActivities && <div className="text-right">{day}</div>}
@@ -77,7 +77,7 @@ const CalendarView = () => {
         </Surface>
       );
     });
-    
+
     return {
       daysWithActivities,
       daysUI: days,
@@ -129,7 +129,7 @@ const CalendarView = () => {
         ))}
         {daysUI}
       </Grid>
-      
+
     </div>
   );
 };

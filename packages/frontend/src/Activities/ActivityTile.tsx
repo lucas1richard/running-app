@@ -48,7 +48,7 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
               </span>
               <span className="sunken-1 py-1 px-2 flex-inline align-center">
                 <HumidityPercentSvg />&nbsp;{activity.weather.relative_humidity_2m}%
-                </span>
+              </span>
             </div>
           </div>
         )}
@@ -59,15 +59,15 @@ const ActivityTile: React.FC<ActivityTileProps> = ({
           {isLoading
             ? <Spinner />
             : (
-            <label htmlFor={`${activity.id}-hider`}>
-              Hide Activity&nbsp;
-              <input
-                id={`${activity.id}-hider`}
-                type="checkbox"
-                checked={activity.hidden}
-                onChange={hideActivity}
-              />
-            </label>
+              <label htmlFor={`${activity.id}-hider`}>
+                Hide Activity&nbsp;
+                <input
+                  id={`${activity.id}-hider`}
+                  type="checkbox"
+                  checked={activity.hidden}
+                  onChange={hideActivity}
+                />
+              </label>
             )}
         </div>
       )}

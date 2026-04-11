@@ -10,14 +10,14 @@ const Grid = styled.div<GridProps>`
   ${standardProps}
   
   ${makeSizeProps([
-    ['$templateColumns', 'grid-template-columns'],
-    ['$templateAreas', 'grid-template-areas'],
-    ['$templateRows', 'grid-template-rows'],
-    ['$colGap', 'column-gap'],
-    ['$rowGap', 'row-gap'],
-    ['$gap', 'gap'],
-    ['$gridAutoRows', 'grid-auto-rows'],
-  ])}
+  ['$templateColumns', 'grid-template-columns'],
+  ['$templateAreas', 'grid-template-areas'],
+  ['$templateRows', 'grid-template-rows'],
+  ['$colGap', 'column-gap'],
+  ['$rowGap', 'row-gap'],
+  ['$gap', 'gap'],
+  ['$gridAutoRows', 'grid-auto-rows'],
+])}
 `;
 
 interface GridProps extends SizeProp<'$templateColumns', CSS.Property.GridTemplateColumns>,
@@ -27,10 +27,9 @@ interface GridProps extends SizeProp<'$templateColumns', CSS.Property.GridTempla
   SizeProp<'$gap', number | CSS.Property.Gap>,
   SizeProp<'$gridAutoRows', number | CSS.Property.GridAutoRows>,
   SizeProp<'$templateRows', number | CSS.Property.GridTemplateRows>,
-  StandardProps
-  {
-    className?: string;
-    children?: React.ReactNode;
-  };
+  StandardProps {
+  className?: string;
+  children?: React.ReactNode;
+};
 
 export default Grid;

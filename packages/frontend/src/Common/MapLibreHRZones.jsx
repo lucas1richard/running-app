@@ -30,10 +30,10 @@ function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
 
     return { maxLng, minLng, maxLat, minLat };
   })
-  
+
   const defaultCenter = useMemo(() => {
     if (!lnglatStream.length) return { lat: 37.74, lng: -122.4 };
-    
+
     const lng = (edges.maxLng + edges.minLng) / 2;
     const lat = (edges.maxLat + edges.minLat) / 2;
     return { lat, lng };
@@ -43,16 +43,16 @@ function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
     type: 'FeatureCollection',
     features: hrzones.map(({ from, to, zone }, ix) => {
       return {
-          type: 'Feature',
-          properties: {
-            name: 'Heart Rate Zones' + from,
-            color: hrZonesGraph[zone],
-          },
-          geometry: {
-            type: 'LineString',
-            coordinates: lnglatStream.slice(ix > 1 ? from - 1 : from, to)
-          }
+        type: 'Feature',
+        properties: {
+          name: 'Heart Rate Zones' + from,
+          color: hrZonesGraph[zone],
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: lnglatStream.slice(ix > 1 ? from - 1 : from, to)
         }
+      }
     })
   };
 
@@ -131,7 +131,7 @@ function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
         />
         <FullscreenControl position="top-right" />
       </Source>
-      
+
     </Map>
   );
 }

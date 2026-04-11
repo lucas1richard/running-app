@@ -1,12 +1,12 @@
 import {
-    setApiErrorAct,
-    setApiLoadingAct,
-    setApiSuccessAct,
+  setApiErrorAct,
+  setApiLoadingAct,
+  setApiSuccessAct,
 } from '@/reducers/apiStatus-actions';
 import {
-    ADD_HEART_ZONES,
-    FETCH_HEART_ZONES,
-    setHeartZonesAct,
+  ADD_HEART_ZONES,
+  FETCH_HEART_ZONES,
+  setHeartZonesAct,
 } from '@/reducers/heartzones-actions';
 import { takeEveryContext } from '@/sagas/effects';
 import requestor from '@/utils/requestor';

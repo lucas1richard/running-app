@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import React from 'react';
 
-dayjs.extend(utc)
+dayjs.extend(utc);
 
 type ZonesHeaderProps = {
   zones: HeartZone;
