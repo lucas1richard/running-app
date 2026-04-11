@@ -1,7 +1,7 @@
+import { Button } from '@/DLS';
+import { updateStreamPin } from '@/reducers/activities-actions';
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateStreamPin } from '@/reducers/activities-actions';
-import { Button } from '@/DLS';
 
 type StreamPinFormProps = {
   pin: StreamPin;

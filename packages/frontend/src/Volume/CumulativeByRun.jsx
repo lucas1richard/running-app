@@ -1,12 +1,9 @@
-import React, { useMemo } from 'react';
-import { useSelector } from 'react-redux';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import { selectActivities } from '@/reducers/activities';
-import useViewSize from '@/hooks/useViewSize';
-import dayjs from 'dayjs';
 import Surface from '@/DLS/Surface';
 import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import useViewSize from '@/hooks/useViewSize';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { useMemo } from 'react';
 
 const currentYear = new Date().getFullYear();
 

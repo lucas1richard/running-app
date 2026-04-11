@@ -1,5 +1,5 @@
-import React from 'react';
 import styles from '@/Loading/Loading.module.css';
+import React from 'react';
 
 const presets = {
   small: {

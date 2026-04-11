@@ -1,29 +1,29 @@
-import { produce } from 'immer';
-import deepmerge from 'deepmerge';
 import dayjs, { type Dayjs, type ManipulateType } from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
+import deepmerge from 'deepmerge';
+import { produce } from 'immer';
 
-import { createDeepEqualSelector } from '@/utils';
-import { getPreferencesState, selectListPrerences, selectPreferencesZonesId, selectSportTypePreferences } from '@/reducers/preferences';
+import { emptyArray, emptyObject } from '@/constants';
+import { wmoToCondition } from '@/Detail/WeatherReporter/utils';
 import {
   SET_ACTIVITIES,
+  SET_ACTIVITIES_DISPLAY_TYPES,
   SET_ACTIVITIES_STREAM,
   SET_ACTIVITIES_SUMMARY,
   SET_ACTIVITY_DETAIL,
-  UPDATE_ACTIVITY,
-  SET_STREAM,
-  SET_STREAMS,
-  SET_SIMILAR_WORKOUTS,
-  SET_WEATHER_DATA,
-  SET_STREAM_PINS,
   SET_HEATMAP_DATA,
-  SET_ACTIVITIES_DISPLAY_TYPES,
+  SET_SIMILAR_WORKOUTS,
+  SET_STREAM,
+  SET_STREAM_PINS,
+  SET_STREAMS,
+  SET_WEATHER_DATA,
+  UPDATE_ACTIVITY,
 } from '@/reducers/activities-actions';
 import { getApplicableHeartZone, getHeartZones, selectAllHeartZones } from '@/reducers/heartzones';
-import { emptyArray, emptyObject } from '@/constants';
-import type { RootState } from '.';
+import { getPreferencesState, selectListPrerences, selectPreferencesZonesId, selectSportTypePreferences } from '@/reducers/preferences';
+import { createDeepEqualSelector } from '@/utils';
 import { makeGet2ndArg, makeGet3rdArg } from '@/utils/selectorUtils';
-import { wmoToCondition } from '@/Detail/WeatherReporter/utils';
+import type { RootState } from '.';
 
 dayjs.extend(weekday);
 

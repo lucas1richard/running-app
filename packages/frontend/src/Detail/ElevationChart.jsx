@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import Surface from '@/DLS/Surface';
+import { getGradeColor } from '@/utils';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import { getGradeColor } from '@/utils';
-import Surface from '@/DLS/Surface';
+import { useMemo } from 'react';
 
 const ElevationChart = ({ title, data, velocity, zones, width, grade }) => {
   const gradePlots = useMemo(() => getGradeColor(grade, { relativeMode: true, vertex: 20 }), []);

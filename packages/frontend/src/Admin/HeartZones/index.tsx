@@ -1,11 +1,11 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { selectAllHeartZones } from '@/reducers/heartzones';
-import { getDateString } from '@/utils';
-import styles from '@/Admin/HeartZones/HeartZones.module.css';
 import AddNewHRZones from '@/Admin/HeartZones/AddNewZones';
+import styles from '@/Admin/HeartZones/HeartZones.module.css';
 import { Basic } from '@/DLS';
 import Surface from '@/DLS/Surface';
+import { selectAllHeartZones } from '@/reducers/heartzones';
+import { getDateString } from '@/utils';
+import React from 'react';
+import { useSelector } from 'react-redux';
 
 const HeartZones: React.FC = () => {
   const allzones = useSelector(selectAllHeartZones);

@@ -1,8 +1,8 @@
+import makeSizeProps, { type SizeProp } from '@/DLS/utils/makeSizeProps';
+import standardProps, { type StandardProps } from '@/DLS/utils/standardProps';
 import React from 'react';
 import styled from 'styled-components';
 import type { CSS } from 'styled-components/dist/types';
-import makeSizeProps, { type SizeProp } from '@/DLS/utils/makeSizeProps';
-import standardProps, { type StandardProps } from '@/DLS/utils/standardProps';
 
 const Grid = styled.div<GridProps>`
   display: grid;

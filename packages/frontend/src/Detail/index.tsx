@@ -1,41 +1,40 @@
-import { useMemo } from 'react';
-import dayjs from 'dayjs';
-import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
-import { selectApplicableHeartZone, selectAllHeartZones } from '@/reducers/heartzones';
-import HeartZonesDisplay from '@/Detail/HeartZonesDisplay';
-import { convertMetricSpeedToMPH, getWeatherStyles } from '@/utils';
 import DurationDisplay from '@/Common/DurationDisplay';
-import SegmentsDetailDisplay from '@/Detail/Segments';
-import HeartZonesChartContainer from '@/Detail/HeartZonesChart';
-import UpdatableNameDescription from '@/Detail/UpdatableNameDescription';
-import SimilarWorkouts from '@/Detail/SimilarWorkouts';
+import MapLibreHRZones from '@/Common/MapLibreHRZones';
+import { Basic as B, Button, Flex, Grid } from '@/DLS';
+import Surface from '@/DLS/Surface';
+import BestEfforts from '@/Detail/BestEfforts';
 import DetailDataFetcher, { streamTypes } from '@/Detail/DetailDataFetcher';
+import HeartZonesChartContainer from '@/Detail/HeartZonesChart';
+import HeartZonesDisplay from '@/Detail/HeartZonesDisplay';
 import Laps from '@/Detail/Laps';
+import SplitsKm from '@/Detail/Laps/SplitKm';
+import SplitsMi from '@/Detail/Laps/SplitsMi';
+import SegmentsDetailDisplay from '@/Detail/Segments';
+import SimilarWorkouts from '@/Detail/SimilarWorkouts';
+import UpdatableNameDescription from '@/Detail/UpdatableNameDescription';
 import WeatherReporter from '@/Detail/WeatherReporter';
-import { selectPreferencesZonesId } from '@/reducers/preferences';
+import Shimmer from '@/Loading/Shimmer';
 import PreferenceControl from '@/PreferenceControl';
-import usePreferenceControl from '@/hooks/usePreferenceControl';
-import { getDataNotReady, useTriggerActionIfStatus } from '@/reducers/apiStatus';
-import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '@/reducers/activities-actions';
-import { setActivityPrefsAct, triggerFetchActivityPrefs } from '@/reducers/preferences-actions';
 import {
   activityShouldShowLaps,
   activityShouldShowSegments,
   activityShouldShowSimilarWorkouts,
 } from '@/PreferenceControl/keyPaths';
-import BestEfforts from '@/Detail/BestEfforts';
-import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
 import { emptyArray } from '@/constants';
 import { useAppSelector } from '@/hooks/redux';
-import Shimmer from '@/Loading/Shimmer';
-import { Basic as B, Button, Card, Flex, Grid } from '@/DLS';
-import useViewSize from '@/hooks/useViewSize';
-import MapLibreHRZones from '@/Common/MapLibreHRZones';
-import Surface from '@/DLS/Surface';
-import SplitsMi from '@/Detail/Laps/SplitsMi';
-import SplitsKm from '@/Detail/Laps/SplitKm';
+import usePreferenceControl from '@/hooks/usePreferenceControl';
+import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
+import { triggerFetchActivityDetail, triggerFetchActivityStreamData } from '@/reducers/activities-actions';
+import { getDataNotReady, useTriggerActionIfStatus } from '@/reducers/apiStatus';
+import { selectAllHeartZones, selectApplicableHeartZone } from '@/reducers/heartzones';
+import { selectPreferencesZonesId } from '@/reducers/preferences';
+import { setActivityPrefsAct, triggerFetchActivityPrefs } from '@/reducers/preferences-actions';
+import { convertMetricSpeedToMPH } from '@/utils';
+import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
+import dayjs from 'dayjs';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 const ActivityDetailPage = () => {
   const dispatch = useDispatch();

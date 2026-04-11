@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
+import HeatMapMapLibre from '@/Common/HeatMapMapLibre';
+import { emptyArray } from '@/constants';
 import HeartZonesChartDisplay from '@/Detail/HeartZonesChart/HeartZonesChartDisplay';
+import { Basic, Button } from '@/DLS';
+import { useAppSelector } from '@/hooks/redux';
+import usePreferenceControl from '@/hooks/usePreferenceControl';
 import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { selectHeartZones } from '@/reducers/heartzones';
-import usePreferenceControl from '@/hooks/usePreferenceControl';
-import { emptyArray } from '@/constants';
-import { useAppSelector } from '@/hooks/redux';
-import { Basic, Button } from '@/DLS';
-import HeatMapMapLibre from '@/Common/HeatMapMapLibre';
+import { useMemo } from 'react';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));

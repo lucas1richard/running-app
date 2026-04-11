@@ -1,6 +1,6 @@
+import { SET_PRS, SET_PRS_BY_DATE } from '@/reducers/prs-actions';
 import { produce } from 'immer';
 import { createSelector } from 'reselect';
-import { SET_PRS, SET_PRS_BY_DATE } from '@/reducers/prs-actions';
 
 import { type RootState } from '.';
 type PRInitialState = {

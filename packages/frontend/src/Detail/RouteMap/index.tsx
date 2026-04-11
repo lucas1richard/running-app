@@ -1,17 +1,17 @@
-import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import { Button } from '@/DLS';
+import Surface from '@/DLS/Surface';
+import getGradeColorAbs from '@/Detail/HeartZonesChart/getGradeColorAbs';
+import useHRZoneIndicators from '@/Detail/RouteMap/useHRZoneIndicators';
+import { emptyArray } from '@/constants';
+import { useAppSelector } from '@/hooks/redux';
+import useViewSize from '@/hooks/useViewSize';
+import { selectStreamTypeData } from '@/reducers/activities';
+import { convertMetricSpeedToMPH } from '@/utils';
+import classNames from 'classnames';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import HighchartsMap from 'highcharts/modules/map';
-import { selectStreamTypeData } from '@/reducers/activities';
-import { convertMetricSpeedToMPH } from '@/utils';
-import { useAppSelector } from '@/hooks/redux';
-import useHRZoneIndicators from '@/Detail/RouteMap/useHRZoneIndicators';
-import classNames from 'classnames';
-import getGradeColorAbs from '@/Detail/HeartZonesChart/getGradeColorAbs';
-import { emptyArray } from '@/constants';
-import useViewSize from '@/hooks/useViewSize';
-import { Button } from '@/DLS';
-import Surface from '@/DLS/Surface';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 
 HighchartsMap(Highcharts);
 

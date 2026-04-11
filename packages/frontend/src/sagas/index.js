@@ -1,11 +1,11 @@
-import { fork } from 'redux-saga/effects'
+import { activitiesListSaga } from '@/sagas/activitieslist';
 import { activitydetailSaga } from '@/sagas/activitydetail';
-import { activitiesListSaga } from '@/sagas/activitieslist'
+import eventStreamSagaListener from '@/sagas/eventStreamSaga';
 import { heartzonesSaga } from '@/sagas/heartzones';
-import { weatherSaga } from '@/sagas/weather';
 import { preferencesSaga } from '@/sagas/preferences';
 import { prsSaga } from '@/sagas/prs';
-import eventStreamSagaListener from '@/sagas/eventStreamSaga';
+import { weatherSaga } from '@/sagas/weather';
+import { fork } from 'redux-saga/effects';
 
 function* mySaga() {
   yield fork(activitydetailSaga);

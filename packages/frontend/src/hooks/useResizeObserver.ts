@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
 import useRunOnce from '@/hooks/useRunOnce';
+import { useCallback, useEffect, useRef } from 'react';
 
 type UseResizeObserverOptions = {
   defer?: boolean;

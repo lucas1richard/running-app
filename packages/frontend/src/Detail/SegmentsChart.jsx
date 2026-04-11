@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
 import styles from '@/Detail/Detail.module.css';
 import Surface from '@/DLS/Surface';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { useMemo } from 'react';
 
 const getPlotbandConfig = ({ ix, text, to, from } = {}) => ({
   from,

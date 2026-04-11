@@ -1,5 +1,5 @@
-import '@/App.css';
 import Activities from '@/Activities';
+import '@/App.css';
 
 function App() {  
   return (

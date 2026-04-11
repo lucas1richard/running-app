@@ -1,19 +1,19 @@
-import { call, put } from 'redux-saga/effects';
-import requestor from '@/utils/requestor';
-import { takeEveryContext } from '@/sagas/effects';
 import {
-  SET_STREAM_PIN,
-  DELETE_STREAM_PIN,
-  UPDATE_STREAM_PIN,
-  setSimilarWorkoutsAct,
-  setStreamPinsAct,
-  updateActivityAct,
+    DELETE_STREAM_PIN,
+    SET_STREAM_PIN,
+    UPDATE_STREAM_PIN,
+    setSimilarWorkoutsAct,
+    setStreamPinsAct,
+    updateActivityAct,
 } from '@/reducers/activities-actions';
 import {
-  FETCH_SIMILAR_WORKOUTS,
-  TRIGGER_UPDATE_ACTIVITY,
+    FETCH_SIMILAR_WORKOUTS,
+    TRIGGER_UPDATE_ACTIVITY,
 } from '@/reducers/activitydetail-actions';
 import makeApiSaga from '@/sagas/apiSaga';
+import { takeEveryContext } from '@/sagas/effects';
+import requestor from '@/utils/requestor';
+import { call, put } from 'redux-saga/effects';
 
 function* updateActivitySaga({ payload }) {
   const { id, ...rest } = payload;

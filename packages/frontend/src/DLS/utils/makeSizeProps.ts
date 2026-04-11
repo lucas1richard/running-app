@@ -1,5 +1,5 @@
-import { css } from 'styled-components';
 import makeStyledCssRule from '@/DLS/utils/makeStyledCssRule';
+import { css } from 'styled-components';
 
 type PropsArg = [baseName: string, cssProp: string][];
 

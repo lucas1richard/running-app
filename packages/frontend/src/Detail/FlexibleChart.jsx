@@ -1,7 +1,7 @@
-import React, { useMemo } from 'react';
+import Surface from '@/DLS/Surface';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
-import Surface from '@/DLS/Surface';
+import { useMemo } from 'react';
 
 const FlexibleChart = ({ title, data, width }) => {
   /** @type {Highcharts.Options} */

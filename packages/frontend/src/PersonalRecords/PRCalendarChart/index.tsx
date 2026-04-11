@@ -1,17 +1,17 @@
-import { useMemo } from 'react';
+import DurationDisplay from '@/Common/DurationDisplay';
+import PRMedal from '@/Common/Icons/PRMedal';
+import { Basic } from '@/DLS';
+import Surface from '@/DLS/Surface';
+import { useAppSelector } from '@/hooks/redux';
+import useViewSize from '@/hooks/useViewSize';
+import CalendarUI from '@/PersonalRecords/PRCalendarChart/CalendarUI';
+import { selectActivitiesByMonth } from '@/reducers/activities';
+import { getPRs } from '@/reducers/prs';
 import dayjs from 'dayjs';
 import weekday from 'dayjs/plugin/weekday';
 import weekOfYear from 'dayjs/plugin/weekOfYear';
-import Surface from '@/DLS/Surface';
-import CalendarUI from '@/PersonalRecords/PRCalendarChart/CalendarUI';
-import { useAppSelector } from '@/hooks/redux';
-import { getPRs } from '@/reducers/prs';
-import { Basic } from '@/DLS';
-import PRMedal from '@/Common/Icons/PRMedal';
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import DurationDisplay from '@/Common/DurationDisplay';
-import useViewSize from '@/hooks/useViewSize';
-import { selectActivitiesByMonth } from '@/reducers/activities';
 
 dayjs.extend(weekday);
 dayjs.extend(weekOfYear);

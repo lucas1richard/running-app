@@ -1,6 +1,6 @@
-import { type FC, useMemo } from 'react';
 import DurationDisplay from '@/Common/DurationDisplay';
 import styles from '@/Detail/BestEfforts.module.scss';
+import { type FC, useMemo } from 'react';
 
 const rankMap = {
   1: '1st',

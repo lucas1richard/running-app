@@ -1,10 +1,10 @@
-import { combineReducers } from '@reduxjs/toolkit';
 import activitiesReducer from '@/reducers/activities';
-import heartzonesReducer from '@/reducers/heartzones';
-import preferencesReducer from '@/reducers/preferences';
 import apiStatusReducer from '@/reducers/apiStatus';
-import prsReducer from '@/reducers/prs';
+import heartzonesReducer from '@/reducers/heartzones';
 import multimapReducer from '@/reducers/multimap';
+import preferencesReducer from '@/reducers/preferences';
+import prsReducer from '@/reducers/prs';
+import { combineReducers } from '@reduxjs/toolkit';
 
 const reducer = combineReducers({
   activities: activitiesReducer,

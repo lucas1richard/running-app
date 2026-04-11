@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import classNames from 'classnames';
+import React, { useCallback, useEffect, useState } from 'react';
 
 const validateSrc = (src) => new Promise((resolve, reject) => {
   const img = new Image();

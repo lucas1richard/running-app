@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectAllHeartZones } from '@/reducers/heartzones';
 import ZonesHeader from '@/Activities/ZonesHeader';
+import { Basic, Button, Flex } from '@/DLS';
+import { selectAllHeartZones } from '@/reducers/heartzones';
 import { selectGlobalPrerences } from '@/reducers/preferences';
 import { setGlobalPrefsAct } from '@/reducers/preferences-actions';
-import { Basic, Button, Flex } from '@/DLS';
 import propSelector from '@/utils/propSelector';
+import { useCallback } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const SetGlobalHeartZones = () => {
   const allZones = useSelector(selectAllHeartZones);

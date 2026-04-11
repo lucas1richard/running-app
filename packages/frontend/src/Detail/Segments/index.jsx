@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import SegmentsChart from '@/Detail/Segments/SegmentsChart';
 import { Button } from '@/DLS';
+import { useCallback, useEffect, useState } from 'react';
 
 const SegmentsDetailDisplay = ({ segments, heartData, velocityData }) => {
   const [visible, setVisible] = useState(Array.from(segments).fill(true));

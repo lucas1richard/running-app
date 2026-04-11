@@ -1,15 +1,15 @@
 import {
-  type FC,
-  useEffect,
-  useState,
+    type FC,
+    useEffect,
+    useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { WeatherCondition, wmoToCondition } from '@/Detail/WeatherReporter/utils';
+import { useAppSelector } from '@/hooks/redux';
 import { selectActivity } from '@/reducers/activities';
 import { setWeatherDataAct } from '@/reducers/activities-actions';
-import { useAppSelector } from '@/hooks/redux';
 import dayjs from 'dayjs';
-import { WeatherCondition, wmoToCondition } from '@/Detail/WeatherReporter/utils';
 
 type Props = {
   id: number;

@@ -1,4 +1,3 @@
-import React from 'react';
 import Surface from '@/DLS/Surface';
 import ActivityTypesDisplay from '@/TopNav/ActivityTypesDisplay';
 

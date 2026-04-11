@@ -1,9 +1,9 @@
-import { useMemo } from 'react';
-import { selectActivityDetailsMulti } from '@/reducers/activities';
-import roundToNearest from '@/utils/roundToNearest';
-import { convertMetricSpeedToMPH } from '@/utils';
 import { emptyArray } from '@/constants';
 import { useAppSelector } from '@/hooks/redux';
+import { selectActivityDetailsMulti } from '@/reducers/activities';
+import { convertMetricSpeedToMPH } from '@/utils';
+import roundToNearest from '@/utils/roundToNearest';
+import { useMemo } from 'react';
 
 /**
  * Returns the segments for the given activity ids.

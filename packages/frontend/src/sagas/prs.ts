@@ -1,12 +1,12 @@
-import { call, put, takeEvery } from 'redux-saga/effects';
+import {
+    FETCH_PRS,
+    FETCH_PRS_BY_DATE,
+    setPrsAct,
+    setPrsByDateAct,
+} from '@/reducers/prs-actions';
 import makeApiSaga from '@/sagas/apiSaga';
 import requestor from '@/utils/requestor';
-import {
-  FETCH_PRS,
-  FETCH_PRS_BY_DATE,
-  setPrsAct,
-  setPrsByDateAct,
-} from '@/reducers/prs-actions';
+import { call, put, takeEvery } from 'redux-saga/effects';
 
 function* fetchPrsSaga() {
   const res = yield call(requestor.get, `/activities/prs`);

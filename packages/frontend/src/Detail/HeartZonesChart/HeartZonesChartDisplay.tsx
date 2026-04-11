@@ -1,32 +1,32 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import variwide from 'highcharts/modules/variwide';
-import gantt from 'highcharts/modules/gantt';
 import { hrZonesBg, hrZonesText } from '@/colors/hrZones';
-import getSmoothVal from '@/Detail/HeartZonesChart/getSmoothVal';
-import addXAxisPlotLine, { removeXAxisPlotLine } from '@/Detail/HeartZonesChart/addXAxisPlotline';
-import useMinMax from '@/Detail/HeartZonesChart/useMinMax';
 import { colors } from '@/Common/colors';
-import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
-import roundToNearest from '@/utils/roundToNearest';
-import {
-  condenseZonesFromHeartRate,
-  convertMetricSpeedToMPH,
-  getDurationString,
-} from '@/utils';
+import MapLibreHRZones from '@/Common/MapLibreHRZones';
+import addXAxisPlotLine, { removeXAxisPlotLine } from '@/Detail/HeartZonesChart/addXAxisPlotline';
 import getGradeColorAbs from '@/Detail/HeartZonesChart/getGradeColorAbs';
+import getSmoothVal from '@/Detail/HeartZonesChart/getSmoothVal';
+import StreamPinForm from '@/Detail/HeartZonesChart/StreamPinForm';
+import useMinMax from '@/Detail/HeartZonesChart/useMinMax';
 import useSegments from '@/Detail/HeartZonesChart/useSegments';
 import { Basic, Button, Flex, Grid } from '@/DLS';
-import useViewSize from '@/hooks/useViewSize';
-import { useDispatch } from 'react-redux';
-import { deleteStreamPin, setStreamPin } from '@/reducers/activities-actions';
-import StreamPinForm from '@/Detail/HeartZonesChart/StreamPinForm';
-import { useAppSelector } from '@/hooks/redux';
-import { selectStreamTypeData } from '@/reducers/activities';
-import useDarkReaderMode from '@/hooks/useDarkReaderMode';
 import Surface from '@/DLS/Surface';
-import MapLibreHRZones from '@/Common/MapLibreHRZones';
+import { useAppSelector } from '@/hooks/redux';
+import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import useViewSize from '@/hooks/useViewSize';
+import { selectStreamTypeData } from '@/reducers/activities';
+import { deleteStreamPin, setStreamPin } from '@/reducers/activities-actions';
+import {
+    condenseZonesFromHeartRate,
+    convertMetricSpeedToMPH,
+    getDurationString,
+} from '@/utils';
+import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
+import roundToNearest from '@/utils/roundToNearest';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import gantt from 'highcharts/modules/gantt';
+import variwide from 'highcharts/modules/variwide';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 variwide(Highcharts);
 gantt(Highcharts);

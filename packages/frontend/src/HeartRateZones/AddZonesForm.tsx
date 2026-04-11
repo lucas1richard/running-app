@@ -1,13 +1,13 @@
+import { Button } from '@/DLS';
+import { addHeartZonesAct } from '@/reducers/heartzones-actions';
 import {
-  type FC,
-  type ChangeEventHandler,
-  type FormEventHandler,
-  useCallback,
-  useState
+    type ChangeEventHandler,
+    type FC,
+    type FormEventHandler,
+    useCallback,
+    useState
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { addHeartZonesAct } from '@/reducers/heartzones-actions';
-import { Button } from '@/DLS';
 
 const AddZonesForm: FC = () => {
   const [z1, setZ1] = useState('');

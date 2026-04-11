@@ -1,11 +1,11 @@
-import { call, put } from 'redux-saga/effects';
-import { hash } from 'ohash';
 import {
-  setApiErrorAct,
-  setApiLoadingAct,
-  setApiSuccessAct,
+    setApiErrorAct,
+    setApiLoadingAct,
+    setApiSuccessAct,
 } from '@/reducers/apiStatus-actions';
 import type { AsyncAction } from '@/types';
+import { hash } from 'ohash';
+import { call, put } from 'redux-saga/effects';
 
 type CB =(...args: any[]) => any;
 

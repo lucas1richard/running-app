@@ -1,14 +1,13 @@
-import dayjs from 'dayjs';
-import Highcharts, { offset } from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import { memo, useMemo } from 'react';
 import { prColors } from '@/Common/colors';
-import classNames from 'classnames';
-import { getDurationString } from '@/utils';
-import { rankMap } from '@/Common/Icons/PRMedal';
-import useViewSize from '@/hooks/useViewSize';
 import Surface from '@/DLS/Surface';
 import useDarkReaderMode from '@/hooks/useDarkReaderMode';
+import useViewSize from '@/hooks/useViewSize';
+import { getDurationString } from '@/utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import { memo, useMemo } from 'react';
 
 const prColorsArr = [
   { value: 0, color: prColors.gold.fill, borderColor: prColors.gold.stroke },

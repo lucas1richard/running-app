@@ -1,7 +1,7 @@
-import { call, put, take, takeEvery } from 'redux-saga/effects';
-import { eventChannel, END } from 'redux-saga'
-import requestor from '@/utils/requestor';
 import makeApiSaga from '@/sagas/apiSaga';
+import requestor from '@/utils/requestor';
+import { END, eventChannel } from 'redux-saga';
+import { call, put, take, takeEvery } from 'redux-saga/effects';
 
 function sseStream(path: string) {
   const eventSource = new EventSource(`${requestor.domain}${path}`);

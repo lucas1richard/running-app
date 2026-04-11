@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import standardProps, { type StandardProps } from '@/DLS/utils/standardProps';
+import styled from 'styled-components';
 
 interface ButtonProps extends StandardProps {}
 

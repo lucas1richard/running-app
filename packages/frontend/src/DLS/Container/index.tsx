@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from 'react';
 import ViewSizeDisplay from '@/Common/ViewSizeDisplay';
+import styles from '@/DLS/Container/Container.module.scss';
+import type { BreakPoint } from '@/DLS/createBreakpoints';
+import { styledComponentsTheme } from '@/DLS/theme';
 import useResizeObserver from '@/hooks/useResizeObserver';
 import { ViewSizeContext } from '@/hooks/useViewSize';
-import { styledComponentsTheme } from '@/DLS/theme';
-import type { BreakPoint } from '@/DLS/createBreakpoints';
-import styles from '@/DLS/Container/Container.module.scss';
+import React, { useCallback, useState } from 'react';
 
 type ContainerProps = {
   children: React.ReactNode;

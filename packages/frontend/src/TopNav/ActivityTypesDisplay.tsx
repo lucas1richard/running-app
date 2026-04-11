@@ -1,8 +1,8 @@
-import { useDispatch, useSelector } from 'react-redux';
 import { MultiSelect } from '@/DLS/MultiSelect';
 import { selectActivitiesDisplayTypes } from '@/reducers/activities';
 import { setActivitiesDisplayTypesAct } from '@/reducers/activities-actions';
 import { setGlobalPrefsAct, triggerSetUserPrefs } from '@/reducers/preferences-actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 const ActivityTypesDisplay = () => {
   const types = useSelector(selectActivitiesDisplayTypes);

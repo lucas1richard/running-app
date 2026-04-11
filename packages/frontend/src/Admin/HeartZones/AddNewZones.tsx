@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addHeartZonesAct } from '@/reducers/heartzones-actions';
 import { Button, Flex } from '@/DLS';
 import Surface from '@/DLS/Surface';
+import { addHeartZonesAct } from '@/reducers/heartzones-actions';
+import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 const AddNewHRZones = ({ latestZone }) => {
   const dispatch = useDispatch();

@@ -1,12 +1,12 @@
-import { useMemo } from 'react';
-import { Basic, Grid } from '@/DLS';
+import HeatMapContainer from '@/Activities/HeatMapContainer';
+import { Basic } from '@/DLS';
+import { useAppSelector } from '@/hooks/redux';
+import useShowAfterMount from '@/hooks/useShowAfterMount';
 import useViewSize from '@/hooks/useViewSize';
+import { selectListActivities } from '@/reducers/activities';
 import CumulativeByRun from '@/Volume/CumulativeByRun';
 import VolumeTable from '@/Volume/VolumeTable';
-import { useAppSelector } from '@/hooks/redux';
-import { selectActivities, selectListActivities } from '@/reducers/activities';
-import useShowAfterMount from '@/hooks/useShowAfterMount';
-import HeatMapContainer from '@/Activities/HeatMapContainer';
+import { useMemo } from 'react';
 
 const Volume = () => {
   const showChart = useShowAfterMount();

@@ -1,6 +1,6 @@
-import { css } from 'styled-components';
-import { makeStyledThemeRule } from '@/DLS/utils/makeStyledCssRule';
 import { type Theme } from '@/DLS/theme';
+import { makeStyledThemeRule } from '@/DLS/utils/makeStyledCssRule';
+import { css } from 'styled-components';
 
 export interface FontProps {
   $fontSize?: keyof Theme['$fontSize'];

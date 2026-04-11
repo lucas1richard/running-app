@@ -7,11 +7,12 @@ import Grid from '@/DLS/Grid';
 import GridArea from '@/DLS/Grid/GridArea';
 
 export {
-  Basic,
-  Button,
-  Card,
-  Container,
-  Flex,
-  Grid,
-  GridArea,
+    Basic,
+    Button,
+    Card,
+    Container,
+    Flex,
+    Grid,
+    GridArea
 };
+

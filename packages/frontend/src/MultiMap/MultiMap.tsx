@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import HighchartsMap from 'highcharts/modules/map';
-import { useAppSelector } from '@/hooks/redux';
-import { selectActivity, selectStreamTypeMulti } from '@/reducers/activities';
+import { emptyArray } from '@/constants';
 import DetailDataFetcher from '@/Detail/DetailDataFetcher';
 import useSegments from '@/Detail/HeartZonesChart/useSegments';
 import useHRZoneIndicators from '@/Detail/RouteMap/useHRZoneIndicators';
-import dayjs from 'dayjs';
-import { emptyArray } from '@/constants';
 import { Button } from '@/DLS';
 import Surface from '@/DLS/Surface';
+import { useAppSelector } from '@/hooks/redux';
+import { selectActivity, selectStreamTypeMulti } from '@/reducers/activities';
+import dayjs from 'dayjs';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import HighchartsMap from 'highcharts/modules/map';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 HighchartsMap(Highcharts);
 

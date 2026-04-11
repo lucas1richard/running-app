@@ -1,8 +1,8 @@
-import React from 'react';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc'
+import { Flex } from '@/DLS';
 import propSelector from '@/utils/propSelector';
-import { Basic, Flex } from '@/DLS';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import React from 'react';
 
 dayjs.extend(utc)
 

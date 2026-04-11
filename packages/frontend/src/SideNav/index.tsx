@@ -1,7 +1,7 @@
+import Surface from '@/DLS/Surface';
+import styles from '@/SideNav/sidenav.module.scss';
 import { type FC } from 'react';
 import { Link } from 'react-router-dom';
-import styles from '@/SideNav/sidenav.module.scss';
-import Surface from '@/DLS/Surface';
 
 type SideNavProps = {};
 

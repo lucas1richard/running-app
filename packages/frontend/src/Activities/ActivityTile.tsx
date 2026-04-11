@@ -1,15 +1,15 @@
+import Tile from '@/Activities/Tile';
+import { ReactComponent as HumidityPercentSvg } from '@/assets/humudity-percent.svg';
+import { ReactComponent as SunnySnowingSvg } from '@/assets/sunny-snowing.svg';
+import { ReactComponent as ThermometerSvg } from '@/assets/thermometer.svg';
+import { useAppSelector } from '@/hooks/redux';
+import useViewSize from '@/hooks/useViewSize';
+import Spinner from '@/Loading/Spinner';
+import { selectActivity } from '@/reducers/activities';
+import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '@/reducers/activitydetail-actions';
+import { useGetApiStatus } from '@/reducers/apiStatus';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { useGetApiStatus } from '@/reducers/apiStatus';
-import { TRIGGER_UPDATE_ACTIVITY, triggerUpdateActivity } from '@/reducers/activitydetail-actions';
-import Spinner from '@/Loading/Spinner';
-import Tile from '@/Activities/Tile';
-import useViewSize from '@/hooks/useViewSize';
-import { useAppSelector } from '@/hooks/redux';
-import { selectActivity } from '@/reducers/activities';
-import { ReactComponent as SunnySnowingSvg } from '@/assets/sunny-snowing.svg';
-import { ReactComponent as HumidityPercentSvg } from '@/assets/humudity-percent.svg';
-import { ReactComponent as ThermometerSvg } from '@/assets/thermometer.svg';
 
 type ActivityTileProps = {
   activity: Activity;

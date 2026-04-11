@@ -1,11 +1,11 @@
-import React, { Fragment, useCallback, useState } from 'react';
-import dayjs, { type ManipulateType } from 'dayjs';
-import { selectActivitiesByTimeGroup, selectTimeGroupedRuns } from '@/reducers/activities';
-import { useAppSelector } from '@/hooks/redux';
-import { Basic, Card } from '@/DLS';
 import { ZonesWidthPercents } from '@/Activities/ZonesWidth';
-import { convertZonesCacheToPercents } from '@/utils';
+import { Basic } from '@/DLS';
 import Surface from '@/DLS/Surface';
+import { useAppSelector } from '@/hooks/redux';
+import { selectActivitiesByTimeGroup } from '@/reducers/activities';
+import { convertZonesCacheToPercents } from '@/utils';
+import dayjs, { type ManipulateType } from 'dayjs';
+import React, { Fragment, useCallback, useState } from 'react';
 
 const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'month' }) => {
   const [tg, setTimeGroup] = useState<ManipulateType>(timeGroup);

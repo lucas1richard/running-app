@@ -1,8 +1,8 @@
-import { useSelector } from 'react-redux';
-import { selectActivityDetails } from '@/reducers/activities';
-import Surface from '@/DLS/Surface';
 import DurationDisplay from '@/Common/DurationDisplay';
+import Surface from '@/DLS/Surface';
+import { selectActivityDetails } from '@/reducers/activities';
 import { convertMetersToFt, convertMetersToMiles } from '@/utils';
+import { useSelector } from 'react-redux';
 
 const SplitsMi = ({ id }) => {
   const details = useSelector((state) => selectActivityDetails(state, id));

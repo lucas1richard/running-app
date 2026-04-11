@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { Button, Flex } from '@/DLS';
+import { useAppSelector } from '@/hooks/redux';
 import { selectListPrerences } from '@/reducers/preferences';
 import { triggerSetUserPrefs } from '@/reducers/preferences-actions';
-import { useAppSelector } from '@/hooks/redux';
-import { Button, Flex } from '@/DLS';
+import React, { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 const setPrefAction = (payload: any) => ({ type: 'preferencesReducer/SET_LIST_PREFERENCES', payload });
 

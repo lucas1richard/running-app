@@ -1,34 +1,32 @@
-import React, { Profiler } from 'react';
+import AdminDashboard from '@/Admin';
+import App from '@/App';
+import '@/assets/main.scss';
+import CalendarView from '@/Calendar';
+import DataLayer from '@/DataLayer';
+import ActivityDetailPage from '@/Detail';
+import { Container } from '@/DLS';
+import Surface from '@/DLS/Surface';
+import { styledComponentsTheme } from '@/DLS/theme';
+import HeartRateZones from '@/HeartRateZones';
+import MultiMapPage from '@/MultiMap';
+import PersonalRecords from '@/PersonalRecords';
+import reducer from '@/reducers';
+import reportWebVitals from '@/reportWebVitals';
+import mySaga from '@/sagas';
+import SideNav from '@/SideNav';
+import TopNav from '@/TopNav';
+import Volume from '@/Volume';
+import { configureStore } from '@reduxjs/toolkit';
+import { enableMapSet } from 'immer';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit'
-import styled, { ThemeProvider } from 'styled-components';
-import createSagaMiddleware from 'redux-saga'
 import {
-  createBrowserRouter,
-  Outlet,
-  RouterProvider,
+    createBrowserRouter,
+    Outlet,
+    RouterProvider,
 } from 'react-router-dom';
-import '@/assets/main.scss';
-import App from '@/App';
-import { enableMapSet } from 'immer';
-import { styledComponentsTheme } from '@/DLS/theme';
-import reportWebVitals from '@/reportWebVitals';
-import reducer from '@/reducers'
-import mySaga from '@/sagas'
-import ActivityDetailPage from '@/Detail';
-import DataLayer from '@/DataLayer';
-import HeartRateZones from '@/HeartRateZones';
-import AdminDashboard from '@/Admin';
-import SideNav from '@/SideNav';
-import PersonalRecords from '@/PersonalRecords';
-import Volume from '@/Volume';
-import MultiMapPage from '@/MultiMap';
-import { Container } from '@/DLS';
-import CalendarView from '@/Calendar';
-import roundToNearest from '@/utils/roundToNearest';
-import Surface from '@/DLS/Surface';
-import TopNav from '@/TopNav';
+import createSagaMiddleware from 'redux-saga';
+import styled, { ThemeProvider } from 'styled-components';
 
 enableMapSet();
 

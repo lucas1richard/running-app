@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import ZonesWidth from '@/Activities/ZonesWidth';
 import DurationDisplay from '@/Common/DurationDisplay';
-import { hrZonesBg, hrZonesText } from '@/colors/hrZones';
-import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '@/utils';
-import styled from 'styled-components';
 import { Basic, Flex } from '@/DLS';
 import Surface from '@/DLS/Surface';
-import ZonesWidth from '@/Activities/ZonesWidth';
+import { hrZonesBg, hrZonesText } from '@/colors/hrZones';
+import { convertHeartDataToZoneSpeeds, convertHeartDataToZoneTimes, convertMetricSpeedToMPH } from '@/utils';
+import React, { useMemo } from 'react';
+import styled from 'styled-components';
 
 type HeartZonesDisplayProps = {
   zones: HeartZone;

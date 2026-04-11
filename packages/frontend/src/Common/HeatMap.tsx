@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react';
-import Highcharts from 'highcharts';
-import HighchartsMap from 'highcharts/modules/map';
-import HighchartsReact from 'highcharts-react-official';
-import roundToNearest from '@/utils/roundToNearest';
-import { Basic, Button } from '@/DLS';
-import Shimmer from '@/Loading/Shimmer';
+import { Button } from '@/DLS';
 import Surface from '@/DLS/Surface';
+import Shimmer from '@/Loading/Shimmer';
+import roundToNearest from '@/utils/roundToNearest';
+import Highcharts from 'highcharts';
+import HighchartsReact from 'highcharts-react-official';
+import HighchartsMap from 'highcharts/modules/map';
+import { useMemo, useState } from 'react';
 
 HighchartsMap(Highcharts);
 

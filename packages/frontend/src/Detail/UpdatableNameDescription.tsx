@@ -1,8 +1,8 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
 import styles from '@/Detail/Detail.module.css';
-import { triggerUpdateActivity } from '@/reducers/activitydetail-actions';
 import { Basic, Button } from '@/DLS';
+import { triggerUpdateActivity } from '@/reducers/activitydetail-actions';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 type UpdatableNameDescriptionProps = {
   activity: Activity;

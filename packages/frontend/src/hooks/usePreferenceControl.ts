@@ -1,14 +1,14 @@
-import { useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import fastDeepEqual from 'fast-deep-equal';
+import { useAppSelector } from '@/hooks/redux';
+import useDispatchAsyncAction from '@/hooks/useDispatchAsyncAction';
 import { type PreferencesKeyPath, selectPreferenceFree } from '@/reducers/preferences';
 import {
-  setPrefsFreeAct,
-  triggerSetActivityPrefs,
-  triggerSetUserPrefs,
+    setPrefsFreeAct,
+    triggerSetActivityPrefs,
+    triggerSetUserPrefs,
 } from '@/reducers/preferences-actions';
-import useDispatchAsyncAction from '@/hooks/useDispatchAsyncAction';
-import { useAppSelector } from '@/hooks/redux';
+import fastDeepEqual from 'fast-deep-equal';
+import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 const usePreferenceControl = <T = any>(
   keyPath: PreferencesKeyPath,

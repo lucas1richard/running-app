@@ -1,8 +1,8 @@
-import React, { memo, useMemo, useState } from 'react';
-import { Basic, Button, Flex } from '@/DLS';
 import ActivityTile from '@/Activities/ActivityTile';
+import { Button } from '@/DLS';
 import { useAppSelector } from '@/hooks/redux';
 import { selectListActivities } from '@/reducers/activities';
+import React, { memo, useMemo, useState } from 'react';
 
 type TileListProps = {
   showHideFunction: boolean;

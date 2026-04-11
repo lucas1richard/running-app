@@ -1,8 +1,8 @@
-import React, { KeyboardEventHandler, MouseEventHandler, useCallback } from 'react';
+import { Basic, Button, Flex } from '@/DLS';
 import usePreferenceControl from '@/hooks/usePreferenceControl';
 import type { PreferencesKeyPath } from '@/reducers/preferences';
-import { Basic, Button, Flex } from '@/DLS';
 import propSelector from '@/utils/propSelector';
+import React, { KeyboardEventHandler, MouseEventHandler, useCallback } from 'react';
 
 type PreferenceControlProps = {
   subject: string,
