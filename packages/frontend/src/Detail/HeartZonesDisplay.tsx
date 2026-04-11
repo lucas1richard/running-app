@@ -48,7 +48,11 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
   if (Number(percents[ix]) === 0) {
     return null;
   }
+
   const isMaxPercentage = Number(percents[ix]) === Math.max.apply(null, percents.map(Number));
+  const avgPacePerMi = Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)));
+  const maxPacePerMi = Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)));
+
   return (
     <CellWrapper
       ix={ix}
@@ -69,13 +73,13 @@ const Cell: React.FC<CellProps> = ({ ix, title, range, percents, totalTimes, avg
           <DataWrapper $flexJustify="space-between">
             <b>Avg Pace in Zone:</b>
             <div>
-              <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].avg)))} />/mi
+              <DurationDisplay numSeconds={avgPacePerMi} />/mi
             </div>
           </DataWrapper>
           <DataWrapper $flexJustify="space-between">
             <b>Fastest Pace in Zone:</b>
             <div>
-              <DurationDisplay numSeconds={Math.floor((3660 / convertMetricSpeedToMPH(avg[ix].max)))} />/mi
+              <DurationDisplay numSeconds={maxPacePerMi} />/mi
             </div>
           </DataWrapper>
         </>

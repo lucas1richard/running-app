@@ -24,6 +24,12 @@ const HeatMapContainer: React.FC<any> = ({ referenceTime, timeframe, localStorag
     return data[index]?.total_seconds || 0;
   }
 
+  console.log('heatmap data', { data, apiStatus });
+
+  if (apiStatus === 'success' && !data.length) {
+    return <div>No data for selected timeframe.</div>;
+  }
+  
   return (
     <>
       <HeatMapMapLibre

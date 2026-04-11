@@ -1,6 +1,6 @@
-import { Fragment, useCallback, useState } from 'react';
+import React, { Fragment, useCallback, useState } from 'react';
 import dayjs, { type ManipulateType } from 'dayjs';
-import { selectTimeGroupedRuns } from '@/reducers/activities';
+import { selectActivitiesByTimeGroup, selectTimeGroupedRuns } from '@/reducers/activities';
 import { useAppSelector } from '@/hooks/redux';
 import { Basic, Card } from '@/DLS';
 import { ZonesWidthPercents } from '@/Activities/ZonesWidth';
@@ -13,7 +13,7 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
     setTimeGroup(e.target.value as ManipulateType);
   }, []);
 
-  const activities = useAppSelector((state) => selectTimeGroupedRuns(state, tg));
+  const activities = useAppSelector((state) => selectActivitiesByTimeGroup(state, tg));
 
   return (
     <div className="card">
@@ -25,12 +25,22 @@ const VolumeTable: React.FC<{ timeGroup: ManipulateType }> = ({ timeGroup = 'mon
         <option value="year">Year</option>
       </select>
 
-      <div>
-        {activities.map(({ zones, runs }) => (
-          <ZonesWidthPercents
-            percents={convertZonesCacheToPercents(zones)}
-            id={runs[0]?.id}
-          />
+      <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', columnGap: '0.25rem', marginTop: '1rem' }}>
+        {activities.map(({ zones, runs, sum, start }, ix) => (
+          <React.Fragment key={start.toString()}>
+            {ix === 0 || dayjs(start).format('MMM YYYY') !== dayjs(activities[ix - 1].start).format('MMM YYYY') ? (
+              <div className="text-xs">
+                {dayjs(start).format('MMM YYYY')}
+              </div>
+            ) : <div className='text-xs'>&nbsp;</div>}
+            <div className="flex-item-grow">
+              <ZonesWidthPercents
+                percents={convertZonesCacheToPercents(zones)}
+                id={runs[0]?.id}
+                height="100%"
+              />
+            </div>
+          </React.Fragment>
         ))}
       </div>
 

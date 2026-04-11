@@ -208,7 +208,7 @@ export const selectActivities = createDeepEqualSelector(
 
     return order
       .map((id) => getActivity(activities, id))
-      .filter(({ sport_type }) => displayPrefs[sport_type]);
+      .filter(({ sport_type }) => displayPrefs?.[sport_type]);
   }
 );
 
@@ -231,7 +231,7 @@ const getListActivities = (activities, { sortBy, sortOrder}, displayTypePrefs, f
     return order
       .map((id) => getActivity(activities, id))
       // .map((id) => activities.activities[id])
-      .filter(({ sport_type }) => displayTypePrefs[sport_type]);
+      .filter(({ sport_type }) => displayTypePrefs?.[sport_type]);
 };
 export const selectListActivities = createDeepEqualSelector([
   getActivitiesState,
@@ -342,9 +342,9 @@ export const selectZoneGroupedRuns = createDeepEqualSelector([
 
 const getTimeGroup = (_: RootState, timeGroup: ManipulateType = 'week') => timeGroup;
 const getTimeGroupedRuns = (preferenceZoneId, allheartzones, activities: Activity[], timeGroup: ManipulateType) => {
-  const nextSunday = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
+  const nextCycleStart = dayjs().endOf(timeGroup).add(1, 'day').startOf('day');
   const boxes: { start: Dayjs, sum: number, runs: Activity[], zones: HeartZoneCache }[] = [];
-  let curr = nextSunday;
+  let curr = nextCycleStart;
   let next = curr.subtract(1, timeGroup);
   let runs = [];
   let sum = 0;
@@ -388,9 +388,70 @@ const getTimeGroupedRuns = (preferenceZoneId, allheartzones, activities: Activit
 
   return boxes;
 };
+
 export const selectTimeGroupedRuns = createDeepEqualSelector(
   selectPreferencesZonesId, selectAllHeartZones, selectActivities, getTimeGroup,
   getTimeGroupedRuns
+);
+
+// loop through the time series and return an array with an element for every time period, even if there are no activities within.
+// for each time period, add activities
+const getActivitiesByTimeGroup = (preferenceZoneId, allheartzones, activities: Activity[], timeGroup: ManipulateType) => {
+  if (!activities?.length) return [];
+  const oldestToNewestActs = [...activities].reverse();
+  const currCycleStart = dayjs(oldestToNewestActs[1].start_date_local).startOf(timeGroup).startOf('day');
+  const boxes: { start: Dayjs, sum: number, runs: Activity[], zones: HeartZoneCache }[] = [];
+  let curr = currCycleStart;
+  let next = curr.add(1, timeGroup);
+  let runs = [];
+  let sum = 0;
+  let zones = {
+    heartZoneId: 0,
+    seconds_z1: 0,
+    seconds_z2: 0,
+    seconds_z3: 0,
+    seconds_z4: 0,
+    seconds_z5: 0,
+  };
+  const numActivities = activities.length;
+
+  let ix = 1;
+  while (ix < numActivities) {
+    while (oldestToNewestActs[ix] && dayjs(oldestToNewestActs[ix].start_date_local).isBefore(next)) {
+      const run = oldestToNewestActs[ix];
+      runs.push(run);
+      sum += run.distance_miles;
+
+      const nativeZones = getApplicableHeartZone(allheartzones, run.start_date);
+      const heartRateZones = getHeartZones(allheartzones, run.start_date, nativeZones, preferenceZoneId);
+      Object.entries(run.zonesCaches[heartRateZones.id] || {}).forEach(([key, value]) => {
+        if (!zones[key]) zones[key] = 0;
+        zones[key] += value;
+      });
+      ix++;
+    }
+    boxes.push({ start: curr, sum, runs, zones });
+    curr = next;
+    next = curr.add(1, timeGroup);
+    runs = [];
+    runs = [];
+    sum = 0;
+    zones = {
+      heartZoneId: 0,
+      seconds_z1: 0,
+      seconds_z2: 0,
+      seconds_z3: 0,
+      seconds_z4: 0,
+      seconds_z5: 0,
+    };
+  }
+
+  return boxes.reverse();
+};
+
+export const selectActivitiesByTimeGroup = createDeepEqualSelector(
+  selectPreferencesZonesId, selectAllHeartZones, selectActivities, getTimeGroup,
+  getActivitiesByTimeGroup
 );
 
 export const selectActivitiesByDate = createDeepEqualSelector(

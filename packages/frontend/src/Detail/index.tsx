@@ -52,7 +52,7 @@ const ActivityDetailPage = () => {
   const activity = useAppSelector((state) => selectActivity(state, id));
 
   const [
-    tileBgColor, setTileBgColor, savePreferences
+    savePreferences
   ] = usePreferenceControl(['activities', idString, 'tileBackgroundIndicator']);
   const [shouldShowLaps] = usePreferenceControl(activityShouldShowLaps(idString));
   const [shouldShowSegments] = usePreferenceControl(activityShouldShowSegments(idString));
@@ -66,9 +66,6 @@ const ActivityDetailPage = () => {
   const zones = allZones.find(({ id }) => id === zonesId) || nativeZones;
 
   const details = useAppSelector((state) => selectActivityDetails(state, id));
-  const viewSize = useViewSize();
-
-  // const { backgroundColor } = getWeatherStyles(activity?.weather);
 
   if (isLoading) {
     return (
@@ -106,7 +103,6 @@ const ActivityDetailPage = () => {
         </B.Div>
         <Surface>
           <div className={`$pad border-radius-1`}>
-            <Button onClick={() => setTileBgColor('weather')}>Show Weather Background</Button>
             <UpdatableNameDescription
               activity={activity}
               details={details}

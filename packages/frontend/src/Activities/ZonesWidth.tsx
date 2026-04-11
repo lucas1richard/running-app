@@ -2,25 +2,23 @@ import React, { memo, useMemo } from 'react';
 import { convertHeartDataToZonePercents, convertZonesCacheToPercents } from '@/utils';
 import { hrZonesText } from '@/colors/hrZones';
 
-export const ZonesWidthPercents: React.FC<{ id: string | number, percents: string[] }> = memo(({ id, percents = [] }) => {
+export const ZonesWidthPercents: React.FC<{ id: string | number, percents: string[], height?: string }> = memo(({ id, percents = [], height = '1rem' }) => {
   const widthStyles = percents.filter((n) => Boolean(Number(n))).map((percent, ix) => ({
       width: `${percent}%`,
-      height: '1rem',
+      height: '100%',
       overflow: 'hidden',
     }));
 
   return (
-    <div>
-      <div className="flex">
-        {widthStyles.map((style, ix) => (
-          <div
-            key={`${ix}-${id}`}
-            style={style}
-            className={`hr-zone-${ix + 1}-bg hr-zone-${ix + 1}-border`}
-            title={`Heart Rate Zone ${ix + 1}: ${style.width}`}
-          />
-        ))}
-      </div>
+    <div className="flex bg-neutral-200" style={{ height }}>
+      {widthStyles.map((style, ix) => (
+        <div
+          key={`${ix}-${id}`}
+          style={style}
+          className={`hr-zone-${ix + 1}-bg hr-zone-${ix + 1}-border`}
+          title={`Heart Rate Zone ${ix + 1}: ${style.width}`}
+        />
+      ))}
     </div>
   );
 })
@@ -80,7 +78,7 @@ const ZonesWidth: React.FC<ZonesWidthProps> = ({ zones, heartData, id, zonesCach
   ]
 
   return (
-    <div>
+    <div style={{ height: height || '1rem' }}>
       {variant === 'linear' && (
         <div
           className="elevation-1"

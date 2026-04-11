@@ -40,11 +40,10 @@ const SimilarWorkouts = ({ activity, zones }) => {
           return (
             <Tile
               key={activity.id}
-              isCompact={true}
               activity={activity}
               zones={zones}
             >
-              <div className="text-sm">
+              {/* <div className="text-sm">
                 Route Score from Base: {meta.routeScoreFromBase}
               </div>
               <div className="text-sm">
@@ -55,7 +54,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
               </div>
               <div>
                 Longest common subsequence: {meta.longestCommonSegmentSubsequence}
-              </div>
+              </div> */}
               <Button onClick={toggleCompare}>
                 {isToggled ? 'Remove Compare' : 'Compare in Multimap'}
               </Button>
