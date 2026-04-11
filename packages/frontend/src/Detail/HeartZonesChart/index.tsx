@@ -1,4 +1,4 @@
-import HeatMapMapLibre from '@/Common/HeatMapMapLibre';
+import GradientMapMapLibre from '@/Common/GradientMapMapLibre';
 import { emptyArray } from '@/constants';
 import HeartZonesChartDisplay from '@/Detail/HeartZonesChart/HeartZonesChartDisplay';
 import { Basic, Button } from '@/DLS';
@@ -7,6 +7,7 @@ import usePreferenceControl from '@/hooks/usePreferenceControl';
 import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { selectHeartZones } from '@/reducers/heartzones';
 import { useMemo } from 'react';
+import getSmoothVal from './getSmoothVal';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
@@ -23,29 +24,46 @@ const HeartZonesChartContainer = ({ id }) => {
   const laps = details?.laps || emptyArray;
   const splitsMi = details?.splits_standard || emptyArray;
 
+  const fullTime = useMemo(() => {
+    const maxTime = timeStream[timeStream.length - 1];
+    const timeArr = new Array(maxTime).fill(0).map((_, ix) => ix);
+    for (let i = 0, j = 0; i < timeArr.length; i++) {
+      if (timeStream[j] === i) j++;
+      else timeArr[i] = null;
+    }
+    return timeArr;
+  }, [timeStream]);
+
+  const smoothVelocity = useMemo(
+    () => getSmoothVal(fullTime, velocityStream, 1),
+    [fullTime, velocityStream, 1]
+  );
+
+  const cutoff = 2;
+
   const hrHeatMapData = useMemo(() => heartRateStream.map((v, ix) => ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
-  })).slice(20, heartRateStream.length - 20), [heartRateStream, latlngStream]);
+  })).slice(cutoff, heartRateStream.length - cutoff), [heartRateStream, latlngStream]);
 
   const altitudeHeatMapData = useMemo(() => altitudeStream.map((v, ix) => ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
-  })).slice(20, altitudeStream.length - 20), [altitudeStream, latlngStream]);
+  })).slice(cutoff, altitudeStream.length - cutoff), [altitudeStream, latlngStream]);
 
   const gradeHeatMapData = useMemo(() => gradeStream.map((v, ix) => ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
-  })).slice(20, gradeStream.length - 20), [gradeStream, latlngStream]);
+  })).slice(cutoff, gradeStream.length - cutoff), [gradeStream, latlngStream]);
 
-  const velocityHeatMapData = useMemo(() => velocityStream.map((v, ix) => ({
+  const velocityHeatMapData = useMemo(() => smoothVelocity.map((v, ix) => ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
-  })).slice(20, velocityStream.length - 20), [velocityStream, latlngStream]);
+  })).slice(cutoff, smoothVelocity.length - cutoff), [smoothVelocity, latlngStream]);
 
   const [
     zonesBandsDirection,
@@ -58,7 +76,7 @@ const HeartZonesChartContainer = ({ id }) => {
 
   const getPercentile = (p: number, data: { measure: number; }[]) => {
     data = data.slice().sort((a, b) => a.measure - b.measure);
-    const index = Math.floor(p * data.length);
+    const index = Math.floor(p * data.length - 1);
     return data[index]?.measure || 0;
   };
 
@@ -86,7 +104,7 @@ const HeartZonesChartContainer = ({ id }) => {
               type="radio"
               value="xAxis"
               checked={zonesBandsDirection === 'xAxis'}
-              onChange={(e) => setZonesBandsDirection('xAxis')}
+              onChange={() => setZonesBandsDirection('xAxis')}
             />
             xAxis
           </label>
@@ -95,7 +113,7 @@ const HeartZonesChartContainer = ({ id }) => {
               type="radio"
               value="yAxis"
               checked={zonesBandsDirection === 'yAxis'}
-              onChange={(e) => setZonesBandsDirection('yAxis')}
+              onChange={() => setZonesBandsDirection('yAxis')}
             />
             yAxis
           </label>
@@ -104,7 +122,7 @@ const HeartZonesChartContainer = ({ id }) => {
               type="radio"
               value="none"
               checked={zonesBandsDirection === 'none'}
-              onChange={(e) => setZonesBandsDirection('none')}
+              onChange={() => setZonesBandsDirection('none')}
             />
             None
           </label>
@@ -122,58 +140,70 @@ const HeartZonesChartContainer = ({ id }) => {
       >
         <Basic.Div $width="50%" $widthSmDown="100%">
           <Basic.Div $fontSize="h2" $marginB={1}>Heart Rate</Basic.Div>
-          <HeatMapMapLibre
+          <GradientMapMapLibre
+            id={id}
+            animated={true}
             title="Heart Rate"
             data={hrHeatMapData}
             measure="measure"
+            time={timeStream}
             height={600}
             deferRender={hrHeatMapData.length === 0}
             minColor={[0, 0, 255, 1]}
             maxColor={[255, 0, 0, 1]}
-            floorValue={getPercentile(0.4, hrHeatMapData)}
-            ceilingValue={getPercentile(0.97, hrHeatMapData)}
+            floorValue={getPercentile(0.1, hrHeatMapData)}
+            ceilingValue={getPercentile(1, hrHeatMapData)}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
           <Basic.Div $fontSize="h2" $marginB={1}>Velocity</Basic.Div>
-          <HeatMapMapLibre
+          <GradientMapMapLibre
+            id={id}
+            animated={true}
+            time={timeStream}
             title="Velocity"
             data={velocityHeatMapData}
             measure="measure"
             height={600}
             deferRender={velocityHeatMapData.length === 0}
-            minColor={[255, 0, 0, 1]}
-            maxColor={[0, 255, 0, 1]}
-            floorValue={getPercentile(0.1, velocityHeatMapData)}
-            ceilingValue={getPercentile(0.8, velocityHeatMapData)}
+            minColor={[0, 0, 255, 1]}
+            maxColor={[255, 0, 0, 1]}
+            floorValue={getPercentile(0, velocityHeatMapData)}
+            ceilingValue={getPercentile(1, velocityHeatMapData)}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
           <Basic.Div $fontSize="h2" $marginB={1}>Altitude</Basic.Div>
-          <HeatMapMapLibre
+          <GradientMapMapLibre
+            id={id}
+            animated={true}
             title="Altitude"
             data={altitudeHeatMapData}
             measure="measure"
+            time={timeStream}
             height={600}
             deferRender={altitudeHeatMapData.length === 0}
             minColor={[0, 0, 255, 1]}
-            maxColor={[255, 255, 0, 1]}
-            floorValue={getPercentile(0.4, altitudeHeatMapData)}
-            ceilingValue={getPercentile(0.97, altitudeHeatMapData)}
+            maxColor={[255, 0, 0, 1]}
+            floorValue={getPercentile(0.01, altitudeHeatMapData)}
+            ceilingValue={getPercentile(1, altitudeHeatMapData)}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
           <Basic.Div $fontSize="h2" $marginB={1}>Grade</Basic.Div>
-          <HeatMapMapLibre
+          <GradientMapMapLibre
+            id={id}
+            animated={true}
             title="Grade"
             data={gradeHeatMapData}
             measure="measure"
             height={600}
             deferRender={gradeHeatMapData.length === 0}
-            minColor={[0, 255, 0, 1]}
+            time={timeStream}
+            minColor={[0, 0, 255, 1]}
             maxColor={[255, 0, 0, 1]}
-            floorValue={getPercentile(0.2, gradeHeatMapData)}
-            ceilingValue={getPercentile(0.97, gradeHeatMapData)}
+            floorValue={getPercentile(0, gradeHeatMapData)}
+            ceilingValue={getPercentile(1, gradeHeatMapData)}
           />
         </Basic.Div>
       </Basic.Div>
