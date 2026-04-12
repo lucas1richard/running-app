@@ -104,8 +104,8 @@ function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
     >
       <Marker
         ref={mapRef}
-        latitude={latlngStreamData[pointer][0]}
-        longitude={latlngStreamData[pointer][1]}
+        latitude={latlngStreamData[pointer]?.[0] || 0}
+        longitude={latlngStreamData[pointer]?.[1] || 0}
       >
         <Basic.Div $width={1.2} $height={1.2} $colorBg="gold" $borderRadius="50%" />
       </Marker>

@@ -1,5 +1,5 @@
-import styles from '@/DLS/Surface/surface.module.css';
 import { forwardRef } from 'react';
+import styles from './surface.module.css';
 
 type SurfaceProps = {
   variant?: 'base' | 'foreground';

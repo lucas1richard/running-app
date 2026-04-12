@@ -70,13 +70,13 @@ const WeatherReporter: FC<Props> = ({ id }) => {
         dispatch(setWeatherDataAct([startRecord, endRecord]));
 
         setSkyStart(wmoToCondition(startRecord.weather_code));
-        setTempStart(Math.round(startRecord.temperature_2m * 9 / 5 + 32));
+        setTempStart(Math.round(startRecord.temperature_2m));
         setHumidityStart(startRecord.relative_humidity_2m);
         setWindStart(startRecord.wind_speed_10m);
         setPrecipStart(startRecord.precipitation);
 
         setSkyEnd(wmoToCondition(endRecord.weather_code));
-        setTempEnd(Math.round(endRecord.temperature_2m * 9 / 5 + 32));
+        setTempEnd(Math.round(endRecord.temperature_2m));
         setHumidityEnd(endRecord.relative_humidity_2m);
         setWindEnd(endRecord.wind_speed_10m);
         setPrecipEnd(endRecord.precipitation);
@@ -91,7 +91,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             Start Conditions:
           </div>
           <div>{skyStart}</div>
-          <div>{tempStart} &deg;F</div>
+          <div>{tempStart * 9 / 5 + 32} &deg;F</div>
           <div><small>Relative Humidity:</small> {humidityStart}%</div>
           <div><small>Wind:</small> {windStart} mph</div>
           <div><small>Precipitation:</small> {precipStart} mm</div>
@@ -101,7 +101,7 @@ const WeatherReporter: FC<Props> = ({ id }) => {
             End Conditions:
           </div>
           <div>{skyEnd}</div>
-          <div>{tempEnd} &deg;F</div>
+          <div>{tempEnd * 9 / 5 + 32} &deg;F</div>
           <div><small>Relative Humidity:</small> {humidityEnd}%</div>
           <div><small>Wind:</small> {windEnd} mph</div>
           <div><small>Precipitation:</small> {precipEnd} mm</div>

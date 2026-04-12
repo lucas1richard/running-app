@@ -3,8 +3,6 @@ import { colors } from '@/Common/colors';
 import MapLibreHRZones from '@/Common/MapLibreHRZones';
 import addXAxisPlotLine, { removeXAxisPlotLine } from '@/Detail/HeartZonesChart/addXAxisPlotline';
 import getGradeColorAbs from '@/Detail/HeartZonesChart/getGradeColorAbs';
-import getSmoothVal from '@/Detail/HeartZonesChart/getSmoothVal';
-import StreamPinForm from '@/Detail/HeartZonesChart/StreamPinForm';
 import useMinMax from '@/Detail/HeartZonesChart/useMinMax';
 import useSegments from '@/Detail/HeartZonesChart/useSegments';
 import { Basic, Button, Flex, Grid } from '@/DLS';
@@ -27,6 +25,7 @@ import gantt from 'highcharts/modules/gantt';
 import variwide from 'highcharts/modules/variwide';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import StreamPinForm from './StreamPinForm';
 
 variwide(Highcharts);
 gantt(Highcharts);
@@ -65,7 +64,6 @@ type Props = {
 
 const HeartZonesChartDisplay: React.FC<Props> = ({
   id,
-  averageSpeed,
   altitude,
   bestEfforts,
   data,
@@ -81,11 +79,21 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
   const latlngStream = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng'));
   const [latlngPointer, setLatlngPointer] = useState(0);
-  const [highlightedSegment, setHighlightedSegment] = useState(undefined);
+  const [, setHighlightedSegment] = useState(undefined);
 
   const addPin = useCallback(function (streamKey) {
     dispatch(setStreamPin(id, streamKey, this.index, '', '', latlngStream[this.index]));
   }, [id, dispatch, latlngStream]);
+
+  // const fullArrayIxMap = useMemo(() => {
+  //   const maxTime = time[time.length - 1];
+  //   const timeArr = time.map((_, ix) => ix);
+  //   for (let i = 0, j = 0; i < timeArr.length; i++) {
+  //     if (time[j] === i) j++;
+  //     else timeArr[i] = null;
+  //   }
+  //   return timeArr;
+  // }, [time]);
 
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
@@ -97,7 +105,9 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     return timeArr;
   }, [time]);
 
-  const yAxisBands = useMemo(() => [1, 2, 3, 4, 5].map((z, ix) => ({
+  console.log(time.length, fullTime.length, altitude.length);
+
+  const yAxisBands = useMemo(() => [1, 2, 3, 4, 5].map((z) => ({
     from: zones[`z${z}`],
     to: (zones[`z${z + 1}`] - 1) || 220,
     color: hrZonesBg[z],
@@ -105,7 +115,13 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   })), [zones]);
 
   const smoothHeartRate = useMemo(
-    () => getSmoothVal(fullTime, data, smoothAverageWindow),
+    // () => getSmoothVal(fullTime, data, smoothAverageWindow),
+    () => {
+      const maxTime = time[time.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      data.forEach((val, ix) => fullDataWithNulls[time[ix]] = val);
+      return fullDataWithNulls;
+    },
     [fullTime, data, smoothAverageWindow]
   );
   const heartRateData = useMemo<[number, number][]>(
@@ -113,11 +129,21 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     [smoothHeartRate, fullTime]
   );
   const altitudeData = useMemo<[number, number][]>(
-    () => fullTime.map((val) => [val, altitude[val]]),
+    () => {
+      const maxTime = time[time.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      altitude.forEach((val, ix) => fullDataWithNulls[time[ix]] = val);
+      return fullTime.map((val) => [val, fullDataWithNulls[val]]);
+    },
     [altitude, fullTime]
   );
   const smoothVelocity = useMemo(
-    () => getSmoothVal(fullTime, velocity, smoothAverageWindow),
+    () => {
+      const maxTime = time[time.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      velocity.forEach((val, ix) => fullDataWithNulls[time[ix]] = val);
+      return fullTime.map((val) => fullDataWithNulls[val]);
+    },
     [fullTime, velocity, smoothAverageWindow]
   );
   const velocityData = useMemo<[number, number][]>(
@@ -150,8 +176,8 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   );
 
   const hrzones = useMemo(
-    () => condenseZonesFromHeartRate(zones, smoothHeartRate),
-    [zones, smoothHeartRate]
+    () => condenseZonesFromHeartRate(zones, smoothHeartRate, fullTime),
+    [zones, smoothHeartRate, fullTime]
   );
 
   const chartRef = useRef<{ chart: Highcharts.Chart; container: React.RefObject<HTMLDivElement>; }>();
@@ -198,7 +224,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
 
   useEffect(() => {
     if (chartRef.current?.chart) {
-      streamPins.forEach(({ stream_key, index }) => {
+      streamPins.forEach(({ index }) => {
         addXAxisPlotLine(index, 'magenta', chartRef);
       });
     }

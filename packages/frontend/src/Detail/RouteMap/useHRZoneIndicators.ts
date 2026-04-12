@@ -35,12 +35,12 @@ const useHRZoneIndicators = (ids: number[], pointer: number, smoothAverageWindow
   const zones = useAppSelector((state) => selectHeartZones(state, activity?.start_date));
 
   const hrzonesArray = useMemo(
-    () => ids.map((_, ix) => condenseZonesFromHeartRate(zones, smoothHeartRateArray[ix])),
+    () => ids.map((_, ix) => condenseZonesFromHeartRate(zones, smoothHeartRateArray[ix], fullTimeArray[ix])),
     [ids, zones, smoothHeartRateArray]
   );
 
   const indicatorColors = useMemo(() => {
-    return ids.map((id, ix) => {
+    return ids.map((_id, ix) => {
       const hrzones = hrzonesArray[ix];
       if (!hrzones) return { fill: 'black', stroke: 'black' };
       const { zone } = hrzones.find(

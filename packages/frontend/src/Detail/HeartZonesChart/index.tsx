@@ -7,7 +7,6 @@ import usePreferenceControl from '@/hooks/usePreferenceControl';
 import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { selectHeartZones } from '@/reducers/heartzones';
 import { useMemo } from 'react';
-import getSmoothVal from './getSmoothVal';
 
 const HeartZonesChartContainer = ({ id }) => {
   const activity = useAppSelector((state) => selectActivity(state, id));
@@ -34,36 +33,73 @@ const HeartZonesChartContainer = ({ id }) => {
     return timeArr;
   }, [timeStream]);
 
-  const smoothVelocity = useMemo(
-    () => getSmoothVal(fullTime, velocityStream, 1),
-    [fullTime, velocityStream, 1]
+  // const smoothVelocity = useMemo(
+  //   () => getSmoothVal(fullTime, velocityStream, 1),
+  //   [fullTime, velocityStream, 1]
+  // );
+
+  const heartRateWithNulls = useMemo(
+    // () => getSmoothVal(fullTime, data, smoothAverageWindow),
+    () => {
+      const maxTime = timeStream[timeStream.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      heartRateStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val);
+      return fullDataWithNulls;
+    },
+    [fullTime, heartRateStream]
+  );
+  const velocityWithNulls = useMemo(
+    () => {
+      const maxTime = timeStream[timeStream.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      velocityStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val);
+      return fullDataWithNulls;
+    },
+    [fullTime, velocityStream]
+  );
+
+  const altitudeWithNulls = useMemo(
+    () => {
+      const maxTime = timeStream[timeStream.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      altitudeStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val);
+      return fullDataWithNulls;
+    },
+    [fullTime, altitudeStream]
   );
 
   const cutoff = 2;
 
-  const hrHeatMapData = useMemo(() => heartRateStream.map((v, ix) => ({
+  const latLngWithNulls = useMemo(() => {
+    const maxTime = timeStream[timeStream.length - 1];
+    const fullDataWithNulls = new Array(maxTime).fill(null);
+    latlngStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val);
+    return fullDataWithNulls;
+  }, []);
+
+  const hrHeatMapData = useMemo(() => heartRateWithNulls.map((v, ix) => v === null ? v : ({
+    lat: latLngWithNulls[ix]?.[0] || 0,
+    lon: latLngWithNulls[ix]?.[1] || 0,
+    measure: v
+  })).slice(cutoff, heartRateWithNulls.length - cutoff), [heartRateWithNulls, latLngWithNulls]);
+
+  const altitudeHeatMapData = useMemo(() => altitudeWithNulls.map((v, ix) => v === null ? v : ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
-  })).slice(cutoff, heartRateStream.length - cutoff), [heartRateStream, latlngStream]);
+  })).slice(cutoff, altitudeWithNulls.length - cutoff), [altitudeWithNulls, latlngStream]);
 
-  const altitudeHeatMapData = useMemo(() => altitudeStream.map((v, ix) => ({
-    lat: latlngStream[ix]?.[0] || 0,
-    lon: latlngStream[ix]?.[1] || 0,
-    measure: v
-  })).slice(cutoff, altitudeStream.length - cutoff), [altitudeStream, latlngStream]);
-
-  const gradeHeatMapData = useMemo(() => gradeStream.map((v, ix) => ({
+  const gradeHeatMapData = useMemo(() => gradeStream.map((v, ix) => v === null ? v : ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
   })).slice(cutoff, gradeStream.length - cutoff), [gradeStream, latlngStream]);
 
-  const velocityHeatMapData = useMemo(() => smoothVelocity.map((v, ix) => ({
+  const velocityHeatMapData = useMemo(() => velocityWithNulls.map((v, ix) => v === null ? v : ({
     lat: latlngStream[ix]?.[0] || 0,
     lon: latlngStream[ix]?.[1] || 0,
     measure: v
-  })).slice(cutoff, smoothVelocity.length - cutoff), [smoothVelocity, latlngStream]);
+  })).slice(cutoff, velocityWithNulls.length - cutoff), [velocityWithNulls, latlngStream]);
 
   const [
     zonesBandsDirection,
@@ -146,13 +182,14 @@ const HeartZonesChartContainer = ({ id }) => {
             title="Heart Rate"
             data={hrHeatMapData}
             measure="measure"
+            latLngWithNulls={latLngWithNulls}
             time={timeStream}
             height={600}
             deferRender={hrHeatMapData.length === 0}
-            minColor={[0, 0, 255, 1]}
+            minColor={[72, 138, 248, 1]}
             maxColor={[255, 0, 0, 1]}
-            floorValue={getPercentile(0.1, hrHeatMapData)}
-            ceilingValue={getPercentile(1, hrHeatMapData)}
+            floorValue={getPercentile(0.1, hrHeatMapData.filter(Boolean))}
+            ceilingValue={getPercentile(0.99, hrHeatMapData.filter(Boolean))}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
@@ -164,12 +201,13 @@ const HeartZonesChartContainer = ({ id }) => {
             title="Velocity"
             data={velocityHeatMapData}
             measure="measure"
+            latLngWithNulls={latLngWithNulls}
             height={600}
             deferRender={velocityHeatMapData.length === 0}
-            minColor={[0, 0, 255, 1]}
+            minColor={[72, 138, 248, 1]}
             maxColor={[255, 0, 0, 1]}
-            floorValue={getPercentile(0, velocityHeatMapData)}
-            ceilingValue={getPercentile(1, velocityHeatMapData)}
+            floorValue={getPercentile(0.1, velocityHeatMapData.filter(Boolean))}
+            ceilingValue={getPercentile(0.99, velocityHeatMapData.filter(Boolean))}
           />
         </Basic.Div>
         <Basic.Div $width="50%" $widthSmDown="100%">
@@ -180,16 +218,17 @@ const HeartZonesChartContainer = ({ id }) => {
             title="Altitude"
             data={altitudeHeatMapData}
             measure="measure"
+            latLngWithNulls={latLngWithNulls}
             time={timeStream}
             height={600}
             deferRender={altitudeHeatMapData.length === 0}
-            minColor={[0, 0, 255, 1]}
+            minColor={[72, 138, 248, 1]}
             maxColor={[255, 0, 0, 1]}
-            floorValue={getPercentile(0.01, altitudeHeatMapData)}
-            ceilingValue={getPercentile(1, altitudeHeatMapData)}
+            floorValue={getPercentile(0.01, altitudeHeatMapData.filter(Boolean))}
+            ceilingValue={getPercentile(0.99, altitudeHeatMapData.filter(Boolean))}
           />
         </Basic.Div>
-        <Basic.Div $width="50%" $widthSmDown="100%">
+        {/* <Basic.Div $width="50%" $widthSmDown="100%">
           <Basic.Div $fontSize="h2" $marginB={1}>Grade</Basic.Div>
           <GradientMapMapLibre
             id={id}
@@ -197,15 +236,16 @@ const HeartZonesChartContainer = ({ id }) => {
             title="Grade"
             data={gradeHeatMapData}
             measure="measure"
+            latLngWithNulls={latLngWithNulls}
             height={600}
             deferRender={gradeHeatMapData.length === 0}
             time={timeStream}
-            minColor={[0, 0, 255, 1]}
+            minColor={[72, 138, 248, 1]}
             maxColor={[255, 0, 0, 1]}
-            floorValue={getPercentile(0, gradeHeatMapData)}
-            ceilingValue={getPercentile(1, gradeHeatMapData)}
+            floorValue={getPercentile(0.01, gradeHeatMapData)}
+            ceilingValue={getPercentile(0.99, gradeHeatMapData)}
           />
-        </Basic.Div>
+        </Basic.Div> */}
       </Basic.Div>
     </div>
   );

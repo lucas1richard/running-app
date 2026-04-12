@@ -153,17 +153,20 @@ $utilityMap: (
 
       @each $prefix, $cssName in $prefixMap {
         .#{$prefix}-#{"" + $color}-#{$shade} {
-          @if $prefix == 'bg' {
+          @if $prefix =='bg' {
             --bgColor: var(--color-#{$color}-#{$shade});
           }
+
           #{$cssName}: var(--color-#{$color}-#{$shade});
         }
+
         @each $utilPrefix, $util in $utilityMap {
           .#{$utilPrefix}\:#{$prefix}-#{"" + $color}-#{$shade} {
             &:#{$util} {
-              @if $prefix == 'bg' {
+              @if $prefix =='bg' {
                 --bgColor: var(--color-#{$color}-#{$shade});
               }
+
               #{$cssName}: var(--color-#{$color}-#{$shade});
             }
           }

@@ -50,25 +50,32 @@ export const getDurationString = (
   return durationArr.map(([num, str]) => `${num}${str}`).join(joinOn);
 };
 
-export const condenseZonesFromHeartRate = (zones: HeartZone, heartrate: number[]) => {
+export const condenseZonesFromHeartRate = (zones: HeartZone, heartrate: number[], timeSeries: number[]) => {
   const rangeMap = [zones.z1, zones.z2, zones.z3, zones.z4, zones.z5, Number.POSITIVE_INFINITY];
 
   const zone = rangeMap.findIndex(
     (zoneLowThreshhold, ix) => zoneLowThreshhold <= heartrate[0] && rangeMap[ix + 1] > heartrate[0]
   ) + 1;
   const ans = [{ zone, from: 0, to: 1 }];
+  let pushForwardIx = 0;
 
   heartrate.forEach((hr, ix) => {
-    if (ix < 1) return;
+    // if (timeSeries?.[ix] === null) {
+    //   console.log('fsfksnifsnicmkfapdfaop');
+    //   // pushForwardIx++;
+    //   return;
+    // }
+    const effectiveStart = ix + pushForwardIx;
+    if (effectiveStart < 1) return;
     const zone = rangeMap.findIndex(
-      (threshhold, ix) => threshhold <= hr && rangeMap[ix + 1] > hr
+      (threshhold, effectiveStart) => threshhold <= hr && rangeMap[effectiveStart + 1] > hr
     ) + 1;
     const latest = ans[ans.length - 1];
 
     if (zone === latest.zone) {
-      latest.to = ix + 1;
+      latest.to = effectiveStart + 1;
     } else {
-      ans.push({ zone, from: ix, to: ix + 1 });
+      ans.push({ zone, from: effectiveStart, to: effectiveStart + 1 });
     }
   });
 
@@ -149,7 +156,7 @@ export const convertHeartDataToZoneSpeeds = (zones: HeartZone, heartData: number
     newacc[zone].max = Math.max(newacc[zone].max, velocityData[index]);
     newacc[zone].min = Math.min(newacc[zone].min, velocityData[index]);
     return newacc;
-  }, new Array(5).fill(0).map((el, ix) => ({ zone: ix + 1, mps: 0, count: 0, max: 0, min: Infinity, })));
+  }, new Array(5).fill(0).map((_el, ix) => ({ zone: ix + 1, mps: 0, count: 0, max: 0, min: Infinity, })));
 
   return zoneSpeeds.map(({ mps, count, ...rest }) => {
     return {

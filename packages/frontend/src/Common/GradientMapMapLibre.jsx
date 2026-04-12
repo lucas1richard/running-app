@@ -19,6 +19,16 @@ const makeColor = (minColor, maxColor, percent) => {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 };
 
+const splitOnNulls = (srcArr) => srcArr.reduce((acc, v) => {
+  const lastEl = acc[acc.length - 1];
+  if (v !== null) {
+    lastEl.push(v);
+  } else if (lastEl.length > 0) {
+    acc.push([]);
+  }
+  return acc;
+}, [[]]);
+
 function GradientMapMapLibre({
   id,
   animated = false,
@@ -32,109 +42,146 @@ function GradientMapMapLibre({
   ceilingValue,
   measure,
   height = 900,
+  latLngWithNulls,
   title = '',
 }) {
+  console.log(splitOnNulls(data))
   const isDarkReaderMode = useDarkReaderMode();
   const outlineSourceId = useId();
   const hrZonesSourceId = useId();
-  const latlngStreamData = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;
+  // const latLngWithNulls = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;
   const activity = useAppSelector((state) => selectActivity(state, id)) || emptyObject;
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date));
-  const lnglatStream = useMemo(() => latlngStreamData.map(([lat, lng]) => [lng, lat]), [latlngStreamData]) || emptyArray;
+  const lnglatStream = useMemo(
+    () => splitOnNulls(latLngWithNulls)
+      .map((ll) => ll.map(([lat, lng]) => [lng, lat])
+      ),
+    [latLngWithNulls]
+  ) || emptyArray;
   const hrzones = useMemo(() => condenseZonesFromHeartRate(zones, heartRateStream), [zones, heartRateStream]);
 
   let activeMinColor = minColor;
   let activeMaxColor = maxColor;
 
   const edges = useMemo(() => {
-    const maxLng = lnglatStream.reduce((max, [lng]) => Math.max(max, lng), -Infinity);
-    const minLng = lnglatStream.reduce((min, [lng]) => Math.min(min, lng), Infinity);
-    const maxLat = lnglatStream.reduce((max, [, lat]) => Math.max(max, lat), -Infinity);
-    const minLat = lnglatStream.reduce((min, [, lat]) => Math.min(min, lat), Infinity);
+    const maxLng = latLngWithNulls.reduce((max, v) => Math.max(max, v?.[1] || -Infinity), -Infinity);
+    const minLng = latLngWithNulls.reduce((min, v) => Math.min(min, v?.[1] || Infinity), Infinity);
+    const maxLat = latLngWithNulls.reduce((max, v) => Math.max(max, v?.[0] || -Infinity), -Infinity);
+    const minLat = latLngWithNulls.reduce((min, v) => Math.min(min, v?.[0] || Infinity), Infinity);
 
     return { maxLng, minLng, maxLat, minLat };
-  }, [lnglatStream]);
+  }, [latLngWithNulls]);
+
+  const makeGradient = (series) => {
+    const stops = series.map(({ lat, lon, [measure]: point }, index) => {
+      const floor = floorValue !== undefined ? floorValue : smallestValue;
+      let ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
+      let numPoint = Number(point);
+      if (floor >= ceiling) ceiling = floor + 1;
+      if (typeof numPoint !== 'number' || isNaN(numPoint)) numPoint = floor;
+      if (Number(numPoint) < floor) numPoint = floor;
+      if (Number(numPoint) > ceiling) numPoint = ceiling;
+      const percent = (Number(numPoint) - floor) / (ceiling - floor);
+      // console.log(title, percent)
+      const color = makeColor(activeMinColor, activeMaxColor, percent);
+      // return [index / (data.length - 1), color];
+      if (time[index] === undefined) {
+        return [];
+      }
+      return [index / (series.length - 1 || 1), color];
+    });
+
+    return [
+      'interpolate',
+      ['linear'],
+      ['line-progress'],
+      ...stops.flat(),
+    ];
+  };
 
   const routeData = {
     type: 'FeatureCollection',
-    features: [
-      {
+    features: lnglatStream.map((lls) => {
+      // console.log(lls)
+      return ({
         type: 'Feature',
         properties: {
           name: 'Route',
           color: isDarkReaderMode ? '#ffffff' : '#000000',
+          gradient: makeGradient(lls),
         },
         geometry: {
           type: 'LineString',
-          coordinates: lnglatStream.map(([lng, lat]) => [lng, lat])
+          coordinates: lls,
         }
-      }
-    ],
+      })
+    }),
   };
 
-  const latlondata = {
+  const makeRouteLine = (lls) => ({
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
       properties: {
-        name: 'Outline',
+        name: 'Route',
         color: isDarkReaderMode ? '#ffffff' : '#000000',
       },
       geometry: {
         type: 'LineString',
-        coordinates: lnglatStream
+        coordinates: lls,
       }
     }],
+  });
+
+  const latlondata = {
+    type: 'FeatureCollection',
+    features: lnglatStream.map((lls) => {
+      // console.log(lls)
+      return ({
+        type: 'Feature',
+        properties: {
+          name: 'Outline',
+          color: isDarkReaderMode ? '#ffffff' : '#000000',
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: lls,
+        }
+      })
+    }),
   };
+
+  console.log(lnglatStream)
 
   const mapRef = useRef(null);
   const animationRef = useRef(null);
 
   const animatedLineLayer = useCallback((time) => {
-    const coords = latlngStreamData[Math.floor((time / 5)) % latlngStreamData.length];
-    mapRef.current?.setLngLat({ lat: coords[0], lng: coords[1] });
+    const coords = latLngWithNulls[Math.floor((time / 5)) % latLngWithNulls.length];
+    if (coords) mapRef.current?.setLngLat({ lat: coords[0], lng: coords[1] });
     animationRef.current = requestAnimationFrame(animatedLineLayer);
   }, []);
 
   useEffect(() => {
-    if (latlngStreamData.length === 0) return;
+    if (latLngWithNulls.length === 0) return;
     if (animated) animatedLineLayer(0);
     return () => cancelAnimationFrame(animationRef.current);
-  }, [animated, animatedLineLayer, latlngStreamData.length]);
+  }, [animated, animatedLineLayer, latLngWithNulls.length]);
 
   const largestValue = useMemo(() => {
-    return Math.max(...data.map((d) => Number(d[measure])));
+    return Math.max(...data.filter(Boolean).map((d) => Number(d[measure])));
   }, [deferRender]);
   const smallestValue = useMemo(() => {
-    return Math.min(...data.map((d) => Number(d[measure])));
+    return Math.min(...data.filter(Boolean).map((d) => Number(d[measure])));
   }, [deferRender]);
 
   const gradientId = useId();
+
   if (lnglatStream.length === 0 || data.length === 0) return null;
-
-  const stops = data.map(({ lat, lon, [measure]: point }, index) => {
-    const floor = floorValue !== undefined ? floorValue : smallestValue;
-    const ceiling = ceilingValue !== undefined ? ceilingValue : largestValue;
-    if (Number(point) < floor) point = smallestValue;
-    if (Number(point) > ceiling) point = largestValue;
-    const percent = (Number(point) - floor) / (ceiling - floor);
-    // console.log(title, percent)
-    const color = makeColor(activeMinColor, activeMaxColor, percent);
-    return [time[index] / (time[time.length - 1] || 1), color];
-  });
-
-
-  const gradient = [
-    'interpolate',
-    ['linear'],
-    ['line-progress'],
-    ...stops.flat(),
-  ];
 
   return (
     <Surface>
-
       <Map
         initialViewState={{
           bounds: [
@@ -151,41 +198,40 @@ function GradientMapMapLibre({
       >
         <Marker
           ref={mapRef}
-          latitude={latlngStreamData[pointer][0]}
-          longitude={latlngStreamData[pointer][1]}
+          latitude={latLngWithNulls[pointer]?.[0] || 0}
+          longitude={latLngWithNulls[pointer]?.[1] || 0}
         >
           <Basic.Div $width={1.2} $height={1.2} $colorBg="gold" $borderRadius="50%" />
         </Marker>
-        <Source data={latlondata} type="geojson" id={outlineSourceId}>
-          <Layer
-            source={outlineSourceId}
-            id="outline-layer"
-            type="line"
-            paint={{
-              'line-width': 15,
-            }}
-          />
-        </Source>
-        <Source data={routeData} type="geojson" id={hrZonesSourceId} lineMetrics={true}>
-          <Layer
-            source={hrZonesSourceId}
-            id="hr-zones-layer"
-            type="line"
-            paint={{
-              'line-color': ['get', 'color'],
-              'line-width': 10,
-              'line-gradient': gradient,
-            }}
-          />
-          <FullscreenControl position="top-right" />
-        </Source>
+        {lnglatStream.map((lls, ix) => (
+          <Source
+            data={makeRouteLine(lls)}
+            key={lls[0].toString()}
+            type="geojson"
+            lineMetrics={true}
+          >
+            <Layer
+              id={`hr-zones-layer-${ix}`}
+              type="line"
+              layout={{
+                "line-cap": 'round'
+              }}
+              paint={{
+                'line-color': ['get', 'color'],
+                'line-width': 15,
+                'line-gradient': makeGradient(splitOnNulls(data)[ix] || []),
+              }}
+            />
+          </Source>
+        ))}
+        <FullscreenControl position="top-right" />
       </Map>
       {!deferRender && (
         <div>
           <svg width="100%" height="20">
             <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: `rgb(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]})`, stopOpacity: activeMinColor[3] }} />
-              <stop offset="100%" style={{ stopColor: `rgb(${activeMaxColor[0]}, ${activeMaxColor[1]}, ${activeMaxColor[2]})`, stopOpacity: activeMaxColor[3] }} />
+              <stop offset="0%" style={{ stopColor: `rgba(${activeMinColor[0]}, ${activeMinColor[1]}, ${activeMinColor[2]}, ${activeMinColor[3]})` }} />
+              <stop offset="100%" style={{ stopColor: `rgba(${activeMaxColor[0]}, ${activeMaxColor[1]}, ${activeMaxColor[2]}, ${activeMaxColor[3]})` }} />
             </linearGradient>
             <rect x="0" y="0" width="100%" height="20" fill={`url(#${gradientId})`} />
           </svg>
