@@ -6,9 +6,18 @@ import { useAppSelector } from '@/hooks/redux';
 import usePreferenceControl from '@/hooks/usePreferenceControl';
 import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { selectHeartZones } from '@/reducers/heartzones';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+type SyncedViewState = {
+  longitude: number;
+  latitude: number;
+  zoom: number;
+};
 
 const HeartZonesChartContainer = ({ id }) => {
+  const [viewState, setViewState] = useState<SyncedViewState>();
+  const pendingViewStateRef = useRef<SyncedViewState>();
+  const frameRef = useRef<number | null>(null);
   const activity = useAppSelector((state) => selectActivity(state, id));
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
@@ -116,6 +125,40 @@ const HeartZonesChartContainer = ({ id }) => {
     return data[index]?.measure || 0;
   };
 
+  useEffect(() => () => {
+    if (frameRef.current !== null) {
+      cancelAnimationFrame(frameRef.current);
+    }
+  }, []);
+
+  const syncViewState = ({ viewState: nextViewState }) => {
+    if (!nextViewState) return;
+    pendingViewStateRef.current = {
+      longitude: nextViewState.longitude,
+      latitude: nextViewState.latitude,
+      zoom: nextViewState.zoom,
+    };
+
+    if (frameRef.current !== null) return;
+
+    frameRef.current = requestAnimationFrame(() => {
+      frameRef.current = null;
+      setViewState((prev) => {
+        const next = pendingViewStateRef.current;
+        if (!next) return prev;
+        if (
+          prev
+          && Math.abs(prev.longitude - next.longitude) < 0.00001
+          && Math.abs(prev.latitude - next.latitude) < 0.00001
+          && Math.abs(prev.zoom - next.zoom) < 0.01
+        ) {
+          return prev;
+        }
+        return next;
+      });
+    });
+  };
+
   return (
     <div>
       <div>
@@ -180,6 +223,9 @@ const HeartZonesChartContainer = ({ id }) => {
             id={id}
             animated={true}
             title="Heart Rate"
+            viewState={viewState}
+            onZoom={syncViewState}
+            onDrag={syncViewState}
             data={hrHeatMapData}
             measure="measure"
             latLngWithNulls={latLngWithNulls}
@@ -199,6 +245,9 @@ const HeartZonesChartContainer = ({ id }) => {
             animated={true}
             time={timeStream}
             title="Velocity"
+            viewState={viewState}
+            onZoom={syncViewState}
+            onDrag={syncViewState}
             data={velocityHeatMapData}
             measure="measure"
             latLngWithNulls={latLngWithNulls}
@@ -216,6 +265,9 @@ const HeartZonesChartContainer = ({ id }) => {
             id={id}
             animated={true}
             title="Altitude"
+            viewState={viewState}
+            onZoom={syncViewState}
+            onDrag={syncViewState}
             data={altitudeHeatMapData}
             measure="measure"
             latLngWithNulls={latLngWithNulls}

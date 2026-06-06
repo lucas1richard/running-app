@@ -85,16 +85,6 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     dispatch(setStreamPin(id, streamKey, this.index, '', '', latlngStream[this.index]));
   }, [id, dispatch, latlngStream]);
 
-  // const fullArrayIxMap = useMemo(() => {
-  //   const maxTime = time[time.length - 1];
-  //   const timeArr = time.map((_, ix) => ix);
-  //   for (let i = 0, j = 0; i < timeArr.length; i++) {
-  //     if (time[j] === i) j++;
-  //     else timeArr[i] = null;
-  //   }
-  //   return timeArr;
-  // }, [time]);
-
   const fullTime = useMemo(() => {
     const maxTime = time[time.length - 1];
     const timeArr = new Array(maxTime).fill(0).map((_, ix) => ix);
@@ -105,8 +95,6 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     return timeArr;
   }, [time]);
 
-  console.log(time.length, fullTime.length, altitude.length);
-
   const yAxisBands = useMemo(() => [1, 2, 3, 4, 5].map((z) => ({
     from: zones[`z${z}`],
     to: (zones[`z${z + 1}`] - 1) || 220,
@@ -115,7 +103,6 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
   })), [zones]);
 
   const smoothHeartRate = useMemo(
-    // () => getSmoothVal(fullTime, data, smoothAverageWindow),
     () => {
       const maxTime = time[time.length - 1];
       const fullDataWithNulls = new Array(maxTime).fill(null);

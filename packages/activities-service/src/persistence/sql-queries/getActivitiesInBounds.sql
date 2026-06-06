@@ -19,6 +19,6 @@ FROM
    rc ON a.id = rc.activityId
 WHERE
   a.hidden IS null
-  AND a.sport_type IN ('Run')
+  AND a.sport_type IN ('Run', 'Walk')
 ORDER BY
   a.start_date_local DESC
