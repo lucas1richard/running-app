@@ -21,7 +21,7 @@ const SimilarWorkouts = ({ activity, zones }) => {
       {similarDist.length === 0 && <p>None found</p>}
       <Grid
         $gap={1}
-        $templateColumns="1fr 1fr 1fr"
+        $templateColumns="1fr 1fr 1fr 1fr 1fr"
         $templateColumnsMd="1fr 1fr"
         $templateColumnsSmDown="1fr"
       >

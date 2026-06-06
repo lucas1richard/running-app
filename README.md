@@ -15,11 +15,8 @@ This project visualizes the data collected by Strava.
 #### Interactive Charts
 ![detail-charts](./readme-statics/detail-charts.webm.mov) -->
 
-#### Velocity Chart
-![detail-velocity-chart](./readme-statics/detail-velocity-chart.png)
-
-#### Heart Rate Chart
-![detail-heartrate-chart](./readme-statics/detail-heartrate-chart.png)
+#### Charts
+![detail-velocity-chart](./readme-statics/detail-charts.png)
 
 #### Similar Workouts - Route Matching
 ![detail](./readme-statics/detail-similar-workout.png)
@@ -31,6 +28,7 @@ This project visualizes the data collected by Strava.
 
 Top 10 Records Chart
 ![personal records](./readme-statics/personal-records.png)
+![personal records list view](./readme-statics/personal-records-2.png)
 
 ### MultiMap
 
