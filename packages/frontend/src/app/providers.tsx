@@ -13,8 +13,9 @@ type AppProvidersProps = PropsWithChildren;
 const AppProviders: FC<AppProvidersProps> = ({ children }) => (
   <Provider store={store}>
     <ThemeProvider theme={styledComponentsTheme}>
-      <DataLayer />
-      {children}
+      <DataLayer>
+        {children}
+      </DataLayer>
     </ThemeProvider>
   </Provider>
 );

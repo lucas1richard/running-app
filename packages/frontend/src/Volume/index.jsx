@@ -4,9 +4,12 @@ import { useAppSelector } from '@/hooks/redux';
 import useShowAfterMount from '@/hooks/useShowAfterMount';
 import useViewSize from '@/hooks/useViewSize';
 import { selectListActivities } from '@/reducers/activities';
+import D3BarChart from '@/DLS/D3BarChart';
 import CumulativeByRun from '@/Volume/CumulativeByRun';
 import VolumeTable from '@/Volume/VolumeTable';
 import { useMemo } from 'react';
+import dayjs from 'dayjs';
+import D3LineChart from '@/DLS/D3LineChart';
 
 const Volume = () => {
   const showChart = useShowAfterMount();
@@ -42,10 +45,39 @@ const Volume = () => {
   }, [activities, activities.length]);
   return (
     <Basic.Div $margin={2}>
-      {showChart && <CumulativeByRun
+      {/* {showChart && <CumulativeByRun
         groupedData={groupedData}
         greatestTotal={greatestTotal}
-      />}
+      />} */}
+      {showChart && (
+        <D3LineChart
+          series={Object.keys(groupedData).map((year, i) => {
+            return (
+              {
+                id: 'Runs in ' + year,
+                type: 'line',
+                data: groupedData[year].map((d) => ({
+                  label: dayjs(d[0]).format('MM-DD'),
+                  value: d[1],
+                })),
+                pointShape: 'cross',
+                color: ['magenta', 'yellow', 'cyan', 'orange', 'black'][i % 5],
+                tooltip: {
+                  pointFormat: 'Distance: <b>{point.y}</b> miles<br/>',
+                },
+                animation: false,
+                marker: {
+                  enabled: true,
+                  radius: isSmall ? 3 : 5,
+                },
+              }
+            )
+          })}
+          type={'datetime'}
+          width={3000}
+          height={600}
+        />
+      )}
       <Basic.Div $display="flex">
         <Basic.Div
           $marginT={1}
