@@ -76,7 +76,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
 }) => {
   const viewSize = useViewSize();
   const dispatch = useDispatch();
-  const [smoothAverageWindow, setSmoothAverageWindow] = useState(20);
+  const [smoothAverageWindow, setSmoothAverageWindow] = useState(1);
   const latlngStream = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng'));
   const [latlngPointer, setLatlngPointer] = useState(0);
   const [, setHighlightedSegment] = useState(undefined);

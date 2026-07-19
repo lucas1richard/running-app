@@ -5,11 +5,14 @@ import Surface from '../Surface';
 export interface BarDatum {
   label: string;
   value: number;
+  color?: string;
 }
+
+export type ChartColor = string | ((v: number, ix?: number) => string);
 
 export interface BarSeries {
   id: string;
-  color?: string;
+  color?: ChartColor;
   data: BarDatum[];
 }
 
@@ -246,7 +249,8 @@ const D3BarChart: React.FC<D3BarChartProps> = ({
 
             const values = series
               .map((currentSeries, seriesIndex) => {
-                const point = currentSeries.data.find((d) => d.label === label);
+                const pointIx = currentSeries.data.findIndex((d) => d.label === label);
+                const point = currentSeries.data[pointIx];
                 if (!point) {
                   return null;
                 }
@@ -254,7 +258,7 @@ const D3BarChart: React.FC<D3BarChartProps> = ({
                   slotKey: String(seriesIndex),
                   seriesId: currentSeries.id,
                   value: point.value,
-                  color: currentSeries.color ?? color,
+                  color: (typeof currentSeries.color === 'function' ? currentSeries.color(point.value, pointIx) : currentSeries.color) ?? color,
                 };
               })
               .filter((value): value is { slotKey: string; seriesId: string; value: number; color: string; } => value !== null);
@@ -330,7 +334,7 @@ const D3BarChart: React.FC<D3BarChartProps> = ({
             const startX = (innerWidth - totalWidth) / 2;
             return (
               <g key={currentSeries.id} transform={`translate(${startX + index * LEGEND_ITEM_WIDTH}, ${innerHeight + 44})`}>
-                <rect width={10} height={10} fill={currentSeries.color ?? color} rx={2} />
+                <rect width={10} height={10} fill={(typeof currentSeries.color === 'function' ? currentSeries.color(0, 0) : currentSeries.color) ?? color} rx={2} />
                 <text x={16} y={8} fontSize={12} fill="currentColor">
                   {currentSeries.id}
                 </text>
