@@ -20,6 +20,7 @@ const receiver = require('./messageQueue/receiver');
 
 const { logger } = require('./utils/logger');
 const { getChannel, channelConfigs } = require('./messageQueue/channels');
+const fetchIntervalsIcu = require('./intervals-icu-ingestion/fetch-intervalsicu.ts');
 // const addAllCompressedRoutes = require('./functions/addAllCompressedRoutes');
 
 receiver.onActivityId(({ activityId, type, correlationId }) => {
@@ -57,11 +58,14 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
       getChannel(channelConfigs.activitiesService)
     ]);
 
+    const acts = await fetchIntervalsIcu('/activities', { queryParams: { oldest: '2026-06-29' } });
+    console.log(acts.length)
+
     await app.listen(PORT);
 
     // await addAllCompressedRoutes();
 
-    logger.info({ message: `strava-client listening on port ${PORT}`});
+    logger.info({ message: `strava-client listening on port ${PORT}` });
   } catch (err) {
     logger.error({ message: 'Error starting strava-client' });
     console.trace(err)
