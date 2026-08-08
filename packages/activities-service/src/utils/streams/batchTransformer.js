@@ -1,4 +1,4 @@
-const { Transform } = require('node:stream');
+import { Transform } from 'node:stream';
 
 class BatchTransformer extends Transform {
   constructor(batchSize = 30, options) {
@@ -24,6 +24,6 @@ class BatchTransformer extends Transform {
   }
 }
 
-module.exports = {
+export {
   BatchTransformer
 };

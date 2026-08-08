@@ -1,4 +1,4 @@
-const { getMySQLConnection } = require('./mysql-connection');
+import { getMySQLConnection } from './mysql-connection.js';
 
 const setHasStreams = async (id, hasStreams) => {
   const pool = await getMySQLConnection();
@@ -32,7 +32,7 @@ const getAll = async () => {
   });
 };
 
-module.exports = {
+export {
   getAll,
   setHasStreams,
 };

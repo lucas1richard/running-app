@@ -1,14 +1,14 @@
-const { findRelationsBySimilarRoute } = require('../constants');
-const activityMatchingReceiver = require('../grpc/activityMatchingReceiver');
-const {
+import { findRelationsBySimilarRoute } from '../constants.js';
+import activityMatchingReceiver from '../grpc/activityMatchingReceiver.js';
+import {
   getRouteCoordinates,
   bulkCreateRouteCoordinates
-} = require('../persistence/routeCoordinates');
-const {
+} from '../persistence/routeCoordinates/index.js';
+import {
   getStream,
   updateActivityDetail
-} = require('../persistence/setupdb-couchbase');
-const { getActivityDetails } = require('./getActivityDetails');
+} from '../persistence/setupdb-couchbase.js';
+import { getActivityDetails } from './getActivityDetails.js';
 
 // const compress = (route, compressionLevel) => {
 //   const roundedRoute = route.map(
@@ -126,7 +126,7 @@ const makeCompressedRoute = async (activityId, compressionLevel = findRelationsB
   return { route: compressedRoute, activityId, compressionLevel };
 };
 
-module.exports = {
+export {
   makeMultiCompressedRoutes,
   makeCompressedRoute,
 };

@@ -1,4 +1,4 @@
-const StreamPin = require('./model-stream-pins');
+import StreamPin from './model-stream-pins.js';
 
 const addStreamPin = async ({
   streamKey,
@@ -21,4 +21,4 @@ const addStreamPin = async ({
   });
 }
 
-module.exports = addStreamPin;
+export default addStreamPin;

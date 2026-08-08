@@ -1,10 +1,10 @@
-const { Router } = require('express');
-const longestCommonSubsequence = require('../../../utils/longestCommonSubsequence');
-const {
+import { Router } from 'express';
+import longestCommonSubsequence from '../../../utils/longestCommonSubsequence.js';
+import {
   findAthleteSegmentsByActivityId,
   findNearbySegmentsWithActivity,
-} = require('../../../persistence/segments');
-const { findActivityById, bulkCreateRelatedSegments } = require('../../../persistence/activities');
+} from '../../../persistence/segments/index.js';
+import { findActivityById, bulkCreateRelatedSegments } from '../../../persistence/activities/index.js';
 
 const router = new Router();
 
@@ -35,52 +35,52 @@ router.get('/:id/segments', async (req, res) => {
 const getComparedSegments = async (activityId) => {
   const activity = await findActivityById(activityId);
 
-    if (!activity) {
-      throw Error('Activity not found');
-    }
+  if (!activity) {
+    throw Error('Activity not found');
+  }
 
-    // const existingRelatedActivities = await RelatedActivities.findAll({
-    //   where: {
-    //     baseActivity: activityId
-    //   },
-    //   order: [['segmentScoreFromBase', 'DESC']],
-    // });
+  // const existingRelatedActivities = await RelatedActivities.findAll({
+  //   where: {
+  //     baseActivity: activityId
+  //   },
+  //   order: [['segmentScoreFromBase', 'DESC']],
+  // });
 
-    // const existingMap = existingRelatedActivities.reduce((acc, { relatedActivity }) => {
-    //   acc[relatedActivity] = true;
-    //   return acc;
-    // }, {});
+  // const existingMap = existingRelatedActivities.reduce((acc, { relatedActivity }) => {
+  //   acc[relatedActivity] = true;
+  //   return acc;
+  // }, {});
 
-    const allSegments = await findNearbySegmentsWithActivity(activity.start_latlng);
+  const allSegments = await findNearbySegmentsWithActivity(activity.start_latlng);
 
-    const groupedSegments = allSegments.reduce((acc, segment) => {
-      const key = segment.activityId;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(segment.activitySegmentId);
-      return acc;
-    }, {});
+  const groupedSegments = allSegments.reduce((acc, segment) => {
+    const key = segment.activityId;
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(segment.activitySegmentId);
+    return acc;
+  }, {});
 
-    const refSegments = groupedSegments[activityId];
+  const refSegments = groupedSegments[activityId];
 
-    const comparedSegments = Object.entries(groupedSegments)
-      .map(([id, compareSegmentsIds]) => {
-        const lcs = longestCommonSubsequence(refSegments, compareSegmentsIds);
-        return {
-          id,
-          longestCommonSubsequence: lcs,
-          activitySegmentsIdsLength: refSegments.length,
-          compareSegmentsIdsLength: compareSegmentsIds.length,
-          scoreLow: Number((lcs / Math.max(refSegments.length, compareSegmentsIds.length)).toFixed(2)),
-          scoreHigh: Number((lcs / Math.min(refSegments.length, compareSegmentsIds.length)).toFixed(2)),
-        }
-      });
+  const comparedSegments = Object.entries(groupedSegments)
+    .map(([id, compareSegmentsIds]) => {
+      const lcs = longestCommonSubsequence(refSegments, compareSegmentsIds);
+      return {
+        id,
+        longestCommonSubsequence: lcs,
+        activitySegmentsIdsLength: refSegments.length,
+        compareSegmentsIdsLength: compareSegmentsIds.length,
+        scoreLow: Number((lcs / Math.max(refSegments.length, compareSegmentsIds.length)).toFixed(2)),
+        scoreHigh: Number((lcs / Math.min(refSegments.length, compareSegmentsIds.length)).toFixed(2)),
+      }
+    });
 
-    comparedSegments.sort((a, b) => b.scoreLow - a.scoreLow);
+  comparedSegments.sort((a, b) => b.scoreLow - a.scoreLow);
 
-    await bulkCreateRelatedSegments(activityId, comparedSegments);
+  await bulkCreateRelatedSegments(activityId, comparedSegments);
 
-    return comparedSegments;
-  };
+  return comparedSegments;
+};
 
 router.get('/:id/segments/compare', async (req, res) => {
   try {
@@ -95,7 +95,7 @@ router.get('/:id/segments/compare', async (req, res) => {
   }
 });
 
-module.exports = {
-  segmentsRouter: router,
+export {
+  router as segmentsRouter,
   getComparedSegments,
 };

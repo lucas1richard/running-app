@@ -1,10 +1,10 @@
-const {
+import {
   createHeartRateZonesTable,
   getAllHeartRateZones,
   addHeartRateZone,
-} = require('./mysql-heart-zones');
+} from './mysql-heart-zones.js';
 
-const ZonesCache = require('./model-zones-cache')
+import ZonesCache from './model-zones-cache.js';
 
 const createHeartZonesCacheOnce = async (activityId, heartZoneId, times) => {
   await ZonesCache.create({
@@ -20,7 +20,7 @@ const createHeartZonesCacheOnce = async (activityId, heartZoneId, times) => {
   });
 };
 
-module.exports = {
+export {
   createHeartZonesCacheOnce,
   createHeartRateZonesTable,
   getAllHeartRateZones,

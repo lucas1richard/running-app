@@ -6,9 +6,9 @@
 //  -
 //  - lat,long
 
-const Router = require('express').Router;
-const { findActivityById } = require('../../persistence/activities');
-const findSimilarStartDistance = require('../../persistence/activities/findSimilarStartDistance');
+import { Router } from 'express';
+import { findActivityById } from '../../persistence/activities/index.js';
+import findSimilarStartDistance from '../../persistence/activities/findSimilarStartDistance.js';
 
 const router = Router();
 
@@ -29,6 +29,6 @@ router.post('/by-route', async (req, res) => {
   }
 });
 
-module.exports = {
-  similarWorkoutsRouter: router,
+export {
+  router as similarWorkoutsRouter,
 };

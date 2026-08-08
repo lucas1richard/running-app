@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const { updateActivityDetail } = require('../../../persistence/setupdb-couchbase');
-const { updateActivityById } = require('../../../persistence/activities');
-const receiver = require('../../../messageQueue/receiver');
+import { Router } from 'express';
+import { updateActivityDetail } from '../../../persistence/setupdb-couchbase.js';
+import { updateActivityById } from '../../../persistence/activities/index.js';
+import receiver from '../../../messageQueue/receiver.js';
 
 const router = new Router();
 
@@ -32,6 +32,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-module.exports = {
-  stravaRouter: router,
+export {
+  router as stravaRouter,
 };

@@ -1,7 +1,7 @@
-const { makeCompressedRoute, makeMultiCompressedRoutes } = require('./makeCompressedRoute');
-const { findActivityById, bulkCreateRelatedRoutes } = require('../persistence/activities');
-const findSimilarStartDistance = require('../persistence/activities/findSimilarStartDistance');
-const activityMatchingReceiver = require('../grpc/activityMatchingReceiver');
+import { makeCompressedRoute, makeMultiCompressedRoutes } from './makeCompressedRoute.js';
+import { findActivityById, bulkCreateRelatedRoutes } from '../persistence/activities/index.js';
+import findSimilarStartDistance from '../persistence/activities/findSimilarStartDistance.js';
+import activityMatchingReceiver from '../grpc/activityMatchingReceiver.js';
 
 const getComparedRoutes = async (activityId) => {
   const activity = await findActivityById(activityId);
@@ -39,7 +39,7 @@ const getComparedRoutes = async (activityId) => {
         numberBaseSegments: activityRouteStr?.length,
       });
       return acc;
-  }, []);
+    }, []);
 
   // save compared routes
   await bulkCreateRelatedRoutes(data);
@@ -48,6 +48,6 @@ const getComparedRoutes = async (activityId) => {
   return data;
 };
 
-module.exports = {
+export {
   getComparedRoutes,
 };

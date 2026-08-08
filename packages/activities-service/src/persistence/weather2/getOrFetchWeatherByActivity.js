@@ -1,7 +1,7 @@
-const Weather = require('./weather-model');
-const { addOrUpdateWeather } = require('./addOrUpdateWeather');
-const { getWeatherByActivityId } = require('./getWeatherByActivityId');
-const { findActivityById } = require('../activities');
+import Weather from './weather-model.js';
+import { addOrUpdateWeather } from './addOrUpdateWeather.js';
+import { getWeatherByActivityId } from './getWeatherByActivityId.js';
+import { findActivityById } from '../activities/index.js';
 
 const getOrFetchWeatherByActivity = async ({ activityId, lat, lon, date }) => {
   const existingWeather = await getWeatherByActivityId(activityId);
@@ -64,6 +64,6 @@ const getOrFetchWeatherByActivity = async ({ activityId, lat, lon, date }) => {
   return storedWeather;
 };
 
-module.exports = {
+export {
   getOrFetchWeatherByActivity,
 };

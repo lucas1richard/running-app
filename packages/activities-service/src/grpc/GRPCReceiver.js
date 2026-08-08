@@ -1,7 +1,7 @@
-const { EventEmitter } = require('node:events');
-const grpc = require('@grpc/grpc-js');
-const protoLoader = require('@grpc/proto-loader');
-const waitPort = require('wait-port');
+import { EventEmitter } from 'node:events';
+import grpc from '@grpc/grpc-js';
+import protoLoader from '@grpc/proto-loader';
+import waitPort from 'wait-port';
 
 class GRPCReceiver extends EventEmitter {
   /**
@@ -35,7 +35,7 @@ class GRPCReceiver extends EventEmitter {
       waitForDns: true
     });
     const protoPath = `/protos/${this.serviceName}.proto`;
-    const packageDefinition = protoLoader.loadSync(protoPath,this.grpcOptions);
+    const packageDefinition = protoLoader.loadSync(protoPath, this.grpcOptions);
     const ClientConstructor = grpc.loadPackageDefinition(packageDefinition)[this.protoPackage];
 
     this.client = new ClientConstructor[this.protoService](
@@ -72,4 +72,4 @@ class GRPCReceiver extends EventEmitter {
   }
 }
 
-module.exports = GRPCReceiver;
+export default GRPCReceiver;

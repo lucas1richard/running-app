@@ -1,7 +1,7 @@
-const { Model, DataTypes } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { Model, DataTypes } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
-class StreamPin extends Model {}
+class StreamPin extends Model { }
 
 StreamPin.init(
   {
@@ -42,4 +42,4 @@ StreamPin.init(
   }
 );
 
-module.exports = StreamPin;
+export default StreamPin;

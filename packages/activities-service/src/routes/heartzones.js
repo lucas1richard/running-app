@@ -1,9 +1,9 @@
-const { Router } = require('express');
-const {
+import { Router } from 'express';
+import {
   getAllHeartRateZones,
   addHeartRateZone,
   createHeartZonesCacheOnce,
-} = require('../persistence/heartzones');
+} from '../persistence/heartzones/index.js';
 
 const router = Router();
 
@@ -36,6 +36,6 @@ router.post('/set-cache', async (req, res) => {
   }
 });
 
-module.exports = {
-  heartzonesRouter: router,
+export {
+  router as heartzonesRouter,
 };

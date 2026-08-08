@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const { makeCompressedRoute } = require('../../../controllers/makeCompressedRoute');
+import { Router } from 'express';
+import { makeCompressedRoute } from '../../../controllers/makeCompressedRoute.js';
 
 const router = new Router();
 
@@ -18,6 +18,6 @@ router.get('/:id/route', async (req, res) => {
   }
 });
 
-module.exports = {
-  routeRouter: router,
+export {
+  router as routeRouter,
 };

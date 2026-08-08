@@ -1,22 +1,22 @@
-const { Router } = require('express');
-const { getAllStreams } = require('../../persistence/setupdb-couchbase');
-const summary = require('../../persistence/mysql-activities');
-const { deleteRouter } = require('./byId/delete');
-const { detailsRouter } = require('./byId/detail');
-const { weatherRouter } = require('./byId/weather');
-const { streamsRouter } = require('./byId/streams');
-const { lapsRouter } = require('./byId/laps');
-const { preferencesRouter } = require('./byId/preferences');
-const { segmentsRouter } = require('./byId/segments');
-const { stravaRouter } = require('./byId/strava');
-const { routeRouter } = require('./byId/route');
-const { similarActivitiesRouter } = require('./byId/similar-activities');
-const { findAllActivities } = require('../../persistence/activities');
-const getPRsByDate = require('../../controllers/getPRsByDate');
-const getPRs = require('../../controllers/getPRs');
-const { listStreamRouter } = require('./listStream');
-const { query } = require('../../persistence/mysql-connection');
-const { getActivitiesInBoundsSql } = require('../../persistence/sql-queries');
+import { Router } from 'express';
+import { getAllStreams } from '../../persistence/setupdb-couchbase.js';
+import { getAll as summaryGetAll } from '../../persistence/mysql-activities.js';
+import { deleteRouter } from './byId/delete.js';
+import { detailsRouter } from './byId/detail.js';
+import { weatherRouter } from './byId/weather.js';
+import { streamsRouter } from './byId/streams.js';
+import { lapsRouter } from './byId/laps.js';
+import { preferencesRouter } from './byId/preferences.js';
+import { segmentsRouter } from './byId/segments.js';
+import { stravaRouter } from './byId/strava.js';
+import { routeRouter } from './byId/route.js';
+import { similarActivitiesRouter } from './byId/similar-activities.js';
+import { findAllActivities } from '../../persistence/activities/index.js';
+import getPRsByDate from '../../controllers/getPRsByDate.js';
+import getPRs from '../../controllers/getPRs.js';
+import { listStreamRouter } from './listStream.js';
+import { query } from '../../persistence/mysql-connection.js';
+import { getActivitiesInBoundsSql } from '../../persistence/sql-queries/index.js';
 
 const router = Router();
 
@@ -49,7 +49,7 @@ router.get('/list', async (req, res) => {
 
 router.get('/summary', async (req, res) => {
   try {
-    const activities = await summary.getAll();
+    const activities = await summaryGetAll();
     res.json(activities);
   } catch (error) {
     res.status(500).send(error.message);
@@ -102,7 +102,7 @@ router.get('/in-bounds', async (req, res) => {
   }
 });
 
-module.exports = {
-  activitiesRouter: router,
+export {
+  router as activitiesRouter,
 };
 

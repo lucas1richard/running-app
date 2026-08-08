@@ -1,4 +1,4 @@
-const StreamPin = require('./model-stream-pins');
+import StreamPin from './model-stream-pins.js';
 
 const deleteStreamPin = async ({ id, streamKey, index, activityId }) => {
   if (id) {
@@ -18,4 +18,4 @@ const deleteStreamPin = async ({ id, streamKey, index, activityId }) => {
   });
 };
 
-module.exports = deleteStreamPin;
+export default deleteStreamPin;

@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const { getItem, storeItem } = require('../persistence/setupdb-mysql');
-const constants = require('../constants');
+import { Router } from 'express';
+import { getItem, storeItem } from '../persistence/setupdb-mysql.js';
+import * as constants from '../constants.js';
 
 const router = new Router();
 
@@ -28,6 +28,6 @@ router.get('/get-constants', async (req, res) => {
   res.json(constants);
 });
 
-module.exports = {
-  adminRouter: router,
+export {
+  router as adminRouter,
 };

@@ -1,15 +1,15 @@
-const Activity = require('../persistence/activities/model-activities');
-const AthleteSegment = require('../persistence/segments/model-athlete-segments');
-const BestEfforts = require('../persistence/activities/model-best-efforts');
-const RouteCoordinates = require('../persistence/routeCoordinates/model-route-coordinates');
-const StreamPin = require('../persistence/streams/model-stream-pins');
-const ZonesCache = require('../persistence/heartzones/model-zones-cache');
-const {
+import Activity from '../persistence/activities/model-activities.js';
+import AthleteSegment from '../persistence/segments/model-athlete-segments.js';
+import BestEfforts from '../persistence/activities/model-best-efforts.js';
+import RouteCoordinates from '../persistence/routeCoordinates/model-route-coordinates.js';
+import StreamPin from '../persistence/streams/model-stream-pins.js';
+import ZonesCache from '../persistence/heartzones/model-zones-cache.js';
+import {
   destroyActivity,
   destroyActivityDetail,
   destroyActivityPreferences,
   destroyStream,
-} = require('../persistence/setupdb-couchbase');
+} from '../persistence/setupdb-couchbase.js';
 
 const deleteActivity = async (activityId) => {
   await Promise.all([
@@ -26,6 +26,6 @@ const deleteActivity = async (activityId) => {
   ])
 };
 
-module.exports = {
+export {
   deleteActivity,
 };

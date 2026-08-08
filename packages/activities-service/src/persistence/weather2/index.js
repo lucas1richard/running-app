@@ -1,10 +1,10 @@
-const { addOrUpdateWeather } = require('./addOrUpdateWeather');
-const { addOrUpdateWeatherForActivity } = require('./addOrUpdateWeatherForActivity');
-const { getWeatherByActivityId } = require('./getWeatherByActivityId');
-const { getWeatherByLatLngDate } = require('./getWeatherByLatLngDate');
-const { getOrFetchWeatherByActivity } = require('./getOrFetchWeatherByActivity');
+import { addOrUpdateWeather } from './addOrUpdateWeather.js';
+import { addOrUpdateWeatherForActivity } from './addOrUpdateWeatherForActivity.js';
+import { getWeatherByActivityId } from './getWeatherByActivityId.js';
+import { getWeatherByLatLngDate } from './getWeatherByLatLngDate.js';
+import { getOrFetchWeatherByActivity } from './getOrFetchWeatherByActivity.js';
 
-module.exports = {
+export {
   addOrUpdateWeather,
   addOrUpdateWeatherForActivity,
   getWeatherByActivityId,

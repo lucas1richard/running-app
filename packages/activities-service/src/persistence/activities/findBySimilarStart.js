@@ -1,11 +1,11 @@
-const { Sequelize, Op } = require('sequelize');
-const Activity = require('./model-activities');
-const { sequelizeCoordsDistance } = require('../utils');
-const {
-  findSimilarStartDistance: { START_DISTANCE_CONSTRAINT },
-} = require('../../constants');
+import { Sequelize, Op } from 'sequelize';
+import Activity from './model-activities.js';
+import { sequelizeCoordsDistance } from '../utils.js';
+import {
+  findSimilarStartDistance,
+} from '../../constants.js';
 
-const findBySimilarStart = async (activity, radius = START_DISTANCE_CONSTRAINT) => {
+const findBySimilarStart = async (activity, radius = findSimilarStartDistance.START_DISTANCE_CONSTRAINT) => {
   const sqlPoint = Sequelize.fn('Point', activity.start_latlng[0], activity.start_latlng[1]);
   const sqlCol = Sequelize.col('start_latlng');
   const startDistDiffFn = Sequelize.fn('ST_Distance', sqlCol, sqlPoint);
@@ -36,4 +36,4 @@ const findBySimilarStart = async (activity, radius = START_DISTANCE_CONSTRAINT) 
   })
 };
 
-module.exports = findBySimilarStart;
+export default findBySimilarStart;

@@ -1,7 +1,7 @@
-const { Router } = require('express');
+import { Router } from 'express';
 const router = Router();
 
-const { getAllCoordinatesStream } = require('../persistence/routeCoordinates');
+import { getAllCoordinatesStream } from '../persistence/routeCoordinates/index.js';
 
 router.get('/heatmap', async (req, res) => {
   try {
@@ -30,6 +30,6 @@ router.get('/heatmap', async (req, res) => {
   }
 });
 
-module.exports = {
-  routeCoordinatesRouter: router,
+export {
+  router as routeCoordinatesRouter,
 };

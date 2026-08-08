@@ -1,6 +1,6 @@
-const { Sequelize, HasOne } = require('sequelize');
-const RelatedActivities = require('./model-related-activities');
-const Activity = require('./model-activities');
+import { Sequelize, HasOne } from 'sequelize';
+import RelatedActivities from './model-related-activities.js';
+import Activity from './model-activities.js';
 
 const summedSegmentScores = Sequelize.where(
   Sequelize.col('segmentScoreFromBase'), '+', Sequelize.col('segmentScoreFromRelated')
@@ -36,4 +36,4 @@ const findRelationsBySimilarSegments = async (baseActivity) => {
   });
 };
 
-module.exports = findRelationsBySimilarSegments;
+export default findRelationsBySimilarSegments;

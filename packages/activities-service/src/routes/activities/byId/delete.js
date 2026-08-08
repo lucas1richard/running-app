@@ -1,5 +1,5 @@
-const { Router } = require('express');
-const { deleteActivity } = require('../../../controllers/deleteActivity');
+import { Router } from 'express';
+import { deleteActivity } from '../../../controllers/deleteActivity.js';
 
 const router = Router();
 
@@ -13,6 +13,6 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
-module.exports = {
-  deleteRouter: router,
+export {
+  router as deleteRouter,
 };

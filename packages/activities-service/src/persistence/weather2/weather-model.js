@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
 class HourlyWeather extends Model {
   static async fetchArchiveWeather(lat, lon, date) {
@@ -109,4 +109,4 @@ HourlyWeather.init(
 );
 
 
-module.exports = HourlyWeather;
+export default HourlyWeather;

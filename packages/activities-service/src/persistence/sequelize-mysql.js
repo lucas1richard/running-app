@@ -1,5 +1,5 @@
-const fs = require('fs');
-const { Sequelize } = require('sequelize');
+import fs from 'fs';
+import { Sequelize } from 'sequelize';
 
 const {
   MYSQL_HOST: HOST,
@@ -33,6 +33,6 @@ sequelize
   .then(() => console.trace('Connection has been established successfully.'))
   .catch((err) => console.error('Unable to connect to the database:', err));
 
-module.exports = {
-  sequelizeMysql: sequelize,
+export {
+  sequelize as sequelizeMysql
 };

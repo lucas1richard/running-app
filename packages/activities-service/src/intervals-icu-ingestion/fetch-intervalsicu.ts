@@ -1,7 +1,7 @@
 const INTERVALS_ICU_ATHLETE_ID = process.env.INTERVALS_ICU_ATHLETE_ID;
 const INTERVALS_ICU_API_KEY = process.env.INTERVALS_ICU_API_KEY;
 
-const fetchIntervalsIcu = async (apiPath, options = {}) => {
+const fetchIntervalsIcu = async (apiPath: string, options = {}) => {
   let path = apiPath;
   const method = options.method ?? 'GET';
   const queryParams = options.queryParams ?? {};
@@ -12,10 +12,10 @@ const fetchIntervalsIcu = async (apiPath, options = {}) => {
     path = apiPath.slice(1);
   }
 
-  const url = new URL(`https://intervals.icu/api/v1/athlete/${INTERVALS_ICU_ATHLETE_ID}/${path}`)
+  const url = new URL(`https://intervals.icu/api/v1/athlete/${INTERVALS_ICU_ATHLETE_ID}/${path}`);
 
   // Assign authentication headers
-  const auth = btoa(`API_KEY:${INTERVALS_ICU_API_KEY}`)
+  const auth = btoa(`API_KEY:${INTERVALS_ICU_API_KEY}`);
   headers.set('Authorization', `Basic ${auth}`);
 
   // Assign queryParams
@@ -23,11 +23,11 @@ const fetchIntervalsIcu = async (apiPath, options = {}) => {
     if (Array.isArray(v)) {
       v.forEach(vv => url.searchParams.append(q, vv));
     } else {
-      url.searchParams.append(q, v)
+      url.searchParams.append(q, v);
     }
   });
 
-  console.log(url, headers)
+  console.log(url, headers);
 
   const res = await fetch(url, {
     ...options,
@@ -38,4 +38,4 @@ const fetchIntervalsIcu = async (apiPath, options = {}) => {
   return res.json();
 };
 
-module.exports = fetchIntervalsIcu;
+export default fetchIntervalsIcu;

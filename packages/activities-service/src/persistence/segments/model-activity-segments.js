@@ -29,8 +29,8 @@ https://developers.strava.com/docs/reference/#api-models-DetailedSegment
 },
 */
 
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
 class ActivitySegment extends Model {
 }
@@ -119,4 +119,4 @@ ActivitySegment.init(
   }
 );
 
-module.exports = ActivitySegment;
+export default ActivitySegment;

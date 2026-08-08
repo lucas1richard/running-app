@@ -1,7 +1,7 @@
-const { Sequelize, HasOne } = require('sequelize');
-const RelatedActivities = require('./model-related-activities');
-const Activity = require('./model-activities');
-const { findRelationsBySimilarRoute: { SIMILARITY_THRESHOLD } } = require('../../constants');
+import { Sequelize, HasOne } from 'sequelize';
+import RelatedActivities from './model-related-activities.js';
+import Activity from './model-activities.js';
+import { findRelationsBySimilarRoute as constEnum } from '../../constants.js';
 
 const summedRouteScores = Sequelize.where(
   Sequelize.col('routeScoreFromBase'), '+', Sequelize.col('routeScoreFromRelated')
@@ -10,7 +10,7 @@ const summedRouteScores = Sequelize.where(
 const findRelationsBySimilarRoute = async (baseActivityId) => {
   return RelatedActivities.findAll({
     where: {
-      linked: Sequelize.where(summedRouteScores, Sequelize.Op.gte, SIMILARITY_THRESHOLD),
+      linked: Sequelize.where(summedRouteScores, Sequelize.Op.gte, constEnum.SIMILARITY_THRESHOLD),
       baseActivity: baseActivityId,
       [Sequelize.Op.not]: { relatedActivity: baseActivityId },
     },
@@ -30,4 +30,4 @@ const findRelationsBySimilarRoute = async (baseActivityId) => {
   });
 };
 
-module.exports = findRelationsBySimilarRoute;
+export default findRelationsBySimilarRoute;

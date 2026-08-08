@@ -1,9 +1,9 @@
-const { Router } = require('express');
-const { getComparedSegments } = require('./activities/byId/segments');
-const {
+import { Router } from 'express';
+import { getComparedSegments } from './activities/byId/segments.js';
+import {
   findAllActivities,
   findRelationsBySimilarSegments,
-} = require('../persistence/activities');
+} from '../persistence/activities/index.js';
 
 const router = Router();
 
@@ -21,6 +21,6 @@ router.get('/network', async (req, res) => {
   }
 });
 
-module.exports = {
-  segmentsRouter: router,
+export {
+  router as segmentsRouter,
 };

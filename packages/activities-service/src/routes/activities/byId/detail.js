@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const { getActivityDetails } = require('../../../controllers/getActivityDetails');
-const { calculateActivityBestEfforts } = require('../../../controllers/calculateActivityBestEfforts');
+import { Router } from 'express';
+import { getActivityDetails } from '../../../controllers/getActivityDetails.js';
+import { calculateActivityBestEfforts } from '../../../controllers/calculateActivityBestEfforts.js';
 
 const router = Router();
 
@@ -18,6 +18,6 @@ router.get('/:id/detail', async (req, res) => {
   }
 });
 
-module.exports = {
-  detailsRouter: router,
+export {
+  router as detailsRouter,
 };

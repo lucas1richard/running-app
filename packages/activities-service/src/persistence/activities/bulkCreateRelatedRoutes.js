@@ -1,4 +1,4 @@
-const RelatedActivities = require('./model-related-activities');
+import RelatedActivities from './model-related-activities.js';
 
 const bulkCreateRelatedRoutes = (data) => {
   return RelatedActivities.bulkCreate(
@@ -12,4 +12,4 @@ const bulkCreateRelatedRoutes = (data) => {
   )
 };
 
-module.exports = bulkCreateRelatedRoutes;
+export default bulkCreateRelatedRoutes;

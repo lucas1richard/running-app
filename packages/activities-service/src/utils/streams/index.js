@@ -1,5 +1,5 @@
-const { BatchTransformer } = require('./batchTransformer');
+import { BatchTransformer } from './batchTransformer.js';
 
-module.exports = {
+export {
   BatchTransformer,
 };

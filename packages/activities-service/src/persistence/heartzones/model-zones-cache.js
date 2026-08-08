@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
-class ZonesCache extends Model {}
+class ZonesCache extends Model { }
 
 ZonesCache.init(
   {
@@ -20,4 +20,4 @@ ZonesCache.init(
   }
 );
 
-module.exports = ZonesCache;
+export default ZonesCache;

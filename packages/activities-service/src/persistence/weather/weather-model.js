@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
 class Weather extends Model {
 }
@@ -42,4 +42,4 @@ Weather.init(
 );
 
 
-module.exports = Weather;
+export default Weather;

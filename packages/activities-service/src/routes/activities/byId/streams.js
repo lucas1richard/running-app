@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const { addStreamPin, deleteStreamPin, updateStreamPin, getStreamPins } = require('../../../persistence/streams');
-const { getActivityStreams } = require('../../../controllers/getActivityStreams');
+import { Router } from 'express';
+import { addStreamPin, deleteStreamPin, updateStreamPin, getStreamPins } from '../../../persistence/streams/index.js';
+import { getActivityStreams } from '../../../controllers/getActivityStreams.js';
 
 const router = new Router();
 
@@ -63,6 +63,6 @@ router.put('/:id/streams/pin', async (req, res) => {
   }
 });
 
-module.exports = {
-  streamsRouter: router,
+export {
+  router as streamsRouter,
 };

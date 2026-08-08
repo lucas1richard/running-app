@@ -1,13 +1,13 @@
-const { Sequelize, Op } = require('sequelize');
-const Activity = require('./model-activities');
-const { sequelizeCoordsDistance } = require('../utils');
-const RelatedActivities = require('./model-related-activities');
-const {
-  findSimilarStartDistance: { START_DISTANCE_CONSTRAINT, ACTIVITY_DISTANCE_CONSTRAINT },
-} = require('../../constants');
+import { Sequelize, Op } from 'sequelize';
+import Activity from './model-activities.js';
+import { sequelizeCoordsDistance } from '../utils.js';
+import RelatedActivities from './model-related-activities.js';
+import {
+  findSimilarStartDistance as constenum,
+} from '../../constants.js';
 
 const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlreadyRelated = false) => {
-  const distanceDelta = Math.max(activity.distance * 0.1, ACTIVITY_DISTANCE_CONSTRAINT);
+  const distanceDelta = Math.max(activity.distance * 0.1, constenum.ACTIVITY_DISTANCE_CONSTRAINT);
   const timeDelta = Math.max(activity.elapsed_time * 0.1, 300);
   return Activity.findAll(
     {
@@ -16,7 +16,7 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
           sport_type: activity.sport_type,
           ax: sequelizeCoordsDistance( // `ax` doesn't mean anything, just a placeholder
             activity.start_latlng,
-            START_DISTANCE_CONSTRAINT,
+            constenum.START_DISTANCE_CONSTRAINT,
             'start_latlng'
           ),
           distance: {
@@ -52,4 +52,4 @@ const findSimilarStartDistance = async (activity, maxCount = 100, excludeAlready
   )
 };
 
-module.exports = findSimilarStartDistance;
+export default findSimilarStartDistance;

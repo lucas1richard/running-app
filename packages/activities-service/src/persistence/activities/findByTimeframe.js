@@ -1,5 +1,5 @@
-const { Sequelize } = require('sequelize');
-const Activity = require('./model-activities');
+import { Sequelize } from 'sequelize';
+import Activity from './model-activities.js';
 
 /**
  *
@@ -19,4 +19,4 @@ const findByTimeframe = async (msOffset = 365 * 24 * 60 * 60 * 1000, rowLimit = 
   });
 };
 
-module.exports = findByTimeframe;
+export default findByTimeframe;

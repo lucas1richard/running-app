@@ -1,4 +1,4 @@
-const StreamPin = require('./model-stream-pins');
+import StreamPin from './model-stream-pins.js';
 
 const updatePin = async (activityId, pin) => {
   return StreamPin.update(pin, {
@@ -9,4 +9,4 @@ const updatePin = async (activityId, pin) => {
   });
 };
 
-module.exports = updatePin;
+export default updatePin;

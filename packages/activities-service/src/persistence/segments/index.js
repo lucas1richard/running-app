@@ -1,9 +1,9 @@
-const Activity = require('../activities/model-activities');
-const { sequelizeCoordsDistance } = require('../utils');
-const bulkCreateActivitySegments = require('./bulkCreateActivitySegments');
-const bulkCreateAthleteSegments = require('./bulkCreateAthleteSegments');
-const findAthleteSegmentsByActivityId = require('./findAthleteSegmentsByActivityId');
-const AthleteSegment = require('./model-athlete-segments');
+import Activity from '../activities/model-activities.js';
+import { sequelizeCoordsDistance } from '../utils.js';
+import bulkCreateActivitySegments from './bulkCreateActivitySegments.js';
+import bulkCreateAthleteSegments from './bulkCreateAthleteSegments.js';
+import findAthleteSegmentsByActivityId from './findAthleteSegmentsByActivityId.js';
+import AthleteSegment from './model-athlete-segments.js';
 
 const findNearbySegmentsWithActivity = async (start_latlng) => {
   return AthleteSegment.findAll({
@@ -20,7 +20,7 @@ const findNearbySegmentsWithActivity = async (start_latlng) => {
   })
 };
 
-module.exports = {
+export {
   bulkCreateActivitySegments,
   bulkCreateAthleteSegments,
   findAthleteSegmentsByActivityId,

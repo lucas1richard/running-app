@@ -1,6 +1,6 @@
-const { Router } = require('express');
-const { getActivityDetail } = require('../../../persistence/setupdb-couchbase');
-const receiver = require('../../../messageQueue/receiver');
+import { Router } from 'express';
+import { getActivityDetail } from '../../../persistence/setupdb-couchbase.js';
+import receiver from '../../../messageQueue/receiver.js';
 
 const router = new Router();
 
@@ -27,6 +27,6 @@ router.get('/:id/laps', async (req, res) => {
   }
 });
 
-module.exports = {
-  lapsRouter: router,
+export {
+  router as lapsRouter,
 };

@@ -1,9 +1,9 @@
-const Weather = require('./weather-model');
+import Weather from './weather-model.js';
 
 const getWeatherByLatLngDate = async (lat, lng, date) => {
   return Weather.findAll({ where: { lat, lng, date } });
 };
 
-module.exports = {
+export {
   getWeatherByLatLngDate,
 };

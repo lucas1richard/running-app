@@ -1,4 +1,4 @@
-const Weather = require('./weather-model');
+import Weather from './weather-model.js';
 
 const addOrUpdateWeather = async (weather) => {
   const transaction = await Weather.sequelize.transaction();
@@ -29,6 +29,6 @@ const addOrUpdateWeather = async (weather) => {
   }
 };
 
-module.exports = {
+export {
   addOrUpdateWeather,
 };

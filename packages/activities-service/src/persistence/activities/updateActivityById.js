@@ -1,7 +1,7 @@
-const Activity = require('./model-activities');
+import Activity from './model-activities.js';
 
 const updateActivityById = async (id, fields) => {
   return Activity.update(fields, { where: { id } });
 };
 
-module.exports = updateActivityById;
+export default updateActivityById;

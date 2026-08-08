@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
-const { calculateActivityBestEfforts } = require('../../controllers/calculateActivityBestEfforts');
-const Activity = require('./model-activities');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
+import { calculateActivityBestEfforts } from '../../controllers/calculateActivityBestEfforts.js';
+import Activity from './model-activities.js';
 
 class CalculatedBestEfforts extends Model {
   /**
@@ -109,4 +109,4 @@ CalculatedBestEfforts.init(
   }
 );
 
-module.exports = CalculatedBestEfforts;
+export default CalculatedBestEfforts;

@@ -1,6 +1,6 @@
-const waitPort = require('wait-port');
-const fs = require('fs');
-const mysql = require('mysql2/promise');
+import waitPort from 'wait-port';
+import fs from 'fs';
+import mysql from 'mysql2/promise';
 
 const {
   MYSQL_HOST: HOST,
@@ -60,7 +60,7 @@ const query = async (...args) => {
   return rows;
 };
 
-module.exports = {
+export {
   getMySQLConnection,
   queryStream,
   query,

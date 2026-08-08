@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
-class RelatedActivities extends Model {}
+class RelatedActivities extends Model { }
 
 RelatedActivities.init(
   {
@@ -85,4 +85,4 @@ RelatedActivities.init(
   }
 );
 
-module.exports = RelatedActivities;
+export default RelatedActivities;

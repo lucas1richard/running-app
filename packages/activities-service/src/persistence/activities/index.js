@@ -1,16 +1,16 @@
-const { Transform, pipeline, Readable } = require('node:stream');
-const { Sequelize } = require('sequelize');
-const Activity = require('./model-activities');
-const findRelationsBySimilarRoute = require('./findRelationsBySimilarRoute');
-const { sequelizeCoordsDistance } = require('../utils');
-const findRelationsBySimilarSegments = require('./findRelationsBySimilarSegments');
-const updateActivityById = require('./updateActivityById');
-const bulkCreateRelatedSegments = require('./bulkCreateRelatedSegments');
-const bulkCreateRelatedRoutes = require('./bulkCreateRelatedRoutes');
-const { logger } = require('../../utils/logger');
-const { queryStream } = require('../mysql-connection');
-const { BatchTransformer } = require('../../utils/streams');
-const { getActivitiesSql, getActivitiesByIdSql } = require('../sql-queries');
+import { Transform, pipeline, Readable } from 'node:stream';
+import { Sequelize } from 'sequelize';
+import Activity from './model-activities.js';
+import findRelationsBySimilarRoute from './findRelationsBySimilarRoute.js';
+import { sequelizeCoordsDistance } from '../utils.js';
+import findRelationsBySimilarSegments from './findRelationsBySimilarSegments.js';
+import updateActivityById from './updateActivityById.js';
+import bulkCreateRelatedSegments from './bulkCreateRelatedSegments.js';
+import bulkCreateRelatedRoutes from './bulkCreateRelatedRoutes.js';
+import { logger } from '../../utils/logger.js';
+import { queryStream } from '../mysql-connection.js';
+import { BatchTransformer } from '../../utils/streams/index.js';
+import { getActivitiesSql, getActivitiesByIdSql } from '../sql-queries/index.js';
 
 const findActivityById = async (id) => {
   return Activity.findByPk(id);
@@ -29,7 +29,7 @@ const findAllActivities = async (rowLimit) => {
 const findAllActivitiesStream = async () => {
   logger.info('Fetching all activities from MySQL with stream');
 
-  const readable = await queryStream({ sql: getActivitiesSql, streamOptions: { highWaterMark: 30 }})
+  const readable = await queryStream({ sql: getActivitiesSql, streamOptions: { highWaterMark: 30 } })
 
   readable.on('close', () => {
     logger.info('Readable stream closed');
@@ -120,7 +120,7 @@ const findNearbyStartingActivities = async (activity) => {
   })
 };
 
-module.exports = {
+export {
   bulkCreateRelatedRoutes,
   bulkCreateRelatedSegments,
   findActivityById,

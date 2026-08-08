@@ -1,4 +1,4 @@
-const { getMySQLConnection } = require('../mysql-connection');
+import { getMySQLConnection } from '../mysql-connection.js';
 
 const createHeartRateZonesTable = async () => {
   const pool = await getMySQLConnection();
@@ -53,7 +53,7 @@ const addHeartRateZone = async (data) => {
   });
 };
 
-module.exports = {
+export {
   createHeartRateZonesTable,
   getAllHeartRateZones,
   addHeartRateZone,

@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
-class HeartZones extends Model {}
+class HeartZones extends Model { }
 
 HeartZones.init(
   {
@@ -20,4 +20,4 @@ HeartZones.init(
   }
 );
 
-module.exports = HeartZones;
+export default HeartZones;

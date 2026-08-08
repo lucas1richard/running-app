@@ -1,6 +1,6 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
-const { findRelationsBySimilarRoute } = require('../../constants');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
+import { findRelationsBySimilarRoute } from '../../constants.js';
 
 // get the same shape as we would get from couchdb
 const formatResponse = (route) => {
@@ -65,4 +65,4 @@ RouteCoordinates.init(
 );
 
 
-module.exports = RouteCoordinates;
+export default RouteCoordinates;

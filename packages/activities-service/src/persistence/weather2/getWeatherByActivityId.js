@@ -1,9 +1,9 @@
-const Weather = require('./weather-model');
+import Weather from './weather-model.js';
 
 const getWeatherByActivityId = async (activityId) => {
   return Weather.findAll({ where: { activityId } });
 };
 
-module.exports = {
+export {
   getWeatherByActivityId,
 };

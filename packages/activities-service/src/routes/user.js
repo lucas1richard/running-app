@@ -1,8 +1,8 @@
-const { Router } = require('express');
-const {
+import { Router } from 'express';
+import {
   getUserPreferences,
   updateUserPreferences,
-} = require('../persistence/setupdb-couchbase');
+} from '../persistence/setupdb-couchbase.js';
 
 const router = Router();
 
@@ -25,6 +25,6 @@ router.post('/preferences', async (req, res) => {
   }
 });
 
-module.exports = {
-  userRouter: router,
+export {
+  router as userRouter,
 };

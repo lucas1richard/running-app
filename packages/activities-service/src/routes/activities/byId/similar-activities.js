@@ -1,8 +1,8 @@
-const { Router } = require('express');
-const { findRelationsBySimilarRoute, findActivityById } = require('../../../persistence/activities');
-// const findSimilarStartDistance = require('../../../persistence/activities/findSimilarStartDistance');
-const { getComparedRoutes } = require('../../../controllers/getComparedRoutes');
-const findBySimilarStart = require('../../../persistence/activities/findBySimilarStart');
+import { Router } from 'express';
+import { findRelationsBySimilarRoute, findActivityById } from '../../../persistence/activities/index.js';
+// import findSimilarStartDistance from '../../../persistence/activities/findSimilarStartDistance.js';
+import { getComparedRoutes } from '../../../controllers/getComparedRoutes.js';
+import findBySimilarStart from '../../../persistence/activities/findBySimilarStart.js';
 
 const router = new Router();
 
@@ -38,6 +38,6 @@ router.get('/:id/find-by-start', async (req, res) => {
   }
 });
 
-module.exports = {
-  similarActivitiesRouter: router,
+export {
+  router as similarActivitiesRouter,
 };

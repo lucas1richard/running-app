@@ -1,4 +1,4 @@
-const ActivitySegment = require('./model-activity-segments');
+import ActivitySegment from './model-activity-segments.js';
 
 
 const bulkCreateActivitySegments = async (activityId, segmentEfforts) => {
@@ -19,4 +19,4 @@ const bulkCreateActivitySegments = async (activityId, segmentEfforts) => {
   });
 };
 
-module.exports = bulkCreateActivitySegments;
+export default bulkCreateActivitySegments;

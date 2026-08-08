@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const { addOrUpdateWeatherForActivity, getOrFetchWeatherByActivity } = require('../../../persistence/weather2');
-const { findActivityById } = require('../../../persistence/activities');
-const { logger } = require('../../../utils/logger');
+import { Router } from 'express';
+import { addOrUpdateWeatherForActivity, getOrFetchWeatherByActivity } from '../../../persistence/weather2/index.js';
+import { findActivityById } from '../../../persistence/activities/index.js';
+import { logger } from '../../../utils/logger.js';
 
 const router = new Router();
 
@@ -42,6 +42,6 @@ router.get('/:id/weather', async (req, res) => {
   }
 });
 
-module.exports = {
-  weatherRouter: router,
+export {
+  router as weatherRouter,
 };

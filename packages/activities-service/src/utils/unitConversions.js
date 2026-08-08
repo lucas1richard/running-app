@@ -13,7 +13,7 @@ const getSecondsPerMile = (metersPerSecond) => {
   return Math.round(secondsPerMile);
 };
 
-module.exports = {
+export {
   convertMetersToMiles,
   convertMetersToFt,
   convertMetricSpeedToMPH,

@@ -1,6 +1,6 @@
-const { Op } = require('sequelize');
-const Activity = require('../persistence/activities/model-activities');
-const CalculatedBestEfforts = require('../persistence/activities/model-calculated-efforts');
+import { Op } from 'sequelize';
+import Activity from '../persistence/activities/model-activities.js';
+import CalculatedBestEfforts from '../persistence/activities/model-calculated-efforts.js';
 
 const getPRsByDate = async () => {
   const prsByDateArr = await CalculatedBestEfforts.findAll({
@@ -36,4 +36,4 @@ const getPRsByDate = async () => {
   return prsByDate;
 };
 
-module.exports = getPRsByDate;
+export default getPRsByDate;

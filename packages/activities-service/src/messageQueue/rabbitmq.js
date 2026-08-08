@@ -1,5 +1,5 @@
-const amqp = require('amqplib');
-const waitPort = require('wait-port');
+import amqp from 'amqplib';
+import waitPort from 'wait-port';
 
 let connection = null;
 
@@ -29,7 +29,7 @@ const closeConnection = async () => {
 process.on('SIGINT', closeConnection);
 process.on('SIGTERM', closeConnection);
 
-module.exports = {
+export {
   getRabbitMQConnection,
   closeConnection,
 };

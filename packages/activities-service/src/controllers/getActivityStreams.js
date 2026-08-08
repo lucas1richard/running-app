@@ -1,4 +1,4 @@
-const { getStream } = require('../persistence/setupdb-couchbase');
+import { getStream } from '../persistence/setupdb-couchbase.js';
 
 const streamKeys = [
   'time',
@@ -26,6 +26,6 @@ const getActivityStreams = async (activityId, keys = streamKeys) => {
   }
 };
 
-module.exports = {
+export {
   getActivityStreams,
 };

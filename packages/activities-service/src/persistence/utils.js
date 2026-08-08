@@ -1,6 +1,6 @@
-const { Sequelize } = require('sequelize');
-const { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } = require('../secret-constants');
-const { getItem, upsertItem } = require('./setupdb-mysql');
+import { Sequelize } from 'sequelize';
+import { STRAVA_CLIENT_ID, STRAVA_CLIENT_SECRET } from '../secret-constants.js';
+import { getItem, upsertItem } from './setupdb-mysql.js';
 
 const getAccessToken = async () => {
   const { access_token, expires } = await getItem(1) || {};
@@ -46,7 +46,7 @@ const sequelizeCoordsDistance = (
   dist
 );
 
-module.exports = {
+export {
   sequelizeCoordsDistance,
   getAccessToken,
   refreshAccessToken,

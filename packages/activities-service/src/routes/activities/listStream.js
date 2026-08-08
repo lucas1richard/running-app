@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const { findAllActivitiesStream, findActivitiesByIdStream } = require('../../persistence/activities');
-const { logger } = require('../../utils/logger');
-const receiver = require('../../messageQueue/receiver');
+import { Router } from 'express';
+import { findAllActivitiesStream, findActivitiesByIdStream } from '../../persistence/activities/index.js';
+import { logger } from '../../utils/logger.js';
+import receiver from '../../messageQueue/receiver.js';
 
 const router = Router();
 
@@ -58,6 +58,6 @@ router.get('/listStream', async (req, res) => {
   }
 });
 
-module.exports = {
-  listStreamRouter: router,
+export {
+  router as listStreamRouter,
 };

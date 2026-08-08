@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
-class BestEfforts extends Model {}
+class BestEfforts extends Model { }
 
 BestEfforts.init(
   {
@@ -22,4 +22,4 @@ BestEfforts.init(
   }
 );
 
-module.exports = BestEfforts;
+export default BestEfforts;

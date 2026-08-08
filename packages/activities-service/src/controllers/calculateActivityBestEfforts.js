@@ -1,4 +1,4 @@
-const { getActivityStreams } = require('./getActivityStreams');
+import { getActivityStreams } from './getActivityStreams.js';
 
 const distances = [
   { name: '100 yards', distance: 91.44 },
@@ -60,6 +60,6 @@ const calculateActivityBestEfforts = async (activityId, meterDistances = distanc
     });
 };
 
-module.exports = {
+export {
   calculateActivityBestEfforts,
 };

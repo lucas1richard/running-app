@@ -1,18 +1,18 @@
-const { sequelizeMysql } = require('./sequelize-mysql');
+import { sequelizeMysql } from './sequelize-mysql.js';
 
-const Activity = require('./activities/model-activities');
-const ActivitySegment = require('./segments/model-activity-segments');
-const AthleteSegment = require('./segments/model-athlete-segments');
-const BestEfforts = require('./activities/model-best-efforts');
-const HeartZones = require('./heartzones/model-heartzones');
-const RelatedActivities = require('./activities/model-related-activities');
-const Weather = require('./weather/weather-model');
-const ZonesCache = require('./heartzones/model-zones-cache');
-const RouteCoordinates = require('./routeCoordinates/model-route-coordinates');
-const { Sequelize } = require('sequelize');
-const StreamPin = require('./streams/model-stream-pins');
-const CalculatedBestEfforts = require('./activities/model-calculated-efforts');
-const HourlyWeather = require('./weather2/weather-model');
+import Activity from './activities/model-activities.js';
+import ActivitySegment from './segments/model-activity-segments.js';
+import AthleteSegment from './segments/model-athlete-segments.js';
+import BestEfforts from './activities/model-best-efforts.js';
+import HeartZones from './heartzones/model-heartzones.js';
+import RelatedActivities from './activities/model-related-activities.js';
+import Weather from './weather/weather-model.js';
+import ZonesCache from './heartzones/model-zones-cache.js';
+import RouteCoordinates from './routeCoordinates/model-route-coordinates.js';
+import { Sequelize } from 'sequelize';
+import StreamPin from './streams/model-stream-pins.js';
+import CalculatedBestEfforts from './activities/model-calculated-efforts.js';
+import HourlyWeather from './weather2/weather-model.js';
 
 const initSequelize = async () => {
   try {
@@ -106,6 +106,6 @@ const initSequelize = async () => {
 };
 
 
-module.exports = {
+export {
   initSequelize,
 };

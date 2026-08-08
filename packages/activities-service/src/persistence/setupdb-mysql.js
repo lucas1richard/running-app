@@ -1,7 +1,7 @@
-const waitPort = require('wait-port');
-const fs = require('fs');
-const mysql = require('mysql2');
-const { createHeartRateZonesTable } = require('./heartzones');
+import waitPort from 'wait-port';
+import fs from 'fs';
+import mysql from 'mysql2';
+import { createHeartRateZonesTable } from './heartzones/index.js';
 
 const {
   MYSQL_HOST: HOST,
@@ -138,7 +138,7 @@ async function removeItem(id) {
   });
 }
 
-module.exports = {
+export {
   initMysql,
   getItem,
   storeItem,

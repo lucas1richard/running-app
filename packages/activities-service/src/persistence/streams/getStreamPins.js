@@ -1,4 +1,4 @@
-const StreamPin = require('./model-stream-pins');
+import StreamPin from './model-stream-pins.js';
 
 const getStreamPins = async (activityId) => {
   return StreamPin.findAll({
@@ -11,4 +11,4 @@ const getStreamPins = async (activityId) => {
   });
 };
 
-module.exports = getStreamPins;
+export default getStreamPins;

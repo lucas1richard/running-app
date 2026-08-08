@@ -1,4 +1,4 @@
-const AthleteSegment = require('./model-athlete-segments');
+import AthleteSegment from './model-athlete-segments.js';
 
 const bulkCreateAthleteSegments = async (activityId, segmentEfforts) => {
   return AthleteSegment.bulkCreate(segmentEfforts.map(({ segment: se, ...rest }) => ({
@@ -15,4 +15,4 @@ const bulkCreateAthleteSegments = async (activityId, segmentEfforts) => {
   });
 };
 
-module.exports = bulkCreateAthleteSegments;
+export default bulkCreateAthleteSegments;

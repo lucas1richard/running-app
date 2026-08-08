@@ -1,7 +1,7 @@
-const { Router } = require('express');
-const { getComparedRoutes } = require('../controllers/getComparedRoutes');
-const findByTimeframe = require('../persistence/activities/findByTimeframe');
-const { findRelationsBySimilarRoute, findActivityById } = require('../persistence/activities');
+import { Router } from 'express';
+import { getComparedRoutes } from '../controllers/getComparedRoutes.js';
+import findByTimeframe from '../persistence/activities/findByTimeframe.js';
+import { findRelationsBySimilarRoute, findActivityById } from '../persistence/activities/index.js';
 
 const router = Router();
 
@@ -28,6 +28,6 @@ router.get('/network', async (req, res) => {
   }
 });
 
-module.exports = {
-  activityRoutesRouter: router,
+export {
+  router as activityRoutesRouter,
 };

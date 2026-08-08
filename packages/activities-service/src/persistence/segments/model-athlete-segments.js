@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
 
 class AthleteSegment extends Model {
   static async findAllByActivityId(activityId) {
@@ -61,4 +61,4 @@ AthleteSegment.init(
   }
 );
 
-module.exports = AthleteSegment;
+export default AthleteSegment;

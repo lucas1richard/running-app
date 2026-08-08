@@ -1,8 +1,8 @@
-const EventEmitter = require('node:events');
-const uuid = require('uuid');
+import EventEmitter from 'node:events';
+import { v4 as uuidV4 } from 'uuid';
 
-const { channelConfigs, getChannel, getChannelSync } = require('./channels');
-const { logger } = require('../utils/logger');
+import { channelConfigs, getChannel, getChannelSync } from './channels.js';
+import { logger } from '../utils/logger.js';
 
 class Receiver extends EventEmitter {
   constructor() {
@@ -17,7 +17,7 @@ class Receiver extends EventEmitter {
   }
 
   generateCorrelationId() {
-    return uuid.v4();
+    return uuidV4();
   }
 
   async init() {
@@ -157,4 +157,4 @@ class Receiver extends EventEmitter {
 
 const receiver = new Receiver();
 
-module.exports = receiver;
+export default receiver;

@@ -1,7 +1,7 @@
-const receiver = require('../messageQueue/receiver');
-const { query } = require('../persistence/mysql-promise');
-const { getStream } = require('../persistence/setupdb-couchbase');
-const { getUnroutedActivitiesSql } = require('../persistence/sql-queries');
+import receiver from '../messageQueue/receiver.js';
+import { query } from '../persistence/mysql-promise.js';
+import { getStream } from '../persistence/setupdb-couchbase.js';
+import { getUnroutedActivitiesSql } from '../persistence/sql-queries/index.js';
 
 const compress = (route = [], compressionLevel = 0.0001) => {
   const roundedRoute = route.map(
@@ -70,4 +70,4 @@ const addAllCompressedRoutes = async (compressionLevel = 0.0001) => {
   }));
 };
 
-module.exports = addAllCompressedRoutes;
+export default addAllCompressedRoutes;

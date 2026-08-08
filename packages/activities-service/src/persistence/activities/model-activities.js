@@ -1,7 +1,7 @@
-const { DataTypes, Model } = require('sequelize');
-const { sequelizeMysql } = require('../sequelize-mysql');
-const { getAllActivities } = require('../setupdb-couchbase');
-const { getSecondsPerMile } = require('../../utils/unitConversions');
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.js';
+import { getAllActivities } from '../setupdb-couchbase.js';
+import { getSecondsPerMile } from '../../utils/unitConversions.js';
 
 class Activity extends Model {
   static async syncWithCouch() {
@@ -226,5 +226,5 @@ Activity.init(
   }
 );
 
-module.exports = Activity;
+export default Activity;
 

@@ -1,4 +1,4 @@
-const { getRabbitMQConnection } = require('./rabbitmq');
+import { getRabbitMQConnection } from './rabbitmq.js';
 
 const exchangeNames = {
   ACTIVITY_SERVICE_UPDATES: 'activityService.updates',
@@ -45,7 +45,7 @@ const getChannel = async (config) => {
   return channel;
 };
 
-module.exports = {
+export {
   exchangeNames,
   channelConfigs,
   getChannel,

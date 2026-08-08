@@ -1,4 +1,4 @@
-const { addOrUpdateWeather } = require('./addOrUpdateWeather');
+import { addOrUpdateWeather } from './addOrUpdateWeather.js';
 
 const addOrUpdateWeatherForActivity = async (activityId, weatherPayload = {}) => {
   return addOrUpdateWeather({
@@ -17,6 +17,6 @@ const addOrUpdateWeatherForActivity = async (activityId, weatherPayload = {}) =>
   });
 };
 
-module.exports = {
+export {
   addOrUpdateWeatherForActivity,
 };

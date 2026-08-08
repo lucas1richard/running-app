@@ -1,9 +1,9 @@
-const assert = require('assert');
-const { pipeline } = require('stream');
-const RouteCoordinates = require('./model-route-coordinates');
-const { queryStream } = require('../mysql-connection');
-const { BatchTransformer } = require('../../utils/streams');
-const { getHeatMapByTimeframeSql, getHeatMapSql } = require('../sql-queries');
+import assert from 'assert';
+import { pipeline } from 'stream';
+import RouteCoordinates from './model-route-coordinates.js';
+import { queryStream } from '../mysql-connection.js';
+import { BatchTransformer } from '../../utils/streams/index.js';
+import { getHeatMapByTimeframeSql, getHeatMapSql } from '../sql-queries/index.js';
 
 // class SumTransformer extends Transform {
 //   constructor(iteratorSize = 10e3, options) {
@@ -48,7 +48,7 @@ const getAllCoordinatesStream = async (referenceTime, timeframe, sportType = '%'
     sql: sql.replace(/_timeframe/g, timeframe).replace(/_sportType/g, `"${sportType}"`),
     queryOptions: { values: [referenceTime, timeframe] },
     streamOptions: { highWaterMark: 500 },
-});
+  });
   return pipeline(readable, new BatchTransformer(500), (err) => {
     if (err) {
       console.error('Pipeline failed', err);
@@ -78,7 +78,7 @@ const bulkCreateRouteCoordinates = async (activityId, compressedRoute, compressi
   );
 };
 
-module.exports = {
+export {
   getRouteCoordinates,
   getAllCoordinatesStream,
   bulkCreateRouteCoordinates,

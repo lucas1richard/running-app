@@ -1,27 +1,27 @@
-const app = require('./app');
-const PORT = require('./port');
+import app from './app.js';
+import PORT from './port.js';
 
-const { setupdb } = require('./persistence/setupdb-couchbase');
-const { initMysql } = require('./persistence/setupdb-mysql');
-const { initSequelize } = require('./persistence/sequelize-init');
+import { setupdb } from './persistence/setupdb-couchbase.js';
+import { initMysql } from './persistence/setupdb-mysql.js';
+import { initSequelize } from './persistence/sequelize-init.js';
 
-const { getRabbitMQConnection } = require('./messageQueue/rabbitmq');
+import { getRabbitMQConnection } from './messageQueue/rabbitmq.js';
 
-const { activitiesRouter } = require('./routes/activities');
-const { adminRouter } = require('./routes/admin');
-const { authRouter } = require('./routes/authenticate');
-const { heartzonesRouter } = require('./routes/heartzones');
-const { analysisRouter } = require('./routes/analysis');
-const { userRouter } = require('./routes/user');
-const { segmentsRouter } = require('./routes/segments');
-const { activityRoutesRouter } = require('./routes/activity-routes');
-const { routeCoordinatesRouter } = require('./routes/routeCoordinates');
-const receiver = require('./messageQueue/receiver');
+import { activitiesRouter } from './routes/activities/index.js';
+import { adminRouter } from './routes/admin.js';
+import { authRouter } from './routes/authenticate.js';
+import { heartzonesRouter } from './routes/heartzones.js';
+import { analysisRouter } from './routes/analysis/index.js';
+import { userRouter } from './routes/user.js';
+import { segmentsRouter } from './routes/segments.js';
+import { activityRoutesRouter } from './routes/activity-routes.js';
+import { routeCoordinatesRouter } from './routes/routeCoordinates.js';
+import receiver from './messageQueue/receiver.js';
 
-const { logger } = require('./utils/logger');
-const { getChannel, channelConfigs } = require('./messageQueue/channels');
-const fetchIntervalsIcu = require('./intervals-icu-ingestion/fetch-intervalsicu.ts');
-// const addAllCompressedRoutes = require('./functions/addAllCompressedRoutes');
+import { logger } from './utils/logger.js';
+import { getChannel, channelConfigs } from './messageQueue/channels.js';
+import fetchIntervalsIcu from './intervals-icu-ingestion/fetch-intervalsicu.ts';
+// import addAllCompressedRoutes from './functions/addAllCompressedRoutes.js';
 
 receiver.onActivityId(({ activityId, type, correlationId }) => {
   logger.info(

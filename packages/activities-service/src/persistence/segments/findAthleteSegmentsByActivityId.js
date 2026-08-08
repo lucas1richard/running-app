@@ -1,7 +1,7 @@
-const AthleteSegment = require('./model-athlete-segments');
+import AthleteSegment from './model-athlete-segments.js';
 
 const findAthleteSegmentsByActivityId = async (activityId) => {
   return AthleteSegment.findAllByActivityId(activityId)
 };
 
-module.exports = findAthleteSegmentsByActivityId;
+export default findAthleteSegmentsByActivityId;

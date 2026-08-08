@@ -1,6 +1,6 @@
-const { getActivityDetail } = require('../persistence/setupdb-couchbase');
-const CalculatedBestEfforts = require('../persistence/activities/model-calculated-efforts');
-const receiver = require('../messageQueue/receiver');
+import { getActivityDetail } from '../persistence/setupdb-couchbase.js';
+import CalculatedBestEfforts from '../persistence/activities/model-calculated-efforts.js';
+import receiver from '../messageQueue/receiver.js';
 
 const getActivityDetails = async (activityId) => {
   const detail = await getActivityDetail(activityId);
@@ -18,6 +18,6 @@ const getActivityDetails = async (activityId) => {
   }
 };
 
-module.exports = {
+export {
   getActivityDetails,
 };

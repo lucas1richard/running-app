@@ -1,5 +1,5 @@
-const deepmerge = require('deepmerge');
-const create_nano = require('nano');
+import deepmerge from 'deepmerge';
+import create_nano from 'nano';
 
 const {
   COUCHDB_USER: couchDbUser,
@@ -180,7 +180,7 @@ const getAllStreams = async () => {
   return body?.rows?.map(({ doc } = {}) => doc) || [];
 };
 
-module.exports = {
+export {
   addActivityDetail,
   addStream,
   setupdb,

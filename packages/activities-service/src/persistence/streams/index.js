@@ -1,9 +1,9 @@
-const addStreamPin = require('./addStreamPin');
-const deleteStreamPin = require('./deleteStreamPin');
-const getStreamPins = require('./getStreamPins');
-const updateStreamPin = require('./updatePin');
+import addStreamPin from './addStreamPin.js';
+import deleteStreamPin from './deleteStreamPin.js';
+import getStreamPins from './getStreamPins.js';
+import updateStreamPin from './updatePin.js';
 
-module.exports = {
+export {
   addStreamPin,
   deleteStreamPin,
   getStreamPins,

@@ -1,5 +1,5 @@
-const GRPCReceiver = require('./GRPCReceiver');
-const { getStream } = require('../persistence/setupdb-couchbase');
+import GRPCReceiver from './GRPCReceiver.js';
+import { getStream } from '../persistence/setupdb-couchbase.js';
 
 class ActivityMatchingReceiver extends GRPCReceiver {
   constructor(options) {
@@ -14,7 +14,7 @@ class ActivityMatchingReceiver extends GRPCReceiver {
     const streams = await getStream(activityId);
     const route = streams.stream.find(({ type }) => type === 'latlng').data;
     const rr = await this.request('getCompactedRoute', {
-      route: route.map((a) =>({ lat:a[0], lon: a[1] })),
+      route: route.map((a) => ({ lat: a[0], lon: a[1] })),
     });
 
     return rr.compactedRoute;
@@ -44,4 +44,4 @@ const activityMatchingReceiver = new ActivityMatchingReceiver({
   protoService: 'ActivityMatching'
 });
 
-module.exports = activityMatchingReceiver;
+export default activityMatchingReceiver;

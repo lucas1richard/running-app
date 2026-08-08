@@ -11,7 +11,7 @@
 //   return dp[0];
 // };
 
-// module.exports = longestCommonSubsequence;
+// export default longestCommonSubsequence;
 
 const longestCommonSubsequence = (seq1, seq2, isEqual = (a, b) => a === b) => {
   const sym = Symbol('x');
@@ -31,4 +31,4 @@ const longestCommonSubsequence = (seq1, seq2, isEqual = (a, b) => a === b) => {
   return recurse(0, 0);
 };
 
-module.exports = longestCommonSubsequence;
+export default longestCommonSubsequence;
