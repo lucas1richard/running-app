@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --ext js,sql,json ./src/index.js",
-    "lint": "eslint ./src"
+    "dev": "nodemon --ext ts,js,sql,json ./src/index.js",
+    "lint": "eslint ./src",
+    "tsc": "tsc ./src/**/*.ts --noEmit"
   },
   "keywords": [],
   "author": "",

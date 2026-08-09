@@ -1,27 +1,27 @@
-import app from './app.js';
-import PORT from './port.js';
+import app from './app.ts';
+import PORT from './port.ts';
 
-import { setupdb } from './persistence/setupdb-couchbase.js';
-import { initMysql } from './persistence/setupdb-mysql.js';
-import { initSequelize } from './persistence/sequelize-init.js';
+import { setupdb } from './persistence/setupdb-couchbase.ts';
+import { initMysql } from './persistence/setupdb-mysql.ts';
+import { initSequelize } from './persistence/sequelize-init.ts';
 
-import { getRabbitMQConnection } from './messageQueue/rabbitmq.js';
+import { getRabbitMQConnection } from './messageQueue/rabbitmq.ts';
 
-import { activitiesRouter } from './routes/activities/index.js';
-import { adminRouter } from './routes/admin.js';
-import { authRouter } from './routes/authenticate.js';
-import { heartzonesRouter } from './routes/heartzones.js';
-import { analysisRouter } from './routes/analysis/index.js';
-import { userRouter } from './routes/user.js';
-import { segmentsRouter } from './routes/segments.js';
-import { activityRoutesRouter } from './routes/activity-routes.js';
-import { routeCoordinatesRouter } from './routes/routeCoordinates.js';
-import receiver from './messageQueue/receiver.js';
+import { activitiesRouter } from './routes/activities/index.ts';
+import { adminRouter } from './routes/admin.ts';
+import { authRouter } from './routes/authenticate.ts';
+import { heartzonesRouter } from './routes/heartzones.ts';
+import { analysisRouter } from './routes/analysis/index.ts';
+import { userRouter } from './routes/user.ts';
+import { segmentsRouter } from './routes/segments.ts';
+import { activityRoutesRouter } from './routes/activity-routes.ts';
+import { routeCoordinatesRouter } from './routes/routeCoordinates.ts';
+import receiver from './messageQueue/receiver.ts';
 
-import { logger } from './utils/logger.js';
-import { getChannel, channelConfigs } from './messageQueue/channels.js';
+import { logger } from './utils/logger.ts';
+import { getChannel, channelConfigs } from './messageQueue/channels.ts';
 import fetchIntervalsIcu from './intervals-icu-ingestion/fetch-intervalsicu.ts';
-// import addAllCompressedRoutes from './functions/addAllCompressedRoutes.js';
+// import addAllCompressedRoutes from './functions/addAllCompressedRoutes.ts';
 
 receiver.onActivityId(({ activityId, type, correlationId }) => {
   logger.info(
@@ -59,7 +59,7 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
     ]);
 
     const acts = await fetchIntervalsIcu('/activities', { queryParams: { oldest: '2026-06-29' } });
-    console.log(acts.length)
+    console.log(acts.length);
 
     await app.listen(PORT);
 
@@ -68,6 +68,6 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
     logger.info({ message: `strava-client listening on port ${PORT}` });
   } catch (err) {
     logger.error({ message: 'Error starting strava-client' });
-    console.trace(err)
+    console.trace(err);
   }
 })();

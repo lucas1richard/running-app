@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "emitDeclarationOnly": true,
+    "declaration": true
+  },
+  "include": [],
+  "references": [
+    {
+      "path": "packages/frontend"
+    },
+    {
+      "path": "packages/vue-frontend"
+    },
+    {
+      "path": "packages/activities-service"
+    }
+  ]
+}

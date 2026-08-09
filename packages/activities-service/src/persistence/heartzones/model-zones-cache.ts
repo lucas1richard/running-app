@@ -1,0 +1,23 @@
+import { DataTypes, Model } from 'sequelize';
+import { sequelizeMysql } from '../sequelize-mysql.ts';
+
+class ZonesCache extends Model { }
+
+ZonesCache.init(
+  {
+    seconds_z1: { type: DataTypes.INTEGER },
+    seconds_z2: { type: DataTypes.INTEGER },
+    seconds_z3: { type: DataTypes.INTEGER },
+    seconds_z4: { type: DataTypes.INTEGER },
+    seconds_z5: { type: DataTypes.INTEGER },
+    activityId: { type: DataTypes.BIGINT, primaryKey: true },
+    heartZoneId: { type: DataTypes.MEDIUMINT, primaryKey: true },
+  },
+  {
+    sequelize: sequelizeMysql,
+    modelName: 'zonesCache',
+    tableName: 'zones_cache',
+  }
+);
+
+export default ZonesCache;
