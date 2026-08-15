@@ -16,6 +16,7 @@ const USER_PREFERENCES_DB = 'user-preferences';
 const ACTIVITY_PREFERENCES_DB = 'activity-preferences';
 
 const activitiesDb = nano.db.use(ACTIVITIES_DB);
+export { activitiesDb };
 const activitiesDetailDb = nano.db.use(ACTIVITIES_DETAIL_DB);
 const streamsDb = nano.db.use(STREAMS_DB);
 const userPreferencesDb = nano.db.use(USER_PREFERENCES_DB);
@@ -53,7 +54,7 @@ const bulkAddActivities = async (activities, batchSize = 100) => {
   for (const batch of batches) {
     await activitiesDb.bulk({
       docs: batch.map((activity) => ({
-        _id: `${activity.id}`,
+        _id: `${activity.external_id}`,
         ...activity,
       }))
     });
@@ -76,7 +77,7 @@ const makeDeleteById = (db) => async (id) => {
     }
     console.error(`Error deleting ${this} ${id}:`, error);
   }
-}
+};
 
 const getAllActivities = async () => {
   const params = { include_docs: true, limit: 10000, descending: true };
@@ -156,10 +157,15 @@ const updateActivityPreferences = async (activityId, preferences = {}) => {
   const existing = await getActivityPreferences(activityId) || {};
   const res = await activityPreferencesDb.insert(deepmerge(existing, preferences), `${activityId}`);
   return res;
-}
+};
 
 const addStream = async (stream, documentId) => {
-  const res = await streamsDb.insert(stream, `${documentId}`)
+  const res = await streamsDb.insert(stream, `${documentId}`);
+  return res;
+};
+
+const addActivity = async (activity, documentId) => {
+  const res = await activitiesDb.insert(activity, `${documentId}`);
   return res;
 };
 
@@ -181,6 +187,7 @@ const getAllStreams = async () => {
 };
 
 export {
+  addActivity,
   addActivityDetail,
   addStream,
   setupdb,

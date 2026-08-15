@@ -1,4 +1,33 @@
 export namespace ICU_API_Response {
+  export type ICU_STREAM_TYPES =
+    | 'time'
+    | 'watts'
+    | 'cadence'
+    | 'heartrate'
+    | 'distance'
+    | 'altitude'
+    | 'latlng'
+    | 'velocity_smooth'
+    | 'torque'
+    | 'fixed_altitude'
+    ;
+
+  export type ICU_Streams = {
+    type: ICU_STREAM_TYPES;
+    name: string | null;
+    data: (number | null)[];
+    data2: number[] | null;
+    valueTypeIsArray: boolean;
+    anomalies: [{
+      start_index: number;
+      end_index: number;
+      value: number;
+      valueEnd: number;
+    }] | null;
+    custom: boolean;
+    allNull: boolean;
+  }[];
+
   export type ICU_Attachment = {
     id: string;
     filename: string;

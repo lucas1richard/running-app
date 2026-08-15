@@ -21,6 +21,9 @@ import receiver from './messageQueue/receiver.ts';
 import { logger } from './utils/logger.ts';
 import { getChannel, channelConfigs } from './messageQueue/channels.ts';
 import fetchIntervalsIcu from './intervals-icu-ingestion/fetch-intervalsicu.ts';
+import fetchIntervalsIcuStreams from './intervals-icu-ingestion/fetchIntervalsIcuStreams.ts';
+import { ingestIntervalICUActivities } from './intervals-icu-ingestion/ingestor.ts';
+import { deleteActivity } from './controllers/deleteActivity.ts';
 // import addAllCompressedRoutes from './functions/addAllCompressedRoutes.ts';
 
 receiver.onActivityId(({ activityId, type, correlationId }) => {
@@ -58,8 +61,10 @@ app.use('/routeCoordinates', routeCoordinatesRouter);
       getChannel(channelConfigs.activitiesService)
     ]);
 
-    const acts = await fetchIntervalsIcu('/activities', { queryParams: { oldest: '2026-06-29' } });
-    console.log(acts.length);
+    // const acts = await fetchIntervalsIcu('/activities', { queryParams: { oldest: '2026-06-29' } });
+    // const acts = await fetchIntervalsIcuStreams('i175584391')
+    // console.log(acts);
+    // await ingestIntervalICUActivities(100)
 
     await app.listen(PORT);
 

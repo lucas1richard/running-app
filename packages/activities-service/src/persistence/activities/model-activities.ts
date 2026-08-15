@@ -136,6 +136,7 @@ Activity.init(
     },
     start_latlng: {
       type: DataTypes.GEOMETRY('POINT'),
+      defaultValue: [0, 0],
       get() {
         return this.getDataValue('start_latlng')?.coordinates;
       }

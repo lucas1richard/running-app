@@ -25,7 +25,7 @@ const SplitsMi = ({ id }) => {
             </tr>
           </thead>
           <tbody>
-            {details.splits_standard.map((split, ix) => {
+            {details?.splits_standard?.map((split, ix) => {
               return (
                 <tr key={split.split} className={`text-right text-white bg-neutral-700 ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
                   <td>{split.split}</td>

@@ -15,7 +15,7 @@ function MapLibreHRZones({ id, animated = false, pointer = 0 }) {
   const isDarkReaderMode = useDarkReaderMode();
   const outlineSourceId = useId();
   const hrZonesSourceId = useId();
-  const latlngStreamData = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng')) || emptyObject;
+  const latlngStreamData = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng')?.filter((a) => a[0] && a[1])) || emptyObject;
   const activity = useAppSelector((state) => selectActivity(state, id)) || emptyObject;
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity.start_date));

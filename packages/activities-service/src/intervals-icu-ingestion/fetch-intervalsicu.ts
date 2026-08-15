@@ -1,7 +1,6 @@
-const INTERVALS_ICU_ATHLETE_ID = process.env.INTERVALS_ICU_ATHLETE_ID;
 const INTERVALS_ICU_API_KEY = process.env.INTERVALS_ICU_API_KEY;
 
-const fetchIntervalsIcu = async (apiPath: string, options = {}) => {
+const fetchIntervalsIcu = async <T = unknown>(apiPath: string, options = {}) => {
   let path = apiPath;
   const method = options.method ?? 'GET';
   const queryParams = options.queryParams ?? {};
@@ -12,7 +11,7 @@ const fetchIntervalsIcu = async (apiPath: string, options = {}) => {
     path = apiPath.slice(1);
   }
 
-  const url = new URL(`https://intervals.icu/api/v1/athlete/${INTERVALS_ICU_ATHLETE_ID}/${path}`);
+  const url = new URL(`https://intervals.icu/api/v1/${path}`);
 
   // Assign authentication headers
   const auth = btoa(`API_KEY:${INTERVALS_ICU_API_KEY}`);
@@ -35,7 +34,7 @@ const fetchIntervalsIcu = async (apiPath: string, options = {}) => {
     headers
   });
 
-  return res.json();
+  return res.json() as T;
 };
 
 export default fetchIntervalsIcu;

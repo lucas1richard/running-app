@@ -19,7 +19,7 @@ let pool;
 /** @type {import('mysql2/promise').Pool} */
 let promisePool;
 
-const getMySQLConnection = async (withPromise) => {
+const getMySQLConnection = async (withPromise?) => {
   if (!withPromise && pool) return pool;
   if (withPromise && promisePool) return promisePool;
 

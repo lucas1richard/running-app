@@ -24,7 +24,7 @@ const SplitsKm = ({ id }) => {
             </tr>
           </thead>
           <tbody>
-            {details.splits_metric.map((split, ix) => {
+            {details?.splits_metric?.map((split, ix) => {
               return (
                 <tr key={split.split} className={`text-right bg-neutral-700 text-white ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
                   <td>{split.split}</td>
