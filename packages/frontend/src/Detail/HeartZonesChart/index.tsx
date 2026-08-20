@@ -7,6 +7,7 @@ import usePreferenceControl from '@/hooks/usePreferenceControl';
 import { selectActivity, selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { selectHeartZones } from '@/reducers/heartzones';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import useCalculatedGrade from './useCalculatedGrade';
 
 type SyncedViewState = {
   longitude: number;
@@ -24,6 +25,7 @@ const HeartZonesChartContainer = ({ id }) => {
   const altitudeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'altitude'));
   const timeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'time'));
   const gradeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'grade_smooth'));
+  const distanceStream = useAppSelector((state) => selectStreamTypeData(state, id, 'distance'));
   const latlngStream = useAppSelector((state) => selectStreamTypeData(state, id, 'latlng'));
   const zones = useAppSelector((state) => selectHeartZones(state, activity?.start_date));
   const details = useAppSelector((state) => selectActivityDetails(state, id));
@@ -31,6 +33,9 @@ const HeartZonesChartContainer = ({ id }) => {
   const bestEfforts = details?.best_efforts || emptyArray;
   const laps = details?.laps || emptyArray;
   const splitsMi = details?.splits_standard || emptyArray;
+
+  // intervals.icu does not provide a grade stream
+  const syntheticGradeStream = useCalculatedGrade(altitudeStream, distanceStream, 10);
 
   const fullTime = useMemo(() => {
     const maxTime = timeStream[timeStream.length - 1];
@@ -168,7 +173,7 @@ const HeartZonesChartContainer = ({ id }) => {
           data={heartRateStream}
           velocity={velocityStream}
           altitude={altitudeStream}
-          grade={gradeStream}
+          grade={gradeStream.length ? gradeStream : syntheticGradeStream}
           time={timeStream}
           zones={zones}
           streamPins={streamPins}

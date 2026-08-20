@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { findAllActivitiesStream, findActivitiesByIdStream } from '../../persistence/activities/index.ts';
 import { logger } from '../../utils/logger.ts';
-import receiver from '../../messageQueue/receiver.ts';
+import { ingestIntervalICUActivities } from '../../intervals-icu-ingestion/ingestor.ts';
 
 const router = Router();
 
@@ -19,14 +19,7 @@ router.get('/listStream', async (req, res) => {
   try {
     if (forceFetch) {
       logger.info('Waiting for new activities...');
-      const correlationId = receiver.generateCorrelationId();
-      receiver.sendMessage('stravaIngestionService', 'basic', { perPage, page }, correlationId);
-      const addedRecordsIds = await receiver.waitForMessage('activitiesService', 'basic-response', correlationId);
-      await receiver.waitForMessage('activitiesService', 'streams-response', correlationId);
-
-      // logger.info('Waiting for new activities with correlationId:', correlationId);
-      // const addedRecordsIds = await receiver
-      //   .sendAndAwaitMessage('stravaIngestionService', 'basic', { perPage, page });
+      const addedRecordsIds = await ingestIntervalICUActivities(100);
 
       const readableStream = await findActivitiesByIdStream(addedRecordsIds);
       readableStream.resume();

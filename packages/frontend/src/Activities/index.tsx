@@ -65,7 +65,7 @@ const Activities = () => {
         </Basic.Div>
         <Basic.Div $widthLgUp="50%">
           <div>
-            <Button onClick={onClickSync}>Sync Strava</Button>
+            <Button onClick={onClickSync}>Sync Activities</Button>
           </div>
           <div className="mt-4">
             <PRs />

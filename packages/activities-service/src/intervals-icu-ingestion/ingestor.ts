@@ -201,7 +201,7 @@ export const processIcuActivity = async (rawActivity: ICU_API_Response.ICU_Activ
 };
 
 export const processIcuActivitiesBatch = async (activities: ICU_API_Response.ICU_Activity[]) => {
-  const results = [];
+  const results: { status: string, mysqlId?: number; icuId: string; error?: string; }[] = [];
   for (const activity of activities) {
     try {
       const res = await processIcuActivity(activity);
@@ -218,10 +218,12 @@ export const ingestIntervalICUActivities = async (limit?: number) => {
     order: [['start_date_local', 'DESC']]
   });
 
-  const dateSince = latestActivity.getDataValue('start_date_local').toUTCString();
+  const dateSince = latestActivity.getDataValue('start_date_local');
   const icuActivities = await fetchIntervalsIcuActivities(dayjs(dateSince).format('YYYY-MM-DD'));
   icuActivities.reverse();
-  await processIcuActivitiesBatch(icuActivities.slice(0, limit));
+  const ids = await processIcuActivitiesBatch(icuActivities.slice(0, limit));
 
   console.log('[ingestIntervalICUActivities]: Done');
+
+  return ids.map(({ mysqlId }) => mysqlId).filter(Boolean);
 };

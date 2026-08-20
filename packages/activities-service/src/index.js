@@ -41,7 +41,6 @@ receiver.onActivityId(({ activityId, type, correlationId }) => {
 app.use('/activities', activitiesRouter);
 app.use('/admin', adminRouter);
 app.use('/auth', authRouter);
-app.use('/auth', authRouter);
 app.use('/heartzones', heartzonesRouter);
 app.use('/analysis', analysisRouter);
 app.use('/user', userRouter);

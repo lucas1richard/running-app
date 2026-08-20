@@ -330,10 +330,12 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
         data: altitudeData,
         yAxis: 3,
         fillOpacity: 0.9,
-        color: {
-          linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 },
-          stops: getGradeColorAbs(grade, 0, 0, { lowestValueRgb: [0, 132, 255], midValueRgb: [0, 0, 0], highestValueRgb: [255, 0, 0] }),
-        },
+        ...grade?.length ? {
+          color: {
+            linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 },
+            stops: grade ? getGradeColorAbs(grade, 0, 0, { lowestValueRgb: [0, 132, 255], midValueRgb: [0, 0, 0], highestValueRgb: [255, 0, 0] }) : ['rgb(0,0,0)', 'rgb(0,0,0)'],
+          }
+        } : { color: 'brown' },
         tooltip: {
           pointFormatter: function () {
             const point = this;

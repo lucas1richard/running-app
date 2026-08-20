@@ -30,7 +30,10 @@ import { selectAllHeartZones, selectApplicableHeartZone } from '@/reducers/heart
 import { selectPreferencesZonesId } from '@/reducers/preferences';
 import { setActivityPrefsAct, triggerFetchActivityPrefs } from '@/reducers/preferences-actions';
 import { convertMetricSpeedToMPH } from '@/utils';
+import analyzeClustering from '@/utils/analyzeClustering';
 import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
+import calculateStats from '@/utils/calculateStats';
+import detectTwoClustersOptimized from '@/utils/detectTwoClustersOptimized';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -49,6 +52,27 @@ const ActivityDetailPage = () => {
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
   const activity = useAppSelector((state) => selectActivity(state, id));
+
+  const clusterAnalysis = useMemo(() => {
+    const strm = velocityStream;
+    if (!strm || strm.length < 2) return null;
+    try {
+      const { centroids, assignments } = detectTwoClustersOptimized(strm);
+      console.log(centroids.map(convertMetricSpeedToMPH));
+      const stats = calculateStats(strm);
+      return analyzeClustering({
+        minClusterAvg: centroids[0],
+        maxClusterAvg: centroids[1],
+        assignments,
+        ...stats,
+      });
+    } catch (e) {
+      console.error('Clustering analysis failed:', e);
+      return null;
+    }
+  }, [velocityStream]);
+
+  console.log(clusterAnalysis);
 
   const [
     savePreferences
@@ -146,6 +170,16 @@ const ActivityDetailPage = () => {
                 yards per beat
               </div>
             </div>
+            {clusterAnalysis?.isMeaningful && (
+              <B.Div $textAlign="center" $marginT={2}>
+                <B.Div $fontSize="h5">
+                  {clusterAnalysis.isRegular ? 'Structured Intervals Detected' : 'Bimodal Distribution Detected'}
+                </B.Div>
+                <B.Div $fontSize="h4">
+                  Confidence: {clusterAnalysis.confidence}
+                </B.Div>
+              </B.Div>
+            )}
             <div>
               <WeatherReporter id={id} />
             </div>
