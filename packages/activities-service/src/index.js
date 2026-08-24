@@ -13,6 +13,7 @@ import { authRouter } from './routes/authenticate.ts';
 import { heartzonesRouter } from './routes/heartzones.ts';
 import { analysisRouter } from './routes/analysis/index.ts';
 import { userRouter } from './routes/user.ts';
+import { mcpRouter } from './routes/mcp/index.ts';
 import { segmentsRouter } from './routes/segments.ts';
 import { activityRoutesRouter } from './routes/activity-routes.ts';
 import { routeCoordinatesRouter } from './routes/routeCoordinates.ts';
@@ -47,6 +48,7 @@ app.use('/user', userRouter);
 app.use('/segments', segmentsRouter);
 app.use('/routes', activityRoutesRouter);
 app.use('/routeCoordinates', routeCoordinatesRouter);
+app.use('/mcp', mcpRouter);
 
 (async () => {
   try {
