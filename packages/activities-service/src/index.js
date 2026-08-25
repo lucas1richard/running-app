@@ -25,6 +25,7 @@ import fetchIntervalsIcu from './intervals-icu-ingestion/fetch-intervalsicu.ts';
 import fetchIntervalsIcuStreams from './intervals-icu-ingestion/fetchIntervalsIcuStreams.ts';
 import { ingestIntervalICUActivities } from './intervals-icu-ingestion/ingestor.ts';
 import { deleteActivity } from './controllers/deleteActivity.ts';
+import { calculateBestEffortsForNewActivities } from './intervals-icu-ingestion/calculateBestEffortsForNewActivities.ts';
 // import addAllCompressedRoutes from './functions/addAllCompressedRoutes.ts';
 
 receiver.onActivityId(({ activityId, type, correlationId }) => {
@@ -66,6 +67,30 @@ app.use('/mcp', mcpRouter);
     // const acts = await fetchIntervalsIcuStreams('i175584391')
     // console.log(acts);
     // await ingestIntervalICUActivities(100)
+
+    // | i164996687  | 2026-07-11 15:58:27 |
+    // | i164996810  | 2026-07-08 20:16:30 |
+    // | i164997049  | 2026-07-05 07:58:29 |
+    // | i165460896  | 2026-07-13 20:25:23 |
+    // | i166972958  | 2026-07-18 13:48:57 |
+    // | i168616750  | 2026-07-23 18:18:42 |
+    // | i172564027  | 2026-08-04 20:02:52 |
+    // | i174947293  | 2026-08-11 20:36:48 |
+    // | i176429326  | 2026-08-16 07:59:27 |
+
+    const newIds = [
+      164996687,
+      164996810,
+      164997049,
+      165460896,
+      166972958,
+      168616750,
+      172564027,
+      174947293,
+      176429326,
+    ];
+
+    await calculateBestEffortsForNewActivities(newIds);
 
     await app.listen(PORT);
 

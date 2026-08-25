@@ -1,13 +1,10 @@
-// import { addCompressedRouteSql, selectHeartZonesAtDateSql, insertHeartRateZonesCacheSql } from './sql-queries';
 import { query } from '../persistence/mysql-connection.ts';
 import { addStream } from '../persistence/setupdb-couchbase.ts';
 import { addCompressedRouteSql, insertHeartRateZonesCacheSql, selectHeartZonesAtDateSql } from '../persistence/sql-queries/index.ts';
 import type { StravaStreamSet } from '../types/strava.ts';
-import fetchIntervalsIcuStreams from './fetchIntervalsIcuStreams.ts';
-import { formatICUStreamsToStrava } from './formatter.ts';
 
 const compress = (route = [], compressionLevel = 0.0001) => {
-  const roundedRoute = route.map(
+  const roundedRoute: [string, string, number, number][] = route.map(
     ([lat, lng], ix) => [
       (Math.round(lat / compressionLevel) * compressionLevel).toFixed(6),
       (Math.round(lng / compressionLevel) * compressionLevel).toFixed(6),

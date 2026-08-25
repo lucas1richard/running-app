@@ -21,6 +21,9 @@ const getActivitiesByIdSql = getSqlFile('getActivitiesById.sql');
 const getHeatMapByTimeframeSql = getSqlFile('getHeatMapByTimeframe.sql');
 const getHeatMapSql = getSqlFile('getHeatMap.sql');
 const getPRsSql = getSqlFile('getPRs.sql');
+const selectExistingBestEffortActivityIdsSql = getSqlFile('selectExistingBestEffortActivityIds.sql');
+const selectActivitiesWithoutBestEffortsSql = getSqlFile('selectActivitiesWithoutBestEfforts.sql');
+const selectMostRecentBestEffortsSql = getSqlFile('selectMostRecentBestEfforts.sql');
 
 export {
   addCompressedRouteSql,
@@ -35,4 +38,7 @@ export {
   getHeatMapSql,
   getPRsSql,
   selectHeartZonesAtDateSql,
+  selectExistingBestEffortActivityIdsSql,
+  selectActivitiesWithoutBestEffortsSql,
+  selectMostRecentBestEffortsSql,
 };

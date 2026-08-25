@@ -9,6 +9,8 @@ import fetchIntervalsIcuActivities from './fetchInvervalsIcuActivities.ts';
 import dayjs from 'dayjs';
 import { insertActivitiesSql, insertBestEffortsSql } from '../persistence/sql-queries/index.ts';
 import ingestActivityStreams from './ingestActivityStreams.ts';
+import { calculateBestEffortsForNewActivities } from './calculateBestEffortsForNewActivities.ts';
+import { getOrFetchWeatherByActivity } from '../persistence/weather2/getOrFetchWeatherByActivity.ts';
 // import BestEfforts from '../persistence/activities/model-best-efforts.ts';
 // import type { PersistenceActivity } from '../persistence/activities/acitivities.types.ts';
 // import { makeCompressedRoute } from '../controllers/makeCompressedRoute.ts';
@@ -49,6 +51,10 @@ export const processIcuActivity = async (rawActivity: ICU_API_Response.ICU_Activ
     console.log('[processActivity]: 1. Format the activity');
     const formattedActivity = formatIcuActivityToStrava(rawActivity);
 
+
+    // const weatherInstance = await getOrFetchWeatherByActivity({
+    //   activityId: formattedActivity,
+    // });
     console.log(formattedActivity);
 
     // 2. Save raw response to CouchDB
@@ -220,8 +226,9 @@ export const ingestIntervalICUActivities = async (limit?: number) => {
 
   const dateSince = latestActivity.getDataValue('start_date_local');
   const icuActivities = await fetchIntervalsIcuActivities(dayjs(dateSince).format('YYYY-MM-DD'));
-  icuActivities.reverse();
+  icuActivities.sort((a, b) => new Date(b.start_date_local).valueOf() - new Date(a.start_date_local).valueOf());
   const ids = await processIcuActivitiesBatch(icuActivities.slice(0, limit));
+  await calculateBestEffortsForNewActivities(ids);
 
   console.log('[ingestIntervalICUActivities]: Done');
 

@@ -19,8 +19,8 @@ router.post('/', async (req, res) => {
       || req.headers['mcp-session-id']
       || randomUUID();
 
-    console.log(req.headers);
-    console.log(`MCP POST [Session: ${sessionId}]:`, JSON.stringify(req.body, null, 2));
+    // console.log(req.headers);
+    // console.log(`MCP POST [Session: ${sessionId}]:`, JSON.stringify(req.body, null, 2));
 
     // 2. Get the session from the manager (creates one if it doesn't exist)
     const session = await sessionManager.getSession(sessionId);

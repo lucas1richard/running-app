@@ -15,14 +15,16 @@ const distances = [
   { name: '15K', distance: 15e3 },
   { name: '20K', distance: 20e3 },
   { name: '1/2 Marathon', distance: 21097.5 },
-  { name: '20 mile', distance: 32180 },
   { name: '25K', distance: 25e3 },
   { name: '30K', distance: 30e3 },
+  { name: '20 mile', distance: 32180 },
   { name: '40K', distance: 40e3 },
   { name: 'Marathon', distance: 42195 },
   { name: '50K', distance: 50e3 },
   { name: '100K', distance: 100e3 },
 ];
+
+distances.sort((a, b) => a.distance - b.distance);
 
 const calculateActivityBestEfforts = async (activityId, meterDistances = distances) => {
   const streams = await getActivityStreams(activityId, ['distance', 'time']);
@@ -30,14 +32,15 @@ const calculateActivityBestEfforts = async (activityId, meterDistances = distanc
   const timeStream = streams?.find(({ type }) => type === 'time')?.data;
 
   if (!distanceStream || !timeStream) {
-    console.warn(`activity ${activityId} is missing stream data, so calculateActivityBestEfforts returning empty array`);
+    console.trace(`activity ${activityId} is missing stream data, so calculateActivityBestEfforts returning empty array`);
     return [];
   }
 
   const len = distanceStream.length;
+  const furthestDistance = distanceStream.at(-1);
 
   return meterDistances
-    .filter(({ distance }) => distance <= distanceStream[len - 1])
+    .filter(({ distance }) => distance <= furthestDistance)
     .map(({ name, distance }) => {
       let start = 0;
       let end = 0;

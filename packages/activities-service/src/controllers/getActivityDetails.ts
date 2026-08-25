@@ -3,7 +3,7 @@ import CalculatedBestEfforts from '../persistence/activities/model-calculated-ef
 import receiver from '../messageQueue/receiver.ts';
 
 const getActivityDetails = async (activityId) => {
-  const detail = await getActivityDetail(activityId);
+  const detail = await getActivityDetail(activityId) || {};
 
   if (detail) {
     const best_efforts = await CalculatedBestEfforts.findAll({ where: { activityId } });

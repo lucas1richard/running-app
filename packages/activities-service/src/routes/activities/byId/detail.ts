@@ -10,6 +10,7 @@ router.get('/:id/detail', async (req, res) => {
     const activity = await getActivityDetails(activityId);
     const bestEfforts = await calculateActivityBestEfforts(activityId);
     res.json({
+      id: activityId,
       ...activity,
       bestEfforts,
     });
