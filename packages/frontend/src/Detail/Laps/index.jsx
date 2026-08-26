@@ -4,6 +4,8 @@ import Surface from '@/DLS/Surface';
 import { useAppSelector } from '@/hooks/redux';
 import { selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '@/utils';
+import detectTransitions from '@/utils/findTransitions';
+import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 const processLaps = (laps) => {
@@ -59,21 +61,23 @@ const getLapHrData = (laps, hr, time, ix) => {
   }
 }
 
-const getLapsFromHr = (hrData) => {
-
-};
-
 const Laps = ({ id }) => {
   const details = useSelector((state) => selectActivityDetails(state, id));
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
+  const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
   const timeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'time'));
-  const laps = details?.laps;
+  const transitions = useMemo(() => detectTransitions(
+    velocityStream.map((value, ix) => ({ time: timeStream[ix], value })),
+    30,
+    0.7 // meters/second
+  ), [velocityStream, timeStream]);
 
-  if (!laps) return null;
+  const laps = details?.laps || [];
 
   return (
     <div className="mt-4 card">
       <Surface className="overflow-x-auto">
+        {JSON.stringify(transitions)}
         <table>
           <thead>
             <tr>
@@ -87,15 +91,15 @@ const Laps = ({ id }) => {
               <th className="px-4">Heart Rate</th>
               <th className="px-4">Max Heart Rate</th>
               <th className="px-4">Elevation Gain</th>
-              <th className="px-4">HR</th>
+              {/* <th className="px-4">HR</th> */}
             </tr>
           </thead>
           <tbody>
-            {processLaps(laps).map((lap, ix) => {
+            {transitions.map((lap, ix) => {
               return (
                 <tr key={lap.name} className={`text-right text-white bg-neutral-700 ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
                   <td>{lap.name}</td>
-                  <td><DurationDisplay numSeconds={lap.elapsed_time} /></td>
+                  <td><DurationDisplay numSeconds={lap.time} /></td>
                   <td>{lap.dist} <small>{lap.distUnit}</small></td>
                   <td>
                     <DurationDisplay
@@ -105,7 +109,7 @@ const Laps = ({ id }) => {
                   <td className="text-center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></td>
                   <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
                   <td>{lap.totalElevationGainFt} <small>ft</small></td>
-                  <td>{JSON.stringify(getLapHrData(laps, heartRateStream, timeStream, ix))}</td>
+                  {/* <td>{JSON.stringify(getLapHrData(laps, heartRateStream, timeStream, ix))}</td> */}
                 </tr>
               )
             }

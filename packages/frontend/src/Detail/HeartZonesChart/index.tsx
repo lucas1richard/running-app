@@ -34,8 +34,6 @@ const HeartZonesChartContainer = ({ id }) => {
   const laps = details?.laps || emptyArray;
   const splitsMi = details?.splits_standard || emptyArray;
 
-  // intervals.icu does not provide a grade stream
-  const syntheticGradeStream = useCalculatedGrade(altitudeStream, distanceStream, 10);
 
   const fullTime = useMemo(() => {
     const maxTime = timeStream[timeStream.length - 1];
@@ -57,7 +55,7 @@ const HeartZonesChartContainer = ({ id }) => {
     () => {
       const maxTime = timeStream[timeStream.length - 1];
       const fullDataWithNulls = new Array(maxTime).fill(null);
-      heartRateStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val);
+      heartRateStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val === 0 ? null : val);
       return fullDataWithNulls;
     },
     [fullTime, heartRateStream]
@@ -81,6 +79,19 @@ const HeartZonesChartContainer = ({ id }) => {
     },
     [fullTime, altitudeStream]
   );
+
+  const distanceWithNulls = useMemo(
+    () => {
+      const maxTime = timeStream[timeStream.length - 1];
+      const fullDataWithNulls = new Array(maxTime).fill(null);
+      distanceStream.forEach((val, ix) => fullDataWithNulls[timeStream[ix]] = val);
+      return fullDataWithNulls;
+    },
+    [fullTime, distanceStream]
+  );
+
+  // intervals.icu does not provide a grade stream
+  const syntheticGradeStream = useCalculatedGrade(altitudeWithNulls, distanceWithNulls, 2);
 
   const cutoff = 2;
 

@@ -106,7 +106,7 @@ const HeartZonesChartDisplay: React.FC<Props> = ({
     () => {
       const maxTime = time[time.length - 1];
       const fullDataWithNulls = new Array(maxTime).fill(null);
-      data.forEach((val, ix) => fullDataWithNulls[time[ix]] = val);
+      data.forEach((val, ix) => fullDataWithNulls[time[ix]] = val || null);
       return fullDataWithNulls;
     },
     [fullTime, data, smoothAverageWindow]

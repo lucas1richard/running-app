@@ -34,6 +34,7 @@ import analyzeClustering from '@/utils/analyzeClustering';
 import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
 import calculateStats from '@/utils/calculateStats';
 import detectTwoClustersOptimized from '@/utils/detectTwoClustersOptimized';
+import detectTransitions from '@/utils/findTransitions';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -51,6 +52,7 @@ const ActivityDetailPage = () => {
 
   const heartRateStream = useAppSelector((state) => selectStreamTypeData(state, id, 'heartrate'));
   const velocityStream = useAppSelector((state) => selectStreamTypeData(state, id, 'velocity_smooth'));
+  const timeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'time'));
   const activity = useAppSelector((state) => selectActivity(state, id));
 
   const clusterAnalysis = useMemo(() => {
@@ -58,8 +60,8 @@ const ActivityDetailPage = () => {
     if (!strm || strm.length < 2) return null;
     try {
       const { centroids, assignments } = detectTwoClustersOptimized(strm);
-      console.log(centroids.map(convertMetricSpeedToMPH));
       const stats = calculateStats(strm);
+
       return analyzeClustering({
         minClusterAvg: centroids[0],
         maxClusterAvg: centroids[1],
@@ -70,9 +72,9 @@ const ActivityDetailPage = () => {
       console.error('Clustering analysis failed:', e);
       return null;
     }
-  }, [velocityStream]);
+  }, [velocityStream, timeStream]);
 
-  console.log(clusterAnalysis);
+
 
   const [
     savePreferences

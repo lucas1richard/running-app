@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
 
+const CLAMP_MAX = 10;
+const CLAMP_MIN = -10;
+
 const useCalculatedGrade = (riseStream: number[], distanceStream: number[], windowSize = 1) => {
   // intervals.icu does not provide a grade stream
   const syntheticGradeStream = useMemo(() => {
@@ -14,7 +17,9 @@ const useCalculatedGrade = (riseStream: number[], distanceStream: number[], wind
       const deltaDist = ds[i] - ds[i - windowSize];
 
       if (deltaDist > 0) {
-        grades[i] = (deltaAlt / deltaDist) * 100;
+        grades[i] = ((deltaAlt / deltaDist) * 100);
+        if (grades[i] > 0) grades[i] = Math.min(grades[i], CLAMP_MAX);
+        if (grades[i] < 0) grades[i] = Math.max(grades[i], CLAMP_MIN);
       } else {
         // Fallback to previous value or 0 if stopped
         grades[i] = grades[i - 1] || 0;

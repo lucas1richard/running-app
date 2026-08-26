@@ -6,7 +6,7 @@ type ActivityDetails = {
   resource_state: number,
   athlete: {
     id: number,
-    resource_state: numberr
+    resource_state: number;
   },
   name: string,
   distance: number,
@@ -113,35 +113,35 @@ type ActivityDetails = {
       country: string,
       private: boolean,
       hazardous: boolean,
-      starred: boolean
+      starred: boolean;
     },
     pr_rank: null | number,
     achievements: [],
     visibility: Visibility,
-    hidden: boolean
+    hidden: boolean;
   }>,
   splits_metric: Array<{
-      distance: number,
-      elapsed_time: number,
-      elevation_difference: number,
-      moving_time: number,
-      split: number,
-      average_speed: number,
-      average_grade_adjusted_speed: number,
-      average_heartrate: number,
-      pace_zone: number,
-    }>,
+    distance: number,
+    elapsed_time: number,
+    elevation_difference: number,
+    moving_time: number,
+    split: number,
+    average_speed: number,
+    average_grade_adjusted_speed: number,
+    average_heartrate: number,
+    pace_zone: number,
+  }>,
   splits_standard: Array<{
-      distance: number,
-      elapsed_time: number,
-      elevation_difference: number,
-      moving_time: number,
-      split: number,
-      average_speed: number,
-      average_grade_adjusted_speed: number,
-      average_heartrate: number,
-      pace_zone: number,
-    }>,
+    distance: number,
+    elapsed_time: number,
+    elevation_difference: number,
+    moving_time: number,
+    split: number,
+    average_speed: number,
+    average_grade_adjusted_speed: number,
+    average_heartrate: number,
+    pace_zone: number,
+  }>,
   laps: Array<{
     id: number,
     resource_state: number,
@@ -194,7 +194,30 @@ type ActivityDetails = {
     pr_rank: null | number,
     achievements: [],
     start_index: number,
-    end_index: number
+    end_index: number;
+  }>,
+  bestEfforts: Array<{
+    id: number,
+    resource_state: number,
+    name: string,
+    activity: {
+      id: number,
+      visibility: Visibility,
+      resource_state: number,
+    },
+    athlete: {
+      id: number,
+      resource_state: number,
+    },
+    elapsed_time: number,
+    moving_time: number,
+    start_date: string,
+    start_date_local: string,
+    distance: number,
+    pr_rank: null | number,
+    achievements: [],
+    start_index: number,
+    end_index: number;
   }>,
   gear: {
     id: number,
@@ -204,7 +227,7 @@ type ActivityDetails = {
     resource_state: number,
     retired: boolean,
     distance: number,
-    converted_distance: number
+    converted_distance: number;
   },
   photos: {
     primary: null,
@@ -212,7 +235,7 @@ type ActivityDetails = {
   },
   stats_visibility: Array<{
     type: 'heart_rate' | 'pace' | 'power' | 'speed' | 'calories',
-    visibility: Visibility
+    visibility: Visibility;
   }>,
   hide_from_home: boolean,
   device_name: string,
@@ -235,5 +258,5 @@ type ActivityDetails = {
     },
     resource_state: number,
   },
-  available_zones: []
-}
+  available_zones: [];
+};

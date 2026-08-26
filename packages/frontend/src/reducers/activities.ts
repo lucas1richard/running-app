@@ -116,7 +116,7 @@ const activitiesReducer = (state = activitiesInitialState, action: Action = { ty
       return produce(state, (nextState) => {
         nextState.details[action.payload.id] = action.payload;
         nextState.activities[action.payload.id] = {
-          // ...state.activities[action.payload.id],
+          ...state.activities[action.payload.id],
           ...getActivity(state, action.payload.id),
           calculatedBestEfforts: [
             ...action.payload.best_efforts.filter(({ pr_rank }) => !!pr_rank)
