@@ -34,7 +34,6 @@ import analyzeClustering from '@/utils/analyzeClustering';
 import calcEfficiencyFactor from '@/utils/calcEfficiencyFactor';
 import calculateStats from '@/utils/calculateStats';
 import detectTwoClustersOptimized from '@/utils/detectTwoClustersOptimized';
-import detectTransitions from '@/utils/findTransitions';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
@@ -73,8 +72,6 @@ const ActivityDetailPage = () => {
       return null;
     }
   }, [velocityStream, timeStream]);
-
-
 
   const [
     savePreferences

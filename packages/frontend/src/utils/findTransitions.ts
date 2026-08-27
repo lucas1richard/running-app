@@ -1,13 +1,16 @@
 type Sample = {
   time: number;  // seconds from start
   value: number; // speed, HR, power, etc.
+  start_index?: number;
 };
 
 type Transition = {
   time: number;
   from: number;
+  start_index: number;
   to: number;
   magnitude: number;
+  value: number;
 };
 
 function detectTransitions(
@@ -15,6 +18,15 @@ function detectTransitions(
   windowSeconds: number,
   minChange: number
 ): Transition[] {
+  const transitions: Transition[] = getTransitions(samples, windowSeconds, minChange);
+  const groups = groupTransitions(transitions, windowSeconds);
+
+  const narrowTransitions = groups.map((s) => getTransitions(s, windowSeconds / 2, minChange));
+
+  return narrowTransitions.map(n => n[0]);
+}
+
+function getTransitions(samples: Sample[], windowSeconds: number, minChange: number) {
   const transitions: Transition[] = [];
 
   for (let i = 0; i < samples.length; i++) {
@@ -36,25 +48,25 @@ function detectTransitions(
     if (magnitude >= minChange) {
       transitions.push({
         time: t,
+        start_index: samples[i].start_index ?? i,
         from: beforeMean,
         to: afterMean,
         magnitude,
+        value: samples[i].value,
       });
     }
   }
 
-  console.log(transitions);
-
-  return mergeNearbyTransitions(transitions, windowSeconds);
+  return transitions;
 }
 
-function mergeNearbyTransitions(
+function groupTransitions(
   transitions: Transition[],
   minimumSeparation: number
-): Transition[] {
+): Transition[][] {
   if (transitions.length === 0) return [];
 
-  const result: Transition[] = [];
+  const result: Transition[][] = [];
 
   let group = [transitions[0]];
 
@@ -65,24 +77,14 @@ function mergeNearbyTransitions(
     if (current.time - previous.time <= minimumSeparation) {
       group.push(current);
     } else {
-      result.push(strongest(group));
+      result.push(group);
       group = [current];
     }
   }
 
-  result.push(strongest(group));
+  result.push(group);
 
   return result;
-}
-
-function strongest(
-  transitions: Transition[]
-): Transition {
-  return transitions.reduce((best, current) =>
-    current.magnitude > best.magnitude
-      ? current
-      : best
-  );
 }
 
 export default detectTransitions;

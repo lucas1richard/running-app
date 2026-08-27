@@ -46,13 +46,15 @@ const processLaps = (laps) => {
 
 const getLapHrData = (laps, hr, time, ix) => {
   const lap = laps[ix];
-  const startIx = lap.start_index + 2; // 2 seconds grace period
+  if (!lap) return;
+  const startIx = lap.start_index; // 2 seconds grace period
   const startHr = hr[startIx];
   const diffThreshhold = 10;
-  const ixSf = hr.findIndex((v, i) => i >= startIx && i <= lap.end_index && v >= (startHr + diffThreshhold));
+  const ixSf = hr
+    .findIndex((v, i) => i >= startIx && i <= (laps[ix + 1]?.start_index || hr.length) - 1 && Math.abs(v - startHr) >= diffThreshhold);
 
   const sfs = time[ixSf] - time[startIx];
-  if (isNaN(sfs) || sfs < 0) return {};
+  if (isNaN(sfs) || sfs < 0) return;
 
   return {
     startHr,
@@ -68,8 +70,8 @@ const Laps = ({ id }) => {
   const timeStream = useAppSelector((state) => selectStreamTypeData(state, id, 'time'));
   const transitions = useMemo(() => detectTransitions(
     velocityStream.map((value, ix) => ({ time: timeStream[ix], value })),
-    30,
-    0.7 // meters/second
+    20,
+    0.5 // meters/second
   ), [velocityStream, timeStream]);
 
   const laps = details?.laps || [];
@@ -84,32 +86,37 @@ const Laps = ({ id }) => {
               <th colSpan="7" className="raised-1 bg-neutral-800 text-white text-center">Laps</th>
             </tr>
             <tr className="raised-1 bg-neutral-800 text-white">
-              <th className="px-4">Name</th>
+              <th className="px-4">Index</th>
               <th className="px-4">Time</th>
               <th className="px-4">Distance</th>
               <th className="px-4">Pace</th>
               <th className="px-4">Heart Rate</th>
               <th className="px-4">Max Heart Rate</th>
               <th className="px-4">Elevation Gain</th>
-              {/* <th className="px-4">HR</th> */}
+              <th className="px-4">HR</th>
             </tr>
           </thead>
           <tbody>
-            {transitions.map((lap, ix) => {
+            {transitions.filter(Boolean).map((lap, ix) => {
               return (
                 <tr key={lap.name} className={`text-right text-white bg-neutral-700 ${ix % 2 === 0 ? 'sunken-1' : ''}`}>
-                  <td>{lap.name}</td>
+                  <td>{lap.start_index}</td>
                   <td><DurationDisplay numSeconds={lap.time} /></td>
                   <td>{lap.dist} <small>{lap.distUnit}</small></td>
                   <td>
-                    <DurationDisplay
+                    {/* <DurationDisplay
                       numSeconds={Math.floor((1 / convertMetersToMiles(lap.distance)) * lap.elapsed_time)} units={['', ':']}
-                    />
+                    /> */}
                   </td>
                   <td className="text-center">{Math.round(lap.average_heartrate)} <abbr>bpm</abbr></td>
                   <td className="text-center">{lap.max_heartrate} <abbr>bpm</abbr></td>
                   <td>{lap.totalElevationGainFt} <small>ft</small></td>
-                  {/* <td>{JSON.stringify(getLapHrData(laps, heartRateStream, timeStream, ix))}</td> */}
+                  <td>{(() => {
+                    const hrData = (getLapHrData(transitions, heartRateStream, timeStream, ix));
+                    if (!hrData) return '';
+                    const dir = hrData.sfhr > hrData.startHr ? '^' : 'v'
+                    return <span>{`${hrData.sfs}s for ${hrData.startHr}`} &rarr; {`${hrData.sfhr}`}</span>
+                  })()}</td>
                 </tr>
               )
             }
