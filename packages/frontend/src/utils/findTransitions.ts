@@ -2,12 +2,14 @@ type Sample = {
   time: number;  // seconds from start
   value: number; // speed, HR, power, etc.
   start_index?: number;
+  end_index?: number;
 };
 
-type Transition = {
+export type Transition = {
   time: number;
   from: number;
   start_index: number;
+  end_index?: number;
   to: number;
   magnitude: number;
   value: number;
@@ -17,13 +19,16 @@ function detectTransitions(
   samples: Sample[],
   windowSeconds: number,
   minChange: number
-): Transition[] {
+): (Required<Transition>)[] {
   const transitions: Transition[] = getTransitions(samples, windowSeconds, minChange);
   const groups = groupTransitions(transitions, windowSeconds);
 
   const narrowTransitions = groups.map((s) => getTransitions(s, windowSeconds / 2, minChange));
 
-  return narrowTransitions.map(n => n[0]);
+  return narrowTransitions.map((n, ix) => ({
+    ...n[0],
+    end_index: (narrowTransitions[ix + 1]?.[0]?.start_index ?? samples.length) - 1
+  }));
 }
 
 function getTransitions(samples: Sample[], windowSeconds: number, minChange: number) {

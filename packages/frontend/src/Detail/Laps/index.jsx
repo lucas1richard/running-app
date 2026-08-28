@@ -4,10 +4,15 @@ import Surface from '@/DLS/Surface';
 import { useAppSelector } from '@/hooks/redux';
 import { selectActivityDetails, selectStreamTypeData } from '@/reducers/activities';
 import { convertMetersToFt, convertMetersToMiles, convertMetricSpeedToMPH } from '@/utils';
+import calculateCardioResponse from '@/utils/calculateCardioResponse';
+import calculateRecoveryTau from '@/utils/calculateRecoveryTau';
 import detectTransitions from '@/utils/findTransitions';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import CardioResponse from './CardioResponse';
 
+
+// calculateRecoveryTau
 const processLaps = (laps) => {
   let timeStart = 0;
 
@@ -79,7 +84,6 @@ const Laps = ({ id }) => {
   return (
     <div className="mt-4 card">
       <Surface className="overflow-x-auto">
-        {JSON.stringify(transitions)}
         <table>
           <thead>
             <tr>
@@ -94,6 +98,7 @@ const Laps = ({ id }) => {
               <th className="px-4">Max Heart Rate</th>
               <th className="px-4">Elevation Gain</th>
               <th className="px-4">HR</th>
+              <th className="px-4">Cardio Response</th>
             </tr>
           </thead>
           <tbody>
@@ -117,15 +122,24 @@ const Laps = ({ id }) => {
                     const dir = hrData.sfhr > hrData.startHr ? '^' : 'v'
                     return <span>{`${hrData.sfs}s for ${hrData.startHr}`} &rarr; {`${hrData.sfhr}`}</span>
                   })()}</td>
+                  <td><CardioResponse lap={lap} activityId={id} /></td>
                 </tr>
               )
             }
             )}
           </tbody>
         </table>
+        <b>Recovery τ</b> is the time it takes your heart rate to drop about 63% of the way from its post-run level back toward your normal walking heart rate.
+        <div>
+          <div><b>averageWorkload</b> = Your average estimated running workload (VO₂) during the first 60 seconds of the interval.</div>
+          <div><b>hrRise30s</b> = How many BPM your heart rate increased during the first 30 seconds of running.</div>
+          <div><b>hrRise60s</b> = How many BPM your heart rate increased during the first 60 seconds of running.</div>
+          <div><b>hrAuc60s</b> = The cumulative amount of heart-rate elevation above your starting HR during the first 60 seconds.</div>
+          <div><b>efficiency</b> = Your estimated running workload divided by your average heart-rate elevation, where higher means more workload for the same HR response.</div>
+        </div>
       </Surface>
 
-      <Surface>
+      {/* <Surface>
         <D3BarChart
           series={[
             {
@@ -154,7 +168,7 @@ const Laps = ({ id }) => {
             },
           ]}
         />
-      </Surface>
+      </Surface> */}
     </div>
   );
 };
