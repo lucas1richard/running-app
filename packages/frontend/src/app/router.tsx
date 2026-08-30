@@ -4,6 +4,7 @@ import AppLayout from '@/app/layout/AppLayout';
 import CalendarView from '@/Calendar';
 import ActivityDetailPage from '@/Detail';
 import HeartRateZones from '@/HeartRateZones';
+import LLMChat from '@/LLMChat';
 import MultiMapPage from '@/MultiMap';
 import PersonalRecords from '@/PersonalRecords';
 import Volume from '@/Volume';
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
         path: '/admin',
         Component: AdminDashboard,
       },
+      {
+        path: '/llm-chat',
+        Component: LLMChat,
+      }
     ],
   },
 ]);

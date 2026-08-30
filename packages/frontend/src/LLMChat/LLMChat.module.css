@@ -1,0 +1,112 @@
+.app {
+  width: min(1000px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px;
+  display: flex;
+  flex-direction: column
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px
+}
+
+h1 {
+  margin: 0;
+  font-size: 24px
+}
+
+header p {
+  margin: 4px 0 0;
+  color: #777
+}
+
+.tools {
+  font-size: 13px;
+  color: #666
+}
+
+.chat {
+  flex: 1;
+  padding: 32px 0
+}
+
+.empty {
+  text-align: center;
+  color: #777;
+  margin-top: 20vh
+}
+
+.item {
+  margin: 12px 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  max-width: 85%
+}
+
+.item.user {
+  margin-left: auto;
+  border: 1px solid #e5e5e5;
+  background: darkblue;
+  color: white;
+}
+
+.item.assistant {
+  border: 1px solid #e5e5e5
+}
+
+.item.tool {
+  color: #555;
+  font-size: 12px
+}
+
+.role {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  opacity: .55;
+  margin-bottom: 6px
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0;
+  font: inherit
+}
+
+form {
+  display: flex;
+  gap: 10px;
+  position: sticky;
+  bottom: 16px
+}
+
+textarea {
+  flex: 1;
+  min-height: 60px;
+  resize: vertical;
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font: inherit;
+  background: white
+}
+
+button {
+  align-self: flex-end;
+  padding: 12px 18px;
+  border: 0;
+  border-radius: 10px;
+  background: #222;
+  color: white;
+  cursor: pointer
+}
+
+button:disabled {
+  opacity: .4;
+  cursor: default
+}

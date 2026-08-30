@@ -21,11 +21,12 @@ import receiver from './messageQueue/receiver.ts';
 
 import { logger } from './utils/logger.ts';
 import { getChannel, channelConfigs } from './messageQueue/channels.ts';
-import fetchIntervalsIcu from './intervals-icu-ingestion/fetch-intervalsicu.ts';
-import fetchIntervalsIcuStreams from './intervals-icu-ingestion/fetchIntervalsIcuStreams.ts';
-import { ingestIntervalICUActivities } from './intervals-icu-ingestion/ingestor.ts';
-import { deleteActivity } from './controllers/deleteActivity.ts';
+// import fetchIntervalsIcu from './intervals-icu-ingestion/fetch-intervalsicu.ts';
+// import fetchIntervalsIcuStreams from './intervals-icu-ingestion/fetchIntervalsIcuStreams.ts';
+// import { ingestIntervalICUActivities } from './intervals-icu-ingestion/ingestor.ts';
+// import { deleteActivity } from './controllers/deleteActivity.ts';
 import { calculateBestEffortsForNewActivities } from './intervals-icu-ingestion/calculateBestEffortsForNewActivities.ts';
+import { llmChatRouter } from './routes/llm-chat/index.ts';
 // import addAllCompressedRoutes from './functions/addAllCompressedRoutes.ts';
 
 receiver.onActivityId(({ activityId, type, correlationId }) => {
@@ -50,6 +51,7 @@ app.use('/segments', segmentsRouter);
 app.use('/routes', activityRoutesRouter);
 app.use('/routeCoordinates', routeCoordinatesRouter);
 app.use('/mcp', mcpRouter);
+app.use('/llm-chat', llmChatRouter);
 
 (async () => {
   try {
