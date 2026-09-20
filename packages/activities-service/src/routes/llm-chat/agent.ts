@@ -27,6 +27,8 @@ export class Agent {
 
   constructor(
     mcpUrl = process.env.MCP_URL ?? "http://localhost:3001/mcp",
+    // model = process.env.OLLAMA_MODEL ?? 'lfm2-64k-context',
+    // ollamaUrl = process.env.OLLAMA_URL ?? "http://host.docker.internal:11434"
     model = process.env.OLLAMA_MODEL ?? "gemma4:cloud",
     ollamaUrl = process.env.OLLAMA_URL ?? "https://ollama.com"
   ) {
@@ -42,49 +44,55 @@ export class Agent {
     return this.mcp.getTools();
   }
 
-  async *run(userMessage: string): AsyncGenerator<AgentEvent> {
+  async *run(userMessage: string, userTools: Tool[] = []): AsyncGenerator<AgentEvent> {
+    await this.init();
     this.messages.push({ role: "user", content: userMessage });
-    const tools = this.mcp.getTools().map(toOllamaTool);
+    const mcpTools = this.mcp.getTools().map(toOllamaTool);
+    const tools = [...userTools, ...mcpTools];
+
 
     for (let turn = 0; turn < 12; turn++) {
       const response = await this.model.chat(this.messages, tools);
 
       for await (const msg of response) {
-        yield { type: 'message', content: msg.message.content };
+        // yield { type: 'message', content: msg.message.content };
+
+        const message = msg.message;
+        if (message.content) {
+          yield { type: "message", content: message.content };
+        }
+
+        const calls = message.tool_calls ?? [];
+        // if (!calls.length) {
+        //   yield { type: "done" }; return;
+        // }
+
+        for (const call of calls) {
+          const name = call.function.name;
+          const args = call.function.arguments ?? {};
+
+          yield { type: "tool_start", name, arguments: args };
+
+          try {
+            const isMcpTool = !!mcpTools.find((t) => t.function?.name === name);
+            if (isMcpTool) {
+              const result = await this.mcp.callTool(name, args);
+              this.messages.push({ role: "tool", tool_name: name, content: JSON.stringify(result) });
+              yield { type: "tool_result", name, result };
+            } else {
+              yield { type: 'tool_result', name, result: { content: [{ ...args }] } };
+            }
+
+          } catch (error) {
+            const text = error instanceof Error ? error.message : String(error);
+            this.messages.push({ role: "tool", tool_name: name, content: JSON.stringify({ error: text }) });
+
+            yield { type: "tool_result", name, result: { error: text } };
+          }
+        }
       }
 
       yield { type: "done" }; return;
-
-      // const message = response;
-      // this.messages.push(message);
-
-
-      // if (message.content) {
-      //   yield { type: "message", content: message.content };
-      // }
-
-      // const calls = message.tool_calls ?? [];
-      // if (!calls.length) {
-      //   yield { type: "done" }; return;
-      // }
-
-      // for (const call of calls) {
-      //   const name = call.function.name; const args = call.function.arguments ?? {};
-
-      //   yield { type: "tool_start", name, arguments: args };
-
-      //   try {
-      //     const result = await this.mcp.callTool(name, args);
-      //     this.messages.push({ role: "tool", tool_name: name, content: JSON.stringify(result) });
-
-      //     yield { type: "tool_result", name, result };
-      //   } catch (error) {
-      //     const text = error instanceof Error ? error.message : String(error);
-      //     this.messages.push({ role: "tool", tool_name: name, content: JSON.stringify({ error: text }) });
-
-      //     yield { type: "tool_result", name, result: { error: text } };
-      //   }
-      // }
     }
     yield { type: "error", error: "The agent reached its maximum tool-call turns." };
   }

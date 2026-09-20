@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Agent } from "./agent.ts";
+import type { Tool } from 'ollama';
 
 const agent = new Agent();
 
@@ -9,8 +10,20 @@ router.get('/health', (_req, res) => res.json({ ok: true }));
 
 router.get('/tools', (_req, res) => res.json(agent.getTools()));
 
+function toOllamaTool(tool: any): Tool {
+  return {
+    type: "function",
+    function: {
+      name: tool.name,
+      description: tool.description ?? "",
+      parameters: tool.inputSchema ?? { type: "object", properties: {} }
+    }
+  };
+}
+
 router.post('/chat', async (req, res) => {
   const text = String(req.body?.message ?? '').trim();
+  const tools = req.body.tools?.map(toOllamaTool);
 
   if (!text) return res.status(400).json({ error: 'message is required' });
 
@@ -20,7 +33,7 @@ router.post('/chat', async (req, res) => {
   res.flushHeaders();
 
   try {
-    for await (const event of agent.run(text)) {
+    for await (const event of agent.run(text, tools)) {
       res.write(`data: ${JSON.stringify(event)}\n\n`);
     }
   } catch (error) {

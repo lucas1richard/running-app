@@ -66,7 +66,13 @@ export class McpSessionManager {
       async () => {
         const activities = await findAllActivities();
         return {
-          content: [{ type: "text", text: JSON.stringify(activities.slice(0, 3)) }],
+          content: [{
+            type: "text",
+            text: JSON.stringify({
+              type: 'activities_list',
+              data: activities.slice(0, 3)
+            })
+          }],
         };
       }
     );

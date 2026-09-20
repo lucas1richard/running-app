@@ -2,16 +2,17 @@ import { useEffect, useState } from 'react';
 import styles from './LLMChat.module.css';
 import requestor from '@/utils/requestor';
 import Markdown from 'react-markdown';
+import Tile from '@/Activities/Tile';
 
 type Event =
   | { type: 'message'; content: string; }
   | { type: 'tool_start'; name: string; arguments: unknown; }
-  | { type: 'tool_result'; name: string; result: unknown; }
+  | { type: 'tool_result'; name: string; result: { content: { type: string; data: unknown; }[]; }; }
   | { type: 'error'; error: string; }
   | { type: 'done'; };
 
 type Item = {
-  role: 'user' | 'assistant' | 'tool';
+  role: 'user' | 'assistant' | 'tool' | 'tool_result';
   content: string;
 };
 
@@ -36,7 +37,29 @@ function LLMChat() {
     setBusy(true);
     setItems((p) => [...p, { role: 'user', content: message }]);
     try {
-      const r = await requestor.post('/llm-chat/chat', { message });
+      const r = await requestor.post(
+        '/llm-chat/chat',
+        {
+          message,
+          tools: [{
+            "name": "render_ui",
+            "description": "Render a UI component for the user.",
+            "inputSchema": {
+              "type": "object",
+              "properties": {
+                "component": {
+                  "type": "string",
+                  "enum": ["chart", "table", "card"]
+                },
+                "props": {
+                  "type": "object"
+                }
+              },
+              "required": ["component", "props"]
+            }
+          }],
+        }
+      );
       if (!r.ok || !r.body) throw new Error(await r.text());
       const reader = r.body.getReader(), decoder = new TextDecoder();
       let buffer = '';
@@ -79,9 +102,14 @@ function LLMChat() {
             ]);
           }
           else if (e.type === 'tool_result') {
+            const dataType = e.result.content[0].type;
+
             setItems((p) => [
               ...p,
-              { role: 'tool', content: `${e.name} → ${JSON.stringify(e.result, null, 2)}` }
+              {
+                role: 'tool_result',
+                content: JSON.stringify(e.result.content),
+              }
             ]);
           }
           else if (e.type === 'error') {
@@ -119,12 +147,23 @@ function LLMChat() {
             <h2>What should we investigate?</h2>
           </div>
         )}
-        {items.map((x, i) => (
-          <article className={`${styles.item} ${styles[x.role]}`} key={i}>
-            <div className={`${styles.role}`}>{x.role}</div>
-            <Markdown>{x.content}</Markdown>
-          </article>
-        ))}
+        {items.map((x, i) => {
+          if (x.role === 'tool_result') {
+            return (
+              <article className={`${styles.item} ${styles[x.role]}`} key={i}>
+                <div className={`${styles.role}`}>{x.role}</div>
+                {/* {JSON.parse(JSON.parse(x.content)?.[0]?.text)?.data.map((a) => <Tile activity={a} key={a.id} />)} */}
+                {x.content}
+              </article>
+            );
+          }
+          return (
+            <article className={`${styles.item} ${styles[x.role]}`} key={i}>
+              <div className={`${styles.role}`}>{x.role}</div>
+              <Markdown>{x.content}</Markdown>
+            </article>
+          );
+        })}
         {returnMsg && (
           <article className={`${styles.item} ${styles.assistant}`}>
             <div className={`${styles.role}`}>{'assistant'}</div>

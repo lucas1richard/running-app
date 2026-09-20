@@ -11,7 +11,7 @@ export class McpToolProvider {
   }
 
   async connect() {
-    this.client = new Client({ name: "local-mcp-harness", version: "0.1.0" }, { capabilities: {} });
+    this.client = new Client({ name: "running-app-mcp", version: "0.1.0" }, { capabilities: {} });
 
     const transport = new StreamableHTTPClientTransport(new URL(this.url));
     await this.client.connect(transport);
